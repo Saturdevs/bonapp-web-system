@@ -1,0 +1,79 @@
+<ng-template #deleteTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Eliminar Producto</h4>
+  </div>
+  <div class="modal-body">
+    ¿Estas seguro que desea eliminar este producto?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="deleteProduct()">Ok</button>
+    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+  </div>
+</ng-template>
+
+<div class="pageTitle">
+    <div class="float-left">
+        <header>
+            <h5> {{ pageTitle }}</h5>
+        </header>
+    </div>
+    <div style="float: right">
+        <a [routerLink]="['newProduct']" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Producto</a>
+    </div>
+</div>
+            
+<div class="ml-5 mr-5 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
+    <div class="row mb-2 customBox">
+        <form #form="ngForm" novalidate class="form-inline">
+            <h6 class="pt-2">Filtrar:</h6>
+            <div class="md-form form-group mr-0 pr-0 col-lg-1 col-md-1">
+                <input type="text" class="input-alternate" placeholder="Codigo" name="queryCod" [(ngModel)]='listFilterCod' id="queryCod">
+            </div>
+            <div class="md-form form-group mr-0 ml-0 col-md-2 col-lg-2">
+                <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
+            </div>
+            <h6 class="pt-2 ml-2">Categoria:</h6>
+            <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left"> 
+                <mdb-select #queryMenu name="queryCategory" (selected)="filterMenu(queryCategory.value)" id="queryCategory" [options]="categoriesOptions"  
+                [(ngModel)]="selectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>    
+            </div>
+            <h6 class="pt-2 ml-2 customH6">Actualizar Precios:</h6>
+            <div class="ml-1 col-md-2 mr-0 md-form form-group">
+                <input class="input-alternate" placeholder="Ingrese porcentaje" [(ngModel)]="percentage" required type="number" name="percentage" id="percentage" >
+            </div>
+            <div class="md-form form-group customMdForm">
+                <button class="btn btn-sm btn-success customCheckButton float-right" [disabled]='form.invalid || percentage === 0' (click)='updatePrice()'><i class="fa fa-check"></i></button>
+            </div>
+        </form>    
+    </div>
+
+    <div class="row">
+        <table class="table table-bordered table-hover customTable">
+            <thead class="primary-color customTableText">
+                <tr>
+                    <th class="customShortTh">Código</th>
+                    <th class="customLongTh">Nombre</th>
+                    <th class="customShortTh">Precio</th>                                     
+                    <th>Categoría</th>
+                    <th>Carta</th>
+                    <th class="customShortTh">Disponible</th>
+                    <th class="customThTd">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-wrapper" *ngIf='products && products.length'>
+                <tr *ngFor = 'let product of filteredProducts ' >
+                    <td class="align-middle customShortTh">{{ product.code }}</td>
+                    <td class="align-middle customLongTh">{{ product.name }}</td>
+                    <td class="align-middle customShortTh">{{ product.price | currency:'USD':code:'2.2-2' }}</td>
+                    <td class="align-middle">{{ product.category.name }}</td>
+                    <td class="align-middle">{{ product.category.menuId.name }}</td>
+                    <td class="align-middle customShortTh">{{ product.available }}</td>
+                    <td class="customThTd align-middle">
+                        <a [routerLink]="['edit', product._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                        <a (click) = "showModalDelete(deleteTemplate, product._id)" class="btn btn-red btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

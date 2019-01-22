@@ -1,0 +1,88 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #cancelTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Cancelar Cambios</h4>
+  </div>
+  <div class="modal-body">
+    ¿Está seguro que desea cancelar los cambios?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="cancel()">Ok</button>
+    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='supplier'>
+  <header class="major" align="center">
+    <h2>{{ pageTitle + supplierNameModified }}</h2>
+  </header>
+  <div class="row">
+    <div class="col-md-6">
+      <form #form="ngForm" method="post" novalidate>
+        
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input #supplierName="ngModel" required type="text" class="form-control" [class.is-invalid]="supplierName.invalid && (supplierName.dirty || supplierName.touched)" name="supplierName" 
+                id="supplierName" [(ngModel)]="supplier.name">
+        </div>
+
+        <div *ngIf="supplierName.invalid && (supplierName.dirty || supplierName.touched)" class="alert alert-danger">
+          El nombre es un campo es requerido.
+        </div>
+
+        <div class="form-group">
+          <label>Email:</label>
+          <input #supplierEmail="ngModel" type="text" class="form-control" [class.is-invalid]="supplierEmail.invalid && (supplierEmail.dirty || supplierEmail.touched)" name="supplierEmail" 
+                id="supplierEmail" [(ngModel)]="supplier.email">
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input #supplierTel="ngModel" type="text" class="form-control" [class.is-invalid]="supplierTel.invalid && (supplierTel.dirty || supplierTel.touched)" name="supplierTel" 
+                id="supplierTel" [(ngModel)]="supplier.tel">
+        </div>
+        
+        <div class="form-group">
+          <label>Dirección:</label>
+          <input #supplierAddressStreet="ngModel" type="text" class="form-control" name="supplierAddressStreet" 
+                id="supplierAddressStreet" [(ngModel)]="supplier.addressStreet"
+                placeholder="Calle">
+
+          <br>
+          
+          <input #supplierAddressNumber="ngModel" type="text" class="form-control" name="supplierAddressNumber" 
+                id="supplierAddressNumber" [(ngModel)]="supplier.addressNumber"
+                placeholder="Número">
+
+          <input #supplierAddressDpto="ngModel" type="text" class="form-control" name="supplierAddressDpto" 
+                id="supplierAddressDpto" [(ngModel)]="supplier.addressDpto"
+                placeholder="Piso / Dpto">
+        </div>
+
+        <div class="md-form">
+            <input mdbDeepDirective [(ngModel)]="supplier.active" type="checkbox" name="checkEnabledTransactions" id="checkEnabledTransactions">
+            <label for="checkEnabledTransactions">Activo</label>
+        </div>
+        
+        <div class="">
+          <ul class="actions" align="center">
+            <li><input [disabled]="form.invalid" type="submit" value="Aceptar" class="special" (click)="updateSupplier(supplier)"/></li>
+            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
+          </ul>
+        </div> 
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<ng-template #deleteTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Eliminar Tamaño</h4>
+  </div>
+  <div class="modal-body">
+    ¿Estas seguro que desea eliminar este tamaño?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="deleteSize()">Ok</button>
+    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+  </div>
+</ng-template>
+<div class="row">
+    <div class="col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+        <div class="row ml-1 settingsTitle">
+            <header class="major">
+                    <h5 class="customTitle">{{ pageTitle }}</h5>
+            </header>
+            <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['newSize'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Tamaño</a>
+        </div>
+        <div class="row ml-1">
+            <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
+                <div class="row mb-2 customBox">
+                    <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+                        <h6 class="pt-2">Filtrar:</h6>
+                        <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
+                            <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
+                        </div>          
+                    </form>    
+                </div>
+                <div class="row">
+                    <table class="table table-bordered table-hover customTable">
+                        <thead class="primary-color customTableText">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-wrapper" *ngIf='sizes && sizes.length'>
+                            <tr *ngFor = 'let size of filteredSizes ' >
+                                <td>{{ size.name }}</td>
+                                <td>{{ size.available }}</td>
+                                <td class="align-middle">
+                                    <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['editSize', size._id] } }]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                                    <a (click) = "showModalDelete(deleteTemplate, size._id)" class="btn btn-red btn-sm">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>    
+            <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-5 pt-1 pb-2 mt-2">
+                <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

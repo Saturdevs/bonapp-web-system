@@ -1,0 +1,69 @@
+<ng-template #deleteTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Eliminar Transacción</h4>
+  </div>
+  <div class="modal-body">
+    ¿Seguro desea eliminar esta Transacción?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="deleteTransaction()">Ok</button>
+    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+  </div>
+</ng-template>
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+      <div class="row ml-1 settingsTitle">
+          <header class="major">
+                  <h5 class="customTitle">{{ pageTitle }}</h5>
+          </header>
+          <a class="customFloatedButton" [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['newTransaction'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nueva Transacción</a>
+      </div>
+      <div class="row ml-1">
+          <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
+              <div class="row mb-2 customBox">
+                  <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+
+                    <h6 class="pt-2">Cliente:</h6>
+                    <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
+                        <mdb-select #clientId name="clientId" (selected)="filterTransactions(clientId.value)" id="clientId" [options]="clientsSelect"  
+                        [(ngModel)]="selectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>
+                    </div>
+                    
+                    <br>
+                    <hr>
+                    
+                    <span *ngIf="clientId.value === 'default'">Todos los clientes</span>
+                    <span *ngIf="clientId.value !== 'default'">{{ clientId.label }}</span>
+                  </form>    
+              </div>
+              <div class="row">
+                  <table class="table table-bordered table-hover customTable">
+                      <thead class="primary-color customTableText">
+                          <tr>
+                              <th>Cliente</th>
+                              <th>Fecha</th>
+                              <th>Monto</th>
+                              <th>Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody class="table-wrapper" *ngIf='filteredTransactions && filteredTransactions.length'>
+                          <tr *ngFor = 'let transaction of filteredTransactions'>                            
+                            <td *ngIf='transaction.deleted === false'>{{ transaction.clientName }}</td>
+                            <td *ngIf='transaction.deleted === false'>{{ transaction.date | date:'dd/MM/yy HH:mm' }}</td>
+                            <td *ngIf='transaction.deleted === false'>{{ transaction.amount }}</td>
+                            <td class="align-middle" *ngIf='transaction.deleted === false'>
+                                <a [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['editTransaction', transaction.clientId, transaction._id] } }]" class="btn btn-yellow btn-sm customButtonText">Detalle</a>
+                                <a (click) = "showModalDelete(deleteTemplate, transaction.clientId, transaction._id)" class="btn btn-red btn-sm">Eliminar</a>
+                            </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>    
+          <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-5 pt-1 pb-2 mt-2">
+              <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+          </div>
+      </div>
+</div>
+
+</div>

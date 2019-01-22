@@ -1,0 +1,54 @@
+<!-- Wrapper -->
+<div id="wrapper">
+	<div class="containter-fluid customMB">
+	<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navBarColor pr-0" [containerInside]="false">
+		<logo>
+			<a class="logo navbar-brand pl-4" href="#"><strong>WebBar</strong></a>
+		</logo>
+		<links>
+			<ul class="navbar-nav mr-auto">
+				<!--<a [routerLink]="['/order']" class="btn btn-primary">Nuevo Pedido</a>-->
+				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Pedidos" placement="bottom" mdbRippleRadius>
+					<a [routerLink]="['orders']" class="nav-link"><i class='fa fa-coffee fa-1x'></i><span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Ventas" placement="bottom" mdbRippleRadius>
+					<a [routerLink]="['sales']" class="nav-link"><i class='fa fa-dollar fa-1x'></i></a>
+				</li>
+				<li class="nav-item waves-light customLi"  [routerLinkActive]="['customActive']" mdbTooltip="Restaurant" placement="bottom" mdbRippleRadius>
+					<a [routerLink]="['restaurant']" class="nav-link"><i class='fa fa-cutlery fa-1x'></i></a>
+				</li>
+				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Clientes" placement="bottom" mdbRippleRadius>
+					<a [routerLink]="['clients-module']" class="nav-link"><i class='fa fa-user-circle fa-1x'></i></a>
+				</li>
+				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Proveedores" placement="bottom" mdbRippleRadius>
+					<a [routerLink]="['suppliers-module']" class="nav-link"><i class='fa fa-truck fa-1x'></i></a>
+				</li>
+				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Configuracion" placement="bottom" mdbRippleRadius>
+					<a [routerLink]="['settings']" class="nav-link"><i class='fa fa-cog fa-1x'></i></a>
+				</li>
+			</ul>
+			<ul class="navbar-nav nav-flex-icons">
+				<li class="pt-0 pr-2 text-center" mdbRippleRadius>
+					<p class="mb-0 customDate">{{ myDate | date:'EEEE'}}</p>
+					<p class="mb-0 customDate">{{ myDate | date:'MMMM d'}}</p>
+				</li>
+				<li class="pt-2">
+					<h5 class="mb-0">{{ myDate | date:'HH:mm:ss'}}</h5>
+				</li>
+				<li class="nav-item dropdown btn-group pr-2" dropdown>
+					<a dropdownToggle type="button" class="nav-link dropdown-toggle waves-light" mdbRippleRadius><i class="fa fa-user fa-1x"></i>
+						<b>User</b><span class="caret"></span></a>
+				
+					<div *dropdownMenu class="dropdown-menu dropdown-primary dropdown" role="menu">
+						<a class="dropdown-item waves-light" href="#" mdbRippleRadius>Cuenta</a>
+						<a class="dropdown-item waves-light" href="#" mdbRippleRadius>Salir</a>
+					</div>
+				</li>
+			</ul>
+		</links>
+	</mdb-navbar>
+	</div>
+	<div class="container-fluid col-md-12 customContainer">
+		<router-outlet></router-outlet>
+	</div>	
+</div>

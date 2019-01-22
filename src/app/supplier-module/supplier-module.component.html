@@ -1,0 +1,13 @@
+<!-- Nav tabs -->
+<ul class="nav classic-tabs tabs-primary customLinksColor">
+  <li class="nav-item customFirstLi">
+    <a class="waves-effect"
+    [routerLink]="['suppliers', { outlets: { edit: ['selectItem'] } }]" routerLinkActive="active">
+        Proveedores
+    </a>
+  </li>
+ </ul>
+ <!-- Tab panels -->
+ <div class="tab-content customContentCard">
+    <router-outlet></router-outlet>
+ </div>

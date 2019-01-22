@@ -1,0 +1,48 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<div class="customButtonAlternative">
+<a class="btn btn-primary btn-sm waves-light customButton" data-toggle="modal" data-target="#basicExample" (click)="fluid.show()" mdbRippleRadius>
+  + Nueva Sala
+</a>
+</div>
+
+<div mdbModal #fluid="mdb-modal" class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-full-height modal-right" role="document">
+      <div class="modal-content">
+          <div class="modal-header secondary-color">
+              <h4 class="modal-title w-100" id="myModalLabel">{{ pageTitle }}</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="fluid.hide()">
+                  <span aria-hidden="true">×</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <form #form="ngForm" method="post" novalidate>
+              <div class="md-form">
+                <label>Nombre Sala:</label>
+                <input #sectionName="ngModel" mdbActive required type="text" class="form-control" [class.is-invalid]="sectionName.invalid && (sectionName.dirty || sectionName.touched)" name="sectionName" 
+                      id="sectionName" [(ngModel)]="newSection.name">
+              </div>
+      
+              <div *ngIf="sectionName.invalid && (sectionName.dirty || sectionName.touched)" class="alert alert-danger">
+                El nombre de la sala es requerido.
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="fluid.hide()" mdbRippleRadius>Close</button>
+              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius (click)="saveSection()" >Save changes</button>
+          </div>
+      </div>
+  </div>
+</div>
+        

@@ -1,0 +1,52 @@
+<div class="pageTitle">
+  <div style="float: left">
+      <header class="major">
+              <h5>{{pageTitle}}</h5>
+      </header>
+  </div>
+</div>
+<div class="row pr-0 mr-0 pl-0 ml-0">
+    <div class="container-fluid col-md-2 col-lg-2 mr-0 ml-0 pr-0 pl-0">
+        
+    <!-- SideNav slide-out button -->
+    <a (click)="sidenav.toggle()" class="btn btn-primary p-3 button-collapse"><i class="fa fa-bars"></i></a>
+    <!--/. SideNav slide-out button -->
+
+    <!-- Sidebar navigation -->
+    <mdb-sidenav #sidenav class="fixed customSideNav pr-2 pl-2 pt-2 stylish-color" [fixed]="true">
+        <li>
+            <ul class="collapsible collapsible-accordion">
+                <mdb-squeezebox [multiple]="false" aria-multiselectable="false">
+                    <mdb-item class="no-collase">
+                        <mdb-item-head mdbRippleRadius><a [routerLink]="[ 'cashRegisters', { outlets: { edit: ['selectItem'] } }]" class="nav-link"><i class="fa fa-hand-pointer-o"></i> Cajas</a></mdb-item-head>
+                        <mdb-item-body></mdb-item-body>
+                    </mdb-item>
+                    <mdb-item class="no-collase">
+                        <mdb-item-head mdbRippleRadius><a [routerLink]="[ 'sizes', { outlets: { edit: ['selectItem'] } }]" class="nav-link"><i class="fa fa-hand-pointer-o"></i> Tamaños</a></mdb-item-head>
+                        <mdb-item-body></mdb-item-body>
+                    </mdb-item>
+                    <mdb-item class="no-collase">
+                        <mdb-item-head mdbRippleRadius><a [routerLink]="[ 'paymentTypes', { outlets: { edit: ['selectItem'] } }]" class="nav-link"><i class="fa fa-hand-pointer-o"></i> Formas de Pago</a></mdb-item-head>
+                        <mdb-item-body></mdb-item-body>
+                    </mdb-item>
+                    <mdb-item class="no-collase">
+                        <mdb-item-head mdbRippleRadius><i class="fa fa-hand-pointer-o"></i> Usuarios</mdb-item-head>
+                        <mdb-item-body></mdb-item-body>
+                    </mdb-item>
+                    <mdb-item class="no-collase">
+                        <mdb-item-head mdbRippleRadius><i class="fa fa-hand-pointer-o"></i> Tipos de Usuarios</mdb-item-head>
+                        <mdb-item-body></mdb-item-body>
+                    </mdb-item>
+                    
+                </mdb-squeezebox>
+            </ul>
+        </li>
+        <!--/. Side navigation links -->
+    </mdb-sidenav>
+    <!--/. Sidebar navigation -->
+
+    </div>
+    <div class="col-md-10 col-lg-10">
+        <router-outlet></router-outlet>
+    </div>
+</div>

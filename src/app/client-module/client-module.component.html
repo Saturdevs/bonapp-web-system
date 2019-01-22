@@ -1,0 +1,19 @@
+<!-- Nav tabs -->
+<ul class="nav classic-tabs tabs-primary customLinksColor">
+  <li class="nav-item customFirstLi">
+    <a class="waves-effect"
+    [routerLink]="['clients', { outlets: { edit: ['selectItem'] } }]" routerLinkActive="active">
+        Clientes
+    </a>
+  </li>
+  <li class="nav-item customFirstLi">
+    <a class="waves-effect"
+    [routerLink]="['accountTransactions', { outlets: { edit: ['selectItem'] } }]" routerLinkActive="active">
+        Cuentas Corrientes
+    </a>
+  </li>
+ </ul>
+ <!-- Tab panels -->
+ <div class="tab-content customContentCard">
+    <router-outlet></router-outlet>
+ </div>

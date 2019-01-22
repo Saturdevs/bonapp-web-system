@@ -1,0 +1,100 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div class="container">
+  <header class="major" align="center">
+    <h2>Nuevo Movimiento</h2>
+  </header>
+  <div class="row">
+    <div class="col-md-6">
+      <form #form="ngForm" method="post" novalidate>
+
+        <div class="form-group">
+          <label>Monto:</label>
+          <input #cashFlowAmount="ngModel" required type="number" class="form-control" [class.is-invalid]="cashFlowAmount.invalid && (cashFlowAmount.dirty || cashFlowAmount.touched)" name="cashFlowAmount" 
+                id="cashFlowAmount" [(ngModel)]="newCashFlow.totalAmount">
+        </div>
+
+        <div *ngIf="cashFlowAmount.invalid && (cashFlowAmount.dirty || cashFlowAmount.touched)" class="alert alert-danger">
+          El monto es un campo es requerido.
+        </div>
+
+        <div class="form-group" [class.has-error]="showMessageCashRegister">
+            <label>Caja:</label>
+            <div class="select-wrapper">
+              <select #cashFlowCashRegister="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageCashRegister" name="cashFlowCashRegister" 
+                (blur)="validateCashRegister(cashFlowCashRegister.value)"
+                (change)="validateCashRegister(cashFlowCashRegister.value)"
+                id="cashFlowCashRegister" [(ngModel)]="newCashFlow.cashRegisterId">
+                <option value="default" default>Seleccione la caja...</option>
+                <option [value]="cashRegister._id" *ngFor = 'let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="showMessageCashRegister" class="alert alert-danger">
+          La Caja del Movimiento es requerida.
+        </div>
+
+        <div class="form-group" [class.has-error]="showMessageType">
+            <label>Tipo:</label>
+            <div class="select-wrapper">
+              <select #cashFlowType="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageType" name="cashFlowType" 
+                (blur)="validateType(cashFlowType.value)"
+                (change)="validateType(cashFlowType.value)"
+                id="cashFlowType" [(ngModel)]="newCashFlow.type">
+                <option value="default" default>Seleccione el tipo...</option>
+                <option *ngFor = 'let type of typesArray'>{{ type }}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="showMessageType" class="alert alert-danger">
+          El Tipo de Movimiento es requerido.
+        </div> 
+        
+        <div class="form-group" [class.has-error]="showMessagePaymentType">
+            <label>Tipo de Pago:</label>
+            <div class="select-wrapper">
+              <select #cashFlowPaymentType="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessagePaymentType" name="cashFlowPaymentType" 
+                (blur)="validatePaymentType(cashFlowPaymentType.value)"
+                (change)="validatePaymentType(cashFlowPaymentType.value)"
+                id="cashFlowPaymentType" [(ngModel)]="newCashFlow.paymentType">
+                <option value="default" default>Seleccione el tipo de pago...</option>
+                <option [value]="paymentType._id" *ngFor = 'let paymentType of paymentTypes'>{{ paymentType.name }}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="showMessagePaymentType" class="alert alert-danger">
+          El Tipo de Pago del Movimiento es requerido.
+        </div> 
+        
+        <div class="form-group">
+            <div class="md-form">
+                <textarea mdbActive #cashFlowComment="ngModel" class="md-textarea"
+                id="cashFlowComment" name="cashFlowComment" [(ngModel)]="newCashFlow.comment"></textarea>
+                <label for="cashFlowComment">Comentario:</label>
+            </div>
+        </div>
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="(form.invalid || hasCashRegister || hasType || hasPaymentType)" type="submit" value="Aceptar" class="special" (click)="saveCashFlow()"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+      </form>
+    </div>
+  </div>
+</div>

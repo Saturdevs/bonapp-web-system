@@ -1,0 +1,25 @@
+
+<!-- Nav tabs -->
+<ul class="nav classic-tabs tabs-primary customLinksColor">
+  <li class="nav-item customFirstLi">
+    <a class="waves-effect"
+    [routerLink]="['menu']" routerLinkActive="active">
+        Cartas
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="waves-effect"
+    [routerLink]="['category']" routerLinkActive="active">
+        Categorias
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="waves-effect"
+    [routerLink]="['product']" routerLinkActive="active">Productos
+  </a>
+  </li>
+ </ul>
+ <!-- Tab panels -->
+ <div class="tab-content customContentCard">
+    <router-outlet></router-outlet>
+ </div>

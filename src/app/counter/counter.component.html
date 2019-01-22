@@ -1,0 +1,165 @@
+<div class="container-fluid rounded z-depth-2 blue-grey lighten-4 fix">
+  <div class="row">
+    <div class="col-lg-7 pt-2">
+
+        <div class="card card-cascade narrower childLeft animated fadeIn">
+
+            <!--Card image-->
+            <div class="view card-header customCardCascade narrower py-2 mx-4 mb-1 d-flex justify-content-between align-items-center">
+
+                <a href="" class="white-text mx-3">Estado de Pedidos por Mostrador</a>
+
+                <!--Checkbox butons-->
+                <div class="btn-group" data-toggle="buttons">
+
+                    <label class="btn btn-sm btn-success form-check-label">
+                        <input class="form-check-input btn-sm" type="radio" checked autocomplete="off"> Entregado
+                    </label>
+
+                    <label class="btn btn-sm btn-warning form-check-label">
+                        <input class="form-check-input" type="radio" autocomplete="off"> Pendiente
+                    </label>
+
+                    <label class="btn btn-sm btn-info form-check-label">
+                        <input class="form-check-input" type="radio" autocomplete="off"> Abierto
+                    </label>
+
+                </div>
+
+            </div>
+            <!--/Card image-->
+
+            <div class="px-4">
+
+                <div class="table-wrapper">
+                    <!--Table-->
+                    <table class="table table-hover mb-0" styles="table-layout:fixed;">
+
+                        <!--Table head-->
+                        <thead>
+                            <tr>
+                                <th class="th-lg">Fecha Inicio</th>
+                                <th class="th-lg">Hora Inicio</th>
+                                <th class="th-lg">Dirección</th>
+                                <th class="th-lg">Teléfono</th>
+                                <th class="th-lg">Cliente</th>
+                                <th class="th-lg">Estado</th>
+                                <th class="th-lg">Total</th>
+                            </tr>
+                        </thead>
+                        <!--Table head-->
+
+                        <!--Table body-->
+                        <tbody class="deliveryTbody">
+                            <tr class="table-warning">
+                               <td class="deliveryTd font-italic" nowrap>No existen pedidos realizados.</td>
+                            </tr>
+                            <!--<tr>
+                               <td class="deliveryTd">20/10/2018</td>
+                               <td class="deliveryTd">02:12:36</td>
+                               <td class="deliveryTd">Donado 1026 Bis</td>
+                               <td class="deliveryTd">3364340196</td>
+                               <td class="deliveryTd">Nelly Garcia</td>
+                               <td class="deliveryTd green-text font-weight-bold">Entregado</td>
+                               <td class="deliveryTd">$300</td>
+                            </tr>-->
+                        </tbody>
+                        <!--Table body-->
+                    </table>
+                    <!--Table-->
+                </div>
+
+                <hr class="my-0">
+
+                <!--Bottom Table UI-->
+                <div class="d-flex justify-content-between">
+
+                    <!--Pagination -->
+                    <nav class="my-4">
+                        <ul class="pagination pagination-circle pg-blue mb-0">
+
+                            <!--First-->
+                            <li class="page-item disabled"><a class="page-link">First</a></li>
+
+                            <!--Arrow left-->
+                            <li class="page-item disabled">
+                                <a class="page-link" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            </li>
+
+                            <!--Numbers-->
+                            <li class="page-item active"><a class="page-link">1</a></li>
+                            <li class="page-item"><a class="page-link">2</a></li>
+                            <li class="page-item"><a class="page-link">3</a></li>
+                            <li class="page-item"><a class="page-link">4</a></li>
+                            <li class="page-item"><a class="page-link">5</a></li>
+
+                            <!--Arrow right-->
+                            <li class="page-item">
+                                <a class="page-link" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                            </li>
+
+                            <!--First-->
+                            <li class="page-item"><a class="page-link">Last</a></li>
+
+                        </ul>
+                    </nav>
+                    <!--/Pagination -->
+
+                </div>
+                <!--Bottom Table UI-->
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-5 pt-2">
+      <div class="card childRight animated fadeIn">
+        
+        <div class="divider-new mt-0 mb-4">
+            <h2 class="h3-responsive">
+                <strong>Nuevo Pedido</strong>
+            </h2>
+        </div>
+
+        <form method="post" novalidate>
+            <!-- First Step -->
+            <div class="row setup-content" *ngIf="steps === 1">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="md-form">
+                            <input placeholder="Cliente" formControlName="client" type="text" class="form-control" id="client" mdbInputValidate>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="md-form">
+                                <input placeholder="Piso" formControlName="floor" type="text" class="form-control" id="floor" mdbInputValidate>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="md-form">
+                                <input placeholder="Departamento" formControlName="flat" type="text" class="form-control" id="flat" mdbInputValidate>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-md-12">
+                            <button class="btn btn-indigo btn-block float-right" [disabled]="deliveryOrderForm.invalid" type="button">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>

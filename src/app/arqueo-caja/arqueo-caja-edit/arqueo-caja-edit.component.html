@@ -1,0 +1,126 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='cashCount'>
+  <header class="major" align="center">
+    <h2>Editando:</h2>
+  </header>
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="cashCountForm" method="post" novalidate>
+        
+        <div class="form-group">
+          <label>Caja:</label>
+          <label>{{ cashCount.cashRegister }}</label>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha:</label>
+          <label>{{ cashCount.createdAt | date:'dd/MM/yy HH:mm' }}</label>
+        </div>
+
+        <div class="form-group">
+          <label>Creado por:</label>
+          <label>{{ cashCount.createdBy }}</label>
+        </div>
+
+        <h3>RESUMEN</h3>
+
+        <div class="form-group">
+          <label>Monto Inicial:</label>
+          <label>{{ cashCount.initialAmount }}</label>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <label>Ingresos:</label>
+          <label>{{ totalIngresos }}</label>
+          <hr>
+          <div *ngFor = 'let paymentType of totalsIngresosPaymentTypes'>
+            <div *ngIf = 'paymentType.total > 0'>
+              <label>{{ paymentType.paymentTypeName }}</label>
+              <label>{{ paymentType.total }}</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Egresos:</label>
+          <label *ngIf = 'totalEgresos > 0'>- {{ totalEgresos }}</label>
+          <label *ngIf = 'totalEgresos === 0'>0</label>
+          <hr>
+          <div *ngFor = 'let paymentType of totalsEgresosPaymentTypes'>
+            <div *ngIf = 'paymentType.total > 0'>
+              <label>{{ paymentType.paymentTypeName }}</label>
+              <label>{{ paymentType.total }}</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estimado en Caja:</label>
+          <label>{{ estimatedAmount }}</label>
+        </div>        
+
+        <div *ngIf="cashCount.closedAt === undefined">
+          <div formArrayName="realAmount" *ngFor = 'let paymentTypeCashRegister of realAmount.controls; let i=index'>
+            <div [formGroupName]="i" class="form-group">
+              <label>{{ cashCountForm.get('realAmount').controls[i].controls.paymentTypeName.value }}:</label>
+              <input formControlName="amount" class="form-control" type="number" 
+                    [class.is-invalid]="cashCountForm.get('realAmount').controls[i].controls.amount.invalid && (cashCountForm.get('realAmount').controls[i].controls.amount.dirty || cashCountForm.get('realAmount').controls[i].controls.amount.touched)" 
+                    name="{{ 'cashCountAmount' + i }}" 
+                    id="{{ 'amount' + i }}"
+                    (input)="changeAmount()">
+            </div>
+
+            <div *ngIf="cashCountForm.get('realAmount').controls[i].controls.amount.invalid && (cashCountForm.get('realAmount').controls[i].controls.amount.dirty || cashCountForm.get('realAmount').controls[i].controls.amount.touched)" class="alert alert-danger">
+              Este es un campo es requerido.
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="cashCount.closedAt !== undefined">
+          <div class="form-group">
+            <label>Real en Caja</label>
+            <label>{{ realAmountTotal }}</label>
+          </div>
+
+          <div class="form-group" *ngFor='let typeOfPayment of paymentDetail'>
+            <label>{{ typeOfPayment.paymentTypeName }}</label>
+            <label>{{ typeOfPayment.paymentAmount }}</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="md-form">
+              <textarea mdbActive formControlName="comment" class="md-textarea" id="comment"></textarea>
+              <label for="cashCountComment">Comentario:</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Diferencia:</label>
+          <label>{{ difference }}</label>
+        </div>
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="cashCountForm.invalid" type="submit" value="Finalizar Arqueo" class="special" (click)="updateCashCount()"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+      </form>
+    </div>
+  </div>
+</div>

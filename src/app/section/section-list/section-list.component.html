@@ -1,0 +1,37 @@
+<!-- Nav tabs -->
+<div class="pageTitle" *ngIf='sections.length === 0'>
+  <div style="float: left">
+      <header class="major">
+              <h5>Configuracion de secciones y mesas</h5>
+      </header>
+  </div>
+  <div style="float: right" *ngIf='settingsActive === true'>
+    <app-section-new (notifyParent)="reloadSections($event)"></app-section-new>  
+  </div>
+</div>
+<div class="col-md-12 col-lg-12 col-sm-12 row stylish-color customLinksColor mr-0 ml-0 pr-0 pl-0">
+  <div class="col-md-7 col-lg-7 col-sm-7 mr-0 ml-0 pr-0 pl-0">
+    <ul class="nav classic-tabs stylish-color customLinksColor" *ngIf='sections.length !== 0'>
+      <li *ngFor='let section of sections; let i=index' class="nav-item customFirstLi">
+        <a class="waves-effect" id="{{ 'tab' + i }}" [routerLink] ="['tables', section._id]" routerLinkActive="active">
+              {{section.name}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 center-pills mr-0 ml-0 pr-4 pl-0">
+    <div class="float-right">
+      <span class="badge badge-pill green">Libre</span>
+      <span class="badge badge-pill red ">Ocupada</span>
+      <span class="badge badge-pill yellow customButtonText">Comandada</span>
+      <span class="badge badge-pill blue">Reservada</span>
+    </div>      
+  </div>
+  <div class="col-md-1 col-lg-1 col-sm-1 mr-0 ml-0 pr-0 pl-0" *ngIf='settingsActive === true'>
+    <app-section-new class="float-right customButton" (notifyParent)="reloadSections($event)"></app-section-new>
+  </div>
+</div>
+<!-- Tab panels -->
+<div class="tab-content customContentCard">
+  <router-outlet></router-outlet>
+</div>

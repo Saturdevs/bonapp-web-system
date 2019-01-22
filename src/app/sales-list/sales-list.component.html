@@ -1,0 +1,26 @@
+
+<!-- Nav tabs -->
+<ul class="nav classic-tabs tabs-primary customLinksColor">
+  <li class="nav-item customFirstLi">
+    <a class="waves-effect"
+    [routerLink]="['sales-list']" routerLinkActive="active">
+        Ventas
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="waves-effect"
+    [routerLink]="['cash-flows', { outlets: { edit: ['selectItem'] } }]" routerLinkActive="active">
+        Movimientos de Caja
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="waves-effect"
+    [routerLink]="['cash-counts', { outlets: { edit: ['selectItem'] } }]" routerLinkActive="active">
+      Arqueos de Caja
+    </a>
+  </li>
+ </ul>
+ <!-- Tab panels -->
+ <div class="tab-content customContentCard">
+    <router-outlet></router-outlet>
+ </div>

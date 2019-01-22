@@ -1,0 +1,72 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='category'>
+  <header class="major" align="center">
+    <h2>Editando: {{categoryNameModified}}</h2>
+  </header>
+  <div class="posts">
+    <article>
+      <a href="#" class="image"><img [src]='category.picture' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
+    </article>
+    <article>
+    
+      <form #form="ngForm" method="post" novalidate>
+
+        <div class="form-group">
+          <label>Nombre Categoría:</label>
+          <input #categoryName="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)" name="categoryName" 
+                id="categoryName" [(ngModel)]="category.name">
+        </div>
+
+        <div *ngIf="categoryName.invalid && (categoryName.dirty || categoryName.touched)" class="alert alert-danger">
+          El nombre de la Categoría es requerido.
+        </div>
+
+        <div class="form-group">
+            <label>Menu:</label>
+            <div class="select-wrapper">
+              <select #categoryMenu="ngModel" required type="text" class="form-control" [class.is-invalid]="hasCategory" name="categoryMenu" 
+                (blur)="validateCategory(categoryMenu.value)"
+                (change)="validateCategory(categoryMenu.value)"
+                id="categoryMenu" [(ngModel)]="category.menuId">
+                <option value="default">Seleccione la carta...</option>
+                <option [value]="menu._id" *ngFor = 'let menu of menus'>{{menu.name}}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="hasCategory" class="alert alert-danger">
+          El Menu de la Categoría es requerido.
+        </div>
+
+        <div class="form-group">
+          <label>Imagen Categoría:</label>
+          <input #categoryPic="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryPic.invalid && (categoryPic.dirty || categoryPic.touched)" name="categoryPic" 
+                id="categoryPic" [(ngModel)]="category.picture">
+        </div>
+
+        <div *ngIf="categoryPic.invalid && (categoryPic.dirty || categoryPic.touched)" class="alert alert-danger">
+          La imagen de la Categoría es requerida.
+        </div>     
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special" (click)="updateCategory(category)"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+      </form>
+    </article>
+  </div>
+</div>

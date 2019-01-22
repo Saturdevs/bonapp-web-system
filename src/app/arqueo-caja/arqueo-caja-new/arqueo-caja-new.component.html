@@ -1,0 +1,76 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">{{ errorTitle }}</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div class="container">
+  <header class="major" align="center">
+    <h2>Nuevo Arqueo de Caja</h2>
+  </header>
+  <div class="row">
+    <div class="col-md-6">
+      <form #form="ngForm" method="post" novalidate>
+
+        <div class="form-group">
+          <label>Hora de Apertura:</label>
+          <input #arqueoDateCreatedAt="ngModel" required type="date" class="form-control" [class.is-invalid]="arqueoDateCreatedAt.invalid && (arqueoDateCreatedAt.dirty || arqueoDateCreatedAt.touched)" name="arqueoDateCreatedAt" 
+                id="arqueoDateCreatedAt" [(ngModel)]="dateCreated_at">
+
+          <input #arqueoHourCreatedAt="ngModel" required type="time" class="form-control" [class.is-invalid]="arqueoHourCreatedAt.invalid && (arqueoHourCreatedAt.dirty || arqueoHourCreatedAt.touched)" name="arqueoHourCreatedAt" 
+                id="arqueoHourCreatedAt" [(ngModel)]="hourCreated_at">                
+        </div>
+
+        <div *ngIf="(arqueoDateCreatedAt.invalid && (arqueoDateCreatedAt.dirty || arqueoDateCreatedAt.touched)) || (arqueoHourCreatedAt.invalid && (arqueoHourCreatedAt.dirty || arqueoHourCreatedAt.touched))"
+             class="alert alert-danger">
+          La fecha es un campo es requerido.
+        </div>
+
+        <div class="form-group">
+          <label>Monto Inicial:</label>
+          <input #arqueoInitialAmount="ngModel" required type="number" class="form-control" [class.is-invalid]="arqueoInitialAmount.invalid && (arqueoInitialAmount.dirty || arqueoInitialAmount.touched)" name="arqueoInitialAmount" 
+                id="arqueoInitialAmount" [(ngModel)]="newArqueo.initialAmount">
+        </div>
+
+        <div *ngIf="arqueoInitialAmount.invalid && (arqueoInitialAmount.dirty || arqueoInitialAmount.touched)" class="alert alert-danger">
+          El monto inicial es un campo es requerido.
+        </div>
+
+        <div class="form-group" [class.has-error]="showMessageCashRegister" *ngIf="lengthCashRegister === true">
+            <label>Caja:</label>
+            <div class="select-wrapper">
+              <select #arqueoCashRegister="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageCashRegister" name="arqueoCashRegister" 
+                (blur)="validateCashRegister(arqueoCashRegister.value)"
+                (change)="validateCashRegister(arqueoCashRegister.value)"
+                id="arqueoCashRegister" [(ngModel)]="newArqueo.cashRegisterId">
+                <option value="default" default>Seleccione la caja...</option>
+                <option [value]="cashRegister._id" *ngFor = 'let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="showMessageCashRegister" class="alert alert-danger">
+          La Caja es requerida.
+        </div>   
+        
+        <div *ngIf="errorArqueo === true" class="alert alert-danger">
+          {{ errorMsg }}
+        </div>          
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="(form.invalid || hasCashRegister)" type="submit" value="Aceptar" class="special" (click)="validate()"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+      </form>
+    </div>
+  </div>
+</div>

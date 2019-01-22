@@ -1,0 +1,62 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='menu'>
+  <header class="major" align="center">
+    <h2>Editando: {{menuNameModified}}</h2>
+  </header>
+  <div class="posts">
+    <article>
+      <a href="#" class="image"><img [src]='menu.picture' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
+    </article>
+    <article>
+    
+      <form #form="ngForm" method="post" novalidate>
+
+        <div class="form-group" *ngIf="canEdit === true">
+          <label>Nombre Carta:</label>
+          <input #menuName="ngModel" required type="text" class="form-control" [class.is-invalid]="menuName.invalid && (menuName.dirty || menuName.touched)" name="menuName" 
+                id="menuName" [(ngModel)]="menu.name">
+        </div>
+
+        <div class="form-group" *ngIf="canEdit === false">
+          <label>Nombre Carta:</label>
+          <label>{{ menu.name }}</label>
+        </div>
+
+        <div *ngIf="menuName.invalid && (menuName.dirty || menuName.touched)" class="alert alert-danger">
+          El nombre de la carta es requerido.
+        </div>
+
+        <div class="form-group">
+          <label>Imagen Carta:</label>
+          <input #menuPic="ngModel" required type="text" class="form-control" [class.is-invalid]="menuPic.invalid && (menuPic.dirty || menuPic.touched)" name="menuPic" 
+                id="menuPic" [(ngModel)]="menu.picture">
+        </div>
+
+        <div *ngIf="menuPic.invalid && (menuPic.dirty || menuPic.touched)" class="alert alert-danger">
+          La imagen de la carta es requerida.
+        </div>    
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="form.invalid" type="submit" value="Aceptar" class="special" (click)="updateMenu(menu)"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+
+      </form>
+    </article>
+  </div>
+</div>
+

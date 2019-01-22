@@ -1,0 +1,69 @@
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div class="container">
+  <header class="major" align="center">
+    <h2>{{ pageTitle }}</h2>
+  </header>
+  <div class="row">
+    <div class="col-md-6">
+      <form #form="ngForm" method="post" novalidate>
+
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input #clientName="ngModel" required type="text" class="form-control" [class.is-invalid]="clientName.invalid && (clientName.dirty || clientName.touched)" name="clientName" 
+                id="clientName" [(ngModel)]="newClient.name">
+        </div>
+
+        <div *ngIf="clientName.invalid && (clientName.dirty || clientName.touched)" class="alert alert-danger">
+          El nombre es un campo es requerido.
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input #clientTel="ngModel" type="text" class="form-control" [class.is-invalid]="clientTel.invalid && (clientTel.dirty || clientTel.touched)" name="clientTel" 
+                id="clientTel" [(ngModel)]="newClient.tel">
+        </div>
+        
+        <div class="form-group">
+          <label>Dirección:</label>
+          <input #clientAddressStreet="ngModel" type="text" class="form-control" name="clientAddressStreet" 
+                id="clientAddressStreet" [(ngModel)]="newClient.addressStreet"
+                placeholder="Calle">
+
+          <br>
+          
+          <input #clientAddressNumber="ngModel" type="text" class="form-control" name="clientAddressNumber" 
+                id="clientAddressNumber" [(ngModel)]="newClient.addressNumber"
+                placeholder="Número">
+
+          <input #clientAddressDpto="ngModel" type="text" class="form-control" name="clientAddressDpto" 
+                id="clientAddressDpto" [(ngModel)]="newClient.addressDpto"
+                placeholder="Piso / Dpto">
+        </div>
+
+        <div class="md-form">
+            <input mdbDeepDirective [(ngModel)]="newClient.enabledTransactions" type="checkbox" name="checkEnabledTransactions" id="checkEnabledTransactions">
+            <label for="checkEnabledTransactions">Tiene Cta Cte</label>
+        </div>
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="(form.invalid)" type="submit" value="Aceptar" class="special" (click)="saveClient()"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+      </form>
+    </div>
+  </div>
+</div>
