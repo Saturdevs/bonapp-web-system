@@ -57,6 +57,10 @@
               <span class="custom-control-description">Caja por defecto</span>
             </label>
           </div>
+
+          <div *ngIf="errorArqueo === true" class="alert alert-danger">
+            {{ errorMsg }}
+          </div>   
   
           <div class="">
             <ul class="actions" align="center">

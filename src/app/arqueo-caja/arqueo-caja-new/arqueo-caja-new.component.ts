@@ -166,18 +166,19 @@ export class ArqueoCajaNewComponent implements OnInit {
         {
           this.errorArqueo = true;
           this.errorMsg = this.errorArqueoOpen;
-        } else {
+        } else {          
           let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
           let dateCreatedAt = new Date(stringDate);
           let currentDate = new Date();
 
-          if (dateCreatedAt > currentDate) {   
+          if (dateCreatedAt > currentDate) {  
             this.errorArqueo = true;
             this.errorMsg = this.errorDateArqueoCurrentDateMsg;
           } else {
             this._arqueoService.getLastArqueoByCashRegister(this.newArqueo.cashRegisterId)
               .subscribe(lastArqueo => {
                 if (!isNullOrUndefined(lastArqueo)) {
+                  console.log("c")
                   let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
                   let dateCreatedAt = new Date(stringDate);
                   let lastDate = new Date(lastArqueo.closedAt)
@@ -188,7 +189,9 @@ export class ArqueoCajaNewComponent implements OnInit {
                   } else {
                     this.saveArqueo();
                   }
-                }
+                } else {
+                  this.saveArqueo();
+                }            
               },
               error => {
                 this.errorTitle = this.errorService;

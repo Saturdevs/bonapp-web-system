@@ -9,6 +9,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
+import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-cash-register-edit',
@@ -23,12 +25,17 @@ export class CashRegisterEditComponent implements OnInit {
   cashRegister: CashRegister;
   cashRegisterNameModified: String;
   cashRegisterDefault: Boolean;
+  cashRegisterAvailable: Boolean;
   errorMessage: string;
   cashRegisterForm: FormGroup;
+  errorArqueo: Boolean = false;
+  errorMsg: string;
+  errorArqueoOpen = "Esta caja tiene un arqueo abierto y no puede ser marcada como inactiva hasta que el mismo sea cerrado."
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _cashRegisterService: CashRegisterService,
+              private _cashCountService: ArqueoCajaService,
               private modalService: BsModalService,
               private formBuilder: FormBuilder) { }
 
@@ -49,6 +56,31 @@ export class CashRegisterEditComponent implements OnInit {
 
   updateCashRegister() {
     let cashRegisterUpdate = Object.assign({}, this.cashRegister, this.cashRegisterForm.value);
+
+    if (cashRegisterUpdate.available === false)
+    {
+      this._cashCountService.getArqueoOpenByCashRegister(cashRegisterUpdate._id).subscribe(
+        arqueo => 
+        {
+          if (!isNullOrUndefined(arqueo))
+          {
+            this.errorArqueo = true;
+            this.errorMsg = this.errorArqueoOpen;          
+          }
+          else
+          {
+            this.callUpdateCashRegisterServiceMethod(cashRegisterUpdate);
+          }
+        }
+      )
+    }
+    else
+    {
+      this.callUpdateCashRegisterServiceMethod(cashRegisterUpdate);
+    }
+  }
+
+  callUpdateCashRegisterServiceMethod(cashRegisterUpdate) {    
     this._cashRegisterService.updateCashRegister(cashRegisterUpdate).subscribe(
         cashRegister => 
         { 
@@ -99,6 +131,7 @@ export class CashRegisterEditComponent implements OnInit {
     this.cashRegister = cashRegister;
     this.cashRegisterNameModified = this.cashRegister.name;
     this.cashRegisterDefault = this.cashRegister.default;
+    this.cashRegisterAvailable = this.cashRegister.available;
     this.cashRegisterForm.patchValue({
       name: this.cashRegister.name,
       available: this.cashRegister.available,
