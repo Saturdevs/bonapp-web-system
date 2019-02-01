@@ -54,7 +54,7 @@ export class CashRegisterEditComponent implements OnInit {
     )
   }
 
-  updateCashRegister() {
+  validate() {
     let cashRegisterUpdate = Object.assign({}, this.cashRegister, this.cashRegisterForm.value);
 
     if (cashRegisterUpdate.available === false)
@@ -69,18 +69,18 @@ export class CashRegisterEditComponent implements OnInit {
           }
           else
           {
-            this.callUpdateCashRegisterServiceMethod(cashRegisterUpdate);
+            this.updateCashRegister(cashRegisterUpdate);
           }
         }
       )
     }
     else
     {
-      this.callUpdateCashRegisterServiceMethod(cashRegisterUpdate);
+      this.updateCashRegister(cashRegisterUpdate);
     }
   }
 
-  callUpdateCashRegisterServiceMethod(cashRegisterUpdate) {    
+  updateCashRegister(cashRegisterUpdate) {    
     this._cashRegisterService.updateCashRegister(cashRegisterUpdate).subscribe(
         cashRegister => 
         { 
