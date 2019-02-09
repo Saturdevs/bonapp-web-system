@@ -187,15 +187,15 @@ export class TableListComponent implements OnInit{
 		let i;
 		let dashconf = [];
 		//Obtenemos las mesas y asignamos al array boxes que se utiliza para mostrar las mesas en el ngFor.			
-		for (i = 0; i < this.tablesNow.length; i++) {
+		for (i = 0; i < this.tablesNow.length; i++) {			
 			dashconf.push({ 'col': this.tablesNow[i].col, 'row': this.tablesNow[i].row, 'sizex': this.tablesNow[i].sizex, 'sizey': this.tablesNow[i].sizey});
 			const conf = dashconf[i];
 			conf.payload = 1 + i;
 			this.boxes[i] = { id: this.tablesNow[i].number, config: conf, status: this.tablesNow[i].status};
 		}
 
-		if (!this.tablesTotal) {
-			this.curNum = 0
+		if (this.tablesTotal.length === 0) {
+			this.curNum = 1;
 		} 
 		else {
 			this.curNum = this.tablesTotal[this.tablesTotal.length - 1].number + 1;				
