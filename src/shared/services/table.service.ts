@@ -49,6 +49,12 @@ export class TableService {
            .catch(this.handleError);
   }
 
+  deleteTableByNumber(tableNumber){
+    return this.apiService.delete(`/table/${tableNumber}/byNumber`)
+           .map(data =>data.table)
+           .catch(this.handleError);
+  }
+
   saveTable(table){
     return this.apiService.post('/table', table)
           .map(data => data.table)

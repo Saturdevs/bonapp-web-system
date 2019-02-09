@@ -61,7 +61,7 @@ export class TableListComponent implements OnInit{
 	blue: Boolean;
 	yellow: Boolean;
 	selectedTable: Number;
-	idTableDelete: any;
+	tableNumberDelete: number;
 
 	constructor(private _router: Router,
 							private _tableService: TableService,
@@ -74,8 +74,6 @@ export class TableListComponent implements OnInit{
 		//this.tablesNow = this._route.snapshot.data['tables'];
 		this._route.data.subscribe(
 			data => { 
-				this.tablesNow = [];
-				this.boxes = [];
 				this.addedTables = [];
 				this.tablesNow = data['tables'];
 				this.tablesTotal = data['totalTables'];
@@ -186,8 +184,12 @@ export class TableListComponent implements OnInit{
 	private _setDashConfig() {	
 		let i;
 		let dashconf = [];
+		this.boxes = [];
 		//Obtenemos las mesas y asignamos al array boxes que se utiliza para mostrar las mesas en el ngFor.			
-		for (i = 0; i < this.tablesNow.length; i++) {			
+		console.log("dashconfig")
+		console.log(this.tablesNow);
+		for (i = 0; i < this.tablesNow.length; i++) {	
+			console.log(i)		
 			dashconf.push({ 'col': this.tablesNow[i].col, 'row': this.tablesNow[i].row, 'sizex': this.tablesNow[i].sizex, 'sizey': this.tablesNow[i].sizey});
 			const conf = dashconf[i];
 			conf.payload = 1 + i;
@@ -233,10 +235,10 @@ export class TableListComponent implements OnInit{
 		}		
 	}
 
-	showDeleteModal(deleteTemplate: TemplateRef<any>, tableId: any){
+	showDeleteModal(deleteTemplate: TemplateRef<any>, tableNumber: number){
 		console.log("settings")
 		if (this.settingsActive === true) {
-			this.idTableDelete = tableId;
+			this.tableNumberDelete = tableNumber;
 			this.modalRef = this.modalService.show(deleteTemplate, {backdrop: true});
 		}	
 	}
@@ -248,11 +250,30 @@ export class TableListComponent implements OnInit{
 
 	deleteTable(){
     if (this.closeModal()){
-      this._tableService.deleteTable(this.idTableDelete).subscribe( success=> {
-        this._setDashConfig();
+      this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe( success=> {
+				console.log("delete")
+        this.getTables();
       });
     }
-  }
+	}
+	
+	getTables() {
+		console.log("gettables")
+		this._tableService.getAll().subscribe(
+			allTables => {
+				console.log("alltables")
+				this.tablesTotal = allTables;
+				this._tableService.getTablesBySection(this._route.snapshot.params['id']).subscribe(
+					sectionTables => {
+						console.log("sectiontables")
+						this.tablesNow = sectionTables;
+						this._setDashConfig();
+					}
+				)
+			},
+			error => this.errorMessage = <any>error
+		)
+	}
 
 	closeModal(){
         this.modalRef.hide();
