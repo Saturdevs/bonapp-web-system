@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgGrid, NgGridItem, NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 
@@ -61,6 +61,7 @@ export class TableListComponent implements OnInit{
 	blue: Boolean;
 	yellow: Boolean;
 	selectedTable: Number;
+	idTableDelete: any;
 
 	constructor(private _router: Router,
 							private _tableService: TableService,
@@ -218,21 +219,40 @@ export class TableListComponent implements OnInit{
 
 	}
 
-	showOpenOrderModal(template,tableId){
-		let currentBox = this.boxes.find(x=> x.id == tableId); 
-		this.selectedTable = tableId;
-		if(currentBox.status == "Libre"){
-			this.modalRef = this.modalService.show(template, {backdrop: true});
-		}
-		if(currentBox.status == "Ocupada"){
-			this._router.navigate(['./orders/orderNew', tableId]);
+	showOpenOrderModal(openNewOrderTemplate: TemplateRef<any>, tableId: any){
+		console.log("orders")
+		if (this.ordersActive === true) {
+			let currentBox = this.boxes.find(x=> x.id == tableId); 
+			this.selectedTable = tableId;
+			if(currentBox.status == "Libre"){
+				this.modalRef = this.modalService.show(openNewOrderTemplate, {backdrop: true});
+			}
+			if(currentBox.status == "Ocupada"){
+				this._router.navigate(['./orders/orderNew', tableId]);
+			}
 		}		
 	}
 
+	showDeleteModal(deleteTemplate: TemplateRef<any>, tableId: any){
+		console.log("settings")
+		if (this.settingsActive === true) {
+			this.idTableDelete = tableId;
+			this.modalRef = this.modalService.show(deleteTemplate, {backdrop: true});
+		}	
+	}
+	
 	newOrder(){
 		this.closeModal();
 		this._router.navigate(['./orders/orderNew', this.selectedTable]);
 	}
+
+	deleteTable(){
+    if (this.closeModal()){
+      this._tableService.deleteTable(this.idTableDelete).subscribe( success=> {
+        this._setDashConfig();
+      });
+    }
+  }
 
 	closeModal(){
         this.modalRef.hide();
