@@ -1,10 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Section } from '../../../shared/models/section';
 
 import { SectionService } from '../../../shared/services/section.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SectionNewComponent } from '../section-new/section-new.component';
+//import { SectionDeleteComponent } from './../section-delete/section-delete.component';
 
 @Component({
   selector: 'app-section-list',
@@ -15,12 +18,15 @@ export class SectionListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(SectionNewComponent)
   private newSection: SectionNewComponent;
-
+  public modalRef: BsModalRef;
   private sections: Array<Section>;
   settingsActive: Boolean;
   ordersActive: Boolean;
+  idSectionDelete: any;
+  activeSection: any;
   
   constructor(private _sectionService: SectionService,
+              private modalService: BsModalService,
               private _route: ActivatedRoute,
               private _router: Router ) { }
 
@@ -37,7 +43,8 @@ export class SectionListComponent implements OnInit, AfterViewInit {
 		
 		if(this.isOrdersActive()) {
 			this.ordersActive = true;
-		}    
+    }    
+    
   }
   
   ngAfterViewInit(): void {
@@ -61,4 +68,30 @@ export class SectionListComponent implements OnInit, AfterViewInit {
           });
       }
   }
+
+  setActiveSection(activeSection: any){
+    this.activeSection = activeSection;
+    console.log(activeSection);
+  } 
+
+  showModalDelete(template: TemplateRef<any>, section: any){
+    this.idSectionDelete = section._id;
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+  }
+
+  deleteSection(){
+    if (this.closeModal()){
+      this._sectionService.deleteSection(this.idSectionDelete).subscribe( success=> {
+        this.reloadSections(true);
+        this.activeSection = null;
+      });
+    }
+  }
+  
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+    return true;     
+  } 
+
 }

@@ -48,7 +48,7 @@ export class SectionNewComponent implements OnInit {
       this._router.navigate(['/settings/section/tables']);
     }
   
-    showModalError(errorTemplate: TemplateRef<any>){
+  showModalError(errorTemplate: TemplateRef<any>){
       this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
   }
   
