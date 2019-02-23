@@ -6,7 +6,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { SectionNewComponent } from './section-new/section-new.component';
 import { SectionEditComponent } from './section-edit/section-edit.component';
 import { SectionListComponent } from './section-list/section-list.component';
-import { SectionDeleteComponent } from './section-delete/section-delete.component';
 import { TableListComponent } from '../table/table-list/table-list.component';
 
 import { SectionListResolverService } from './section-list/section-list-resolver.service';
@@ -23,8 +22,7 @@ import { SectionService } from '../../shared/services/section.service';
   declarations: [
     SectionNewComponent, 
     SectionEditComponent, 
-    SectionListComponent, 
-    SectionDeleteComponent
+    SectionListComponent
   ],
   providers: [ 
     SectionListResolverService,
