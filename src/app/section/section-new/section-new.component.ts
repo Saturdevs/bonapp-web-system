@@ -40,8 +40,7 @@ export class SectionNewComponent implements OnInit {
 
   ngOnInit() {
     this.sectionForm = this.formBuilder.group({
-      name: ['', Validators.required],      
-      available: true   
+      name: ['', Validators.required]  
     });
     //this.newSection = new Section(); 
   }
