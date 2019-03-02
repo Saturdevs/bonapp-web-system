@@ -16,7 +16,10 @@
             <header class="major">
                     <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
-            <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['newSize'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Tamaño</a>
+            <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['newSize'] } }]" 
+                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> 
+                + Nuevo Tamaño
+            </a>
         </div>
         <div class="row ml-1">
             <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">

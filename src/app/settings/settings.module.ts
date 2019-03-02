@@ -8,6 +8,8 @@ import { TableListComponent } from '../table/table-list/table-list.component';
 import { GeneralSettingsComponent } from '../general-settings/general-settings.component';
 import { SectionListComponent } from '../section/section-list/section-list.component';
 import { SectionNewComponent } from '../section/section-new/section-new.component';
+import { SectionEditComponent } from '../section/section-edit/section-edit.component';
+import { SectionListConfigComponent } from '../section/section-list-config/section-list-config.component';
 import { SizeListComponent } from '../size/size-list/size-list.component';
 import { SizeNewComponent } from '../size/size-new/size-new.component';
 import { SizeEditComponent } from '../size/size-edit/size-edit.component';
@@ -23,12 +25,14 @@ import { TableListGuardService } from '../table/table-list/table-list-guard.serv
 import { TableListResolverService } from '../table/table-list/table-list-resolver.service';
 import { TableAllResolverService } from '../table/table-list/table-all-resolver.service';
 import { SectionListResolverService } from '../section/section-list/section-list-resolver.service';
+import { SectionEditResolverService } from '../section/section-edit/section-edit-resolver.service';
 import { SizeResolverService } from '../size/size-list/size-resolver.service';
 import { SizeEditResolverService } from '../size/size-edit/size-edit-resolver.service';
 import { PaymentTypeResolverService } from '../payment-type/payment-type-list/payment-type-resolver.service';
 import { PaymentTypeEditResolverService } from '../payment-type/payment-type-edit/payment-type-edit-resolver.service';
 import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
 import { CashRegisterEditResolverService } from '../cash-register/cash-register-edit/cash-register-edit-resolver.service';
+
 
 @NgModule({
   imports: [
@@ -104,6 +108,29 @@ import { CashRegisterEditResolverService } from '../cash-register/cash-register-
                   {
                     path: 'newCashRegister',
                     component: CashRegisterNewComponent,
+                    outlet: 'edit'
+                  },
+                  {
+                    path: 'selectItem',
+                    component: SelectItemComponent,
+                    outlet: 'edit'
+                  } 
+                ]                                                 
+              },
+              {
+                path: 'sections',                
+                component: SectionListConfigComponent,
+                resolve: { sections: SectionListResolverService },
+                children: [
+                  {
+                    path: 'editSection/:id',
+                    component: SectionEditComponent,
+                    resolve: { section: SectionEditResolverService },
+                    outlet: 'edit'
+                  },
+                  {
+                    path: 'newSection',
+                    component: SectionNewComponent,
                     outlet: 'edit'
                   },
                   {

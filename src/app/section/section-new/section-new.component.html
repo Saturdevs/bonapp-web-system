@@ -10,13 +10,60 @@
   </div>
 </ng-template>
 
+<ng-template #cancelTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title">Cancelar Cambios</h4>
+    </div>
+    <div class="modal-body">
+      ¿Está seguro que desea salir sin guardar los cambios?
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="button special" (click)="cancel()">Ok</button>
+      <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+    </div>
+</ng-template>
+
+<!-- Form -->
+<div class="animated fadeIn" *ngIf='section'>
+    <div class="card card-cascade customHeightCard">
+        <div class="view overlay hm-white-slight waves-light customCardCascade text-center pt-3 pl-3 pr-3 pb-3" mdbRippleRadius>
+          <h3>{{ pageTitle }}</h3>
+        </div>
+        <div class="card-body customHeightCard"> 
+          <form method="post" novalidate [formGroup]="sectionForm">
+            <div class="md-form mt-3">
+              <input mdbActive formControlName="name" type="text" class="form-control" 
+                [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)" 
+                id="name">
+              <label for="name">Nombre:</label>
+              <div *ngIf="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)" 
+                class="alert alert-danger">
+              El nombre de la Sala es requerido.
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="options">
+                <button class="btn btn-primary waves-light" type="button"  value="Cancel" 
+                  (click)="showModalCancel(cancelTemplate)" mdbRippleRadius>Cancelar</button>
+                <button class="btn btn-primary waves-light" [disabled]="sectionForm.invalid" type="button" value="Guardar" 
+                  (click)="saveSection()" mdbRippleRadius>Aceptar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>
+
+<!--
 <div class="customButtonAlternative">
-<a class="btn btn-primary btn-sm waves-light customButton" data-toggle="modal" data-target="#basicExample" (click)="fluid.show()" mdbRippleRadius>
+<a class="btn btn-primary btn-sm waves-light customButton" data-toggle="modal" data-target="#basicExample" 
+  (click)="fluid.show()" mdbRippleRadius>
   + Nueva Sala
 </a>
 </div>
 
-<div mdbModal #fluid="mdb-modal" class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div mdbModal #fluid="mdb-modal" class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" 
+  aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-full-height modal-right" role="document">
       <div class="modal-content">
           <div class="modal-header secondary-color">
@@ -45,4 +92,4 @@
       </div>
   </div>
 </div>
-        
+-->

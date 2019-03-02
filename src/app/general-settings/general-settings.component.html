@@ -37,7 +37,10 @@
                         <mdb-item-head mdbRippleRadius><i class="fa fa-hand-pointer-o"></i> Tipos de Usuarios</mdb-item-head>
                         <mdb-item-body></mdb-item-body>
                     </mdb-item>
-                    
+                    <mdb-item class="no-collase">
+                        <mdb-item-head mdbRippleRadius><a [routerLink]="[ 'sections', { outlets: { edit: ['selectItem'] } }]"  class="nav-link"><i class="fa fa-hand-pointer-o"></i> Salas</a></mdb-item-head>
+                        <mdb-item-body></mdb-item-body>
+                    </mdb-item>                  
                 </mdb-squeezebox>
             </ul>
         </li>
