@@ -1,3 +1,55 @@
-<p>
-  section-edit works!
-</p>
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
+  </div>
+  <div class="modal-body">
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #cancelTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Cancelar Cambios</h4>
+  </div>
+  <div class="modal-body">
+    ¿Está seguro que desea cancelar los cambios?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="cancel()">Ok</button>
+    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+  </div>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='section'>
+  <header class="major" align="center">
+    <h2>Editando: {{sectionNameModified}}</h2>
+  </header>
+  <div class="posts">
+        
+      <form method="post" novalidate [formGroup]="sectionForm">
+
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input formControlName="name" type="text" class="form-control" 
+            [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
+                id="name">
+        </div>
+
+        <div *ngIf="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)" 
+          class="alert alert-danger">
+          El nombre de la Sala es requerido.
+        </div>   
+
+        <div class="">
+          <ul class="actions" align="center">
+            <li><input [disabled]="sectionForm.invalid" type="submit" value="Aceptar" class="special" (click)="updateSection()"/></li>
+            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
+          </ul>
+        </div>    
+      </form>
+  </div>
+</div>
