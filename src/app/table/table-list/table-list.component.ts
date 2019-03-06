@@ -8,6 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { Table } from '../../../shared/models/table'
 import { TableService } from '../../../shared/services/table.service';
 import { ToastService } from 'ng-mdb-pro/pro/alerts';
+import { isNullOrUndefined } from 'util';
 
 interface Box {
     id: number;
@@ -196,7 +197,7 @@ export class TableListComponent implements OnInit{
 			this.boxes[i] = { id: this.tablesNow[i].number, config: conf, status: this.tablesNow[i].status};
 		}
 
-		if (this.tablesTotal.length === 0) {
+		if (isNullOrUndefined(this.tablesTotal) || this.tablesTotal.length === 0) {
 			this.curNum = 1;
 		} 
 		else {

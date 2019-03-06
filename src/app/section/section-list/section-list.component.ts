@@ -5,6 +5,7 @@ import { Section } from '../../../shared/models/section';
 import { SectionService } from '../../../shared/services/section.service';
 
 import { SectionNewComponent } from '../section-new/section-new.component';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-section-list',
@@ -41,7 +42,10 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   }
   
   ngAfterViewInit(): void {
-    document.getElementById("tab0").click();
+    if (!isNullOrUndefined(document.getElementById("tab0").click()))
+    {
+      document.getElementById("tab0").click();
+    }
   }
 
   isSettingsActive() {
