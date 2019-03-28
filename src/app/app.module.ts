@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +26,7 @@ import { ClientAccountTransactionsModule } from './client-account-transactions/c
 import { SupplierModuleModule } from './supplier-module/supplier-module.module';
 import { SupplierModule } from './supplier/supplier.module';
 import { SharedModule } from './../shared/shared.module';
+import { FileInputModule } from './file-input/file-input.module';
 
 import { AppComponent } from './app.component';
 import { CounterComponent } from './counter/counter.component';
@@ -63,9 +64,10 @@ import { SelectItemComponent } from './select-item/select-item.component';
     SupplierModuleModule,
     SupplierModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
+    FileInputModule
   ],
-  schemas: [ NO_ERRORS_SCHEMA ],
+  schemas: [ NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

@@ -1,0 +1,11 @@
+<form>
+  <div class="file-field md-form">
+    <div mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect>
+      <span>Choose file</span>
+      <input type="file" (change)="onFileChange($event)" mdbFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" accept="{{allowedTypes}}">
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path" type="text" placeholder="Upload your file" [value]="showFiles()">
+    </div>
+  </div>
+</form>

@@ -13,25 +13,27 @@ import { ProductNewGuardService } from './product-new/product-new-guard.service'
 import { ProductResolverService } from './product-list/product-resolver.service';
 import { ProductModifyResolverService } from './product-modify/product-modify-resolver.service';
 import { CategoryResolverService } from '../category/category-list/category-resolver.service';
+import { FileInputModule } from '../file-input/file-input.module';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       
     ]),
-    SharedModule
+    SharedModule,
+    FileInputModule
   ],
   declarations: [
     ProductListComponent,
     ProductModifyComponent,
-    ProductNewComponent
+    ProductNewComponent,
   ],
   providers: [ 
     ProductService,
     ProductNewGuardService,
     ProductEditGuardService,
     ProductModifyResolverService,
-    ProductResolverService
+    ProductResolverService 
   ]
 })
 export class ProductModule { }

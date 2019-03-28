@@ -80,22 +80,7 @@
               </div>        
             </div> 
           </div>
-          
-          <div class="file-field">
-            <div class="btn btn-primary btn-sm waves-light" mdbRippleRadius>
-              <span>Imagen</span>
-              <input formControlName="picture" type="file" mdbFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput"
-              [class.is-invalid]="productForm.get('picture').invalid && (productForm.get('picture').dirty || productForm.get('picture').touched)" 
-                  id="picture">
-            </div>
-            <div class="file-path-wrapper">
-              <input class="file-path" type="text" placeholder="Seleccione Imagen..." [value]="showFiles()">
-            </div>
-          </div>
-
-          <div *ngIf="productForm.get('picture').invalid && (productForm.get('picture').dirty || productForm.get('picture').touched)" class="alert alert-danger">
-            La imagen del Producto es requerida.
-          </div> 
+          <app-file-input [type]="'img'" [subtype]="'product'"></app-file-input>
         </div> 
         <div class="col-md-6 pr-0 pl-0">
             <img onerror="this.src='../../../assets/img/No_image_available.svg'"/>               
