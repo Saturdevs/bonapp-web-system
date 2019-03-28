@@ -80,7 +80,10 @@
               </div>        
             </div> 
           </div>
-          <app-file-input [type]="'img'" [subtype]="'product'"></app-file-input>
+          <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
+          <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+            La imagen del producto es requerida.
+          </div>       
         </div> 
         <div class="col-md-6 pr-0 pl-0">
             <img onerror="this.src='../../../assets/img/No_image_available.svg'"/>               

@@ -21,7 +21,7 @@ import { FileInputComponent } from '../../file-input/file-input.component';
   styleUrls: ['./product-new.component.css']
 })
 export class ProductNewComponent implements OnInit {
-
+  pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();
   categories: Category[];
@@ -36,6 +36,7 @@ export class ProductNewComponent implements OnInit {
   humanizeBytes: Function;
   dragOver: boolean;
   lastProductCode: string;
+  validPicture: string = '';
 
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
@@ -58,7 +59,7 @@ export class ProductNewComponent implements OnInit {
       cod: ['', Validators.required],
       name: ['', Validators.required],
       category: ['', ComboValidators.hasValue],
-      picture: ['', Validators.required],
+      picture: ['',Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
       sizes: this.formBuilder.array([]),      
@@ -128,6 +129,14 @@ export class ProductNewComponent implements OnInit {
           );
     } else if (!this.productForm.dirty) {
       this.onSaveComplete();
+    }
+  }
+  onNotified(validator: string) {
+    console.log(validator);
+    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    this.pictureTouched = true;
+    if(this.validPicture != ''){
+      this.productForm.controls.picture.setValue(this.validPicture);
     }
   }
 

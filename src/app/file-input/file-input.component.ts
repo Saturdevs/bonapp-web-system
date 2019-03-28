@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { UploadFile, UploadInput, UploadOutput } from 'ng-mdb-pro/pro/file-input';
 import { humanizeBytes } from 'ng-mdb-pro/pro/file-input';
 
@@ -16,6 +16,7 @@ export class FileInputComponent implements OnInit  {
   allowedTypes: string;
   formData: FormData;
   files: UploadFile[];
+  errorMessage: string;
   uploadInput: EventEmitter<UploadInput>;
   humanizeBytes: Function;
   dragOver: boolean;  
@@ -23,7 +24,8 @@ export class FileInputComponent implements OnInit  {
 
   @Input() type: string;
   @Input() subtype: string;
-  
+  @Output() validator = new EventEmitter<string>();
+
   ngOnInit() {
     this.newFile = new File();
   }
@@ -57,16 +59,22 @@ export class FileInputComponent implements OnInit  {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.newFile.data = reader.result.split(',')[1];
-        this.newFile.data = "asdasd";
         this.newFile.name = file.name;
         this.newFile.type = file.type;
         this.newFile.subtype = this.subtype;
         };
+      
+      this.validator.emit(file.name);
       };
     }
 
   startUpload(): void {
-    this._fileInputService.saveFile(this.newFile);
+    this._fileInputService.saveFile(this.newFile)
+            .subscribe(file => {
+              console.log(file);
+            },
+            error => this.errorMessage = <any>error
+          );
     this.files = [];
   }
 
