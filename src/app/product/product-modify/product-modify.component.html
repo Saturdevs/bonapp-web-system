@@ -7,7 +7,7 @@
     <form method="post" novalidate [formGroup]="productForm">
       <div class="row">
         <div class="col-md-6">
-          <img [src]='product.pictures' onerror="this.src='../../../assets/img/No_image_available.svg'"/>
+          <img class="customImage" [src]="path" onerror="this.src='../../../assets/img/No_image_available.svg'"/>
         </div>
         <div class="col-md-6">
           <div class="form-group">

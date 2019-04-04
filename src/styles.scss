@@ -19,6 +19,13 @@
     text-align: center;
 }
 
+.customImage{
+    height:800px; 
+    width:800px;
+    border-radius:1%;
+    padding-left: 5rem;
+}
+
 .customActive{
     background-color: $alternative-color;
     transition: 0.5s linear;

@@ -31,6 +31,7 @@ export class ProductModifyComponent implements OnInit {
   clickAceptar: Boolean;
   private sub: Subscription;
   sizesArr: Array<string> = new Array("Chico", "Mediano", "Grande");
+  path: string = '../../../assets/img/products/';
 
   get sizes(): FormArray{
     return <FormArray>this.productForm.get('sizes');
@@ -117,6 +118,7 @@ export class ProductModifyComponent implements OnInit {
     }));
     const prodSizesFormArray = this.formBuilder.array(prodSizes);
     this.productForm.setControl('sizes', prodSizesFormArray);
+    this.path = this.path + this.product.pictures;
   }
 
   updateProduct() {

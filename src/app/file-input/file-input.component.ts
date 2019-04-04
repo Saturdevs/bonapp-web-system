@@ -47,26 +47,35 @@ export class FileInputComponent implements OnInit  {
         files += this.files[i].name;
          if (!(this.files.length - 1 === i)) {
            files += ',';
+          }
         }
+        return files;
       }
-      return files;
-   }
-
-  onFileChange(event) {
-    let reader = new FileReader();
-    if(event.target.files && event.target.files.length > 0) {
-      let file = event.target.files[0];
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.newFile.data = reader.result.split(',')[1];
-        this.newFile.name = file.name;
-        this.newFile.type = file.type;
-        this.newFile.subtype = this.subtype;
-        };
       
-      this.validator.emit(file.name);
+      async onFileChange(event) {
+        let reader = new FileReader();
+        if(event.target.files && event.target.files.length > 0) {
+          let file = event.target.files[0]; 
+          this.validator.emit(file.name);
+          await this.loadFileReader(reader, file);
+          this.newFile.data = reader.result.split(',')[1];
+          this.newFile.name = file.name;
+          this.newFile.type = file.type;
+          this.newFile.subtype = this.subtype;
+        }
       };
-    }
+    
+      loadFileReader(reader,file):any{
+        return new Promise((resolve, reject) => {
+          reader.onerror = () => {
+            reader.abort();
+          };
+          reader.onload = () => {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
 
   startUpload(): void {
     this._fileInputService.saveFile(this.newFile)
