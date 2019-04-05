@@ -12,13 +12,15 @@ import { ProductService } from '../../shared/services/product.service';
 import { CategoryResolverService } from './category-list/category-resolver.service';
 import { CategoryModifyResolverService } from './category-modify/category-modify-resolver.service';
 import { MenuResolverService } from '../menu/menu-resolver.service';
+import { FileInputModule } from '../file-input/file-input.module';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       
     ]),
-    SharedModule
+    SharedModule,
+    FileInputModule
   ],
   declarations: [
     CategoryComponent,

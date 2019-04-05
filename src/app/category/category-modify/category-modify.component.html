@@ -17,7 +17,7 @@
   </header>
   <div class="posts">
     <article>
-      <a href="#" class="image"><img [src]='category.picture' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
+      <a href="#" class="image "><img class="customImage" [src]='path' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
     </article>
     <article>
     
@@ -50,15 +50,10 @@
           El Menu de la Categoría es requerido.
         </div>
 
-        <div class="form-group">
-          <label>Imagen Categoría:</label>
-          <input #categoryPic="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryPic.invalid && (categoryPic.dirty || categoryPic.touched)" name="categoryPic" 
-                id="categoryPic" [(ngModel)]="category.picture">
-        </div>
-
-        <div *ngIf="categoryPic.invalid && (categoryPic.dirty || categoryPic.touched)" class="alert alert-danger">
-          La imagen de la Categoría es requerida.
-        </div>     
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'"></app-file-input>
+        <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+          La imagen de la categoria es requerida.
+        </div>           
 
         <div class="12u$">
           <ul class="actions" align="center">

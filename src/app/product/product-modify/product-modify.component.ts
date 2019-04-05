@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 
@@ -9,6 +9,7 @@ import { Category } from '../../../shared/models/category';
 import { ProductService } from '../../../shared/services/product.service';
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
+import { FileInputComponent } from '../../file-input/file-input.component';
 
 @Component({
   selector: 'app-product-modify',
@@ -16,7 +17,8 @@ import { ComboValidators } from '../../../shared/functions/combo.validator';
   styleUrls: ['./product-modify.component.css']
 })
 export class ProductModifyComponent implements OnInit {
-
+  pictureTouched: boolean;
+  validPicture: string;
   pageTitle: string = 'Product Modify';
   productForm: FormGroup;
   productOption: FormArray;
@@ -32,6 +34,9 @@ export class ProductModifyComponent implements OnInit {
   private sub: Subscription;
   sizesArr: Array<string> = new Array("Chico", "Mediano", "Grande");
   path: string = '../../../assets/img/products/';
+
+  @ViewChild(FileInputComponent)
+  private fileInputComponent: FileInputComponent;
 
   get sizes(): FormArray{
     return <FormArray>this.productForm.get('sizes');
@@ -123,6 +128,7 @@ export class ProductModifyComponent implements OnInit {
 
   updateProduct() {
     let prod = Object.assign({}, this.product, this.productForm.value);
+    this.fileInputComponent.startUpload();
     this._productService.updateProduct(prod).subscribe(
       product => this.product = product,
       error => this.errorMessage = <any>error);
@@ -130,6 +136,14 @@ export class ProductModifyComponent implements OnInit {
     this.onBack();
   }
 
+  onNotified(validator: string) {
+    console.log(validator);
+    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    this.pictureTouched = true;
+    if(this.validPicture != ''){
+      this.productForm.controls.picture.setValue(this.validPicture);
+    }
+  }
   onBack(): void {
     this._router.navigate(['/restaurant/product']);
   }

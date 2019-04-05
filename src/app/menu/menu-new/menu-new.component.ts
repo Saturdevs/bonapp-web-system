@@ -9,6 +9,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { MenuGuardService } from '../menu-guard.service';
 import { Menu } from '../../../shared/models/menu';
 import { MenuService } from '../../../shared/services/menu.service';
+import { FileInputComponent } from '../../file-input/file-input.component';
 
 @Component({
   selector: 'app-menu-new',
@@ -16,6 +17,11 @@ import { MenuService } from '../../../shared/services/menu.service';
   styleUrls: ['./menu-new.component.css']
 })
 export class MenuNewComponent implements OnInit {
+  
+
+  @ViewChild(FileInputComponent)
+  private fileInputComponent: FileInputComponent;
+
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
 
@@ -24,6 +30,8 @@ export class MenuNewComponent implements OnInit {
    menus: Menu[];   
    errorMessage: string;
    newMenu: Menu;
+   validPicture: string = '';
+   pictureTouched: boolean;
 
    private sub: Subscription;
 
@@ -38,12 +46,22 @@ export class MenuNewComponent implements OnInit {
 
 
   saveMenu(){
+    this.fileInputComponent.startUpload();
     this._menuService.saveMenu(this.newMenu).subscribe(
           menu => { this.newMenu = menu,
                     this.onBack()},
           error => { this.errorMessage = <any>error,
                      this.showModalError(this.errorTemplate)});
     
+  }
+
+  onNotified(validator: string) {
+    console.log(validator);
+    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    this.pictureTouched = true;
+    if(this.validPicture != ''){
+      this.newMenu.picture =this.validPicture;
+    }
   }
 
   showModalError(errorTemplate: TemplateRef<any>){

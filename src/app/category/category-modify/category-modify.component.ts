@@ -10,6 +10,7 @@ import { Category } from '../../../shared/models/category';
 import { Menu } from '../../../shared/models/menu';
 import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
+import { FileInputComponent } from '../../file-input/file-input.component';
 
 @Component({
   selector: 'app-category-modify',
@@ -17,6 +18,9 @@ import { MenuService } from '../../../shared/services/menu.service';
   styleUrls: ['./category-modify.component.css']
 })
 export class CategoryModifyComponent implements OnInit {
+
+  @ViewChild(FileInputComponent)
+  private fileInputComponent: FileInputComponent;
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
@@ -33,6 +37,9 @@ export class CategoryModifyComponent implements OnInit {
   menuSelect: Menu;
   private sub: Subscription;
   hasCategory = false;
+  pictureTouched: boolean;
+  validPicture: string;
+  path: string = '../../../assets/img/categories/';
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
@@ -42,6 +49,7 @@ export class CategoryModifyComponent implements OnInit {
 
  ngOnInit(): void {
     this.category = this._route.snapshot.data['category'];
+    this.path = this.path + this.category.picture;
     this.categoryNameModified = this.category.name;
     this.categoryMenuModified = this.category.menuId;
     this.CategoryPicModified = this.category.picture;
@@ -50,11 +58,22 @@ export class CategoryModifyComponent implements OnInit {
   }
 
   updateCategory(category: Category) {
-      this._categoryService.updateCategory(category).subscribe(
+    this.fileInputComponent.startUpload();
+    this._categoryService.updateCategory(category).subscribe(
           category => { this.category = category,
                         this.onBack()},
           error => { this.errorMessage = <any>error,
                      this.showModalError(this.errorTemplate)});
+  }
+
+
+  onNotified(validator: string) {
+    console.log(validator);
+    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    this.pictureTouched = true;
+    if(this.validPicture != ''){
+      this.category.picture = this.validPicture;
+    }
   }
 
   onBack(): void {

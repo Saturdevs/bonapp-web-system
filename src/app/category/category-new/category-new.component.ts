@@ -8,6 +8,7 @@ import { Category } from '../../../shared/models/category';
 import { Menu } from '../../../shared/models/menu';
 import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
+import { FileInputComponent } from '../../file-input/file-input.component';
 
 @Component({
   selector: 'app-category-new',
@@ -16,6 +17,9 @@ import { MenuService } from '../../../shared/services/menu.service';
 })
 export class CategoryNewComponent implements OnInit {
   
+  @ViewChild(FileInputComponent)
+  private fileInputComponent: FileInputComponent;
+
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
   public modalRef: BsModalRef;
@@ -24,6 +28,8 @@ export class CategoryNewComponent implements OnInit {
   newCategory: Category;
   menus: Menu[];
   hasCategory = false;
+  pictureTouched: boolean;
+  validPicture: string;
 
   constructor(private _router: Router,
               private _categoryService: CategoryService,
@@ -37,11 +43,21 @@ export class CategoryNewComponent implements OnInit {
   }
 
   saveCategory(){
+    this.fileInputComponent.startUpload();
     this._categoryService.saveCategory(this.newCategory).subscribe(
       category =>{ this.newCategory = category,
                    this.onBack()},
       error => { this.errorMessage = <any>error,
                      this.showModalError(this.errorTemplate)});
+  }
+
+  onNotified(validator: string) {
+    console.log(validator);
+    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    this.pictureTouched = true;
+    if(this.validPicture != ''){
+      this.newCategory.picture = this.validPicture;
+    }
   }
 
   getMenus(){

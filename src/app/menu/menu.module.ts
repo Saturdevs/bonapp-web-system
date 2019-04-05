@@ -10,13 +10,15 @@ import { MenuModifyComponent } from './menu-modify/menu-modify.component';
 import { MenuService } from '../../shared/services/menu.service';
 import { MenuGuardService } from './menu-guard.service';
 import { MenuModifyResolverService } from './menu-modify/menu-modify-resolver.service';
+import { FileInputModule } from '../file-input/file-input.module';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
          
     ]),
-    SharedModule
+    SharedModule,
+    FileInputModule
   ],
   declarations: [
     MenuComponent,

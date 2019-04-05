@@ -17,7 +17,7 @@
   </header>
   <div class="posts">
     <article>
-      <a href="#" class="image"><img [src]='menu.picture' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
+      <a href="#" class="image "><img class="customImage" [src]='path' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
     </article>
     <article>
     
@@ -38,15 +38,10 @@
           El nombre de la carta es requerido.
         </div>
 
-        <div class="form-group">
-          <label>Imagen Carta:</label>
-          <input #menuPic="ngModel" required type="text" class="form-control" [class.is-invalid]="menuPic.invalid && (menuPic.dirty || menuPic.touched)" name="menuPic" 
-                id="menuPic" [(ngModel)]="menu.picture">
-        </div>
-
-        <div *ngIf="menuPic.invalid && (menuPic.dirty || menuPic.touched)" class="alert alert-danger">
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'"></app-file-input>
+        <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
           La imagen de la carta es requerida.
-        </div>    
+        </div>        
 
         <div class="12u$">
           <ul class="actions" align="center">
