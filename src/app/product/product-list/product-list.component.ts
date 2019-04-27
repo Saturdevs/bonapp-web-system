@@ -156,9 +156,15 @@ export class ProductListComponent implements OnInit {
     this.percentage = 0; 
   }
 
-  showModalDelete(template: TemplateRef<any>, idProduct: any){
+  async showModalDelete(template: TemplateRef<any>,templateNoDelete: TemplateRef<any>, idProduct: any){
     this.idProductDelete = idProduct;
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+    let canDelete = this.productService.validateProductsBeforeChanges(this.idProductDelete);
+    if(await canDelete.then(x => x == true)){
+      this.modalRef = this.modalService.show(template, {backdrop: true});
+    }
+    else{
+      this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});
+    }
   }
 
   deleteProduct(){

@@ -85,25 +85,20 @@ export class CategoryComponent implements OnInit {
       )
   }
 
-  showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idCategory: any){
+  async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idCategory: any){
     this.idCategoryDelete = idCategory;
-    this._productService.getProductsByCategory(this.idCategoryDelete)
-        .subscribe(products => {
-          this.products = products;
-          if (this.products.length > 0) {
-            this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});                  
-          } else {
-            this.modalRef = this.modalService.show(templateDelete, {backdrop: true}); 
-          }
-        },
-        error => { this.errorMessage = <any>error;
-                   alert(this.errorMessage);
-                });
+    let canDelete = this.categoryService.validateCategoriesBeforeChanges(this.idCategoryDelete);
+    if (await canDelete.then(x=>x == true)){
+      this.modalRef = this.modalService.show(templateDelete, {backdrop: true});
+    }
+    else{
+      this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});
+    }
   }
 
   filterMenu(value) {
     this._listFilter = '';
-    if (value === 'default') {
+    if (value === 'default') {this._productService.getProductsByCategory(this.idCategoryDelete)
       this.getCategories();
     } else {
       this.getCategoriesByMenu(value);      

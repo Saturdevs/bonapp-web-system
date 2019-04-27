@@ -61,17 +61,15 @@ export class MenuComponent implements OnInit {
             error => this.errorMessage = <any>error);
       }
 
-      showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idMenu: any){
-        this.idMenuDelete = idMenu;               
-        this._menuService.hasCategory(this.idMenuDelete).subscribe(
-          menu => {
-            if (isNullOrUndefined(menu)) {
-              this.modalRef = this.modalService.show(templateDelete, {backdrop: true});    
-            } else {
-              this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});     
-            }
-          }
-        )                          
+      async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idMenu: any){
+        this.idMenuDelete = idMenu;       
+        let canDelete = this._menuService.validateMenuBeforeChanges(this.idMenuDelete);
+        if(await canDelete.then(x => x == true)){
+          this.modalRef = this.modalService.show(templateDelete, {backdrop: true});    
+        }
+        else{
+          this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});     
+        }                          
       }
 
       deleteMenu(){

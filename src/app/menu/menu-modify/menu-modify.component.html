@@ -9,6 +9,17 @@
     <button type="button" class="button special" (click)="closeModal()">Ok</button>
   </div>
 </ng-template>
+<ng-template #noModify>
+  <div class="modal-header">
+    <h4 class="modal-title">Modificar Carta</h4>
+  </div>
+  <div class="modal-body">
+    No se puede modificar la carta seleccionada porque tiene categorias asociadas.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModalAndGoBack()">Ok</button>
+  </div>
+</ng-template>
 
 <!-- Form -->
 <div *ngIf='menu'>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 
@@ -10,6 +10,8 @@ import { ProductService } from '../../../shared/services/product.service';
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-product-modify',
@@ -34,14 +36,17 @@ export class ProductModifyComponent implements OnInit {
   private sub: Subscription;
   sizesArr: Array<string> = new Array("Chico", "Mediano", "Grande");
   path: string = '../../../assets/img/products/';
-
+  public modalRef: BsModalRef;
+  
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
+   
+  @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
 
   get sizes(): FormArray{
     return <FormArray>this.productForm.get('sizes');
   }
-
+  
   get options(): FormArray{
     return <FormArray>this.productForm.get('options');
   }
@@ -49,8 +54,9 @@ export class ProductModifyComponent implements OnInit {
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _productService: ProductService,
-              private formBuilder: FormBuilder) { }
-
+              private formBuilder: FormBuilder,
+              private modalService: BsModalService) { }
+              
   ngOnInit() {
     this.productForm = this.formBuilder.group({
       code: ['', Validators.required],
@@ -66,7 +72,16 @@ export class ProductModifyComponent implements OnInit {
     
     this.onProductRetrieved(this._route.snapshot.data['product']);
     this.categories = this._route.snapshot.data['categories'];
-    this.clickAceptar = false;     
+    this.clickAceptar = false;
+
+    this.validateProductsBeforeModify();
+  }
+  
+  async validateProductsBeforeModify(){
+    let canModify = this._productService.validateProductsBeforeChanges(this.product.code);
+    if (await canModify.then(x => x == false)){
+      this.modalRef = this.modalService.show(this.noModifyTemplate, {backdrop: true});
+    }
   }
 
   buildProductSizes(): FormGroup {
@@ -75,7 +90,7 @@ export class ProductModifyComponent implements OnInit {
                 price: ['', Validators.required]
               })
   }
-
+  
   buildProductOptions(): FormGroup {
     return this.formBuilder.group({
                   name: ['', Validators.required],
@@ -144,6 +159,18 @@ export class ProductModifyComponent implements OnInit {
       this.productForm.controls.picture.setValue(this.validPicture);
     }
   }
+  
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+    return true;     
+  }
+  
+  closeModalAndGoBack(){
+    this.closeModal();
+    this.onBack();
+  }
+
   onBack(): void {
     this._router.navigate(['/restaurant/product']);
   }

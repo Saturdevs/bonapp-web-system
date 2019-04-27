@@ -10,11 +10,15 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiService } from './api.service';
 import { Category } from '../models/category';
+import { ProductService } from './product.service';
 
 @Injectable()
 export class CategoryService {  
-
+  didValidate: boolean = false;
+  productsInCategory: any;
+  
   constructor(
+    private _productService: ProductService,
     private apiService: ApiService
   ) {}
 
@@ -57,6 +61,15 @@ export class CategoryService {
     return this.apiService.post('/category', category)
           .map(data => data.category)
           .catch(this.handleError);
+  }
+
+   async validateCategoriesBeforeChanges(idCategory){
+    let productsInCategory = await this._productService.getProductsByCategory(idCategory).toPromise();
+        if (productsInCategory.length > 0) {
+          return false
+        } else {
+          return true 
+        }
   }
 
   private handleError(err: HttpErrorResponse){

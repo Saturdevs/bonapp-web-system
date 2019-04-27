@@ -7,12 +7,17 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiService } from './api.service';
 import { Product } from '../models/product';
+import { OrderService } from './order.service';
 
 @Injectable()
 export class ProductService {  
+  didValidate: boolean = false;
+  ordersWithCurrentMenu: any[];
+  orders: any[];
 
   constructor(
     private apiService: ApiService,
+    private _orderService: OrderService
   ) {}
 
   getAll(): Observable<Product[]> {
@@ -55,6 +60,17 @@ export class ProductService {
     return this.apiService.post('/product', product)
           .map(data => data.product)
           .catch(this.handleError);
+  }
+
+  async validateProductsBeforeChanges(idProduct){
+    let orders = await this._orderService.getAll().toPromise();
+        this.ordersWithCurrentMenu = orders.filter(x => x.products.find(y => y.code == idProduct));
+        if(this.ordersWithCurrentMenu.length > 0){
+          return false;
+        }
+        else{
+          return true;
+        }
   }
 
   private handleError(err: HttpErrorResponse){

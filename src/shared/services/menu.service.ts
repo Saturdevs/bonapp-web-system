@@ -7,12 +7,16 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiService } from './api.service';
 import { Menu } from '../models/menu';
+import { CategoryService } from './category.service';
 
 @Injectable()
 export class MenuService {  
+  didValidate: boolean = false;
+  categoriesInMenu: any;
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
+    private _categoryService : CategoryService
   ) {}
 
   getAll(): Observable<Menu[]> {
@@ -50,6 +54,16 @@ export class MenuService {
       .map(data => data.menu) 
       .catch(this.handleError)
   }
+
+  async validateMenuBeforeChanges(idMenu){
+    let categoriesInMenu = await this._categoryService.getCategoriesByMenu(idMenu)
+      .toPromise();
+      if (categoriesInMenu.length > 0) {
+        return false
+      } else {
+        return true 
+      }
+}
 
   private handleError(err: HttpErrorResponse){
     console.log(err.message);

@@ -17,12 +17,13 @@ import { FileInputComponent } from '../../file-input/file-input.component';
 })
 
 export class MenuModifyComponent implements OnInit {
-
+  
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
-
-
+  
+  
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
 
   public modalRef: BsModalRef;
   pageTitle: string = 'Menu Modify';
@@ -46,24 +47,19 @@ export class MenuModifyComponent implements OnInit {
     this.menu = this._route.snapshot.data['menu'];
     this.path = this.path + this.menu.picture;
 
-    this._menuService.hasCategory(this.menu._id).subscribe(
-      menu => {
-        if (isNullOrUndefined(menu)) {
-          console.log('a')
-          this.canEdit = false;  
-        } else {
-          console.log('b')
-          this.canEdit = true;
-        }
-      }
-    )
-    
-    console.log(this.canEdit)
+    this.validateMenuBeforeModify();
   }
-
+  
+  async validateMenuBeforeModify(){
+    let canModify = this._menuService.validateMenuBeforeChanges(this.menu._id);
+    if (await canModify.then(x => x == false)){
+      this.modalRef = this.modalService.show(this.noModifyTemplate, {backdrop: true});
+    }
+  }
+  
   updateMenu(menu: Menu) {
-      this.fileInputComponent.startUpload();
-      this._menuService.updateMenu(menu).subscribe(
+    this.fileInputComponent.startUpload();
+    this._menuService.updateMenu(menu).subscribe(
           menu => { this.menu = menu,
                     this.onBack()},
           error => { this.errorMessage = <any>error,
@@ -83,15 +79,21 @@ export class MenuModifyComponent implements OnInit {
   showModalError(errorTemplate: TemplateRef<any>){
       this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
   }
-
+  
+  onBack(): void {
+    this._router.navigate(['/restaurant/menu']);
+  }
+  
   closeModal(){
     this.modalRef.hide();
     this.modalRef = null;   
     return true;     
   }
-
-  onBack(): void {
-    this._router.navigate(['/restaurant/menu']);
+  closeModalAndGoBack(){
+    this.closeModal();
+    this.onBack();
+    return true;  
   }
+
 
 }

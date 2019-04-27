@@ -18,11 +18,12 @@ import { FileInputComponent } from '../../file-input/file-input.component';
   styleUrls: ['./category-modify.component.css']
 })
 export class CategoryModifyComponent implements OnInit {
-
+  
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
-
+  
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
 
   public modalRef: BsModalRef;
   pageTitle: string = 'Category Modify';
@@ -42,12 +43,12 @@ export class CategoryModifyComponent implements OnInit {
   path: string = '../../../assets/img/categories/';
 
   constructor(private _route: ActivatedRoute,
-              private _router: Router,
-              private _categoryService: CategoryService,
+    private _router: Router,
+    private _categoryService: CategoryService,
               private modalService: BsModalService,
               private _menuService: MenuService) { }
 
- ngOnInit(): void {
+              ngOnInit(): void {
     this.category = this._route.snapshot.data['category'];
     this.path = this.path + this.category.picture;
     this.categoryNameModified = this.category.name;
@@ -55,18 +56,27 @@ export class CategoryModifyComponent implements OnInit {
     this.CategoryPicModified = this.category.picture;
     this.CategoryNumberOfItemsModified = this.category.number_of_items;
     this.menus = this._route.snapshot.data['menus'];
+    
+    this.validateCategoryBeforeModify();
+  }
+  
+  async validateCategoryBeforeModify(){
+    let canDelete = this._categoryService.validateCategoriesBeforeChanges(this.category._id);
+    if (await canDelete.then(x => x == false)){
+      this.modalRef = this.modalService.show(this.noModifyTemplate, {backdrop: true});
+    }
   }
 
   updateCategory(category: Category) {
     this.fileInputComponent.startUpload();
     this._categoryService.updateCategory(category).subscribe(
           category => { this.category = category,
-                        this.onBack()},
+            this.onBack()},
           error => { this.errorMessage = <any>error,
-                     this.showModalError(this.errorTemplate)});
+            this.showModalError(this.errorTemplate)});
   }
 
-
+  
   onNotified(validator: string) {
     console.log(validator);
     validator != '' ? this.validPicture = validator: this.validPicture = '';
@@ -87,6 +97,12 @@ export class CategoryModifyComponent implements OnInit {
   closeModal(){
     this.modalRef.hide();
     this.modalRef = null;   
+    return true;     
+  }
+
+  closeModalAndGoBack(){
+    this.closeModal();
+    this.onBack();
     return true;     
   }
 

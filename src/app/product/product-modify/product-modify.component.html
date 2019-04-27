@@ -1,4 +1,15 @@
 <!-- Form -->
+<ng-template #noModify>
+  <div class="modal-header">
+    <h4 class="modal-title">Modificar Producto</h4>
+  </div>
+  <div class="modal-body">
+    No se puede modificar el producto seleccionado porque se encuentra en algun pedido.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModalAndGoBack()">Ok</button>
+  </div>
+</ng-template>
 <div *ngIf='product'>
   <header class="major" align="center">
     <h2>Editando: {{productNameModified}}</h2>

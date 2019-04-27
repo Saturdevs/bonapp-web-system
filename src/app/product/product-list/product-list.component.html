@@ -10,6 +10,17 @@
     <button type="button" class="button special" (click)="closeModal()">Cancel</button>
   </div>
 </ng-template>
+<ng-template #noDeleteTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title">Eliminar Producto</h4>
+    </div>
+    <div class="modal-body">
+      No se puede eliminar el producto seleccionado porque esta en algun pedido.
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="button special" (click)="closeModal()">Ok</button>
+    </div>
+  </ng-template>
 
 <div class="pageTitle">
     <div class="float-left">
@@ -70,7 +81,7 @@
                     <td class="align-middle customShortTh">{{ product.available }}</td>
                     <td class="customThTd align-middle">
                         <a [routerLink]="['edit', product._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
-                        <a (click) = "showModalDelete(deleteTemplate, product._id)" class="btn btn-red btn-sm">Eliminar</a>
+                        <a (click) = "showModalDelete(deleteTemplate, noDeleteTemplate, product._id)" class="btn btn-red btn-sm">Eliminar</a>
                     </td>
                 </tr>
             </tbody>
