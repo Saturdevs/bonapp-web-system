@@ -1,25 +1,5 @@
 <ng-template #openNewOrderTemplate>
-  <div class="modal-header primary-color">
-    <h4 class="modal-title text-white">Nuevo pedido</h4>
-  </div>
-  <div class="modal-body">
-    <div class="row pl-4">
-      <div class="float-left">        
-        <label for="tableNumber">Nro. de Mesa: </label>
-        <label id="tableNumber" mdbActive> {{ selectedTable.number }}</label>
-      </div>
-    </div>
-    <hr>
-    <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
-      <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-        <mdb-completer style="width:100%!important;" (selected)="selectWaiter()" [label]="'Seleccionar Mozo'" name="autocomplete" [(ngModel)]="selectedWaiter" [datasource]="waitersList" [minSearchLength]="0"></mdb-completer>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="newOrder()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
-  </div>
+  <app-order-pre [selectedTable]="selectedTable" (close)="closeModal()" class="clasedeprueba"></app-order-pre>
 </ng-template>
 
 <ng-template #deleteTemplate>

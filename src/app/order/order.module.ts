@@ -7,6 +7,7 @@ import { OrderNewComponent } from './order-new/order-new.component';
 import { OrderDetailComponent } from './order-detail/order-detail.component';
 import { OrderListComponent } from './order-list/order-list.component';
 import { OrderCloseComponent } from './order-close/order-close.component';
+import { OrderPreComponent } from './order-pre/order-pre.component';
 
 import { OrderService } from '../../shared/services/order.service';
 import { OrderNewResolverService } from './order-new/order-new-resolver.service';
@@ -22,14 +23,16 @@ import { OrderNewResolverService } from './order-new/order-new-resolver.service'
     OrderNewComponent, 
     OrderDetailComponent, 
     OrderListComponent, 
-    OrderCloseComponent
+    OrderCloseComponent, 
+    OrderPreComponent
   ],
   providers: [
     OrderService,
     OrderNewResolverService
   ],
   exports: [
-    OrderNewComponent
+    OrderNewComponent,
+    OrderPreComponent
   ]
 })
 export class OrderModule { }

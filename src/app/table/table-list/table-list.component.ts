@@ -259,46 +259,6 @@ export class TableListComponent implements OnInit{
 			)			
 		}		
 	}
-	
-	newOrder(){
-		let order = new Order();
-		this.closeModal();
-		this.selectedTable.status = "Ocupada";
-		this._orderService.getLastOrder().subscribe(
-			lastOrder => {
-				console.log("subscribe")
-				if (isNullOrUndefined(lastOrder))
-				{
-					order.orderNumber = 1;
-				}
-				else
-				{
-					order.orderNumber = lastOrder.orderNumber + 1;
-				}
-
-				order.type = "Restaurant";
-				order.table = this.selectedTable.number;
-				order.status = "Open";
-				order.users = new UsersInOrder();
-				//aca hay que setear el id del usuario admin. todavia no esta creado.
-				order.users.id = "5b39625a42d7744c995253c5";
-				order.users.owner = true;
-				order.users.products = new Array<ProductsInUserOrder>();
-				order.users.products = [];		
-				order.app = false;		
-				this._orderService.saveOrder(order).subscribe(() => {
-					this._tableService.updateTable(this.selectedTable).subscribe(
-						table => { 
-							this.selectedTable = table;
-							this._router.navigate(['./orders/orderNew', this.selectedTable.number]); 
-						},
-						error => { this.errorMessage = <any>error }
-					)
-				})
-			},
-			error => { this.errorMessage = <any>error }
-		)			
-	}
 
 	deleteTable(){
     if (this.closeModal()){
