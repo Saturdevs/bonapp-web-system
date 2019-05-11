@@ -14,7 +14,7 @@ export class OrderService {
   constructor(
     private apiService: ApiService
   ) { }
-
+  
   getAll(): Observable<Order[]> {
     return this.apiService.get('/order')
            .map(data => data.orders)
@@ -26,10 +26,22 @@ export class OrderService {
             .map(data => data.order);
   }
 
+  getOrderOpenByTable(tableNumber): Observable<Order> {
+    return this.apiService.get(`/order/status/${tableNumber}?open=Open`)
+          .map(data => data.orders[0])
+          .catch(this.handleError);
+  }
+
   getOrdersByTable(idTable) {
     return this.apiService.get(`/order/section/${idTable}`)
            .map(data => data.orders)
            .catch(this.handleError);
+  }
+
+  getLastOrder(): Observable<Order> {
+    return this.apiService.get(`/order/lastOrder`)
+            .map(data => data.lastOrder)
+            .catch(this.handleError);
   }
 
   updateOrder(order){

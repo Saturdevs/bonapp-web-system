@@ -64,13 +64,13 @@ export class ProductService {
 
   async validateProductsBeforeChanges(idProduct){
     let orders = await this._orderService.getAll().toPromise();
-        this.ordersWithCurrentMenu = orders.filter(x => x.products.find(y => y.code == idProduct));
-        if(this.ordersWithCurrentMenu.length > 0){
-          return false;
-        }
-        else{
-          return true;
-        }
+    this.ordersWithCurrentMenu = orders.filter(x => x.users[0].products.find(y => y.code == idProduct));
+    if(this.ordersWithCurrentMenu.length > 0){
+      return false;
+    }
+    else{
+      return true;
+    }
   }
 
   private handleError(err: HttpErrorResponse){

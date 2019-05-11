@@ -1,22 +1,21 @@
+import { 
+  UsersInOrder, 
+  OrderDiscount 
+} from '../index';
+
 export class Order {
   _id: string;
-  orderNumber : string;
+  orderNumber : number;
   type: string;
+  table: number;
   cashRegister: string;
   waiter: string;
   status: string;
-  orderApp: Boolean;
-  users: Array<any>;
-  subtotal: number;
-  payment: Array<any>;
-  sent_at: string;
-  discountPercentage: number;
-  created_at: string;
-  table: number;
-  open: boolean;
-  cancel: boolean;
-  //users
-  completed_at: string;
+  users: UsersInOrder;
+  created_at: Date;
+  sent_at: Date;
+  completed_at: Date;
+  discount: OrderDiscount;
   totalPrice: number;
-  products: Array<any>;
+  app: Boolean;
 }

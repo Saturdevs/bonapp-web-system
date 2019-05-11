@@ -6,7 +6,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { OrderNewComponent } from './order-new/order-new.component';
 import { OrderDetailComponent } from './order-detail/order-detail.component';
 import { OrderListComponent } from './order-list/order-list.component';
+import { OrderCloseComponent } from './order-close/order-close.component';
+
 import { OrderService } from '../../shared/services/order.service';
+import { OrderNewResolverService } from './order-new/order-new-resolver.service';
 
 @NgModule({
   imports: [
@@ -18,13 +21,12 @@ import { OrderService } from '../../shared/services/order.service';
   declarations: [
     OrderNewComponent, 
     OrderDetailComponent, 
-    OrderListComponent
+    OrderListComponent, 
+    OrderCloseComponent
   ],
   providers: [
-    OrderNewComponent, 
-    OrderDetailComponent, 
-    OrderListComponent,
-    OrderService
+    OrderService,
+    OrderNewResolverService
   ],
   exports: [
     OrderNewComponent

@@ -1,17 +1,34 @@
-import { Component, OnInit, TemplateRef, Output, EventEmitter, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
-import { Order } from '../../../shared/models/order';
-import { OrderService } from '../../../shared/services/order.service';
+import { CompleterData } from 'ng-mdb-pro/pro/autocomplete';
+
+import { CompleterService } from 'ng-mdb-pro/pro/autocomplete';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ProductService } from '../../../shared/services/product.service';
-import { Product } from '../../../shared/models/product';
-import { TableService } from '../../../shared/services/table.service';
-import { Table } from '../../../shared/models/table';
 import { ModalDirective } from 'ng-mdb-pro/free';
-import { ArqueoCajaService, CashRegisterService, CashRegister, ArqueoCaja, PaymentType, PaymentTypeService, MenuService, Menu, CategoryService, Category } from '../../../shared/index';
+import { 
+  ArqueoCajaService, 
+  CashRegisterService, 
+  CashRegister, 
+  ArqueoCaja, 
+  PaymentType, 
+  PaymentTypeService, 
+  MenuService, 
+  Menu, 
+  CategoryService, 
+  Category,
+  ProductsInUserOrder,
+  ProductService,
+  Product,
+  TableService,
+  Table,
+  OrderService,
+  Order,
+  OrderDiscount
+} from '../../../shared/index';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-order-new',
@@ -20,6 +37,9 @@ import { ArqueoCajaService, CashRegisterService, CashRegister, ArqueoCaja, Payme
 })
 export class OrderNewComponent implements OnInit {
   public modalRef: BsModalRef;
+
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private productService: ProductService,
@@ -30,147 +50,334 @@ export class OrderNewComponent implements OnInit {
               private cashRegisterService : CashRegisterService,
               private menuService : MenuService,
               private categoryService : CategoryService,
-              private paymentTypesService : PaymentTypeService) { }
+              private paymentTypesService : PaymentTypeService,
+              private completerService: CompleterService) { }
 
   pageTitle: String = 'Nuevo Pedido'; 
-  tableNumber: number;
-  products: Product[];
-  errorMessage: string;
-  filteredProducts: Product[];
-  productsName: String[] = [];
-  productsInOrder: Product[] = [];
-  selectedProduct: String;
-  tableActive : Table;
-  newOrder: Order;
-  orderQty: Array<any> = [];
-  qtyProd: number = 1;
-  ordersActive: Boolean;
-  openOrder: Boolean = false;
-  currentOrder : Order;
-  maxOrderNumber : number;
-  tableNum : number = parseInt(this._route.snapshot.params['idTable']);
-  cashRegisters : CashRegister[] = [];
-  currentCashRegister : CashRegister;
-  openArqueo : ArqueoCaja;
-  discountPercentage : number;
-  orderTotalPrice : number;
-  discountAmount : number;
-  paymentsInCurrentOrder : Array<any> = [];
-  availablePaymentTypes : PaymentType[] = [];
+  prodObservation: string = 'Agregue una observación aquí...';
+  errorMessage: string; 
   menus : Menu[];
   categories : Category[];
-  productsToAdd : Product[];
-  currentTable: Table;
+  products: Product[]; 
+  filteredProducts: Product[];
+  /** Pedido en curso. */
+  order: Order;
+  /** Array para almacenar los productos antes de confirmarlos en el pedido. */
+  preOrderProducts: Array<ProductsInUserOrder> = [];
+  /** Monto total a confirmar de los productos en array preOrderProducts. */
+  totalToConfirm: number;
+  /** Monto total de los productos ya confirmados en la orden. */
+  total: number;
+  /**Booleano para determinar si mostrar la sección de descuento o no. */
+  showDiscount: Boolean;
+  /**Booleano que indica si el pedido tiene algun descuento. */
+  thereIsDiscount: Boolean;
+  /**String de búsqueda mdb-completer. */
+  searchStr: string;
+  /** */
+  dataService: CompleterData;
+  /**Porcentaje de descuento. */
+  discountRate: number;
+  /**Monto de descuento. */
+  discountAmount: number;
+  /**Producto a eliminar del array de productos del pedido. */
+  productToRemoveFromOrder:ProductsInUserOrder;
+  /**Motivo para eliminar el producto del pedido. */
+  deletedReason: string;
+  /**Cantidad del producto seleccionado por la lista. */
+  qtyProd: number = 1;   
 
   @ViewChild('fluid') public fluid:ModalDirective;
 
   ngOnInit() {
-    this.newOrder = new Order();
-    this.getTableByNumber(this.tableNum);
-    this.getProducts();
-    this.getAllMenus();
-
-    if(this.isOrdersActive()) {
-			this.ordersActive = true;
-		}
+    this.order = this._route.snapshot.data['order'];
+    console.log(this.order)
+    this.products = this._route.snapshot.data['products'];
+    this.filteredProducts = this.products;
+    this.menus = this._route.snapshot.data['menus'];
+    this.categories = this._route.snapshot.data['categories'];
+    this.totalToConfirm = 0;
+    this.order.totalPrice = 0;
+    this.showDiscount = false;
+    console.log(this.order.discount)
+    //this.thereIsDiscount = !isNullOrUndefined(this.order.discount);
+    this.dataService = this.completerService.local(this.filteredProducts, 'name', 'name');
   }
 
-  ngAfterViewInit() {
-    this.fluid.show();
-  }
-
-  getProducts(): void {
-    this.productService.getProductsWithCategory()
-      .subscribe(products => {
-        this.products = products.map(product => {
-          if(product.available) {
-            product.available = 'Si';
-          } else {
-            product.available = 'No';
-          }
-          //console.log(this.productsName);
-          
-          this.productsName.push(product.name);
-          
-         // console.log(this.products);
-          return product;
-        });
-        this.filteredProducts = this.products;
-        
+  /**Devuelve las categorías para el menu pasado como parámetro almacenadas en el sistema
+   * @param menuId id del menu para el que se quieren obtener las categorías
+   */
+  getCategories(menuId){
+    this.categories = [];
+    this.products = this.filteredProducts = [];
+    this.categoryService.getCategoriesByMenu(menuId)
+      .subscribe(categories => {
+        this.categories = categories;
       },
-      error => this.errorMessage = <any>error);
+      error => { this.errorMessage = <any>error['message'];});
   }
 
-  selectProductByBox() : void{
-    this.selectedProduct = 'Hamburguesa Especial';
-    this.selectProduct();
-  }
-
-  selectProduct(): void {
-    let currentProduct = this.products.find(x=> x.name == this.selectedProduct);
-    
-    if (this.productsInOrder.find(x=> x.code == currentProduct.code)){
-       if (this.orderQty.find(x=> x.productCode == currentProduct.code)){
-        this.orderQty.find(x=> x.productCode == currentProduct.code).qty += this.qtyProd
-       }
-       else
-       {
-        this.orderQty.push({
-          productName : currentProduct.name,
-          productCode : currentProduct.code,
-          qty : this.qtyProd
-        });
-       }
-    }
-    else{
-      this.productsInOrder.push(currentProduct);
-      this.orderQty.push({
-        productName : currentProduct.name,
-        productCode : currentProduct.code,
-        qty : this.qtyProd
-      });
-    }
-  }
-
-  addProductQty(code): void{
-    let currentProduct = this.products.find(x=> x.code == code);
-
-    if (this.orderQty.find(x=> x.productCode == currentProduct.code)){
-      this.orderQty.find(x=> x.productCode == currentProduct.code).qty++
+  /**Actualiza el pedido actual
+   * @param order pedido a actualizar en la base de datos
+   */
+  updateOrder(order:Order):void {
+    this.orderService.updateOrder(order).subscribe(
+      orderReturned => {
+        this.order = orderReturned;
+      },
+      error => {
+        this.errorMessage = <any>error,
+        this.showModalError(this.errorTemplate)
       }
+    )
+  }
+  
+  showModalError(errorTemplate: TemplateRef<any>){
+    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  }
+
+  /**Devuelve los productos para la categoría pasada como parámetro almacenados en el sistema
+   * @param menuId id de la categoría para la que se quieren obtener los productos
+   */
+  getProductsByCategory(categoryId) {
+    this.products = this.filteredProducts = [];
+    this.productService.getProductsByCategory(categoryId)
+      .subscribe(products => {
+        this.products = products;
+      },
+      error => { this.errorMessage = <any>error['message'];}
+    );
+  }
+
+  /**Agrega el producto seleccionado en la lista al pedido. Primero busca el producto en el array filteredProducts por su nombre*/
+  addProductToPreOrderFromList():void {    
+    let product = new Product();
+
+    product = this.filteredProducts.find(p => p.name === this.searchStr);
+    this.addProductToPreOrder(product, this.qtyProd);
+  }
+  
+  /**Agrega los productos al array de preOrderProducts.
+   * @param currentProduct producto seleccionado para agregar al array de preOrderProducts
+   * @param quantity cantidad del producto seleccionado. Cuando el mismo se elige de la lista será la cantidad seleccionada, si se 
+   *                 selecciona haciendo click sobre el nombre del producto es 1
+   */
+  addProductToPreOrder(product:Product, quantity:number):void {  
+    if (!isNullOrUndefined(product))
+    {
+      let productInPreOrder = new ProductsInUserOrder();
+      let currentProduct = new ProductsInUserOrder();
+
+      //Creo el producto a buscar en el array de preOrderProducts.
+      currentProduct.id = product._id;
+      currentProduct.name = product.name;
+      currentProduct.hasObservations = false;
+      currentProduct.observations = '';
+      currentProduct.options = null;
+      currentProduct.price = product.price;
+      currentProduct.quantity = quantity;
+      currentProduct.size = null;
+      currentProduct.deleted = false;      
+
+      //Producto en el array preOrderProducts si existe.
+      productInPreOrder = this.preOrderProducts.find(x=> this.compareProducts(x, currentProduct));
+      //Si el producto ya esta en los productos pre seleccionados aumento la cantidad. Sino hago el push al array
+      if (!isNullOrUndefined(productInPreOrder)) {    
+        //Si el producto ya existe en el pre pedido se suma la cantidad nueva.    
+        productInPreOrder.quantity += quantity;
+        this.updateTotalToConfirm(productInPreOrder.price, quantity);
+      }
+      else
+      {
+        //Si el producto no existe en el pre pedido se hace el push al array.
+        this.preOrderProducts.push(currentProduct);
+        this.updateTotalToConfirm(currentProduct.price, quantity);
+      }      
+    }
+  }
+
+  /**Compara propiedad por propiedad para determinar si el producto dado como parámetro existe en el array de preOrderProducts.
+   * No compara la propiedad quantity porque esta va cambiando a medida que se agregan productos iguales al array.
+   * @param prodInPreOrder producto existente en el array preOrderProducts 
+   * @param product producto para el que se quiere determinar su existencia en el array preOrederProducts
+   * @returns true si el producto se encuentra en el array preOrderProducts. false si no se encuentra.
+   */
+  compareProducts(prodInPreOrder: ProductsInUserOrder, product: ProductsInUserOrder):boolean {
+    if (prodInPreOrder.id === product.id &&
+        prodInPreOrder.name === product.name &&
+        prodInPreOrder.hasObservations === product.hasObservations &&
+        prodInPreOrder.observations === product.observations &&
+        prodInPreOrder.options === product.options &&
+        prodInPreOrder.price === product.price &&
+        prodInPreOrder.size === product.size &&
+        prodInPreOrder.deleted === product.deleted) 
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+  }
+
+  /**Elimina el producto del array preOrderProducts sin importar la cantidad
+   * @param productToRemove producto a eliminar del array preOrderProducts
+   */
+  removeProductFromPreOrder(productToRemove:any):void {    
+    if (this.preOrderProducts.length === 1)
+    {
+      this.updateTotalToConfirm(this.preOrderProducts[0].price, -this.preOrderProducts[0].quantity);
+      this.preOrderProducts = [];
+    }
     else
     {
-      this.orderQty.push({
-        productName : currentProduct.name,
-        productCode : currentProduct.code,
-        qty : 1
-      })
-    }    
+      let indexOfProd = this.preOrderProducts.indexOf(productToRemove);
+      this.preOrderProducts = this.preOrderProducts.splice(indexOfProd-1, 1);
+      this.updateTotalToConfirm(productToRemove.price, -productToRemove.quantity);
+    }
   }
 
+  /**Elimina el producto del array de productos del usuario sin importar la cantidad*/
+  deleteProductFromOrder():void {     
+    let prodIndex = this.order.users[0].products.indexOf(this.productToRemoveFromOrder);    
+    this.order.users[0].products[prodIndex].deleted = true;
+    this.order.users[0].products[prodIndex].deletedReason = this.deletedReason;
+    this.order.totalPrice -= this.order.users[0].products[prodIndex].quantity * this.order.users[0].products[prodIndex].price;
+    this.closeModalDeleteProd();
+  }
 
-  decreaceProductQty(code): void{
-    let currentProduct = this.products.find(x=> x.code == code);
+  /**Incrementa o disminuye la cantidad del producto en la cantidad pasada como parámetro
+   * @param productToUpdateQty producto al que se le va a incrementar la cantidad
+   * @param qty cantidad a ser incrementada o disminuída. Puede ser un número negativo
+   */
+  updateProductQty(productToUpdateQty:any, qty: number): void {
+    if (productToUpdateQty.quantity + qty >= 0)
+    {
+      productToUpdateQty.quantity += qty;  
+      this.updateTotalToConfirm(productToUpdateQty.price, qty);
+    }
+  }
 
-    if (this.orderQty.find(x=> x.productCode == currentProduct.code)){
-      if(this.orderQty.find(x=> x.productCode == currentProduct.code).qty > 1){
-          this.orderQty.find(x=> x.productCode == currentProduct.code).qty--
+  /**Acualiza el monto total a confirmar
+   * @param price precio del producto 
+   * @param qty cantidad del producto
+   */
+  updateTotalToConfirm(price:number, qty:number):void {
+    this.totalToConfirm += price * qty;
+  }
+
+  /**Cancelar pre order */
+  cancelPreOrder():void {
+    this.preOrderProducts = [];
+    this.totalToConfirm = 0;
+  }
+
+  /**Confirmar pre order */
+  confirmPreOrder():void {
+    this.preOrderProducts.forEach(productInPreOrder => {
+      let productInOrder = new ProductsInUserOrder();
+      productInOrder = null;
+      
+      //Si ya existen productos en el pedido, verifico si el producto en el pre-pedido existe en el pedido.
+      if (!isNullOrUndefined(this.order.users[0].products) && this.order.users[0].products.length > 0) {
+        productInOrder = this.order.users[0].products.find(product => this.compareProducts(product, productInPreOrder))
+      }
+
+      //Si el produco en el pre pedido existe en el pedido sumo la cantidad, sino lo agrego.
+      if (!isNullOrUndefined(productInOrder)) {
+        productInOrder.quantity += productInPreOrder.quantity
       }
       else {
-        this.orderQty.splice(this.orderQty.indexOf(currentProduct),1)
-      } 
+        //Si el producto en el pre pedido tiene una observacion pero es igual al texto por default se cambia por vacio y 
+        //se setea a false la variable hasDescription
+        if (productInPreOrder.hasObservations === true && productInPreOrder.observations === this.prodObservation) {
+          productInPreOrder.hasObservations = false;
+          productInPreOrder.observations = '';
+        }
+
+        this.order.users[0].products.push(productInPreOrder);
+      }
+    })
+
+    this.order.totalPrice += this.totalToConfirm;
+    this.totalToConfirm = 0;
+    this.preOrderProducts = [];    
+  }
+
+  /**Muestra o esconde la sección de observaciones para cada producto */
+  showObservationBox(product:ProductsInUserOrder):void {
+    product.hasObservations = !product.hasObservations;
+    product.observations = this.prodObservation;
+  }
+
+  /**Muestra o esconde la sección de descuento */
+  showDiscountSection(show: boolean):void {
+    this.showDiscount = show;
+
+    if (show === true) {
+      this.discountAmount = 0;
+      this.discountRate = 0;        
+    }
+  }
+
+  /**Calcula el porcentaje de descuento según el monto de descuento ingresado */
+  calculateRate():void {
+    this.discountRate = (this.discountAmount * 100) / this.order.totalPrice; 
+  }
+
+  /**Calcula el monto de descuento según el porcentaje de descuento ingresado */
+  calculateAmount():void {
+    this.discountAmount = (this.discountRate / 100) * this.order.totalPrice;
+  }
+
+  addDiscount():void {
+    this.showDiscountSection(false);  
+    if (isNullOrUndefined(this.order.discount))
+    {
+      this.order.discount = new OrderDiscount();
+      this.order.discount.discountAmount = this.discountAmount;  
+      this.order.discount.discountRate = this.discountRate;
+      this.order.discount.subtotal = this.order.totalPrice;
+      this.order.totalPrice = this.order.discount.subtotal - this.order.discount.discountAmount;  
     }
     else
     {
-      this.orderQty.push({
-        productName : currentProduct.name,
-        productCode : currentProduct.code,
-        qty : 1
-      })
-    }    
+      this.order.discount.discountAmount = this.discountAmount;  
+      this.order.discount.discountRate = this.discountRate;
+      this.order.totalPrice = this.order.discount.subtotal - this.order.discount.discountAmount;
+    }
   }
 
-  checkQty(product) : void{
+  selectText(component):void {
+    component.select();
+  }
+
+  showModalRemoveProduct(template: TemplateRef<any>, product:ProductsInUserOrder):void {
+    this.productToRemoveFromOrder = product;
+
+    this.modalRef = this.modalService.show(template, {backdrop: true, ignoreBackdropClick: true});
+  }
+
+  closeModalDeleteProd(){
+    this.deletedReason = undefined;
+    this.modalRef.hide();
+    this.modalRef = null;       
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+  }
+
+  closeTable(template){
+		this.modalRef = this.modalService.show(template, {backdrop: true});
+	}
+  
+
+
+
+  //PARA QUE ES ESTE METODO?
+  /* checkQty(product) : void{
     // if (this.orderQty.find(x=> x.productCode == product.code)){
     //   if(this.orderQty.find(x=> x.productCode == product.code).qty > 1){
     //       this.orderQty.find(x=> x.productCode == product.code).qty--
@@ -190,16 +397,6 @@ export class OrderNewComponent implements OnInit {
     
     console.log(product.qty);
   }
-
-  isOrdersActive() {
-    //console.log('orders active')
-		return this._router.isActive('/orders/section/tables/' + this._route.snapshot.params['id'], true);
-	}
-
-  // closeModal(){
-  //   this.fluid.hide();
-  //   this._router.navigate(['/orders/section/tables/' + this._route.parent.snapshot.params['id']])
-  // }
 
   findOrders(table : Table){
     //   this.tableActive.status = 'Ocupada'; //SOLO PARA PRUEBAS POR EL ERROR DE QUERYSELECTORALL
@@ -229,7 +426,7 @@ export class OrderNewComponent implements OnInit {
             };
             orders.forEach(secondOrder => {
               if(order.orderNumber > secondOrder.orderNumber){
-                this.maxOrderNumber = parseInt(order.orderNumber);
+                //this.maxOrderNumber = parseInt(order.orderNumber);
               };
             });
           });
@@ -250,7 +447,7 @@ export class OrderNewComponent implements OnInit {
     //}
   }
 
-  getTableByNumber(tableNumber){ //ACA TENGO QUE VALIDAR SI VINO LA MESA POR PARAMETRO. NO DESPUES
+  getTableByNumber(tableNumber){
     this.tableService.getTableByNumber(tableNumber)
        .subscribe(table => {
          this.currentTable = table;
@@ -259,47 +456,7 @@ export class OrderNewComponent implements OnInit {
     error => { this.errorMessage = <any>error['message'];});
   }
 
-  // savePreOrder(){
-  //   // let newOrder = new Order();
-  //   // newOrder.open = true;
-  //   // newOrder.cancel = false;
-  //   // newOrder.completed_at = null;
-  //   // newOrder.created_at = new Date().toLocaleDateString();
-  //   // newOrder.products = [];
-  //   // newOrder.table = this.tableNumber;
-  //   // newOrder.totalPrice = 0;
-
-  //  // this.orderService.saveOrder(this.newOrder);
-
-  //   this.openOrder = true;
-    
-  // }
-
-  getAllMenus(){
-    this.menuService.getAll()
-      .subscribe(menus => {
-        this.menus = menus;
-    },
-    error => { this.errorMessage = <any>error['message'];});
-  }
-
-  getCategories(menuId){
-      this.categoryService.getCategoriesByMenu(menuId)
-        .subscribe(categories => {
-          this.categories = categories;
-        },
-        error => { this.errorMessage = <any>error['message'];});
-  }
-
-  getProductsToAdd(categoryId){
-    this.productService.getProductsByCategory(categoryId)
-      .subscribe(products => {
-        this.productsToAdd = products;
-        console.log(this.productsToAdd);
-      },
-      error => { this.errorMessage = <any>error['message'];}
-    );
-  }
+  
 
   saveOrder(){
     //console.log(this.currentTable);
@@ -313,25 +470,15 @@ export class OrderNewComponent implements OnInit {
       error => { this.errorMessage = <any>error['message'];}
     );
     };
-    this.currentOrder.orderNumber = (this.maxOrderNumber + 1).toString();
+    //this.currentOrder.orderNumber = (this.maxOrderNumber + 1).toString();
     this.currentOrder.type = 'Mostrador';
     this.currentOrder.waiter = 'asdjkfaljdsfa';
     this.currentOrder.table = this.currentTable.number;
     this.currentOrder.orderApp = false;
-   // newOrder.users = ;
-   // this.orderService.saveOrder(this.newOrder);
 
   //  this.openOrder = true;
     this.orderService.saveOrder(this.currentOrder);
     this._router.navigate(['./orders/section/tables/5a63ccdbb3f3d70c3837e49a']);
-  }
-
-  calculatePercentage(){
-    this.discountPercentage = (this.discountAmount * 100) / this.currentOrder.subtotal; 
-  }
-
-  calculateAmount(){
-    this.discountAmount = (this.discountPercentage / 100) * this.currentOrder.subtotal;
   }
 
   getAllPaymentTypes(){
@@ -370,14 +517,7 @@ export class OrderNewComponent implements OnInit {
     //hacer algo aca; 
   }
 
-  closeTable(template){
-			this.modalRef = this.modalService.show(template, {backdrop: true});
-	}
-  closeModal(){
-        this.modalRef.hide();
-        this.modalRef = null;
-        return true;        
-	}
-
+  
+ */
 
   }

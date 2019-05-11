@@ -5,8 +5,14 @@ import { NgGrid, NgGridItem, NgGridConfig, NgGridItemConfig, NgGridItemEvent } f
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Table } from '../../../shared/models/table'
-import { TableService } from '../../../shared/services/table.service';
+import {
+	Table,
+	TableService,
+	Order,
+	OrderService,
+	UsersInOrder,
+	ProductsInUserOrder
+} from '../../../shared/index';
 import { ToastService } from 'ng-mdb-pro/pro/alerts';
 import { isNullOrUndefined } from 'util';
 
@@ -61,11 +67,13 @@ export class TableListComponent implements OnInit{
 	red: Boolean;
 	blue: Boolean;
 	yellow: Boolean;
-	selectedTable: Number;
+	selectedTable: Table;
 	tableNumberDelete: number;
+	qtyProd: number;
 
 	constructor(private _router: Router,
 							private _tableService: TableService,
+							private _orderService: OrderService,
 							private _route: ActivatedRoute,
 							private modalService: BsModalService,
 							private toast: ToastService) 
@@ -94,6 +102,7 @@ export class TableListComponent implements OnInit{
 			this.ordersActive = true;
 			this.gridConfig.draggable = false;
 			this.gridConfig.resizable = false;
+			this.selectedTable = new Table();
 		}
 	}
 
@@ -216,37 +225,79 @@ export class TableListComponent implements OnInit{
 	showSuccessToast() { 
 		let options = { timeOut: 2500 };
 		this.toast.success('Se ha guardado correctamente','AppBares Dice:', options);
-	  }
-
-	evaluateRoute(tableId){
-
-	}
-
-	showOpenOrderModal(openNewOrderTemplate: TemplateRef<any>, tableId: any){
-		console.log("orders")
-		if (this.ordersActive === true) {
-			let currentBox = this.boxes.find(x=> x.id == tableId); 
-			this.selectedTable = tableId;
-			if(currentBox.status == "Libre"){
-				this.modalRef = this.modalService.show(openNewOrderTemplate, {backdrop: true});
-			}
-			if(currentBox.status == "Ocupada"){
-				this._router.navigate(['./orders/orderNew', tableId]);
-			}
-		}		
 	}
 
 	showDeleteModal(deleteTemplate: TemplateRef<any>, tableNumber: number){
-		console.log("settings")
 		if (this.settingsActive === true) {
 			this.tableNumberDelete = tableNumber;
 			this.modalRef = this.modalService.show(deleteTemplate, {backdrop: true});
 		}	
 	}
+
+	showOpenOrderModal(openNewOrderTemplate: TemplateRef<any>, tableNumber: any){
+		if (this.ordersActive === true) {
+			this._tableService.getTableByNumber(tableNumber).subscribe(
+				table => {
+					this.selectedTable = table;
+
+					this._orderService.getOrderOpenByTable(this.selectedTable.number).subscribe(
+						order => {
+							//Verifico que el pedido para la mesa no sea nulo o undefined por si se creo el pedido
+							//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
+							//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
+							if (isNullOrUndefined(order) && this.selectedTable.status === "Libre") {
+								this.modalRef = this.modalService.show(openNewOrderTemplate, {backdrop: true});
+							}
+							else {
+								this._router.navigate(['./orders/orderNew', tableNumber]);
+							}
+						},
+						error => { this.errorMessage = <any>error }
+					)
+				},
+				error => { this.errorMessage = <any>error }
+			)			
+		}		
+	}
 	
 	newOrder(){
+		let order = new Order();
 		this.closeModal();
-		this._router.navigate(['./orders/orderNew', this.selectedTable]);
+		this.selectedTable.status = "Ocupada";
+		this._orderService.getLastOrder().subscribe(
+			lastOrder => {
+				console.log("subscribe")
+				if (isNullOrUndefined(lastOrder))
+				{
+					order.orderNumber = 1;
+				}
+				else
+				{
+					order.orderNumber = lastOrder.orderNumber + 1;
+				}
+
+				order.type = "Restaurant";
+				order.table = this.selectedTable.number;
+				order.status = "Open";
+				order.users = new UsersInOrder();
+				//aca hay que setear el id del usuario admin. todavia no esta creado.
+				order.users.id = "5b39625a42d7744c995253c5";
+				order.users.owner = true;
+				order.users.products = new Array<ProductsInUserOrder>();
+				order.users.products = [];		
+				order.app = false;		
+				this._orderService.saveOrder(order).subscribe(() => {
+					this._tableService.updateTable(this.selectedTable).subscribe(
+						table => { 
+							this.selectedTable = table;
+							this._router.navigate(['./orders/orderNew', this.selectedTable.number]); 
+						},
+						error => { this.errorMessage = <any>error }
+					)
+				})
+			},
+			error => { this.errorMessage = <any>error }
+		)			
 	}
 
 	deleteTable(){

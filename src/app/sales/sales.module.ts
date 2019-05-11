@@ -13,6 +13,10 @@ import { OrderNewComponent } from '../order/order-new/order-new.component';
 import { SectionListResolverService } from '../section/section-list/section-list-resolver.service';
 import { TableListResolverService } from '../table/table-list/table-list-resolver.service';
 import { DeliveryResolverService } from "../delivery/delivery-resolver.service";
+import { OrderNewResolverService } from '../order/order-new/order-new-resolver.service';
+import { ProductResolverService } from '../product/product-list/product-resolver.service';
+import { MenuResolverService } from '../menu/menu-resolver.service';
+import { CategoryResolverService } from '../category/category-list/category-resolver.service';
 
 @NgModule({
   imports: [
@@ -37,8 +41,14 @@ import { DeliveryResolverService } from "../delivery/delivery-resolver.service";
             resolve: { sections: SectionListResolverService }         
           },
           {
-            path:'orderNew/:idTable',
-            component: OrderNewComponent
+            path:'orderNew/:tableNumber',
+            component: OrderNewComponent,
+            resolve:{ 
+                      order: OrderNewResolverService, 
+                      products: ProductResolverService,
+                      categories: CategoryResolverService,
+                      menus: MenuResolverService 
+                    }
           },
           {
             path: 'delivery',

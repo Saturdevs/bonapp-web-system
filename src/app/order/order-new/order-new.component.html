@@ -1,292 +1,266 @@
-<ng-template #closeTemplate>
-  <div class="modal-header primary-color">
-    <h4 class="modal-title text-white">Nuevo pedido</h4>
+<ng-template #errorTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Error de Servicio</h4>
   </div>
   <div class="modal-body">
-    <div class="row pl-4">
-      <div class="float-left col-md-4 col-lg-4 col-sm-4">
-        <h6 class="float-left">Subtotal:</h6>
-        <h6 class="float-left">$54</h6>
-      </div>
-      <div class="float-left col-md-3 col-lg-3 col-sm-3">
-        <h5>Descuento:</h5>
-        <input type="number" class="form-control" (change)='calculateAmount()' [(ngModel)]="discountPercentage" id="discountPercentager" mdbActive>
-        <label for="discountPercentager">Porcentaje</label>
-        <input type="number" class="form-control" [(ngModel)]="discountAmount" (change)='calculatePercentage()' id="discountAmount" mdbActive>
-        <label for="discountAmount">Monto</label>
-      </div>
-    </div>
-    <hr>
-    <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
-      <div class="md-form form-group col-md-4 col-lg-4 col-sm-4 col-xs-4">
-        <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
-        <label for="prodQty">Cantidad de personas</label>
-      </div>
-      <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-        <mdb-completer style="width:100%!important;" (selected)="selectWaiter()" [label]="'Seleccionar Mozo'" name="autocomplete" [(ngModel)]="selectedWaiter" [datasource]="waitersList" [minSearchLength]="0"></mdb-completer>
+    {{errorMessage}}
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">Eliminar Producto del Pedido</h4>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12">
+      <div class="row">
+        ¿Estas seguro que desea cancelar esta adición?
+      </div>    
+      <div class="row">
+        <textarea (click)="selectText(obs)" #obs placeholder="Comentario..." 
+        [(ngModel)]="deletedReason"></textarea>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="button special" (click)="newOrder()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+    <button type="button" class="button special" (click)="deleteProductFromOrder()" 
+      [disabled]="deletedReason === undefined || deletedReason === ''">Aceptar</button>
+    <button type="button" class="button special" (click)="closeModalDeleteProd()">Cancel</button>
   </div>
 </ng-template>
-<!-- <div mdbModal #fluid="mdb-modal" class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-full-height modal-right customModal" role="document">
-      <div class="modal-content" *ngIf="openOrder === true">
-          <div class="modal-header primary-color white-text">
-              <h4 class="modal-title w-100" id="myModalLabel">{{ pageTitle }}</h4>
-            </div>
-          <div class="modal-body">
-            <div class="row pl-4">
-                <div class="float-left col-md-3 col-lg-3 col-sm-3">
-                  <h5>{{tableNumber}}</h5>
-                </div>
-            </div>
-            <hr>
-            <div class="row pl-4">
-              <h6>5 personas - 20/02/18 22:37:00</h6>
-            </div>
-            <hr>
-            <div class="row pl-4">
-                <h6>Adicionar</h6>
-            </div>
-            <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
-              <div class="md-form form-group col-md-4 col-lg-4 col-sm-4 col-xs-4">
-                <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
-                <label for="prodQty">Cantidad</label>
-              </div>
-              <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-                <mdb-completer style="width:100%!important;" (selected)="selectProduct()" [label]="'Buscar Producto'" name="autocomplete" [(ngModel)]="selectedProduct" [datasource]="productsName" [minSearchLength]="0"></mdb-completer>
-              </div>
-            </div>
-            <div class="row pl-4 customDivHeight">
-              <ul class="list-group">
-                <div class="btn-group customProductMargin" *ngFor="let product of orderQty" data-toggle="buttons">
-                  <label (click)="decreaceProductQty(product.productCode)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-                      <p class="pb-0 mb-0">-</p>
-                  </label>
-                  <li class="list-group-item d-flex customSize customSizeY justify-content-between align-items-center pb-1 pt-0">
-                      {{ product.productName }}
-                      <span class="badge badge-primary badge-pill customBadge" contenteditable="true" (input)="checkQty(product)" name="qtyProdSpan" [(ngModel)]="product.qty"></span>
-                  </li>
-                  <label (click)="addProductQty(product.productCode)" class="z-depth-0 customSizeY btn btn-tb btn-primary waves-effect waves-light float-right pt-2">
-                    <p class="pb-0 mb-0">+</p>
-                  </label>
-                </div>
-              </ul>
-            </div>
-            <div class="row customSubtotalDiv">
-              <div class="float-left col-md-4 col-lg-4 col-sm-4">
-                  <h6 class="float-left">Subtotal:</h6>
-                  <h6 class="float-left">$54</h6>
-              </div>
-              <div class="float-right col-md-8 col-lg-8 col-sm-8">
-                  <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="saveOrder()" >Guardar</button>
-              </div>  
-            </div>
-            <hr>
-            <!-- <form #form="ngForm" method="post" novalidate>
-              <div class="row">
-                <div class="col-md-8 col-lg-8 col-xl-8">               
-                  
-                  
-                </div>
-                <div class="col-md-6 col-lg-6 col-xl-6">
-                
-                </div>
-              </div>
-            </form> -->
-          <!-- </div>
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="closeModal()" mdbRippleRadius>Cancelar</button>  
-            <button type="button" class="btn btn-primary waves-light" mdbRippleRadius (click)="saveSection()" >Cerrar Mesa</button>  
-          </div>
-      </div>
-      <div class="modal-content" *ngIf="openOrder === false">
-        <div class="modal-header primary-color white-text">
-            <h4 class="modal-title w-100" id="myModalLabel">{{ pageTitle }}</h4>
-          </div>
-        <div class="modal-body">
-          <div class="row pl-4">
-              <div class="float-left col-md-3 col-lg-3 col-sm-3">
-                <input type="number" class="form-control" [(ngModel)]="tableNumber" id="tableNumber" mdbActive>
-                <label for="tableNumber">Nro. de Mesa</label>
-              </div>
-          </div>
-          <hr>
-          <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
-            <div class="md-form form-group col-md-4 col-lg-4 col-sm-4 col-xs-4">
-              <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
-              <label for="prodQty">Cantidad de personas</label>
-            </div>
-            <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-              <mdb-completer style="width:100%!important;" (selected)="selectWaiter()" [label]="'Seleccionar Mozo'" name="autocomplete" [(ngModel)]="selectedWaiter" [datasource]="waitersList" [minSearchLength]="0"></mdb-completer>
-            </div>
-          </div>  
-        </div>
-        <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="closeModal()" mdbRippleRadius>Cancelar</button>  
-          <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="savePreOrder()">Guardar</button>
-        </div>
-    </div>
-  </div>
-</div> -->
-<!-- <div mdbModal *ngIf="openOrder === false" #fluid="mdb-modal" class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-full-height modal-right customModal" role="document">
-        
-    </div>
-</div> -->
+
+<ng-template #closeOrderTemplate>
+  <app-order-close></app-order-close>
+</ng-template>
 
 <div class="row pr-0 pl-0 mr-0 ml-0">
   <div class="row col-md-8 col-lg-8 col-xs-8 col-sm-8" style="max-height:7rem;">
-  <div class="row col-12"
-  style="
-  width: 100%;
-  overflow-x: hidden!important;
-  position: relative;
-  height: 100%;
-  ">
+    <div class="row col-12"
+    style="width: 100%;
+    overflow-x: hidden!important;
+    position: relative;
+    height: 100%;">
       <div class="container-fluid pr-0 pl-0 mr-0 ml-0" style="background-color:blue;
       position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow-x: hidden;
-    white-space:nowrap;
-      
-  height: auto;
-      ">
-      <div *ngFor="let menu of menus" style="    height:100%;
-      max-width:700px;
-      display:inline-block;
-      *zoom:1;/*IE*/
-      font-size:14px;
-      white-space:normal;
-      padding:0 2em;margin-left: 0px;
-      margin-right: 0px;
-      
-  height: auto;">
-        <a class="customFloatedButton" (click)="getCategories(menu._id)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{menu.name}}</a>
-      </div>    
-          <!-- <a class="customFloatedButton" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Bebidas</a>
-          <a class="customFloatedButton" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Bebidas</a>
-          <a class="customFloatedButton" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Bebidas</a>
-          <a class="customFloatedButton" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Bebidas</a>
-          <a class="customFloatedButton" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Bebidas</a>
-          <a class="customFloatedButton" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Bebidas</a> -->
-      
-        </div>
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      overflow-x: hidden;
+      white-space:nowrap;
+      height: auto;">
+        <div *ngFor="let menu of menus" style="    height:100%;
+        max-width:700px;
+        display:inline-block;
+        *zoom:1;/*IE*/
+        font-size:14px;
+        white-space:normal;
+        padding:0 2em;margin-left: 0px;
+        margin-right: 0px;      
+        height: auto;">
+          <a class="customFloatedButton" (click)="getCategories(menu._id)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{menu.name}}</a>
+        </div>          
+      </div>
 
-        <div class="paddles">
-            <button class="left-paddle paddle" style="left:auto!important;">
-              <
-            </button>
-            <button class="right-paddle paddle">
-              >
-            </button>
-        </div>
-  
-
-
-  </div>
-  <div class="row">
-    <div class="col-3" style="background-color: yellow; height:35rem; min-width:13rem; 
-    overflow-y: scroll;">
-      <div *ngFor="let category of categories">
-        <a class="customFloatedButton" (click)="getProductsToAdd(category._id)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{category.name}}</a>
+      <div class="paddles">
+          <button class="left-paddle paddle" style="left:auto!important;">
+            <
+          </button>
+          <button class="right-paddle paddle">
+            >
+          </button>
       </div>
     </div>
-    <div class="col-9 row" style="background-color: red;
-    height: 35rem;
-    width: 48.5rem;
-    overflow-y: scroll;">
-        <div>
-          <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
+  
+    <div class="row">
+      <div class="col-3" style="background-color: yellow; height:35rem; min-width:13rem; 
+      overflow-y: scroll;">
+        <div *ngFor="let category of categories">
+          <a class="customFloatedButton" (click)="getProductsByCategory(category._id)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{category.name}}</a>
         </div>
-        <div>
-            <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-          </div>
-          <div>
-              <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-            </div>
-            <div>
-                <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-              </div>        <div>
-                  <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                </div>        <div>
-                    <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                  </div>        <div>
-                      <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                    </div>        <div>
-                        <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                      </div>        <div>
-                          <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                        </div>        <div>
-                            <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                          </div>        <div>
-                              <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                            </div>        <div>
-                                <a class="customFloatedButton" (click)="selectProductByBox()" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> Hamburguesa Especial</a>
-                              </div>
+      </div>
+      <div class="col-9 row" style="background-color: red;
+      height: 35rem;
+      width: 48.5rem;
+      overflow-y: scroll;">
+        <div *ngFor="let product of products">
+          <a class="customFloatedButton" (click)="addProductToPreOrder(product, 1)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{product.name}}</a>
+        </div>
+      </div>
     </div>
-  </div>
 
-</div>
+  </div>
   <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4" style="height:100%">
     <div class="row pl-4">
       <div class="float-left col-md-3 col-lg-3 col-sm-3">
-        <h5>{{tableNumber}}</h5>
+        <h5>Mesa {{order.table}}</h5>
       </div>
-  </div>
-  <hr>
-  <div class="row pl-4">
-    <h6>5 personas - 20/02/18 22:37:00</h6>
-  </div>
-  <hr>
-  <div class="row pl-4">
-      <h6>Adicionar</h6>
-  </div>
-  <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
-    <div class="md-form form-group col-md-4 col-lg-4 col-sm-4 col-xs-4">
-      <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
-      <label for="prodQty">Cantidad</label>
     </div>
-    <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-      <mdb-completer style="width:100%!important;" (selected)="selectProduct()" [label]="'Buscar Producto'" name="autocomplete" [(ngModel)]="selectedProduct" [datasource]="productsName" [minSearchLength]="0"></mdb-completer>
+
+    <hr>
+
+    <div class="row pl-4">
+      <h6>{{ order.created_at | date:'dd/MM/yy HH:mm' }}</h6>
     </div>
-  </div>
-  <div class="row pl-2 customDivHeight">
-    <ul class="list-group">
-      <div class="btn-group customProductMargin" *ngFor="let product of orderQty" data-toggle="buttons">
-        <label (click)="decreaceProductQty(product.productCode)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-            <p class="pb-0 mb-0">-</p>
-        </label>
-        <li class="list-group-item d-flex customSize customSizeY justify-content-between align-items-center pb-1 pt-0">
-            {{ product.productName }}
-            <span class="badge badge-primary badge-pill customBadge" contenteditable="true" (input)="checkQty(product)" name="qtyProdSpan" [(ngModel)]="product.qty"></span>
-        </li>
-        <label (click)="addProductQty(product.productCode)" class="z-depth-0 customSizeY btn btn-tb btn-primary waves-effect waves-light float-right pt-2">
-          <p class="pb-0 mb-0">+</p>
-        </label>
+
+    <hr>
+    
+    <div class="row pl-4">
+        <h6>Adicionar</h6>
+    </div>
+    
+    <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
+      <div class="md-form form-group col-md-2 col-lg-2 col-sm-2 col-xs-2">
+        <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
+        <label for="prodQty">Cantidad</label>
       </div>
-    </ul>
-  </div>
-  <div class="row customSubtotalDiv">
-    <div class="float-left col-md-4 col-lg-4 col-sm-4">
-        <h6 class="float-left">Subtotal:</h6>
-        <h6 class="float-left">$54</h6>
+      <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
+        <mdb-completer style="width:100%!important;" (selected)="addProductToPreOrderFromList()" [label]="'Buscar Producto'" initialValue="Buscar Producto" name="autocomplete" [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0"></mdb-completer>
+      </div>
     </div>
-    <div class="float-right col-md-8 col-lg-8 col-sm-8">
-        <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="saveOrder()" >Guardar</button>
-    </div>  
-  </div>
-  <div class="row">
-    <div class="float-right col-3">               
-      <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeTemplate)" >Cerrar Mesa</button>
+    
+    <!-- Listado de productos en pre order -->
+    <div class="row pl-2 customDivHeight" *ngIf='preOrderProducts && preOrderProducts.length'>
+      <ul class="list-group">
+        <div class="btn-group customProductMargin row" *ngFor="let product of preOrderProducts" data-toggle="buttons">
+          <div class="col-md-12">
+            <div class="row">
+              <label (click)="updateProductQty(product, -1)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+                <p class="pb-0 mb-0">-</p>
+              </label>
+
+              <p>{{ product.quantity }}</p>
+
+              <label (click)="updateProductQty(product, 1)" class="z-depth-0 customSizeY btn btn-tb btn-primary waves-effect waves-light float-right pt-2">
+                <p class="pb-0 mb-0">+</p>
+              </label>
+
+              <li class="list-group-item d-flex customSize customSizeY justify-content-between align-items-center pb-1 pt-0">
+                  {{ product.name }}            
+              </li>  
+
+              <p>$ {{ product.price }} </p>  
+
+              <label (click)="showObservationBox(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+                <p class="pb-0 mb-0"><i class="fa fa-comment fa-1x"></i></p>
+              </label> 
+              
+              <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+                <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
+              </label>         
+            </div>            
+
+            <div class="row" *ngIf="product.hasObservations === true">
+              <textarea (click)="selectText(obs)" #obs [(ngModel)]="product.observations"></textarea>
+            </div>
+          </div>
+        </div>        
+      </ul>
+
+      <p>Total a confirmar: {{ totalToConfirm }}</p>
+
+      <div class="float-right col-md-8 col-lg-8 col-sm-8">
+        <button type="button" class="float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="cancelPreOrder()" >Cancelar</button>
+      </div>  
+      <div class="float-right col-md-8 col-lg-8 col-sm-8">
+        <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="confirmPreOrder()" >Confirmar</button>
+      </div> 
     </div>
-  </div>
+
+    <!-- Listado de productos en order -->
+    <div class="row pl-2 customDivHeight" *ngIf='order.users[0].products && order.users[0].products.length'>
+      <ul class="list-group">
+        <div class="btn-group customProductMargin" *ngFor="let product of order.users[0].products" data-toggle="buttons">   
+          <div class="col-md-12">  
+            <div class="row">
+              <p>{{ product.quantity }}</p>
+
+              <li class="list-group-item d-flex customSize customSizeY justify-content-between align-items-center pb-1 pt-0">
+                  {{ product.name }}              
+              </li>  
+
+              <p>$ {{ product.price }} </p>  
+              
+              <button 
+                type="button" 
+                class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" 
+                (click)="showModalRemoveProduct(deleteTemplate, product)">
+                <i class="fa fa-times fa-1x"></i>
+              </button>
+            </div>     
+            <div class="row">
+              <div *ngIf="product.hasObservations === true">
+                {{ product.observations }}
+              </div>
+
+              <div *ngIf="product.deleted === true">
+                <p> - CANCELADO: {{ product.deletedReason }} </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ul>
+    </div>
+
+    <!-- Ingresar descuento -->
+    <div class="row" *ngIf='showDiscount===true'>
+      <form #formDiscount="ngForm" novalidate>
+        <div class="row">
+          <span>Descuento: </span>
+          <input type="number" class="form-control" [(ngModel)]="discountRate" name="discountRate" 
+            (input)="calculateAmount()"
+            (click)="selectText(rate)"
+            #rate
+            mdbActive>
+          <span>%</span>
+
+          <span>$</span>
+          <input type="number" class="form-control" [(ngModel)]="discountAmount" name="discountAmount"
+            (input)="calculateRate()" 
+            (click)="selectText(amount)"
+            #amount
+          mdbActive>
+        </div>
+        <div class="row">
+          <ul class="actions" align="center">
+            <li><input [disabled]="formDiscount.invalid" value="Confirmar" class="special" (click)="addDiscount()"/></li>
+            <li><input type="reset" value="Cancelar" (click)='showDiscountSection(false)' /></li>
+          </ul>
+        </div>
+      </form>
+    </div>
+
+    <!-- Mostrar descuento si hay alguno ingresado -->
+    <div class="row" *ngIf='order.discount !== undefined && order.discount !== null'>
+      <div class="col-md-12">
+        <div class="row">
+          <h6 class="float-left">Subtotal:</h6>
+          <h6 class="float-left">{{ order.discount.subtotal }}</h6>      
+        </div>
+
+        <div class="row">
+          <h6 class="float-left">Descuento </h6>
+          <h6 class="float-left">{{ order.discount.discountRate }} %</h6>      
+        </div>
+      </div>
+    </div>
+
+    <!--Total-->
+    <div class="row">
+      <h6 class="float-left">Total:</h6>
+      <h6 class="float-left">${{ order.totalPrice }}</h6>
+    </div>
+
+    <div class="row">
+      <div class="float-left col 2">
+        <button [disabled]="order.users[0].products.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
+      </div>
+      <div class="float-right col-3">               
+        <button type="button" [disabled]="order.users[0].products.length === 0" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
+      </div>
+    </div>
   </div>
 </div>

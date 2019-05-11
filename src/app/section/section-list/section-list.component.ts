@@ -20,6 +20,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   private sections: Array<Section>;
   settingsActive: Boolean;
   ordersActive: Boolean;
+  title: string;
   
   constructor(private _sectionService: SectionService,
               private _route: ActivatedRoute,
@@ -33,10 +34,12 @@ export class SectionListComponent implements OnInit, AfterViewInit {
     });
    
     if(this.isSettingsActive()) {
+      this.title = "Configuración de secciones y mesas";
 			this.settingsActive = true;
 		}
 		
 		if(this.isOrdersActive()) {
+      this.title = "Nuevo Pedido"
 			this.ordersActive = true;
 		}    
   }

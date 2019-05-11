@@ -7,3 +7,5 @@ export * from './payment-type.service';
 export * from './cash-register.service';
 export * from './cash-flow.service';
 export * from './arqueo-caja.service';
+export * from './table.service';
+export * from './order.service';
