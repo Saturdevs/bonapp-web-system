@@ -24,6 +24,7 @@ export class OrderPreComponent implements OnInit {
   public modalRef: BsModalRef;
   private errorMessage: string;
   private title: string = 'Nuevo Pedido';
+  private tableNumber: string = 'Numero de mesa';
  
   constructor(private _orderService: OrderService,
               private _tableService: TableService,
