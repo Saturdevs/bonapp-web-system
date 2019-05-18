@@ -1,5 +1,37 @@
-<p>
-  order-close works!
-</p>
+<div class="col-md-12">
+  <!-- Titulo del form -->
+  <div class="row">
+    {{title + order.table}}
 
-<button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="onClick()" >Confirmar</button>
+    <label (click)="closeForm()" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+      <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
+    </label> 
+  </div>
+
+  <!-- Cuerpo del form -->
+  <div class="row">
+    <!-- Adiciones -->
+    <div class="col-md-6">    
+      <div class="row">
+        {{ aditionsTitle }}
+      </div>  
+
+    </div>
+    <!-- Pago -->
+    <div class="col-md-6">
+      <div class="row">
+        {{ paymentsTitle }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones -->
+  <div class="row">
+    <div class="modal-footer">      
+      <button type="button" class="button special" (click)="closeForm()">{{ cancelButton }}</button>
+      <div class="float-right col-3">               
+        <button type="button" [disabled]="order.users[0].products.length === 0" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">{{ closeTableButton + order.table }}</button>
+      </div>
+    </div>  
+  </div>
+</div>

@@ -51,12 +51,13 @@ export class OrderPreComponent implements OnInit {
 				order.type = "Restaurant";
 				order.table = this.selectedTable.number;
 				order.status = "Open";
-				order.users = new UsersInOrder();
+				order.users = new Array<UsersInOrder>();
+				order.users[0] = new UsersInOrder();
 				//aca hay que setear el id del usuario admin. todavia no esta creado.
-				order.users.id = "5b39625a42d7744c995253c5";
-				order.users.owner = true;
-				order.users.products = new Array<ProductsInUserOrder>();
-				order.users.products = [];		
+				order.users[0].user = "5b39625a42d7744c995253c5";
+				order.users[0].owner = true;
+				order.users[0].products = new Array<ProductsInUserOrder>();
+				order.users[0].products = [];		
 				order.app = false;		
 				this._orderService.saveOrder(order).subscribe(() => {
 					this._tableService.updateTable(this.selectedTable).subscribe(

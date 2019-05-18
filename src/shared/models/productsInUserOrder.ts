@@ -1,10 +1,10 @@
 export class ProductsInUserOrder {
-  id: string;
+  /**Id del producto */
+  product: string;
   name: string;
   options: Array<any>;
   price: number;
   size: any;   
-  hasObservations: boolean;
   observations: string;
   quantity: number;
   deleted: boolean;

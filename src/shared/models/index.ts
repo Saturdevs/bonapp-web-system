@@ -17,3 +17,5 @@ export * from './transaction';
 export * from './usersInOrder';
 export * from './paymentInUserOrder';
 export * from './orderDiscount';
+export * from './user';
+export * from './cash-register';
