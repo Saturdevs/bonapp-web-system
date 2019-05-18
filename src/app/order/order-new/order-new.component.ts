@@ -9,21 +9,12 @@ import { CompleterService } from 'ng-mdb-pro/pro/autocomplete';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ModalDirective } from 'ng-mdb-pro/free';
 import { 
-  ArqueoCajaService, 
-  CashRegisterService, 
-  CashRegister, 
-  ArqueoCaja, 
-  PaymentType, 
-  PaymentTypeService, 
-  MenuService, 
   Menu, 
   CategoryService, 
   Category,
   ProductsInUserOrder,
   ProductService,
   Product,
-  TableService,
-  Table,
   OrderService,
   Order,
   OrderDiscount
@@ -39,18 +30,14 @@ export class OrderNewComponent implements OnInit {
   public modalRef: BsModalRef;
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('fluid') public fluid:ModalDirective;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private productService: ProductService,
               private orderService : OrderService,
-              private tableService : TableService,
               private modalService: BsModalService,
-              private arqueoCajaService : ArqueoCajaService,
-              private cashRegisterService : CashRegisterService,
-              private menuService : MenuService,
               private categoryService : CategoryService,
-              private paymentTypesService : PaymentTypeService,
               private completerService: CompleterService) { }
 
   pageTitle: String = 'Nuevo Pedido'; 
@@ -86,21 +73,18 @@ export class OrderNewComponent implements OnInit {
   deletedReason: string;
   /**Cantidad del producto seleccionado por la lista. */
   qtyProd: number = 1;   
-
-  @ViewChild('fluid') public fluid:ModalDirective;
+  /**Productos ya almacenados en el pedido */
+  productsInOrder: Array<ProductsInUserOrder> = [];  
 
   ngOnInit() {
-    this.order = this._route.snapshot.data['order'];
-    console.log(this.order)
+    this.order = this.orderService.transformOrderFromDbToBusiness(this._route.snapshot.data['order']);
     this.products = this._route.snapshot.data['products'];
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
     this.categories = this._route.snapshot.data['categories'];
     this.totalToConfirm = 0;
-    this.order.totalPrice = 0;
+    this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.showDiscount = false;
-    console.log(this.order.discount)
-    //this.thereIsDiscount = !isNullOrUndefined(this.order.discount);
     this.dataService = this.completerService.local(this.filteredProducts, 'name', 'name');
   }
 
@@ -121,10 +105,9 @@ export class OrderNewComponent implements OnInit {
    * @param order pedido a actualizar en la base de datos
    */
   updateOrder(order:Order):void {
-    this.orderService.updateOrder(order).subscribe(
-      orderReturned => {
-        this.order = orderReturned;
-      },
+    let ord = this.orderService.transformOrderFromBusinessToDb(order);
+    this.orderService.updateOrder(ord).subscribe(
+      orderReturned => {},
       error => {
         this.errorMessage = <any>error,
         this.showModalError(this.errorTemplate)
@@ -169,9 +152,8 @@ export class OrderNewComponent implements OnInit {
       let currentProduct = new ProductsInUserOrder();
 
       //Creo el producto a buscar en el array de preOrderProducts.
-      currentProduct.id = product._id;
+      currentProduct.product = product._id;
       currentProduct.name = product.name;
-      currentProduct.hasObservations = false;
       currentProduct.observations = '';
       currentProduct.options = null;
       currentProduct.price = product.price;
@@ -196,16 +178,15 @@ export class OrderNewComponent implements OnInit {
     }
   }
 
-  /**Compara propiedad por propiedad para determinar si el producto dado como parámetro existe en el array de preOrderProducts.
+  /**Compara propiedad por propiedad para determinar si los productos dados como parámetros son iguales.
    * No compara la propiedad quantity porque esta va cambiando a medida que se agregan productos iguales al array.
    * @param prodInPreOrder producto existente en el array preOrderProducts 
    * @param product producto para el que se quiere determinar su existencia en el array preOrederProducts
    * @returns true si el producto se encuentra en el array preOrderProducts. false si no se encuentra.
    */
   compareProducts(prodInPreOrder: ProductsInUserOrder, product: ProductsInUserOrder):boolean {
-    if (prodInPreOrder.id === product.id &&
+    if (prodInPreOrder.product === product.product &&
         prodInPreOrder.name === product.name &&
-        prodInPreOrder.hasObservations === product.hasObservations &&
         prodInPreOrder.observations === product.observations &&
         prodInPreOrder.options === product.options &&
         prodInPreOrder.price === product.price &&
@@ -290,8 +271,7 @@ export class OrderNewComponent implements OnInit {
       else {
         //Si el producto en el pre pedido tiene una observacion pero es igual al texto por default se cambia por vacio y 
         //se setea a false la variable hasDescription
-        if (productInPreOrder.hasObservations === true && productInPreOrder.observations === this.prodObservation) {
-          productInPreOrder.hasObservations = false;
+        if (productInPreOrder.observations === this.prodObservation) {
           productInPreOrder.observations = '';
         }
 
@@ -302,11 +282,12 @@ export class OrderNewComponent implements OnInit {
     this.order.totalPrice += this.totalToConfirm;
     this.totalToConfirm = 0;
     this.preOrderProducts = [];    
+
+    this.updateOrder(this.order);
   }
 
   /**Muestra o esconde la sección de observaciones para cada producto */
   showObservationBox(product:ProductsInUserOrder):void {
-    product.hasObservations = !product.hasObservations;
     product.observations = this.prodObservation;
   }
 

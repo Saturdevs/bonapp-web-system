@@ -1,6 +1,8 @@
 import { 
   UsersInOrder, 
-  OrderDiscount 
+  OrderDiscount,
+  User,
+  CashRegister 
 } from '../index';
 
 export class Order {
@@ -8,14 +10,14 @@ export class Order {
   orderNumber : number;
   type: string;
   table: number;
-  cashRegister: string;
-  waiter: string;
+  cashRegister: CashRegister;
+  waiter: User;
   status: string;
-  users: UsersInOrder;
+  app: Boolean;
+  users: Array<UsersInOrder>;
   created_at: Date;
   sent_at: Date;
   completed_at: Date;
   discount: OrderDiscount;
   totalPrice: number;
-  app: Boolean;
 }
