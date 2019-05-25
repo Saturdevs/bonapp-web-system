@@ -1,5 +1,5 @@
 export class PaymentType {
-    _id: String;
+    _id: string;
     name: String;
     available: any;
     default: Boolean;

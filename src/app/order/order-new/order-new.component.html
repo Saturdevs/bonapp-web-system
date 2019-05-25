@@ -33,7 +33,7 @@
 </ng-template>
 
 <ng-template #closeOrderTemplate>
-  <app-order-close [order]="order" (close)="closeModal()"></app-order-close>
+  <app-order-close [order]="order" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
 </ng-template>
 
 <div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0">
@@ -159,6 +159,7 @@
               
               <button 
                 type="button" 
+                [disabled]="product.deleted === true"
                 class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" 
                 (click)="showModalRemoveProduct(deleteTemplate, product)">
                 <i class="fa fa-times fa-1x"></i>
@@ -176,35 +177,7 @@
           </div>
         </div>
       </ul>
-    </div>
-
-    <!-- Ingresar descuento -->
-    <div class="row" *ngIf='showDiscount===true'>
-      <form #formDiscount="ngForm" novalidate>
-        <div class="row">
-          <span>Descuento: </span>
-          <input type="number" class="form-control" [(ngModel)]="discountRate" name="discountRate" 
-            (input)="calculateAmount()"
-            (click)="selectText(rate)"
-            #rate
-            mdbActive>
-          <span>%</span>
-
-          <span>$</span>
-          <input type="number" class="form-control" [(ngModel)]="discountAmount" name="discountAmount"
-            (input)="calculateRate()" 
-            (click)="selectText(amount)"
-            #amount
-          mdbActive>
-        </div>
-        <div class="row">
-          <ul class="actions" align="center">
-            <li><input [disabled]="formDiscount.invalid" value="Confirmar" class="special" (click)="addDiscount()"/></li>
-            <li><input type="reset" value="Cancelar" (click)='showDiscountSection(false)' /></li>
-          </ul>
-        </div>
-      </form>
-    </div>
+    </div>    
 
     <!-- Mostrar descuento si hay alguno ingresado -->
     <div class="row" *ngIf='order.discount !== undefined && order.discount !== null'>
@@ -216,7 +189,10 @@
 
         <div class="row">
           <h6 class="float-left">Descuento </h6>
-          <h6 class="float-left">{{ order.discount.discountRate }} %</h6>      
+          <h6 class="float-left">{{ order.discount.discountRate }} %</h6> 
+          <label (click)="removeDiscount()" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+            <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
+          </label>      
         </div>
       </div>
     </div>
@@ -227,12 +203,9 @@
       <h6 class="float-left">${{ order.totalPrice }}</h6>
     </div>
 
-    <div class="row">
-      <div class="float-left col 2">
-        <button [disabled]="order.users[0].products.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
-      </div>
+    <div class="row">      
       <div class="float-right col-3">               
-        <button type="button" [disabled]="order.users[0].products.length === 0" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
+        <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
       </div>
     </div>
   </div>
