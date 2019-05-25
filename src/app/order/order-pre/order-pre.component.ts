@@ -25,7 +25,9 @@ export class OrderPreComponent implements OnInit {
   private errorMessage: string;
   private title: string = 'Nuevo Pedido';
   private tableNumber: string = 'Numero de mesa';
- 
+	private	cancelButton: string = 'Cancelar';
+	private	confirmButton: string = 'Aceptar';
+
   constructor(private _orderService: OrderService,
               private _tableService: TableService,
               private _router: Router) { }

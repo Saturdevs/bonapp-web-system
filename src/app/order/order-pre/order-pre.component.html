@@ -1,25 +1,27 @@
-<div class="customOpenOrder col-md-12">
+<div class="customOpenOrder container col-md-12">
   <div class="row pageTitle primary-color">
     <div class="col-md-12">
       <h4 class="text-white text-center mb-0">{{title}}</h4>    
     </div>
   </div>
-  <div class="row">
-    <div class="row">
-      <div class="float-left">        
-        <label for="tableNumber">Nro. de Mesa: </label>
+  <div class="customOpenOrderContent">
+    <div class="row" id="firstRow">
+      <div class="col-md-12 col-sm-12 col-lg-12">
+        <label for="tableNumber">{{tableNumber}}:</label>
         <label id="tableNumber" mdbActive> {{ selectedTable.number }}</label>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-        <mdb-completer style="width:100%!important;" (selected)="selectWaiter()" [label]="'Seleccionar Mozo'" name="autocomplete" [(ngModel)]="selectedWaiter" [datasource]="waitersList" [minSearchLength]="0"></mdb-completer>
-      </div>
+    <div class="row" id="secondRow">
+      <div class="col-md-12 col-lg-12 col-sm-12">
+        <mdb-completer (selected)="selectWaiter()" [label]="'Seleccionar Mozo'" name="autocomplete" [(ngModel)]="selectedWaiter" [datasource]="waitersList" [minSearchLength]="0"></mdb-completer> 
+      </div>  
     </div>
   </div>
-  <div class="row">
-    <button type="button" class="button special" (click)="newOrder()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
+  <div class="row grey lighten-3">
+    <div class="customOrderButtons">
+      <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeModal()">{{cancelButton}}</button>
+      <button type="button" class="btn btn-primary btn-sm waves-light" (click)="newOrder()">{{confirmButton}}</button>
+    </div>
   </div>
 </div>
 

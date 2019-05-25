@@ -36,37 +36,16 @@
   <app-order-close [order]="order" (close)="closeModal()"></app-order-close>
 </ng-template>
 
-<div class="row pr-0 pl-0 mr-0 ml-0">
-  <div class="row col-md-8 col-lg-8 col-xs-8 col-sm-8" style="max-height:7rem;">
-    <div class="row col-12"
-    style="width: 100%;
-    overflow-x: hidden!important;
-    position: relative;
-    height: 100%;">
-      <div class="container-fluid pr-0 pl-0 mr-0 ml-0" style="background-color:blue;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      overflow-x: hidden;
-      white-space:nowrap;
-      height: auto;">
-        <div *ngFor="let menu of menus" style="    height:100%;
-        max-width:700px;
-        display:inline-block;
-        *zoom:1;/*IE*/
-        font-size:14px;
-        white-space:normal;
-        padding:0 2em;margin-left: 0px;
-        margin-right: 0px;      
-        height: auto;">
-          <a class="customFloatedButton" (click)="getCategories(menu._id)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{menu.name}}</a>
+<div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0">
+  <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8" style="max-height:7rem;">
+    <div class="row col-12 menusContainer pr-0 pl-0">
+      <div class="d-flex align-items-center pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+        <div *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
+          <a (click)="getCategories(menu._id)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
         </div>          
       </div>
-
       <div class="paddles">
-          <button class="left-paddle paddle" style="left:auto!important;">
+          <button class="left-paddle paddle" style="left:0!important;">
             <
           </button>
           <button class="right-paddle paddle">
@@ -74,24 +53,18 @@
           </button>
       </div>
     </div>
-  
-    <div class="row">
-      <div class="col-3" style="background-color: yellow; height:35rem; min-width:13rem; 
-      overflow-y: scroll;">
-        <div *ngFor="let category of categories">
-          <a class="customFloatedButton" (click)="getProductsByCategory(category._id)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{category.name}}</a>
+    <div class="row categoriesAndProductsContainer">
+      <div class="col-2 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+        <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
+          <a (click)="getProductsByCategory(category._id)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
         </div>
       </div>
-      <div class="col-9 row" style="background-color: red;
-      height: 35rem;
-      width: 48.5rem;
-      overflow-y: scroll;">
-        <div *ngFor="let product of products">
-          <a class="customFloatedButton" (click)="addProductToPreOrder(product, 1)" class="btn btn-primary btn-lg waves-light customButton" mdbRippleRadius style="padding:2rem 2.4rem;"> {{product.name}}</a>
+      <div class="d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+        <div class="productsButtonContainer" *ngFor="let product of products">
+          <a (click)="addProductToPreOrder(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
         </div>
       </div>
     </div>
-
   </div>
   <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4" style="height:100%">
     <div class="row pl-4">

@@ -1,0 +1,87 @@
+.menusContainer{
+    width: 100%;
+    overflow-x: hidden!important;
+    height: 65%;
+    background-color:blue;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.menuButtonContainer{
+    height:80%;
+    width: 30%;
+    display:inline-block;
+    padding:0;
+    padding-right: 1rem;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.menuButton{
+    height:100%;
+    width: 100%;
+}
+.categoriesAndProductsContainer{
+    overflow: hidden!important;
+}
+.categoriesContainer{
+    background-color: yellow;
+    height:35rem;
+    min-width:13rem;
+    overflow-y: scroll;
+}
+
+.categoryButtonContainer{
+    padding:0;
+    padding-top: .5rem;
+    margin-left: 0px;
+    margin-right: 0px;
+    height: 15%;
+}
+
+.categoryButton{
+    width: 90%;
+    height: 80%;
+    font-size: 80%!important;
+}
+
+.productsContainer{
+    background-color: red;
+    height: 35rem;
+    width: 41.6rem;
+    overflow-y: scroll;
+}
+
+.productsButtonContainer{
+    padding:0;
+    padding-left: .5rem;
+    padding-top: .5rem;
+    margin-left: 0px;
+    margin-right: 0px;
+    height: 15%;
+    width: 25%;    
+}
+
+.productButton{
+    width: 90%;
+    height: 90%;
+    font-size: 80%!important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.customScrollBar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.customScrollBar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 3px;
+}
+
+.customScrollBar::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}

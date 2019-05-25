@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgGrid, NgGridItem, NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 
@@ -55,6 +55,8 @@ export class TableListComponent implements OnInit{
 		'zoom_on_drag': false,
 		'limit_to_screen': true
 	};
+@ViewChild('openNewOrderTemplate') openNewOrderTemplate;
+
 	private itemPositions: Array<any> = [];
 	tablesNow: Array<Table> = [];
 	tablesTotal: Array<Table> = [];
@@ -70,6 +72,9 @@ export class TableListComponent implements OnInit{
 	selectedTable: Table;
 	tableNumberDelete: number;
 	qtyProd: number;
+	config = {
+		backdrop: true,
+	}
 
 	constructor(private _router: Router,
 							private _tableService: TableService,
@@ -89,7 +94,7 @@ export class TableListComponent implements OnInit{
 				this._setDashConfig(); 
 			}
 		);	
-		console.log(this.tablesTotal);
+		console.log(this.openNewOrderTemplate);
 		console.log(this.tablesNow);
 			
 		if(this.isSettingsActive()) {
@@ -246,7 +251,8 @@ export class TableListComponent implements OnInit{
 							//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
 							//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
 							if (isNullOrUndefined(order) && this.selectedTable.status === "Libre") {
-								this.modalRef = this.modalService.show(openNewOrderTemplate, {backdrop: true});
+								this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, {class: 'customNewOrder'}));
+
 							}
 							else {
 								this._router.navigate(['./orders/orderNew', tableNumber]);
