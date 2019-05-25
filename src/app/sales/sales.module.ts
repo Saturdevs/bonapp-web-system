@@ -17,6 +17,8 @@ import { OrderNewResolverService } from '../order/order-new/order-new-resolver.s
 import { ProductResolverService } from '../product/product-list/product-resolver.service';
 import { MenuResolverService } from '../menu/menu-resolver.service';
 import { CategoryResolverService } from '../category/category-list/category-resolver.service';
+import { PaymentTypeResolverService } from '../payment-type/payment-type-list/payment-type-resolver.service';
+import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
 
 @NgModule({
   imports: [
@@ -47,7 +49,9 @@ import { CategoryResolverService } from '../category/category-list/category-reso
                       order: OrderNewResolverService, 
                       products: ProductResolverService,
                       categories: CategoryResolverService,
-                      menus: MenuResolverService 
+                      menus: MenuResolverService,
+                      cashRegisters: CashRegisterResolverService,
+                      paymentTypes: PaymentTypeResolverService
                     }
           },
           {

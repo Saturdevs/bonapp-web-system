@@ -17,9 +17,12 @@ import {
   Product,
   OrderService,
   Order,
-  OrderDiscount
+  OrderDiscount,
+  CashRegister,
+  PaymentType
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
+import { OrderCloseComponent } from '../order-close/order-close.component';
 
 @Component({
   selector: 'app-order-new',
@@ -31,6 +34,8 @@ export class OrderNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   @ViewChild('fluid') public fluid:ModalDirective;
+  @ViewChild(OrderCloseComponent)
+  private closeOrderTemplate: OrderCloseComponent;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -54,19 +59,13 @@ export class OrderNewComponent implements OnInit {
   /** Monto total a confirmar de los productos en array preOrderProducts. */
   totalToConfirm: number;
   /** Monto total de los productos ya confirmados en la orden. */
-  total: number;
-  /**Booleano para determinar si mostrar la sección de descuento o no. */
-  showDiscount: Boolean;
+  total: number;  
   /**Booleano que indica si el pedido tiene algun descuento. */
   thereIsDiscount: Boolean;
   /**String de búsqueda mdb-completer. */
   searchStr: string;
   /** */
-  dataService: CompleterData;
-  /**Porcentaje de descuento. */
-  discountRate: number;
-  /**Monto de descuento. */
-  discountAmount: number;
+  dataService: CompleterData;  
   /**Producto a eliminar del array de productos del pedido. */
   productToRemoveFromOrder:ProductsInUserOrder;
   /**Motivo para eliminar el producto del pedido. */
@@ -75,6 +74,10 @@ export class OrderNewComponent implements OnInit {
   qtyProd: number = 1;   
   /**Productos ya almacenados en el pedido */
   productsInOrder: Array<ProductsInUserOrder> = [];  
+  /**Cajas registradoras registradas en la bd*/
+  cashRegisters: Array<CashRegister> = [];
+  /**Tipos de pago registrados en la bd*/
+  paymentTypes: Array<PaymentType> = [];
 
   ngOnInit() {
     this.order = this.orderService.transformOrderFromDbToBusiness(this._route.snapshot.data['order']);
@@ -82,9 +85,10 @@ export class OrderNewComponent implements OnInit {
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
     this.categories = this._route.snapshot.data['categories'];
+    this.cashRegisters = this._route.snapshot.data['cashRegisters'];
+    this.paymentTypes = this._route.snapshot.data['paymentTypes'];    
     this.totalToConfirm = 0;
-    this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
-    this.showDiscount = false;
+    this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;    
     this.dataService = this.completerService.local(this.filteredProducts, 'name', 'name');
   }
 
@@ -213,7 +217,7 @@ export class OrderNewComponent implements OnInit {
     else
     {
       let indexOfProd = this.preOrderProducts.indexOf(productToRemove);
-      this.preOrderProducts = this.preOrderProducts.splice(indexOfProd-1, 1);
+      this.preOrderProducts.splice(indexOfProd, 1);
       this.updateTotalToConfirm(productToRemove.price, -productToRemove.quantity);
     }
   }
@@ -224,6 +228,7 @@ export class OrderNewComponent implements OnInit {
     this.order.users[0].products[prodIndex].deleted = true;
     this.order.users[0].products[prodIndex].deletedReason = this.deletedReason;
     this.order.totalPrice -= this.order.users[0].products[prodIndex].quantity * this.order.users[0].products[prodIndex].price;
+    this.updateOrder(this.order);
     this.closeModalDeleteProd();
   }
 
@@ -289,45 +294,7 @@ export class OrderNewComponent implements OnInit {
   /**Muestra o esconde la sección de observaciones para cada producto */
   showObservationBox(product:ProductsInUserOrder):void {
     product.observations = this.prodObservation;
-  }
-
-  /**Muestra o esconde la sección de descuento */
-  showDiscountSection(show: boolean):void {
-    this.showDiscount = show;
-
-    if (show === true) {
-      this.discountAmount = 0;
-      this.discountRate = 0;        
-    }
-  }
-
-  /**Calcula el porcentaje de descuento según el monto de descuento ingresado */
-  calculateRate():void {
-    this.discountRate = (this.discountAmount * 100) / this.order.totalPrice; 
-  }
-
-  /**Calcula el monto de descuento según el porcentaje de descuento ingresado */
-  calculateAmount():void {
-    this.discountAmount = (this.discountRate / 100) * this.order.totalPrice;
-  }
-
-  addDiscount():void {
-    this.showDiscountSection(false);  
-    if (isNullOrUndefined(this.order.discount))
-    {
-      this.order.discount = new OrderDiscount();
-      this.order.discount.discountAmount = this.discountAmount;  
-      this.order.discount.discountRate = this.discountRate;
-      this.order.discount.subtotal = this.order.totalPrice;
-      this.order.totalPrice = this.order.discount.subtotal - this.order.discount.discountAmount;  
-    }
-    else
-    {
-      this.order.discount.discountAmount = this.discountAmount;  
-      this.order.discount.discountRate = this.discountRate;
-      this.order.totalPrice = this.order.discount.subtotal - this.order.discount.discountAmount;
-    }
-  }
+  }    
 
   selectText(component):void {
     component.select();
@@ -352,7 +319,11 @@ export class OrderNewComponent implements OnInit {
 
   closeTable(template){
 		this.modalRef = this.modalService.show(template, {backdrop: true});
-	}
+  }
+  
+  removeDiscount(): void {
+    this.closeOrderTemplate.removeDiscount();
+  }
   
 
 
@@ -462,14 +433,6 @@ export class OrderNewComponent implements OnInit {
     this._router.navigate(['./orders/section/tables/5a63ccdbb3f3d70c3837e49a']);
   }
 
-  getAllPaymentTypes(){
-    this.paymentTypesService.getAvailables().subscribe(
-      paymentTypes => this.availablePaymentTypes = paymentTypes)
-  }
-
-  populatePaymentTypesInOrder(){
-  }
-
   closeOrder(order : Order){
     this.orderTotalPrice = this.currentOrder.subtotal - this.discountAmount;
     order.completed_at = new Date().toLocaleDateString();
@@ -481,11 +444,7 @@ export class OrderNewComponent implements OnInit {
   
     this.orderService.saveOrder(order);
   }
- 
-  getAllCashRegister(){
-    this.cashRegisterService.getAll().subscribe(cashregisters =>
-      this.cashRegisters = cashregisters)
-  }
+
 
   getArqueo(){
     this.arqueoCajaService.getArqueoOpenByCashRegister(this.currentCashRegister).subscribe(
