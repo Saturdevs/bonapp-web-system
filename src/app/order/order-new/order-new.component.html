@@ -36,8 +36,9 @@
   <app-order-close [order]="order" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
 </ng-template>
 
-<div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0">
-  <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8" style="max-height:7rem;">
+<div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0" style="height: 87.5vh;
+overflow: auto;">
+  <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8 pr-0" style="height: 100%">
     <div class="row col-12 menusContainer pr-0 pl-0">
       <div class="d-flex align-items-center pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <div *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
@@ -45,45 +46,38 @@
         </div>          
       </div>
       <div class="paddles">
-          <button class="left-paddle paddle" style="left:0!important;">
+          <button class="left-paddle paddle btn customPaddle waves-light" mdbRippleRadius style="left:0!important;">
             <
           </button>
-          <button class="right-paddle paddle">
+          <button class="right-paddle paddle btn customPaddle waves-light" mdbRippleRadius>
             >
           </button>
       </div>
     </div>
-    <div class="row categoriesAndProductsContainer">
-      <div class="col-2 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+    <div class="row col-12 pr-0 pl-0 categoriesAndProductsContainer">
+      <div class="col-3 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
           <a (click)="getProductsByCategory(category._id)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
         </div>
       </div>
-      <div class="d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+      <div class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <div class="productsButtonContainer" *ngFor="let product of products">
           <a (click)="addProductToPreOrder(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4" style="height:100%">
-    <div class="row pl-4">
-      <div class="float-left col-md-3 col-lg-3 col-sm-3">
+  <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4 pl-0 pr-0">
+    <div class="row secondary-color customTextColor customTableNumberTitle">
+      <div class="row col-lg-12 col-md-12 col-sm-12">
         <h5>Mesa {{order.table}}</h5>
+      </div>
+      <div class="row col-lg-12 col-md-12 col-sm-12 customSubtittle">
+        {{ order.created_at | date:'dd/MM/yy HH:mm' }}
       </div>
     </div>
 
-    <hr>
-
-    <div class="row pl-4">
-      <h6>{{ order.created_at | date:'dd/MM/yy HH:mm' }}</h6>
-    </div>
-
-    <hr>
-    
-    <div class="row pl-4">
-        <h6>Adicionar</h6>
-    </div>
+    <div class="row col-lg-12 col-md-12 col-sm-12 pt-1 pb-2">Adicionar</div>
     
     <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
       <div class="md-form form-group col-md-2 col-lg-2 col-sm-2 col-xs-2">
@@ -96,7 +90,7 @@
     </div>
     
     <!-- Listado de productos en pre order -->
-    <div class="row pl-2 customDivHeight" *ngIf='preOrderProducts && preOrderProducts.length'>
+    <div class="row pl-2 customDivHeight customPreOrderAdition" *ngIf='preOrderProducts && preOrderProducts.length'>
       <ul class="list-group">
         <div class="btn-group customProductMargin row" *ngFor="let product of preOrderProducts" data-toggle="buttons">
           <div class="col-md-12">
@@ -104,24 +98,24 @@
               <label (click)="updateProductQty(product, -1)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
                 <p class="pb-0 mb-0">-</p>
               </label>
-
-              <p>{{ product.quantity }}</p>
+              
+              <p class="pt-1 pr-2 pl-2">{{ product.quantity }}</p>
 
               <label (click)="updateProductQty(product, 1)" class="z-depth-0 customSizeY btn btn-tb btn-primary waves-effect waves-light float-right pt-2">
                 <p class="pb-0 mb-0">+</p>
               </label>
 
-              <li class="list-group-item d-flex customSize customSizeY justify-content-between align-items-center pb-1 pt-0">
+              <li class="list-group-item customProductInputName ml-2">
                   {{ product.name }}            
               </li>  
 
-              <p>$ {{ product.price }} </p>  
+              <p class="pl-1 pr-1">$ {{ product.price }} </p>  
 
-              <label (click)="showObservationBox(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+              <label (click)="showObservationBox(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left mr-1 ml-1">
                 <p class="pb-0 mb-0"><i class="fa fa-comment fa-1x"></i></p>
               </label> 
               
-              <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
+              <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left mr-1 ml-1">
                 <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
               </label>         
             </div>            
@@ -132,15 +126,15 @@
           </div>
         </div>        
       </ul>
-
-      <p>Total a confirmar: {{ totalToConfirm }}</p>
-
-      <div class="float-right col-md-8 col-lg-8 col-sm-8">
-        <button type="button" class="float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="cancelPreOrder()" >Cancelar</button>
-      </div>  
-      <div class="float-right col-md-8 col-lg-8 col-sm-8">
-        <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="confirmPreOrder()" >Confirmar</button>
-      </div> 
+      <div class="row col-12">Total a confirmar: {{ totalToConfirm }}</div>
+      <div class="row col-12 pr-0">
+        <div class="float-left col-md-6 col-lg-6 col-sm-6">
+          <button type="button" class="float-left btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="cancelPreOrder()" >Cancelar</button>
+        </div>  
+        <div class="float-right col-md-6 col-lg-6 col-sm-6 pr-0">
+          <button type="button" class="float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="confirmPreOrder()" >Confirmar</button>
+        </div> 
+      </div>
     </div>
 
     <!-- Listado de productos en order -->
@@ -151,11 +145,11 @@
             <div class="row">
               <p>{{ product.quantity }}</p>
 
-              <li class="list-group-item d-flex customSize customSizeY justify-content-between align-items-center pb-1 pt-0">
+              <li class="list-group-item customProductShowingName pb-1 pt-0">
                   {{ product.name }}              
               </li>  
 
-              <p>$ {{ product.price }} </p>  
+              <p class="mr-1">$ {{ product.price }} </p>  
               
               <button 
                 type="button" 
@@ -170,7 +164,7 @@
                 {{ product.observations }}
               </div>
 
-              <div *ngIf="product.deleted === true">
+              <div class="pl-4" *ngIf="product.deleted === true">
                 <p> - CANCELADO: {{ product.deletedReason }} </p>
               </div>
             </div>
@@ -180,15 +174,13 @@
     </div>    
 
     <!--Total-->
-    <div class="row">
-      <h6 class="float-left">Total:</h6>
-      <h6 class="float-left">${{ order.totalPrice }}</h6>
+    <div class="mt-2">
+      <h6 class="float-left pt-2">Total: </h6>
+      <h6 class="float-left pt-2"> ${{ order.totalPrice }}</h6>
     </div>
-
-    <div class="row">      
-      <div class="float-right col-3">               
+      
+      <div class="col-3 float-right mt-2">               
         <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
       </div>
-    </div>
   </div>
 </div>
