@@ -9,7 +9,7 @@
   </div>
 
   <!-- Cuerpo del form -->
-  <div class="row" *ngIf="order.users[0].products !== null && order.users[0].products !== undefined && order.users[0].products.length > 0">
+  <div class="row" *ngIf="productsInOrder !== null && productsInOrder !== undefined && productsInOrder.length > 0">
     <!-- Adiciones -->
     <div class="col-md-6">    
       <div class="col-md-12">
@@ -18,7 +18,7 @@
         </div>  
       </div>
 
-      <div class="col-md-12" *ngFor="let product of order.users[0].products">
+      <div class="col-md-12" *ngFor="let product of productsInOrder">
         <div class="row" *ngIf="product.deleted === false">
           <div>
             <p>{{ product.quantity }}</p>
@@ -31,22 +31,22 @@
           </div>
 
           <div>
-            <p>${{ product.price }} </p>  
+            <p>${{ product.price * product.quantity }} </p>  
           </div>
         </div> 
       </div>
 
       <!-- Mostrar descuento si hay alguno ingresado -->
-      <div class="row" *ngIf='order.discount !== undefined && order.discount !== null'>
+      <div class="row" *ngIf='discount !== undefined && discount !== null'>
         <div class="col-md-12">
           <div class="row">
             <h6 class="float-left">Subtotal:</h6>
-            <h6 class="float-left">{{ order.discount.subtotal }}</h6>      
+            <h6 class="float-left">{{ discount.subtotal }}</h6>      
           </div>
   
           <div class="row">
             <h6 class="float-left">Descuento </h6>
-            <h6 class="float-left">{{ order.discount.discountRate }} %</h6> 
+            <h6 class="float-left">{{ discount.discountRate }} %</h6> 
             <label (click)="removeDiscount()" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
               <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
             </label>       
@@ -57,7 +57,7 @@
       <!--Total-->
       <div class="row">
         <h6 class="float-left">Total:</h6>
-        <h6 class="float-left">${{ order.totalPrice }}</h6>
+        <h6 class="float-left">${{ totalPrice }}</h6>
       </div>
     </div>
 
@@ -79,14 +79,14 @@
 
       <div class="row">
         <p>{{ cashRegisterLabel }}</p>
-        <mdb-select (selected)="getSelectedCashRegister($event)" [(ngModel)]="selectedCashRegister" 
+        <mdb-select [(ngModel)]="selectedCashRegister" 
           [options]="cashRegistersSelect" placeholder="Choose your option">
         </mdb-select>
       </div>
 
-      <div class="col-md-12" *ngFor="let payment of usrOwner.payments">
+      <div class="col-md-12" *ngFor="let payment of payments">
         <div class="row">
-          <mdb-select (selected)="getSelectedPaymentType($event)" [(ngModel)]="payment.methodId" 
+          <mdb-select [(ngModel)]="payment.methodId" 
             [options]="paymentTypesSelect" placeholder="Choose your option">
           </mdb-select>   
           
@@ -99,8 +99,8 @@
       </div>
 
       <!-- Ingresar descuento -->
-      <div class="float-left col 2" *ngIf='showDiscount===false && (order.discount === null || order.discount === undefined)'>
-        <button [disabled]="order.users[0].products.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
+      <div class="float-left col 2" *ngIf='showDiscount===false && (discount === null || discount === undefined)'>
+        <button [disabled]="productsInOrder.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
       </div> 
 
       <div class="row" *ngIf='showDiscount===true'>
@@ -123,8 +123,8 @@
           </div>
           <div class="row">
             <ul class="actions" align="center">
-              <li><input [disabled]="formDiscount.invalid" value="Confirmar" class="special" (click)="addDiscount()"/></li>
-              <li><input type="reset" value="Cancelar" (click)='showDiscountSection(false)' /></li>
+              <li><input [disabled]="formDiscount.invalid" value="{{ confirmButtonLabel }}" class="special" (click)="addDiscount()"/></li>
+              <li><input type="reset" value="{{ cancelButtonLabel }}" (click)='showDiscountSection(false)' /></li>
             </ul>
           </div>
         </form>
@@ -139,7 +139,7 @@
     </div>   
   </div>
 
-  <div class="row" *ngIf="order.users[0].products === null || order.users[0].products === undefined || order.users[0].products.length === 0">
+  <div class="row" *ngIf="productsInOrder === null || productsInOrder === undefined || productsInOrder.length === 0">
     {{ closeOrderWithoutAditions }}
   </div>
 
@@ -148,7 +148,10 @@
     <div class="modal-footer">      
       <button type="button" class="button special" (click)="closeForm()">{{ cancelButton }}</button>
       <div class="float-right col-3">               
-        <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">{{ closeTableButton + order.table }}</button>
+        <button type="button" [disabled]="changeAmount<0" 
+        class="customMarginButton float-right btn btn-sm btn-primary waves-light" 
+        (click)="closeTable()"
+        mdbRippleRadius>{{ closeTableButton + order.table }}</button>
       </div>
     </div>  
   </div>
