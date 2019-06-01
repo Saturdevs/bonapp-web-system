@@ -95,8 +95,11 @@ export class OrderCloseComponent implements OnInit {
       })
     });
 
-    this.calculatePartialPaidAmount();
-    this.addPayment(); 
+    if (this.productsInOrder.length > 0)
+    {
+      this.calculatePartialPaidAmount();
+      this.addPayment(); 
+    }
     
     this.showDiscount = false;  
     this.calculateChangeAmount();    
@@ -227,9 +230,12 @@ export class OrderCloseComponent implements OnInit {
 
     usrOwner = this.order.users.find(usr => usr.owner === true);
 
-    this.payments.forEach(payment => {
-      usrOwner.payments.push(payment);
-    })    
+    if (!isNullOrUndefined(this.payments) && this.payments.length > 0)
+    {
+      this.payments.forEach(payment => {
+        usrOwner.payments.push(payment);
+      })    
+    }
 
     this.tableService.updateTableByNumber(table).subscribe(
       tableReturned => {
@@ -238,8 +244,8 @@ export class OrderCloseComponent implements OnInit {
           let ord = this.orderService.transformOrderFromBusinessToDb(this.order);
           this.orderService.updateOrder(ord).subscribe(
             orderReturned => {
-              //this.addOrderToArqueo(orderReturned);
-              console.log("Order return: " + orderReturned);
+              let order = this.orderService.transformOrderFromDbToBusiness(orderReturned);
+              this.addOrderToArqueo(orderReturned);
               this.closeForm();
               this._router.navigate(['./orders']);
             },
@@ -259,9 +265,51 @@ export class OrderCloseComponent implements OnInit {
    * @param order pedido para agregar al arqueo
    */
   addOrderToArqueo(order: Order): void{
-    this.arqueoCajaService.getArqueoOpenByCashRegister(this.order.cashRegister).subscribe(
-      arqueo => {
-        /*Agregar los ingresos al arqueo y luego actualizar el mismo */
+    this.arqueoCajaService.getArqueoOpenByCashRegister(order.cashRegister).subscribe(
+      cashCount => {
+        if(!isNullOrUndefined(cashCount)) {
+          if(isNullOrUndefined(cashCount.ingresos)) {
+            cashCount.ingresos = new Array();
+          }
+
+          /*Si hay un solo pago en el arqueo se guarda el monto total del pedido y no el monto del pago. Esto es  
+            porque puede haber una diferencia entre los dos que sería el vuelto */
+          if (order.users.length === 1 && order.users[0].payments.length === 1) {
+            let payment = order.users[0].payments[0];
+            cashCount.ingresos.push({ paymentType: payment.methodId, desc: "Ventas", amount: order.totalPrice });
+          }
+          else {
+            let paymentsSum = 0;
+
+            for (let i = 0; i < order.users.length; i++) {
+              for (let j = 0; j < order.users[i].payments.length; j++) {
+                let payment = order.users[i].payments[j];                
+
+                /*Si es el último pago insertado en el array de pagos del último usuario el monto del arqueo es igual
+                  a la diferencia entre el monto total del pedido y la suma de pagos de los demas usuarios realizadas 
+                  hasta el momento. No es el monto del pago porque la suma puede ser mayo al monto total del pedido
+                  y habría que dar vuelto */
+                if (i === order.users.length-1 && j === order.users[i].payments.length-1) {
+                  cashCount.ingresos.push({ paymentType: payment.methodId, desc: "Ventas", amount: order.totalPrice - paymentsSum })
+                }
+                else {
+                  paymentsSum += payment.amount;
+                  cashCount.ingresos.push({ paymentType: payment.methodId, desc: "Ventas", amount: payment.amount })
+                }
+              }
+            }
+          } 
+          
+          this.arqueoCajaService.updateArqueo(cashCount).subscribe(
+            cashCount => {},
+            error => {
+              this.errorMessage = <any>error;
+            }
+          )
+        }                
+      },
+      error => { 
+        this.errorMessage = <any>error;
       }
     )
   }
