@@ -203,24 +203,6 @@ overflow: auto;">
       </ul>
     </div>     -->
 
-    <!-- Mostrar descuento si hay alguno ingresado -->
-    <div class="row" *ngIf='order.discount !== undefined && order.discount !== null'>
-      <div class="col-md-12">
-        <div class="row">
-          <h6 class="float-left">Subtotal:</h6>
-          <h6 class="float-left">{{ order.discount.subtotal }}</h6>      
-        </div>
-
-        <div class="row">
-          <h6 class="float-left">Descuento </h6>
-          <h6 class="float-left">{{ order.discount.discountRate }} %</h6> 
-          <label (click)="removeDiscount()" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left">
-            <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
-          </label>      
-        </div>
-      </div>
-    </div>
-
     <!--Total-->
     <div class="row">
       <div class="col-lg-6 col-md-6 col-sm-6 totalOrder">

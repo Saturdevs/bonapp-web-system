@@ -43,6 +43,12 @@ export class TableService {
             .catch(this.handleError);
   }
 
+  updateTableByNumber(table){
+    return this.apiService.put(`/table/byNumber/${table.number}`, table)
+            .map(data => data.table)
+            .catch(this.handleError);
+  }
+
   deleteTable(idTable){
     return this.apiService.delete(`/table/${idTable}`)
            .map(data =>data.table)
