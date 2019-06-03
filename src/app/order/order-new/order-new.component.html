@@ -70,75 +70,105 @@ overflow: auto;">
   <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4 pl-0 pr-0">
     <div class="row secondary-color customTextColor customTableNumberTitle">
       <div class="row col-lg-12 col-md-12 col-sm-12">
-        <h5>Mesa {{order.table}}</h5>
+        <h5>{{'Mesa ' + order.table | uppercase}}</h5>
       </div>
+    </div>
+    <div class="row">
       <div class="row col-lg-12 col-md-12 col-sm-12 customSubtittle">
-        {{ order.created_at | date:'dd/MM/yy HH:mm' }}
+          {{ order.created_at | date:'dd/MM/yy HH:mm' }}
       </div>
     </div>
 
-    <div class="row col-lg-12 col-md-12 col-sm-12 pt-1 pb-2">Adicionar</div>
-    
-    <div class="row col-md-12 col-lg-12 col-sm-12 col-xs-12">
-      <div class="md-form form-group col-md-2 col-lg-2 col-sm-2 col-xs-2">
-        <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
-        <label for="prodQty">Cantidad</label>
-      </div>
-      <div class="col-md-8 col-lg-8 col-sm-8 col-xs-8">
-        <mdb-completer style="width:100%!important;" (selected)="addProductToPreOrderFromList()" [label]="'Buscar Producto'" initialValue="Buscar Producto" name="autocomplete" [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0"></mdb-completer>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 customAddProductsTitle"><span class="align-middle">{{ 'Adicionar' | uppercase }}</span></div>
+      <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 customAddProductsSection">
+        <div class="row">
+          <div class="col-2">
+            <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
+          </div>
+          <div class="col-9">
+            <mdb-completer style="width:100%!important;" (selected)="addProductToPreOrderFromList()" [label]="'Buscar Producto'" initialValue="Buscar Producto" name="autocomplete" [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0"></mdb-completer>
+          </div>
+        </div>
       </div>
     </div>
     
     <!-- Listado de productos en pre order -->
-    <div class="row pl-2 customDivHeight customPreOrderAdition" *ngIf='preOrderProducts && preOrderProducts.length'>
-      <ul class="list-group">
-        <div class="btn-group customProductMargin row" *ngFor="let product of preOrderProducts" data-toggle="buttons">
-          <div class="col-md-12">
-            <div class="row">
-              <label (click)="updateProductQty(product, -1)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-                <p class="pb-0 mb-0">-</p>
-              </label>
-              
-              <p class="pt-1 pr-2 pl-2">{{ product.quantity }}</p>
+    <div class="row customPreOrderAdition" *ngIf='preOrderProducts && preOrderProducts.length'>
+      <div class="col-md-12 col-lg-12 col-sm-12 preordeerProduct" *ngFor="let product of preOrderProducts">
+        <div class="row mb-2">
+          <div class="col-3 p-0">
+            <label (click)="updateProductQty(product, -1)" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left m-0">
+              <span class="pb-0 mb-0">-</span>
+            </label>
+            
+            <span class="pt-1 pr-2 pl-2">{{ product.quantity }}</span>
 
-              <label (click)="updateProductQty(product, 1)" class="z-depth-0 customSizeY btn btn-tb btn-primary waves-effect waves-light float-right pt-2">
-                <p class="pb-0 mb-0">+</p>
-              </label>
-
-              <li class="list-group-item customProductInputName ml-2">
-                  {{ product.name }}            
-              </li>  
-
-              <p class="pl-1 pr-1">$ {{ product.price }} </p>  
-
-              <label (click)="showObservationBox(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left mr-1 ml-1">
-                <p class="pb-0 mb-0"><i class="fa fa-comment fa-1x"></i></p>
-              </label> 
-              
-              <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left mr-1 ml-1">
-                <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
-              </label>         
-            </div>            
-
-            <div class="row" *ngIf="product.observations !== undefined && product.observations !== ''">
-              <textarea (click)="selectText(obs)" #obs [(ngModel)]="product.observations"></textarea>
-            </div>
+            <label (click)="updateProductQty(product, 1)" class="z-depth-0 buttonOrder btn btn-tb btn-primary waves-effect waves-light float-right m-0">
+              <span class="pb-0 mb-0">+</span>
+            </label>
           </div>
-        </div>        
-      </ul>
-      <div class="row col-12">Total a confirmar: {{ totalToConfirm }}</div>
-      <div class="row col-12 pr-0">
-        <div class="float-left col-md-6 col-lg-6 col-sm-6">
-          <button type="button" class="float-left btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="cancelPreOrder()" >Cancelar</button>
-        </div>  
-        <div class="float-right col-md-6 col-lg-6 col-sm-6 pr-0">
+          <div class="col-6 pl-0 pr-0">
+            <span class="ml-2">
+                {{ product.name }}            
+            </span>  
+            <span class="pl-1 pr-1">$ {{ product.price }} </span>  
+          </div>
+          <div class="col-3 pl-0 pr-1">
+            <label (click)="showObservationBox(product)" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left m-0 mr-2">
+              <span class="pb-0 mb-0"><i class="fa fa-comment fa-1x"></i></span>
+            </label> 
+            
+            <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left m-0 ml-2">
+              <span class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></span>
+            </label>         
+          </div>
+        </div>
+        <div class="row mb-2 pr-2" *ngIf="product.observations !== undefined && product.observations !== ''">
+            <textarea  class="md-textarea form-control" (click)="selectText(obs)" #obs [(ngModel)]="product.observations"></textarea>
+        </div>
+      </div>
+      <div class="col-md-12 col-lg-12 col-sm-12 pt-2 pb-2 pl-1 totalToConfirm"><span>Total a confirmar: ${{ totalToConfirm }}</span></div>
+      <div class="col-md-12 col-lg-12 col-sm-12 p-0 m-0 infoSection">
+        <div class="float-left col-md-6 col-lg-6 col-sm-6 offset-md-6 pl-0">
+          <button type="button" class="float-left btn btn-sm customButtonCancel waves-light ml-4 mr-0" mdbRippleRadius (click)="cancelPreOrder()" >Cancelar</button>
           <button type="button" class="float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="confirmPreOrder()" >Confirmar</button>
-        </div> 
+        </div>  
+        <!-- <div class="float-right col-md-6 col-lg-6 col-sm-6 pr-2">
+        </div>  -->
+      </div>
+    </div>
+    <!-- Listado de productos en order -->
+    <div class="row mt-0 productsInOrder" *ngIf='order.users[0].products && order.users[0].products.length'>
+      <div class="col-lg-12 col-md-12 col-sm-12 productLine" *ngFor="let product of order.users[0].products">
+        <div class="row mb-0">
+          <div class="col-2 p-0 pl-3">
+            <span>{{ product.quantity }}</span>
+          </div>
+          <div class="col-6 p-0">
+            <span>{{ product.name }}</span>
+          </div>
+          <div class="col-2 p-0">
+            <span>$ {{ product.price }} </span>
+          </div>
+          <div class="col-2 p-0">
+            <button type="button" [disabled]="product.deleted === true" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left mt-0" (click)="showModalRemoveProduct(deleteTemplate, product)">
+            <i class="fa fa-times fa-1x"></i>
+            </button>
+          </div>
+        </div>  
+        <div class="row mb-2">
+          <div *ngIf="product.observations !== undefined && product.observations !== ''">
+            <span>{{ product.observations }}</span>
+          </div>
+          <div class="pl-4" *ngIf="product.deleted === true">
+            <span>- CANCELADO: {{ product.deletedReason }}</span>
+          </div>
+        </div>      
       </div>
     </div>
 
-    <!-- Listado de productos en order -->
-    <div class="row pl-2 customDivHeight" *ngIf='order.users[0].products && order.users[0].products.length'>
+    <!-- <div class="row pl-2 customDivHeight" *ngIf='order.users[0].products && order.users[0].products.length'>
       <ul class="list-group">
         <div class="btn-group customProductMargin" *ngFor="let product of order.users[0].products" data-toggle="buttons">   
           <div class="col-md-12">  
@@ -171,16 +201,21 @@ overflow: auto;">
           </div>
         </div>
       </ul>
-    </div>    
+    </div>     -->
 
     <!--Total-->
-    <div class="mt-2">
-      <h6 class="float-left pt-2">Total: </h6>
-      <h6 class="float-left pt-2"> ${{ order.totalPrice }}</h6>
-    </div>
-      
-      <div class="col-3 float-right mt-2">               
-        <button type="button" class="customMarginButton float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6 totalOrder">
+        <span class="float-left">{{'Total' | uppercase}} </span>
       </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 totalOrder pr-4">
+        <span class="float-right">{{ '$ ' + order.totalPrice | uppercase }}</span>
+      </div>      
+    </div>
+    <div class="row">
+      <div class="col-4 offset-4 mt-2">               
+        <button type="button" class="btn btn-md btn-primary waves-light" mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
+      </div>
+    </div>
   </div>
 </div>

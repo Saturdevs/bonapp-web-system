@@ -1,7 +1,7 @@
 .menusContainer{
     width: 100%;
     overflow-x: hidden!important;
-    height: 12%;
+    height: 10%;
     background-color:rgba(244, 67, 54, 0.3);
     top: 0;
     bottom: 0;
@@ -25,7 +25,7 @@
 }
 .categoriesAndProductsContainer{
     overflow: hidden!important;
-    height: 88%;
+    height: 90%;
 }
 .categoriesContainer{
     background-color: rgba(244, 67, 54, 0.2);
@@ -93,24 +93,26 @@
 }
 
 .customSubtittle{
-    font-size: 80%!important;
+    font-size: 100%!important;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left:1.5rem;
 }
 
 .customTextColor{
     color:#4B515D!important;
+    font-weight: bold;
 }
 
 .customTableNumberTitle{
-    height: 12%;
+    height: 10%;
     padding-left: .5rem;
-    padding-top: .5rem
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .customPreOrderAdition{
-    padding-top:.5rem;
-    padding-left: 2rem!important;
-    padding-right: 2rem;
-    padding-bottom: .5rem;
+    padding-right: .5rem;
 }
 
 .customProductInputName{
@@ -125,4 +127,60 @@
     overflow: hidden;
     margin-left: .75rem;
     margin-right: .75rem;
+}
+
+.customAddProductsTitle{
+    background-color: #999999;
+    color: white;
+    font-weight: bold;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+
+.customAddProductsSection{
+    background-color: #f1f1f1;
+    padding-top: 0.5rem;
+}
+
+.infoSection{
+    background-color: #f6f6f6
+}
+
+.buttonOrder{
+    height: 2rem!important;
+}
+
+.preordeerProduct{
+    padding-left: 1.5rem;
+    padding-top: .5rem;
+    background-color: #ffdd77;
+    border-left: solid 4px #fb4;
+    border-top: solid 1px #f5c963;  
+}
+
+.totalToConfirm{
+    background-color: #f3f3f3;
+    border-left: solid 4px #999999;
+    border-top: solid 1px #f5c963;
+    border-bottom: solid 1px #d0d0d0;  
+}
+
+.productsInOrder{
+    background-color: #f3f3f3;
+    border-left: solid 4px #fb4;
+    border-top: solid 1px #d0d0d0;
+}
+
+.productLine{
+    border-bottom: solid 1px #d0d0d0;
+    padding-top: .5rem;
+}
+
+.totalOrder{
+    background-color: #4c4c4c;
+    color: white;
+    font-weight: bold;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+
 }
