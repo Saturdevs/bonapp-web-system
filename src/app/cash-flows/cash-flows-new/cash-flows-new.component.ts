@@ -71,34 +71,31 @@ export class CashFlowsNewComponent implements OnInit {
       cashCount => {
         if(!isNullOrUndefined(cashCount)){
           if(cashFlow.type === "Ingreso"){
-            if(!isNullOrUndefined(cashCount.ingresos)){
-              cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+            if(isNullOrUndefined(cashCount.ingresos)){
+              cashCount.ingresos = new Array();              
             }
-            else {
-              cashCount.ingresos = new Array();
-              cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
-            }
+              
+            cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })            
           } 
           else if(cashFlow.type === "Egreso"){
-            if(!isNullOrUndefined(cashCount.egresos)){
-              cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+            if(isNullOrUndefined(cashCount.egresos)){
+              cashCount.egresos = new Array();              
             }
-            else {
-              cashCount.egresos = new Array();
-              cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+
+            cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+          }
+
+          this._cashCountService.updateArqueo(cashCount).subscribe(
+            cashCount => {
+              this.cashCount = cashCount;
+              this.onBack();
+            },
+            error => {
+              this.errorMessage = <any>error;
+              this.showModalError(this.errorTemplate);
             }
-          }
-        }
-        this._cashCountService.updateArqueo(cashCount).subscribe(
-          cashCount => {
-            this.cashCount = cashCount;
-            this.onBack();
-          },
-          error => {
-            this.errorMessage = <any>error;
-            this.showModalError(this.errorTemplate);
-          }
-        )
+          )
+        }        
       },
       error => {
         this.errorMessage = <any>error;
