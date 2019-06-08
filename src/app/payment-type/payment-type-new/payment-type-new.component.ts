@@ -9,6 +9,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { PaymentType } from '../../../shared/models/payment-type';
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-payment-type-new',
@@ -19,9 +20,9 @@ export class PaymentTypeNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   paymentType: PaymentType = new PaymentType();
-  errorMessage: string;
   paymentTypeForm: FormGroup;
   pageTitle: String = 'Nueva Forma de Pago';
 
@@ -48,16 +49,17 @@ export class PaymentTypeNewComponent implements OnInit {
               console.log(paymentType)
               this._router.navigate(['/settings/general/paymentTypes', { outlets: { edit: ['selectItem'] } }])
             },        
-            (error: any) => { 
-              this.errorMessage = <any>error,
-              this.showModalError(this.errorTemplate)
+            (error: any) => {               
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
     }
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

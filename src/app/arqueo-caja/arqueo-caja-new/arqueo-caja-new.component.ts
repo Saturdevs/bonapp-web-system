@@ -11,6 +11,7 @@ import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service'
 import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { isNullOrUndefined, error } from 'util';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-arqueo-caja-new',
@@ -24,13 +25,12 @@ export class ArqueoCajaNewComponent implements OnInit {
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
   newArqueo: ArqueoCaja;
-  errorMessage: string;
   errorMsg: string;
   errorTitle: string;
   errorDateArqueoCurrentDateMsg = "La fecha de apertura del arqueo es mayor a la fecha actual";
   errorDateLastArqueoMsg = "La fecha de apertura del arqueo es menor a la fecha de cierre de un arqueo posterior de la misma caja";
   errorArqueoOpen = "Ya existe un arqueo de caja abierto";
-  errorService: string = 'Error de Servicio';
+  serviceErrorTitle: string = 'Error de Servicio';
   pageTitle: String = 'Nuevo Arqueo de Caja';
   hasCashRegister = true;
   showMessageCashRegister = false;
@@ -92,70 +92,15 @@ export class ArqueoCajaNewComponent implements OnInit {
           },
           error => 
           { 
-            this.errorTitle = this.errorService;
-            this.errorMessage = <any>error;
-            this.showModalError(this.errorTemplate)
+            this.showModalError(<any>error);
           }
         );
       },
       error => {
-        this.errorTitle = this.errorService;
-        this.errorMessage = <any>error;
-        this.showModalError(this.errorTemplate)
+        this.showModalError(<any>error);
       }
     )                                                                             
   }
-
-  /*getArqueoOpenByCashRegister() {
-    this._arqueoService.getArqueoOpenByCashRegister(this.newArqueo.cashRegisterId)
-      .subscribe(arqueo => {        
-        if (!isNullOrUndefined(arqueo))
-        {
-          this.errorArqueo = true;
-          this.errorMsg = this.errorArqueoOpen;
-        }              
-      },
-      error => {
-        this.errorTitle = this.errorService;
-        this.errorMessage = <any>error;
-        this.showModalError(this.errorTemplate)
-      }
-    );
-  }
-
-  validateArquedoDateOpen() {
-    let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
-    let dateCreatedAt = new Date(stringDate);
-    let currentDate = new Date();
-
-    if (dateCreatedAt > currentDate) {      
-      this.errorArqueo = true;
-      this.errorMsg = this.errorDateArqueoCurrentDateMsg;
-    }
-  }
-
-  validateDateLastArqueo() {
-    this._arqueoService.getLastArqueoByCashRegister(this.newArqueo.cashRegisterId)
-      .subscribe(lastArqueo => {
-        if (!isNullOrUndefined(lastArqueo)) {
-          let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
-          let dateCreatedAt = new Date(stringDate);
-          let lastDate = new Date(lastArqueo.closedAt)
-          console.log(lastDate)
-
-          if (dateCreatedAt < lastDate) {
-            this.errorArqueo = true;
-            this.errorMsg = this.errorDateLastArqueoMsg;
-          }
-        }
-      },
-      error => {
-        this.errorTitle = this.errorService;
-        this.errorMessage = <any>error;
-        this.showModalError(this.errorTemplate)
-      }
-    );
-  } */
 
   validate() {
     this.errorArqueo = false;
@@ -193,46 +138,23 @@ export class ArqueoCajaNewComponent implements OnInit {
                   this.saveArqueo();
                 }            
               },
-              error => {
-                this.errorTitle = this.errorService;
-                this.errorMessage = <any>error;
-                this.showModalError(this.errorTemplate)
+              error => {                
+                this.showModalError(<any>error);
               }
             );
           }
         }             
       },
       error => {
-        this.errorTitle = this.errorService;
-        this.errorMessage = <any>error;
-        this.showModalError(this.errorTemplate)
+        this.showModalError(<any>error);
       }
     );
-    /* this.getArqueoOpenByCashRegister();
-
-    if (!this.errorArqueo) {
-      this.validateArquedoDateOpen();
-    }   
-
-    if (!this.errorArqueo) {
-      console.log('validate last date')
-      this.validateDateLastArqueo();
-    }
-    console.log(this.errorArqueo)
-    if (!this.errorArqueo) {
-      console.log('save')
-      this.saveArqueo();
-    } */
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

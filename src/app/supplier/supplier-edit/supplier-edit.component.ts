@@ -8,6 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Supplier } from '../../../shared/models/supplier';
 import { SupplierService } from '../../../shared/services/supplier.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-supplier-edit',
@@ -18,8 +19,8 @@ export class SupplierEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  errorMessage: string;  
   supplier: Supplier;
   pageTitle: String = 'Editando proveedor: ';
   supplierNameModified: String;
@@ -44,9 +45,8 @@ export class SupplierEditComponent implements OnInit {
         this.supplier = supplier,
         this.onBack()
       },
-      error => { 
-        this.errorMessage = <any>error;
-        this.showModalError(this.errorTemplate)
+      error => {         
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
@@ -55,8 +55,10 @@ export class SupplierEditComponent implements OnInit {
     this._router.navigate(['/suppliers-module/suppliers', { outlets: { edit: ['selectItem'] } }]);
   }
   
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   showModalCancel(template: TemplateRef<any>){

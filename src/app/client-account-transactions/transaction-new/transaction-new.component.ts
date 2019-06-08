@@ -13,6 +13,7 @@ import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service'
 import { CashRegister } from '../../../shared/models/cash-register';
 import { PaymentType } from '../../../shared/models/payment-type';
 import { isNullOrUndefined } from 'util';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-transaction-new',
@@ -23,9 +24,8 @@ export class TransactionNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  errorMessage: string;
-  errorTitle: string;
   paymentTypes: PaymentType[];
   cashRegisters: CashRegister[];
   clients: Client[];
@@ -105,9 +105,7 @@ export class TransactionNewComponent implements OnInit {
                     this._arqueoService.updateArqueo(arqueo).subscribe(
                       success => {},
                       error => {
-                        this.errorMessage = <any>error;
-                        this.errorTitle = "Error de Servicio";
-                        this.showModalError(this.errorTemplate)
+                        this.showModalError(this.serviceErrorTitle, <any>error);
                       }
                     );
                   }
@@ -116,35 +114,28 @@ export class TransactionNewComponent implements OnInit {
               this.onBack();
             },
             error => { 
-              this.errorMessage = <any>error;
-              this.errorTitle = "Error de Servicio";
-              this.showModalError(this.errorTemplate)
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
         } else {
-          this.errorMessage = "El cliente seleccionado no tiene una cuenta corriente habilitada. Por favor habilite la opción cuenta corriente en la configuración del Cliente.";
-          this.errorTitle = "Cta Cte Inhabilitada"
-          this.showModalError(this.errorTemplate)
+          let errorMessage = "El cliente seleccionado no tiene una cuenta corriente habilitada. Por favor habilite la opción cuenta corriente en la configuración del Cliente.";
+          let errorTitle = "Cta Cte Inhabilitada"
+          this.showModalError(errorTitle, errorMessage)
         }        
       },
       error => 
       { 
-        this.errorMessage = <any>error;
-        this.errorTitle = "Error de Servicio"
-        this.showModalError(this.errorTemplate)
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );        
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
-  }
 
   onBack(): void {
     this._router.navigate(['/clients-module/accountTransactions', { outlets: { edit: ['selectItem'] } }]);

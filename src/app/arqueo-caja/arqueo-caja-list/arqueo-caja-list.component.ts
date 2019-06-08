@@ -13,6 +13,7 @@ import { CashRegister } from '../../../shared/models/cash-register';
 
 import { DatePickerComponent } from '../../../shared/components/date-picker/date-picker.component';
 import { error } from 'util';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-arqueo-caja-list',
@@ -24,9 +25,9 @@ export class ArqueoCajaListComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
   pageTitle: string = "Arqueos de Caja";
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   arqueos: ArqueoCaja[];
-  errorMessage: string;
   filteredArqueos: ArqueoCaja[];
   _listFilter: string;
   idArqueoDelete: any;
@@ -56,7 +57,7 @@ export class ArqueoCajaListComponent implements OnInit {
               arqueo.cashRegister = cashRegister.name;
             },
             error => {
-              this.errorMessage = <any>error;
+              this.showModalError(<any>error);
             }
           );
 
@@ -96,7 +97,7 @@ export class ArqueoCajaListComponent implements OnInit {
               arqueo.cashRegister = cashRegister.name;
             },
             error => {
-              this.errorMessage = <any>error;
+              this.showModalError(<any>error);
             }
           );
 
@@ -120,7 +121,7 @@ export class ArqueoCajaListComponent implements OnInit {
         this.filteredArqueos = this.arqueos;
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(<any>error);
       }
     );
   }
@@ -136,8 +137,10 @@ export class ArqueoCajaListComponent implements OnInit {
     return true;     
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   deleteArqueo(){
@@ -150,14 +153,12 @@ export class ArqueoCajaListComponent implements OnInit {
               this.getArqueos();
             },
             error => { 
-              this.errorMessage = <any>error,
-              this.showModalError(this.errorTemplate)
+              this.showModalError(<any>error)
             }
           );
         },
         error => { 
-          this.errorMessage = <any>error,
-          this.showModalError(this.errorTemplate)
+          this.showModalError(<any>error)
         }
       );
     }

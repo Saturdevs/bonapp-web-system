@@ -11,6 +11,7 @@ import { Menu } from '../../../shared/models/menu';
 import { MenuService } from '../../../shared/services/menu.service';
 import { isNullOrUndefined } from 'util';
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   templateUrl: './menu-modify.component.html'
@@ -25,12 +26,12 @@ export class MenuModifyComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   pageTitle: string = 'Menu Modify';
   menu: Menu;
   menuNameModified: string;
   menuPicMod: string;
-  errorMessage: string;
   id: string;
   private sub: Subscription;
   canEdit: Boolean;
@@ -60,10 +61,13 @@ export class MenuModifyComponent implements OnInit {
   updateMenu(menu: Menu) {
     this.fileInputComponent.startUpload();
     this._menuService.updateMenu(menu).subscribe(
-          menu => { this.menu = menu,
-                    this.onBack()},
-          error => { this.errorMessage = <any>error,
-                     this.showModalError(this.errorTemplate)});
+          menu => { 
+            this.menu = menu;
+            this.onBack();
+          },
+          error => { 
+            this.showModalError(this.serviceErrorTitle, <any>error);
+          });
   }
 
 
@@ -76,8 +80,10 @@ export class MenuModifyComponent implements OnInit {
     }
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
   
   onBack(): void {

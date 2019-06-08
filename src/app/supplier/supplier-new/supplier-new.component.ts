@@ -8,6 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Supplier } from '../../../shared/models/supplier';
 import { SupplierService } from '../../../shared/services/supplier.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-supplier-new',
@@ -18,8 +19,8 @@ export class SupplierNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  errorMessage: string;
   pageTitle: String = 'Nuevo Proveedor';
   newSupplier: Supplier;
 
@@ -40,21 +41,16 @@ export class SupplierNewComponent implements OnInit {
         this.onBack()
       },
       error => 
-      { 
-        this.errorMessage = <any>error,
-        this.showModalError(this.errorTemplate)
+      {         
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

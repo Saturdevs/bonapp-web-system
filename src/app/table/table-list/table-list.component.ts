@@ -15,6 +15,7 @@ import {
 } from '../../../shared/index';
 import { ToastService } from 'ng-mdb-pro/pro/alerts';
 import { isNullOrUndefined } from 'util';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 interface Box {
     id: number;
@@ -28,8 +29,9 @@ interface Box {
   styleUrls: ['./table-list.component.scss']
 })
 export class TableListComponent implements OnInit{
+	private serviceErrorTitle = 'Error de Servicio';
 	public modalRef: BsModalRef;
-  	private boxes: Array<Box> = [];
+  private boxes: Array<Box> = [];
 	private rgb: string = '#efefef';
 	private curNum;
 	private gridConfig: NgGridConfig = <NgGridConfig>{
@@ -60,7 +62,6 @@ export class TableListComponent implements OnInit{
 	private itemPositions: Array<any> = [];
 	tablesNow: Array<Table> = [];
 	tablesTotal: Array<Table> = [];
-	private errorMessage: string;
 	deletedTables: Array<any> = [];
 	addedTables: Array<Table> = [];
 	settingsActive: Boolean;
@@ -258,10 +259,14 @@ export class TableListComponent implements OnInit{
 								this._router.navigate(['./orders/orderNew', tableNumber]);
 							}
 						},
-						error => { this.errorMessage = <any>error }
+						error => { 
+							this.showModalError(this.serviceErrorTitle, <any>error);
+						 }
 					)
 				},
-				error => { this.errorMessage = <any>error }
+				error => { 
+					this.showModalError(this.serviceErrorTitle, <any>error);
+				 }
 			)			
 		}		
 	}
@@ -289,9 +294,17 @@ export class TableListComponent implements OnInit{
 					}
 				)
 			},
-			error => this.errorMessage = <any>error
+			error => {
+				this.showModalError(this.serviceErrorTitle, <any>error);
+			}
 		)
 	}
+
+	showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
+  }
 
 	closeModal(){
         this.modalRef.hide();

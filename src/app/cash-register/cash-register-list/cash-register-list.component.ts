@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { CashRegister } from '../../../shared/models/cash-register';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-register-list',
@@ -15,9 +16,9 @@ import { CashRegister } from '../../../shared/models/cash-register';
 export class CashRegisterListComponent implements OnInit {
 
   pageTitle: string = "Cajas";
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
-  errorMessage: string;
   filteredCashRegisters: CashRegister[];
   _listFilter: string;
   idCashRegisterDelete: any;
@@ -72,12 +73,20 @@ export class CashRegisterListComponent implements OnInit {
         });
         this.filteredCashRegisters = this.cashRegisters;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error)
+      });
   }
 
   showModalDelete(template: TemplateRef<any>, idCashRegister: any){
     this.idCashRegisterDelete = idCashRegister;
     this.modalRef = this.modalService.show(template, {backdrop: true});
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

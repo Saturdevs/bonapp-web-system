@@ -9,6 +9,7 @@ import { Menu } from '../../../shared/models/menu';
 import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-category-new',
@@ -22,9 +23,9 @@ export class CategoryNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   categories: Category[];
-  errorMessage: string;
   newCategory: Category;
   menus: Menu[];
   hasCategory = false;
@@ -47,8 +48,9 @@ export class CategoryNewComponent implements OnInit {
     this._categoryService.saveCategory(this.newCategory).subscribe(
       category =>{ this.newCategory = category,
                    this.onBack()},
-      error => { this.errorMessage = <any>error,
-                     this.showModalError(this.errorTemplate)});
+      error => { 
+        this.showModalError(<any>error);
+      });
   }
 
   onNotified(validator: string) {
@@ -65,19 +67,15 @@ export class CategoryNewComponent implements OnInit {
         .subscribe(menus => {
             this.menus = menus
           },
-          error => { this.errorMessage = <any>error['message'],
-                     this.showModalError(this.errorTemplate),
-                     this.onBack()});
+          error => { 
+            this.showModalError(<any>error['message']);
+          });
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
-  }
-
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

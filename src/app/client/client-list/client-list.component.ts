@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { ClientService } from '../../../shared/services/client.service';
 import { Client } from '../../../shared/models/client';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-client-list',
@@ -15,10 +16,10 @@ import { Client } from '../../../shared/models/client';
 export class ClientListComponent implements OnInit {
 
   pageTitle: string = "Clientes";
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   clients: Client[];
   filteredClients: Client[];
-  errorMessage: string;  
   idClientDelete: any;
 
   constructor(private _clientService: ClientService,
@@ -42,9 +43,15 @@ export class ClientListComponent implements OnInit {
         this.filteredClients = this.clients;
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   showModalDelete(template: TemplateRef<any>, idClient: any){

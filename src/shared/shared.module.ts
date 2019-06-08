@@ -6,6 +6,7 @@ import { MDBBootstrapModules } from 'ng-mdb-pro';
 import { MDBSpinningPreloader } from 'ng-mdb-pro';
 import { ToastModule } from 'ng-mdb-pro/pro/alerts';
 import { ApiService } from '../shared/services/api.service';
+import { ErrorTemplateComponent } from '../shared/components/error-template/error-template.component';
 
 @NgModule({
   imports: [
@@ -14,7 +15,9 @@ import { ApiService } from '../shared/services/api.service';
     ToastModule.forRoot(),
     MDBBootstrapModules.forRoot(),    
   ],
-  declarations: [],
+  declarations: [
+    ErrorTemplateComponent
+  ],
   providers: [ 
     ApiService,
     MDBSpinningPreloader   
@@ -24,7 +27,11 @@ import { ApiService } from '../shared/services/api.service';
     FormsModule,
     ReactiveFormsModule,
     MDBBootstrapModules,
-    ModalModule
+    ModalModule,
+    ErrorTemplateComponent
+  ],
+  entryComponents: [
+    ErrorTemplateComponent
   ],
   schemas: [ NO_ERRORS_SCHEMA ]
 })

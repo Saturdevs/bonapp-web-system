@@ -8,6 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Client } from '../../../shared/models/client';
 import { ClientService } from '../../../shared/services/client.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-client-edit',
@@ -18,8 +19,8 @@ export class ClientEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
-  public modalRef: BsModalRef;
-  errorMessage: string;  
+  private serviceErrorTitle = 'Error de Servicio';
+  public modalRef: BsModalRef; 
   client: Client;
   pageTitle: String = 'Editando cliente: ';
   clientNameModified: String;
@@ -45,8 +46,7 @@ export class ClientEditComponent implements OnInit {
         this.onBack()
       },
       error => { 
-        this.errorMessage = <any>error;
-        this.showModalError(this.errorTemplate)
+        this.showModalError(<any>error)
       }
     );
   }
@@ -55,8 +55,10 @@ export class ClientEditComponent implements OnInit {
     this._router.navigate(['/clients-module/clients', { outlets: { edit: ['selectItem'] } }]);
   }
   
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   showModalCancel(template: TemplateRef<any>){

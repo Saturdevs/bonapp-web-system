@@ -11,6 +11,8 @@ import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { UploadFile, UploadInput, UploadOutput } from 'ng-mdb-pro/pro/file-input';
 import { humanizeBytes } from 'ng-mdb-pro/pro/file-input';
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 
 
@@ -21,11 +23,12 @@ import { FileInputComponent } from '../../file-input/file-input.component';
   styleUrls: ['./product-new.component.css']
 })
 export class ProductNewComponent implements OnInit {
+  private serviceErrorTitle = 'Error de Servicio';
+  public modalRef: BsModalRef;
   pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();
   categories: Category[];
-  errorMessage: string;
   categorySelect: Category;
   clickAceptar: Boolean;
   sizesArray: Array<string> = new Array("Chico", "Mediano", "Grande");
@@ -52,7 +55,8 @@ export class ProductNewComponent implements OnInit {
   constructor(private _router: Router,
               private _productService: ProductService,
               private _categoryService: CategoryService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private modalService: BsModalService) { }
 
   ngOnInit() {
     this.productForm = this.formBuilder.group({
@@ -114,7 +118,7 @@ export class ProductNewComponent implements OnInit {
       categories => {
         this.categories = categories;
       },
-      error => this.errorMessage = <any>error
+      error => this.showModalError(this.serviceErrorTitle, <any>error)
     );
   }
 
@@ -124,13 +128,18 @@ export class ProductNewComponent implements OnInit {
       this.fileInputComponent.startUpload();
       this._productService.saveProduct(p)
           .subscribe(
-            () => this.onSaveComplete(),
-            (error: any) => this.errorMessage = <any>error
+            () => {
+              this.onSaveComplete();
+            },
+            (error: any) => {
+              this.showModalError(this.serviceErrorTitle, <any>error);
+            }
           );
     } else if (!this.productForm.dirty) {
       this.onSaveComplete();
     }
   }
+
   onNotified(validator: string) {
     console.log(validator);
     validator != '' ? this.validPicture = validator: this.validPicture = '';
@@ -138,6 +147,12 @@ export class ProductNewComponent implements OnInit {
     if(this.validPicture != ''){
       this.productForm.controls.picture.setValue(this.validPicture);
     }
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onSaveComplete() {

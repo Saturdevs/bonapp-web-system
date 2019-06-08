@@ -9,6 +9,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Section } from '../../../shared/models/section';
 import { SectionService } from '../../../shared/services/section.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-section-edit',
@@ -19,10 +20,10 @@ export class SectionEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   section: Section;
   sectionNameModified: String;
-  errorMessage: string;
   sectionForm: FormGroup;
 
   constructor(private _route: ActivatedRoute,
@@ -50,12 +51,15 @@ export class SectionEditComponent implements OnInit {
           section => { this.section = section;
                     this._router.navigate(['/settings/general/sections', { outlets: { edit: ['selectItem'] } }])
                   },
-          error => { this.errorMessage = <any>error,
-                     this.showModalError(this.errorTemplate)});
+          error => { 
+            this.showModalError(this.serviceErrorTitle, <any>error)
+          });
     }
 
-    showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+    showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+      this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+      this.modalRef.content.errorTitle = errorTitleReceived;
+      this.modalRef.content.errorMessage = errorMessageReceived;
     }
 
     closeModal(){

@@ -7,6 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ClientService } from '../../../shared/services/client.service';
 import { Transaction } from '../../../shared/models/transaction';
 import { Client } from '../../../shared/models/client';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-transaction-list',
@@ -15,11 +16,11 @@ import { Client } from '../../../shared/models/client';
 })
 export class TransactionListComponent implements OnInit {
 
+  private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = "Cuentas Corrientes";
   public modalRef: BsModalRef;
   transactions: Transaction[];
   filteredTransactions: Transaction[];
-  errorMessage: string;  
   idClientTransactionDelete: any;
   idTransactionDelete: any;
   clientsWithTransactions: Client[];
@@ -48,7 +49,7 @@ export class TransactionListComponent implements OnInit {
         this.filteredTransactions = this.transactions;
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
@@ -65,7 +66,7 @@ export class TransactionListComponent implements OnInit {
         this.selectedValue = 'default';        
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
@@ -76,7 +77,7 @@ export class TransactionListComponent implements OnInit {
         this.filteredTransactions = transactions;
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
@@ -122,6 +123,12 @@ export class TransactionListComponent implements OnInit {
         }
       );
     }
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   reloadItems(event) {

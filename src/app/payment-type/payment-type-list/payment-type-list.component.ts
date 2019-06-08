@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 import { PaymentType } from '../../../shared/models/payment-type';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-payment-type-list',
@@ -15,9 +16,9 @@ import { PaymentType } from '../../../shared/models/payment-type';
 export class PaymentTypeListComponent implements OnInit {
 
   pageTitle: string = "Formas de Pago";
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   paymentTypes: PaymentType[];
-  errorMessage: string;
   filteredPaymentTypes: PaymentType[];
   _listFilter: string;
   idPaymentTypeDelete: any;
@@ -73,7 +74,10 @@ export class PaymentTypeListComponent implements OnInit {
         });
         this.filteredPaymentTypes = this.paymentTypes;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      }
+    )
   }
 
   showModalDelete(template: TemplateRef<any>, idPaymentType: any){
@@ -93,6 +97,12 @@ export class PaymentTypeListComponent implements OnInit {
         this.getPaymentTypes();
       });
     }
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   reloadItems(event) {

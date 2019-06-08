@@ -12,6 +12,7 @@ import { CashRegisterService } from '../../../shared/services/cash-register.serv
 import { CashRegister } from '../../../shared/models/cash-register';
 
 import { DatePickerComponent } from '../../../shared/components/date-picker/date-picker.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-flows-list',
@@ -21,9 +22,9 @@ import { DatePickerComponent } from '../../../shared/components/date-picker/date
 export class CashFlowsListComponent implements OnInit {
 
   pageTitle: string = "Movimientos de Caja";
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   cashFlows: CashFlow[];
-  errorMessage: string;
   filteredCashFlows: CashFlow[];
   _listFilter: string;
   idCashFlowsDelete: any;
@@ -51,7 +52,7 @@ export class CashFlowsListComponent implements OnInit {
               cashFlow.cashRegister = cashRegister.name                
             },  
             error => { 
-              this.errorMessage = <any>error
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
 
@@ -90,7 +91,7 @@ export class CashFlowsListComponent implements OnInit {
               cashFlow.cashRegister = cashRegister.name                
             },  
             error => { 
-              this.errorMessage = <any>error
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );  
 
@@ -99,12 +100,20 @@ export class CashFlowsListComponent implements OnInit {
 
         this.filteredCashFlows = this.cashFlows;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      })
   }
 
   showModalDelete(template: TemplateRef<any>, idCashFlow: any){
     this.idCashFlowsDelete = idCashFlow;
     this.modalRef = this.modalService.show(template, {backdrop: true});
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){
