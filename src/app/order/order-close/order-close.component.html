@@ -1,158 +1,193 @@
-<div class="col-md-12">
+<div class="container col-md-12">
   <!-- Titulo del form -->
-  <div class="row">
-    {{title + order.table}}
-
-    <label (click)="closeForm()" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-      <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
-    </label> 
+  <div class="row pageTitle primary-color">
+    <span aria-hidden="true" (click)="closeForm()" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1">&times;</span>
+    <div class="col-md-12">
+        <h4 class="text-white text-center mb-0">{{title + order.table}}</h4>
+    </div>
   </div>
-
   <!-- Cuerpo del form -->
   <div class="row" *ngIf="productsInOrder !== null && productsInOrder !== undefined && productsInOrder.length > 0">
     <!-- Adiciones -->
-    <div class="col-md-6">    
-      <div class="col-md-12">
+    <div class="col-md-6 pl-0 pr-1">    
+      <div class="col-md-12 sectionTitle">
         <div class="row">
           {{ aditionsTitle }}
         </div>  
       </div>
 
-      <div class="col-md-12" *ngFor="let product of productsInOrder">
-        <div class="row" *ngIf="product.deleted === false">
-          <div>
-            <p>{{ product.quantity }}</p>
+      <div class="col-md-12 productsInOrder" *ngFor="let product of productsInOrder">
+        <div class="row mb-0 pt-2 pb-2" *ngIf="product.deleted === false">
+          <div class="col-2 p-0 pl-3">
+            <span>{{ product.quantity }}</span>
           </div>
-
-          <div>
-            <li>
-                {{ product.name }}              
-            </li>  
+          <div class="col-7 p-0">
+            <span>{{ product.name }}</span>  
           </div>
-
-          <div>
-            <p>${{ product.price * product.quantity }} </p>  
+          <div class="col-3 p-0">
+            <span class="float-right pr-3">{{ product.price * product.quantity | currency}}</span>  
           </div>
         </div> 
       </div>
-
       <!-- Mostrar descuento si hay alguno ingresado -->
-      <div class="row" *ngIf='discount !== undefined && discount !== null'>
-        <div class="col-md-12">
-          <div class="row">
-            <h6 class="float-left">Subtotal:</h6>
-            <h6 class="float-left">{{ discount.subtotal }}</h6>      
+      <div class="col-md-12 sectionDiscounts" *ngIf='discount !== undefined && discount !== null'>
+        <div class="row subTotalDiscount">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <span class="float-left">{{'Subtotal' | uppercase}} </span>
           </div>
-  
-          <div class="row">
-            <h6 class="float-left">Descuento </h6>
-            <h6 class="float-left">{{ discount.discountRate }} %</h6> 
-            <label (click)="removeDiscount()" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-              <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
-            </label>       
+          <div class="col-lg-6 col-md-6 col-sm-6 pr-0">
+            <span class="float-right pr-3">{{ discount.subtotal | currency }}</span>
           </div>
         </div>
       </div>
+      <div class="col-md-12 sectionDiscounts" *ngIf='discount !== undefined && discount !== null'>        
+        <div class="row discountAmount">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <span class="float-left">{{'Descuento' | uppercase}} </span>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 pr-0">
+            <span class="float-right pr-3">{{ discount.discountAmount | currency }}</span>
+          </div>
+        </div>
+      </div>  
 
       <!--Total-->
-      <div class="row">
-        <h6 class="float-left">Total:</h6>
-        <h6 class="float-left">${{ totalPrice }}</h6>
+      <div class="col-md-12 totalOrder">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <span class="float-left">{{'Total' | uppercase}} </span>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 pr-4">
+            <span class="float-right">{{ totalPrice | currency }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Pago -->    
-    <div class="col-md-6">
-      <div class="col-md-12">
+    <div class="col-md-6 pr-0 pl-1">
+      <div class="col-md-12 sectionTitle pt-0 pb-0">
         <div class="row">
-          {{ paymentsTitle }}
-                    
-          <label (click)="addPayment()" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-            <p class="pb-0 mb-0"><i class="fa fa-plus fa-1x"></i></p>
-          </label> 
+          <div class="col-10 paymentsTitle pl-0">
+            {{ paymentsTitle }}
+          </div>
+          <div class="col-2 addPaymentContainer">
+            <label (click)="addPayment()" class="addPaymentButton z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left mb-0 mt-0">
+              <span class="pb-0 mb-0"><i class="fa fa-plus fa-1x"></i></span>
+            </label> 
+          </div>
         </div>  
       </div>
 
-      <div class="row">
-        {{ partialPaidAmountLabel + ' $' + partialPaidAmount }} 
-      </div>
-
-      <div class="row">
-        <p>{{ cashRegisterLabel }}</p>
-        <mdb-select [(ngModel)]="selectedCashRegister" 
-          [options]="cashRegistersSelect" placeholder="Choose your option">
-        </mdb-select>
-      </div>
-
-      <div class="col-md-12" *ngFor="let payment of payments">
+      <div class="col-md-12 sectionPayed">
         <div class="row">
-          <mdb-select [(ngModel)]="payment.methodId" 
-            [options]="paymentTypesSelect" placeholder="Choose your option">
-          </mdb-select>   
-          
-          <input type="number" class="form-control" [(ngModel)]="payment.amount" id="amount" (input)="calculateChangeAmount()" mdbActive>
+          <div class="col-lg-9 col-md-9 col-sm-9 partialPaidLabel">
+            <span class="float-left">{{ partialPaidAmountLabel | uppercase}} </span>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 pr-0">
+            <span class="float-right pr-3">{{ partialPaidAmount | currency }}</span>
+          </div>
+        </div>
+      </div>
 
-          <label (click)="removePayment(payment)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left">
-            <p class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></p>
-          </label>  
+      <div class="col-md-12 cashRegisterSelectSection">
+        <div class="row">
+          <div class="col-lg-5 col-md-5 col-sm-5 cashRegisterLabel pr-0">
+            <span class="float-left">{{ cashRegisterLabel | uppercase}}:</span>
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-7">
+            <mdb-select [(ngModel)]="selectedCashRegister" 
+              [options]="cashRegistersSelect" placeholder="Choose your option" class="mdbSelectClass">
+            </mdb-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 cashRegisterSelectSection" *ngFor="let payment of payments">
+        <div class="row">
+          <div class="col-lg-5 col-md-5 col-sm-5 pr-0">
+            <mdb-select [(ngModel)]="payment.methodId" 
+              [options]="paymentTypesSelect" placeholder="Choose your option" class="mdbSelectClass">
+            </mdb-select>   
+          </div>
+          <div class="col-lg-5 col-md-5 col-sm-5">
+            <input type="number" class="form-control pt-0" [(ngModel)]="payment.amount" id="amount" (input)="calculateChangeAmount()" mdbActive>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-2">
+            <label (click)="removePayment(payment)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left removePayment">
+              <span class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></span>
+            </label>  
+          </div>
+        </div>         
+      </div>
+      <div class="col-md-12 cashRegisterSelectSection" *ngIf='showDiscount===false && (discount === null || discount === undefined)'>
+        <div class="row">
+          <!-- Ingresar descuento -->
+          <div class="float-left col 2">
+            <button [disabled]="productsInOrder.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
+          </div>   
         </div>         
       </div>
 
-      <!-- Ingresar descuento -->
-      <div class="float-left col 2" *ngIf='showDiscount===false && (discount === null || discount === undefined)'>
-        <button [disabled]="productsInOrder.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
-      </div> 
-
-      <div class="row" *ngIf='showDiscount===true'>
-        <form #formDiscount="ngForm" novalidate>
+      <form #formDiscount="ngForm" novalidate>      
+      <div class="col-md-12 discountAndButtonsSection" *ngIf='showDiscount===true'>
           <div class="row">
-            <span> {{ discountRateLabel }}: </span>
-            <input type="number" class="form-control" [(ngModel)]="discountRate" name="discountRate" 
-              (input)="calculateAmount()"
-              (click)="selectText(rate)"
-              #rate
-              mdbActive>
-            <span>%</span>
-
-            <span>$</span>
-            <input type="number" class="form-control" [(ngModel)]="discountAmount" name="discountAmount"
-              (input)="calculateRate()" 
-              (click)="selectText(amount)"
-              #amount
-            mdbActive>
+            <div class="col-lg-3 col-md-3 col-sm-3 cashRegisterLabel pr-0 pt-3">
+              <span class="float-left">{{discountRateLabel | uppercase}}:</span>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 pr-0">
+              <input type="number" class="form-control" [(ngModel)]="discountRate" name="discountRate" 
+                (input)="calculateAmount()"
+                (click)="selectText(rate)"
+                #rate
+                mdbActive>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 pl-0 pt-3">
+                <i class="fa fa-percent"></i>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 pr-0 pt-3">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 pl-0">
+              <input type="number" class="form-control" [ngModel]="discountAmount" (ngModelChange)="discountAmount=$event" name="discountAmount"
+                (input)="calculateRate()" 
+                (click)="selectText(amount)"
+                #amount
+                mdbActive>
+            </div>
           </div>
-          <div class="row">
+      </div>
+      <div class="col-12 cashRegisterSelectSection" *ngIf='showDiscount===true'>
+        <div class="row buttonsRow">
             <ul class="actions" align="center">
               <li><input [disabled]="formDiscount.invalid" value="{{ confirmButtonLabel }}" class="special" (click)="addDiscount()"/></li>
               <li><input type="reset" value="{{ cancelButtonLabel }}" (click)='showDiscountSection(false)' /></li>
             </ul>
-          </div>
-        </form>
+        </div>
       </div>
 
+    </form>
       <!-- Vuelto -->
-      <div class="row">
-        <span>{{ changeLabel }}: </span>
-        <span>$</span>
-        <label>{{ changeAmount }}</label>
+      <div class="col-md-12 totalChange">
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <span class="float-left">{{changeLabel | uppercase}} </span>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 pr-4">
+            <span class="float-right">{{ changeAmount | currency }}</span>
+          </div>
+        </div>
       </div>
     </div>   
   </div>
-
   <div class="row" *ngIf="productsInOrder === null || productsInOrder === undefined || productsInOrder.length === 0">
     {{ closeOrderWithoutAditions }}
   </div>
-
   <!-- Botones -->
-  <div class="row">
-    <div class="modal-footer">      
-      <button type="button" class="button special" (click)="closeForm()">{{ cancelButton }}</button>
-      <div class="float-right col-3">               
-        <button type="button" [disabled]="changeAmount<0" 
-        class="customMarginButton float-right btn btn-sm btn-primary waves-light" 
-        (click)="closeTable()"
-        mdbRippleRadius>{{ closeTableButton + order.table }}</button>
-      </div>
-    </div>  
+  <div class="row grey lighten-3">
+    <div class="col-7 offset-5 closeOrderButton">
+      <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeForm()">{{cancelButton}}</button>
+      <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="changeAmount < 0" (click)="closeTable()">{{closeTableButton + order.table}}</button>
+    </div>
   </div>
 </div>

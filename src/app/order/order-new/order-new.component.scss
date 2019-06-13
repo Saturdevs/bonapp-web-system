@@ -11,7 +11,7 @@
 
 .menuButtonContainer{
     height:80%;
-    width: 30%;
+    width: 15%;
     display:inline-block;
     padding:0;
     padding-right: 1rem;
@@ -183,4 +183,8 @@
     padding-top: .75rem;
     padding-bottom: .75rem;
 
+}
+
+.activeItem{
+    border-bottom: solid 3px #4c4c4c;
 }

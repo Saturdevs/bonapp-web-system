@@ -33,7 +33,7 @@ export class OrderCloseComponent implements OnInit {
               private arqueoCajaService: ArqueoCajaService
             ) { }
 
-  private title: String = "CERRAR MESA ";
+  private title: String = "Cerrar Mesa ";
   private aditionsTitle: String = "ADICIONES";
   private paymentsTitle: String = "PAGOS";
   private cashRegisterLabel: String = "Caja Registradora";

@@ -40,30 +40,31 @@
 overflow: auto;">
   <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8 pr-0" style="height: 100%">
     <div class="row col-12 menusContainer pr-0 pl-0">
-      <div class="d-flex align-items-center pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
-        <div *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
-          <a (click)="getCategories(menu._id)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
-        </div>          
-      </div>
-      <div class="paddles">
-          <button class="left-paddle paddle btn customPaddle waves-light" mdbRippleRadius style="left:0!important;">
-            <
-          </button>
-          <button class="right-paddle paddle btn customPaddle waves-light" mdbRippleRadius>
-            >
-          </button>
-      </div>
+      <div class="d-flex align-items-center pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0" style="width: 100%">
+        <button class="left-paddle paddle btn customPaddle waves-light" mdbRippleRadius style="left:0!important;">
+          <
+        </button>
+        <div style="margin-left:8%;" *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
+          <a (click)="getCategories(menu._id); applyClassMenu(menu._id)" [ngClass]="{'activeItem': activeMenu == menu._id}" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
+        </div>
+        <button class="right-paddle paddle btn customPaddle waves-light" mdbRippleRadius>
+          >
+        </button>
+      </div>          
     </div>
     <div class="row col-12 pr-0 pl-0 categoriesAndProductsContainer">
       <div class="col-3 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
-          <a (click)="getProductsByCategory(category._id)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
+          <a (click)="getProductsByCategory(category._id); applyClassCategory(category._id)" [ngClass]="{'activeItem': activeCategory == category._id}"  class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
         </div>
       </div>
-      <div class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+      <div *ngIf="products && products.length > 0" class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <div class="productsButtonContainer" *ngFor="let product of products">
           <a (click)="addProductToPreOrder(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
         </div>
+      </div>
+      <div *ngIf="products.length == 0" class="col-9 d-flex justify-content-center col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-5 mr-0 ml-0 mt-0 mb-0">
+          <h3>{{ noProductsText }}</h3>
       </div>
     </div>
   </div>

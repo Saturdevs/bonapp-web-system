@@ -1,0 +1,107 @@
+
+.closeOrderButton{
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    margin-top: 3%;
+}
+
+.sectionTitle{
+    background-color: #999999;
+    color: white;
+    font-weight: bold;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    padding-left: 2rem;
+}
+
+.totalOrder{
+    background-color: #4c4c4c;
+    color: white;
+    font-weight: bold;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+
+.productsInOrder{
+    background-color: #f3f3f3;
+    border-left: solid 4px #fb4;
+    border-top: solid 1px #d0d0d0;
+    border-right: solid 1px #d0d0d0;
+}
+.sectionDiscounts{
+    background-color: #f6f6f6;
+    font-weight: bold;
+    padding-top: .65rem;
+    padding-bottom: .65rem;
+    border-top: solid 1px #d0d0d0;
+    border-right: solid 1px #d0d0d0;
+    border-left: solid 4px #999999;
+    color: #616060;
+}
+
+.paymentsTitle{
+    padding-bottom: .75rem;
+    padding-top: .75rem;
+}
+
+.addPaymentContainer{
+    padding-bottom: .2rem;
+    padding-top: .2rem;
+}
+
+.addPaymentButton{
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+
+.sectionPayed{
+    background-color: #f6f6f6;
+    font-weight: bold;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    border-top: solid 1px #d0d0d0;
+    border-left: solid 1px #d0d0d0;
+    color: #616060;   
+}
+
+.partialPaidLabel{
+    font-size: .9rem;
+}
+
+.cashRegisterLabel{
+    padding-top: .75rem;
+    font-size: .9rem;
+    font-weight: bold;
+}
+
+.cashRegisterSelectSection{
+    background-color: #f6f6f6;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    border-top: solid 1px #d0d0d0;
+    border-left: solid 1px #d0d0d0;
+    color: #616060;  
+}
+
+.removePayment{
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+}
+
+.totalChange{
+    background-color: #e5e5e5;
+    color: #616060;  
+    font-weight: bold;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+
+.discountAndButtonsSection{
+    background-color: #FFDD77;
+    border-left: solid 4px #FFBB44;
+}
+
+.buttonsRow{
+    background-color: #f6f6f6;
+    border-left: none;
+}

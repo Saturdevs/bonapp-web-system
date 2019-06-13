@@ -279,7 +279,7 @@ width: 100%!important;
 
 .left-paddle {
     left: 0;
-    z-index: 100;
+    z-index: 0;
 }
 
 .right-paddle {
@@ -291,7 +291,16 @@ width: 100%!important;
     width: 20rem!important;
 }
 
+.closeOrderModal{
+    max-width: none;
+    width: 60%!important;
+}
+
 .customButtonCancel{
     color:rgb(48, 47, 47)!important;
     border: solid 1px rgb(175, 174, 174);
+}
+
+.mdbSelectClass{
+    z-index:10; 
 }

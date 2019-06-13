@@ -44,6 +44,7 @@ export class OrderNewComponent implements OnInit {
               private completerService: CompleterService) { }
 
   pageTitle: String = 'Nuevo Pedido'; 
+  noProductsText: string = 'Debe seleccionar un menu y una categoria de la lista.';
   prodObservation: string = 'Agregue una observación aquí...';
   errorMessage: string; 
   menus : Menu[];
@@ -76,13 +77,21 @@ export class OrderNewComponent implements OnInit {
   cashRegisters: Array<CashRegister> = [];
   /**Tipos de pago registrados en la bd*/
   paymentTypes: Array<PaymentType> = [];
+  /** Configuracion de la modal de cierre de mesa*/
+  config = {
+		backdrop: true,
+  }
+  /** Variables para setear la clase de los menues dinamicamente segun el que esta seleccionado*/
+  private activeMenu : string = '';
+  /** Variables para setear la clase de las categorias dinamicamente segun la que esta seleccionada*/
+  private activeCategory: string = '';
 
   ngOnInit() {
     this.order = this.orderService.transformOrderFromDbToBusiness(this._route.snapshot.data['order']);
-    this.products = this._route.snapshot.data['products'];
+    this.products = [];
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
-    this.categories = this._route.snapshot.data['categories'];
+    this.categories = [];
     this.cashRegisters = this._route.snapshot.data['cashRegisters'];
     this.paymentTypes = this._route.snapshot.data['paymentTypes'];    
     this.totalToConfirm = 0;
@@ -316,7 +325,15 @@ export class OrderNewComponent implements OnInit {
   }
 
   closeTable(template){
-		this.modalRef = this.modalService.show(template, {backdrop: true});
+		this.modalRef = this.modalService.show(template,  Object.assign({}, this.config, {class: 'closeOrderModal'}));
+  }
+
+  applyClassMenu(menuId){
+    this.activeMenu = menuId;    
+  }
+
+  applyClassCategory(categoryId){
+    this.activeCategory = categoryId;    
   }
 
 }
