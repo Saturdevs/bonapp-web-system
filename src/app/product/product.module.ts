@@ -14,6 +14,7 @@ import { ProductResolverService } from './product-list/product-resolver.service'
 import { ProductModifyResolverService } from './product-modify/product-modify-resolver.service';
 import { CategoryResolverService } from '../category/category-list/category-resolver.service';
 import { FileInputModule } from '../file-input/file-input.module';
+import { SharedService } from '../../shared/services/shared.service';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { FileInputModule } from '../file-input/file-input.module';
     ProductNewGuardService,
     ProductEditGuardService,
     ProductModifyResolverService,
-    ProductResolverService 
+    ProductResolverService,
+    SharedService
   ]
 })
 export class ProductModule { }

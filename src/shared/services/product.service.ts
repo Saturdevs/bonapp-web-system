@@ -64,7 +64,7 @@ export class ProductService {
 
   async validateProductsBeforeChanges(idProduct){
     let orders = await this._orderService.getAll().toPromise();
-    this.ordersWithCurrentMenu = orders.filter(x => x.users[0].products.find(y => y.code == idProduct));
+    this.ordersWithCurrentMenu = orders.filter(x => x.users[0].products.find(y => y.product == idProduct));
     if(this.ordersWithCurrentMenu.length > 0){
       return false;
     }

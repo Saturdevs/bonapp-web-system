@@ -6,6 +6,7 @@ import { MDBBootstrapModules } from 'ng-mdb-pro';
 import { MDBSpinningPreloader } from 'ng-mdb-pro';
 import { ToastModule } from 'ng-mdb-pro/pro/alerts';
 import { ApiService } from '../shared/services/api.service';
+import { SharedService } from './services/shared.service';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { ApiService } from '../shared/services/api.service';
   declarations: [],
   providers: [ 
     ApiService,
+    SharedService,
     MDBSpinningPreloader   
   ],
   exports: [
