@@ -1,100 +1,88 @@
-<ng-template #errorTemplate>
-    <div class="modal-header">
-      <h4 class="modal-title">{{ errorTitle }}</h4>
-    </div>
-    <div class="modal-body">
-      {{errorMessage}}
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="button special" (click)="closeModal()">Ok</button>
-    </div>
-  </ng-template>
-  
-  <!-- Form -->
-  <div class="container">
-    <header class="major" align="center">
-      <h2>Nueva Transacción</h2>
-    </header>
-    <div class="row">
-      <div class="col-md-6">
-        <form #form="ngForm" method="post" novalidate>
+<!-- Form -->
+<div class="container">
+  <header class="major" align="center">
+    <h2>Nueva Transacción</h2>
+  </header>
+  <div class="row">
+    <div class="col-md-6">
+      <form #form="ngForm" method="post" novalidate>
 
-            <div class="form-group" [class.has-error]="showMessageCashRegister">
-                <label>Cliente:</label>
-                <div class="select-wrapper">
-                  <select #clientTransaction="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageClient" name="clientTransaction" 
-                    (blur)="validateClient(clientTransaction.value)"
-                    (change)="validateClient(clientTransaction.value)"
-                    id="clientTransaction" [(ngModel)]="newTransaction.client">
-                    <option value="default" default>Seleccione el cliente...</option>
-                    <option [value]="client._id" *ngFor = 'let client of clients'>{{ client.name }}</option>
-                  </select>
-                </div>
-            </div>
-    
-            <div *ngIf="showMessageClient" class="alert alert-danger">
-              El Cliente es requerido.
-            </div>
-  
-          <div class="form-group">
-            <label>Monto:</label>
-            <input #transactionAmount="ngModel" required type="number" class="form-control" [class.is-invalid]="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)" name="transactionAmount" 
-                  id="transactionAmount" [(ngModel)]="newTransaction.amount">
-          </div>
-  
-          <div *ngIf="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)" class="alert alert-danger">
-            El monto es un campo es requerido.
-          </div>            
-  
-         <div class="form-group" [class.has-error]="showMessagePaymentType">
-              <label>Medio de Pago:</label>
-              <div class="select-wrapper">
-                <select #transactionPaymentType="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessagePaymentType" name="transactionPaymentType" 
-                  (blur)="validatePaymentType(transactionPaymentType.value)"
-                  (change)="validatePaymentType(transactionPaymentType.value)"
-                  id="transactionPaymentType" [(ngModel)]="newTransaction.paymentType">
-                  <option value="default" default>Seleccione el tipo de pago...</option>
-                  <option [value]="paymentType._id" *ngFor = 'let paymentType of paymentTypes'>{{ paymentType.name }}</option>
-                </select>
-              </div>
-          </div>
-  
-          <div *ngIf="showMessagePaymentType" class="alert alert-danger">
-            El Medio de Pago es requerido.
-          </div>
-          
           <div class="form-group" [class.has-error]="showMessageCashRegister">
-              <label>Caja:</label>
+              <label>Cliente:</label>
               <div class="select-wrapper">
-                <select #transactionCashRegister="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageCashRegister" name="transactionCashRegister" 
-                  (blur)="validateCashRegister(transactionCashRegister.value)"
-                  (change)="validateCashRegister(transactionCashRegister.value)"
-                  id="transactionCashRegister" [(ngModel)]="newTransaction.cashRegister">
-                  <option value="default" default>Seleccione la caja...</option>
-                  <option [value]="cashRegister._id" *ngFor = 'let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+                <select #clientTransaction="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageClient" name="clientTransaction" 
+                  (blur)="validateClient(clientTransaction.value)"
+                  (change)="validateClient(clientTransaction.value)"
+                  id="clientTransaction" [(ngModel)]="newTransaction.client">
+                  <option value="default" default>Seleccione el cliente...</option>
+                  <option [value]="client._id" *ngFor = 'let client of clients'>{{ client.name }}</option>
                 </select>
               </div>
           </div>
   
-          <div *ngIf="showMessageCashRegister" class="alert alert-danger">
-            La Caja es requerida.
+          <div *ngIf="showMessageClient" class="alert alert-danger">
+            El Cliente es requerido.
           </div>
 
-          <div class="form-group">
-              <div class="md-form">
-                  <textarea mdbActive #transactionComment="ngModel" class="md-textarea"
-                  id="transactionComment" name="transactionComment" [(ngModel)]="newTransaction.comment"></textarea>
-                  <label for="transactionComment">Comentario:</label>
-              </div>
-          </div>
-  
-          <div class="12u$">
-            <ul class="actions" align="center">
-              <li><input [disabled]="(form.invalid || hasCashRegister || hasClient || hasPaymentType)" type="submit" value="Guardar" class="special" (click)="saveTransaction()"/></li>
-              <li><input type="reset" value="Atras" (click)='onBack()' /></li>
-            </ul>
-          </div>    
-        </form>
-      </div>
+        <div class="form-group">
+          <label>Monto:</label>
+          <input #transactionAmount="ngModel" required type="number" class="form-control" [class.is-invalid]="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)" name="transactionAmount" 
+                id="transactionAmount" [(ngModel)]="newTransaction.amount">
+        </div>
+
+        <div *ngIf="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)" class="alert alert-danger">
+          El monto es un campo es requerido.
+        </div>            
+
+        <div class="form-group" [class.has-error]="showMessagePaymentType">
+            <label>Medio de Pago:</label>
+            <div class="select-wrapper">
+              <select #transactionPaymentType="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessagePaymentType" name="transactionPaymentType" 
+                (blur)="validatePaymentType(transactionPaymentType.value)"
+                (change)="validatePaymentType(transactionPaymentType.value)"
+                id="transactionPaymentType" [(ngModel)]="newTransaction.paymentType">
+                <option value="default" default>Seleccione el tipo de pago...</option>
+                <option [value]="paymentType._id" *ngFor = 'let paymentType of paymentTypes'>{{ paymentType.name }}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="showMessagePaymentType" class="alert alert-danger">
+          El Medio de Pago es requerido.
+        </div>
+        
+        <div class="form-group" [class.has-error]="showMessageCashRegister">
+            <label>Caja:</label>
+            <div class="select-wrapper">
+              <select #transactionCashRegister="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageCashRegister" name="transactionCashRegister" 
+                (blur)="validateCashRegister(transactionCashRegister.value)"
+                (change)="validateCashRegister(transactionCashRegister.value)"
+                id="transactionCashRegister" [(ngModel)]="newTransaction.cashRegister">
+                <option value="default" default>Seleccione la caja...</option>
+                <option [value]="cashRegister._id" *ngFor = 'let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+              </select>
+            </div>
+        </div>
+
+        <div *ngIf="showMessageCashRegister" class="alert alert-danger">
+          La Caja es requerida.
+        </div>
+
+        <div class="form-group">
+            <div class="md-form">
+                <textarea mdbActive #transactionComment="ngModel" class="md-textarea"
+                id="transactionComment" name="transactionComment" [(ngModel)]="newTransaction.comment"></textarea>
+                <label for="transactionComment">Comentario:</label>
+            </div>
+        </div>
+
+        <div class="12u$">
+          <ul class="actions" align="center">
+            <li><input [disabled]="(form.invalid || hasCashRegister || hasClient || hasPaymentType)" type="submit" value="Guardar" class="special" (click)="saveTransaction()"/></li>
+            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+          </ul>
+        </div>    
+      </form>
     </div>
   </div>
+</div>

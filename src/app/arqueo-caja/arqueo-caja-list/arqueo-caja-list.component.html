@@ -1,61 +1,58 @@
 <ng-template #deleteTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title">Eliminar Arqueo</h4>
-  </div>
-  <div class="modal-body">
-    ¿Seguro desea eliminar este Arqueo?
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="deleteArqueo()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
-  </div>
+    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteArqueo()"
+        (close)="closeModal()">
+    </app-delete-template>
 </ng-template>
 <div class="row pl-0 pr-0 ml-0 mr-0">
     <div class="col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 pr-0 customTitleBar">
         <div class="row pr-0 ml-0 mr-0 pageTitle">
             <header class="major">
-                    <h5 class="customTitle">{{ pageTitle }}</h5>
+                <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
-            <a class="customFloatedButton" [routerLink]="['/sales/cash-counts', { outlets: { edit: ['newCashCount'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Arqueo</a>
+            <a class="customFloatedButton" [routerLink]="['/sales/cash-counts', { outlets: { edit: ['newCashCount'] } }]"
+                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Arqueo</a>
         </div>
-        <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
-            <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">                
-              <div class="row">
-                <table class="table table-bordered table-hover customTable">
-                    <thead class="primary-color customTableText">
-                        <tr>
-                            <th>Hora Apertura</th>
-                            <th>Hora Cierre</th>
-                            <th>Caja</th>
-                            <th>Estimado</th>
-                            <th>Real</th>
-                            <th>Diferencia</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-wrapper" *ngIf='filteredArqueos && filteredArqueos.length'>
-                        <tr *ngFor = 'let arqueo of filteredArqueos' >
-                            <td>{{ arqueo.createdAt | date:'dd/MM/yy HH:mm' }}</td>
-                            <td>{{ arqueo.closedAt | date:'dd/MM/yy HH:mm' }}</td>
-                            <td>{{ arqueo.cashRegister }}</td>
-                            <td>{{ arqueo.estimatedAmount | currency:'USD':code:'2.2-2'  }}</td>
-                            <td *ngIf="arqueo.closedAt === undefined"></td>
-                            <td *ngIf="arqueo.closedAt !== undefined">{{ arqueo.realAmountTotal | currency:'USD':code:'2.2-2'  }}</td>
-                            <td *ngIf="arqueo.closedAt === undefined"></td>
-                            <td *ngIf="arqueo.closedAt !== undefined">{{ arqueo.realAmountTotal - arqueo.estimatedAmount | currency:'USD':code:'2.2-2' }}</td>
-                            <td class="align-middle">
-                                <a [routerLink]="['/sales/cash-counts', { outlets: { edit: ['editCashCount', arqueo._id] } }]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
-                                <a (click) = "showModalDelete(deleteTemplate, arqueo._id)" class="btn btn-red btn-sm">Eliminar</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-              </div>
-            </div>    
-            <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-5 pt-1 pb-2 mt-0 pt-2 outletGeneric">
+        <div class="row ml-1 mt-3">
+            <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
+                <div class="row">
+                    <table class="table table-bordered table-hover customTable">
+                        <thead class="primary-color customTableText">
+                            <tr>
+                                <th>Hora Apertura</th>
+                                <th>Hora Cierre</th>
+                                <th>Caja</th>
+                                <th>Estimado</th>
+                                <th>Real</th>
+                                <th>Diferencia</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-wrapper" *ngIf='filteredArqueos && filteredArqueos.length'>
+                            <tr *ngFor='let arqueo of filteredArqueos'>
+                                <td>{{ arqueo.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+                                <td>{{ arqueo.closedAt | date:'dd/MM/yy HH:mm' }}</td>
+                                <td>{{ arqueo.cashRegister }}</td>
+                                <td>{{ arqueo.estimatedAmount | currency:'USD':code:'2.2-2' }}</td>
+                                <td *ngIf="arqueo.closedAt === undefined"></td>
+                                <td *ngIf="arqueo.closedAt !== undefined">{{ arqueo.realAmountTotal |
+                                    currency:'USD':code:'2.2-2' }}</td>
+                                <td *ngIf="arqueo.closedAt === undefined"></td>
+                                <td *ngIf="arqueo.closedAt !== undefined">{{ arqueo.realAmountTotal -
+                                    arqueo.estimatedAmount | currency:'USD':code:'2.2-2' }}</td>
+                                <td class="align-middle">
+                                    <a [routerLink]="['/sales/cash-counts', { outlets: { edit: ['editCashCount', arqueo._id] } }]"
+                                        class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                                    <a (click)="showModalDelete(deleteTemplate, arqueo._id)" class="btn btn-red btn-sm">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-5 pt-1 pb-2 mt-2">
                 <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
             </div>
         </div>
-  </div>
+    </div>
 
 </div>

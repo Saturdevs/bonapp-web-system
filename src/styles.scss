@@ -312,4 +312,14 @@ width: 100%!important;
 .outletGeneric{
     border-left: solid 1px lightgrey;
     background-color: #f6f6f6;
+    
+.customFooterModal {
+    background-color: #eeeeee;
+}
+
+.modalContent {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1.5rem;
+    white-space: pre-line;
 }

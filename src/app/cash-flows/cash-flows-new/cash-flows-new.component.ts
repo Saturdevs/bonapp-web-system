@@ -15,6 +15,7 @@ import { PaymentTypeService } from '../../../shared/services/payment-type.servic
 import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
 import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
 import { isNullOrUndefined } from 'util';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-flows-new',
@@ -25,11 +26,11 @@ export class CashFlowsNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   paymentTypes: PaymentType[];
   cashRegisters: CashRegister[];
   newCashFlow: CashFlow;
-  errorMessage: string;
   pageTitle: String = 'Nuevo Movimiento';
   hasCashRegister = true;
   showMessageCashRegister = false;
@@ -71,37 +72,33 @@ export class CashFlowsNewComponent implements OnInit {
       cashCount => {
         if(!isNullOrUndefined(cashCount)){
           if(cashFlow.type === "Ingreso"){
-            if(!isNullOrUndefined(cashCount.ingresos)){
-              cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+            if(isNullOrUndefined(cashCount.ingresos)){
+              cashCount.ingresos = new Array();              
             }
-            else {
-              cashCount.ingresos = new Array();
-              cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
-            }
+              
+            cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })            
           } 
           else if(cashFlow.type === "Egreso"){
-            if(!isNullOrUndefined(cashCount.egresos)){
-              cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+            if(isNullOrUndefined(cashCount.egresos)){
+              cashCount.egresos = new Array();              
             }
-            else {
-              cashCount.egresos = new Array();
-              cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+
+            cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
+          }
+
+          this._cashCountService.updateArqueo(cashCount).subscribe(
+            cashCount => {
+              this.cashCount = cashCount;
+              this.onBack();
+            },
+            error => {
+              this.showModalError(<any>error);
             }
-          }
-        }
-        this._cashCountService.updateArqueo(cashCount).subscribe(
-          cashCount => {
-            this.cashCount = cashCount;
-            this.onBack();
-          },
-          error => {
-            this.errorMessage = <any>error;
-            this.showModalError(this.errorTemplate);
-          }
-        )
+          )
+        }        
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(<any>error);
       }
     )
   }
@@ -111,18 +108,15 @@ export class CashFlowsNewComponent implements OnInit {
       cashFlow =>{ this.newCashFlow = cashFlow,
                    this.saveCashFlowIntoCashCount(this.newCashFlow);
                    this.onBack()},
-      error => { this.errorMessage = <any>error,
-                     this.showModalError(this.errorTemplate)});
+      error => { 
+                this.showModalError(<any>error)
+              });
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

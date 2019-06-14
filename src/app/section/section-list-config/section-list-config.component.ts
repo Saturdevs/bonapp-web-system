@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SectionService } from '../../../shared/services/section.service';
 import { Section } from '../../../shared/models/section';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-section-list-config',
@@ -15,9 +16,11 @@ import { Section } from '../../../shared/models/section';
 export class SectionListConfigComponent implements OnInit {
 
   pageTitle: string = "Salas";
+  private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Sala";
+  private modalDeleteMessage: string = "¿Está seguro que desea eliminar la Sala?";
   public modalRef: BsModalRef;
   sections: Section[];
-  errorMessage: string;
   filteredSections: Section[];
   _listFilter: string;
   idSectionDelete: any;
@@ -56,12 +59,20 @@ export class SectionListConfigComponent implements OnInit {
         this.sections = sections;
         this.filteredSections = this.sections;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      });
   }
 
   showModalDelete(template: TemplateRef<any>, idSection: any){
     this.idSectionDelete = idSection;
     this.modalRef = this.modalService.show(template, {backdrop: true});
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

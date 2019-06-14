@@ -10,6 +10,7 @@ import { MenuGuardService } from '../menu-guard.service';
 import { Menu } from '../../../shared/models/menu';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-menu-new',
@@ -25,13 +26,13 @@ export class MenuNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
 
-   public modalRef: BsModalRef;
-   pageTitle: string = 'New Menu';
-   menus: Menu[];   
-   errorMessage: string;
-   newMenu: Menu;
-   validPicture: string = '';
-   pictureTouched: boolean;
+  private serviceErrorTitle = 'Error de Servicio';
+  public modalRef: BsModalRef;
+  pageTitle: string = 'New Menu';
+  menus: Menu[];   
+  newMenu: Menu;
+  validPicture: string = '';
+  pictureTouched: boolean;
 
    private sub: Subscription;
 
@@ -48,10 +49,13 @@ export class MenuNewComponent implements OnInit {
   saveMenu(){
     this.fileInputComponent.startUpload();
     this._menuService.saveMenu(this.newMenu).subscribe(
-          menu => { this.newMenu = menu,
-                    this.onBack()},
-          error => { this.errorMessage = <any>error,
-                     this.showModalError(this.errorTemplate)});
+          menu => { 
+            this.newMenu = menu;
+            this.onBack();
+          },
+          error => { 
+            this.showModalError(this.serviceErrorTitle, <any>error);
+          });
     
   }
 
@@ -64,14 +68,10 @@ export class MenuNewComponent implements OnInit {
     }
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
-  }
-
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

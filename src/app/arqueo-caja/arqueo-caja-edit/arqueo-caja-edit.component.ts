@@ -15,6 +15,7 @@ import { PaymentType } from '../../../shared/models/payment-type';
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 
 import { StringsFunctions } from '../../../shared/functions/stringsFunctions';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-arqueo-caja-edit',
@@ -23,12 +24,11 @@ import { StringsFunctions } from '../../../shared/functions/stringsFunctions';
 })
 export class ArqueoCajaEditComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  private serviceErrorTitle = 'Error de Servicio';
   cashCountForm: FormGroup;
   public modalRef: BsModalRef;  
   paymentTypes: PaymentType[];
   cashCount: ArqueoCaja;
-  errorMessage: string;  
   hasCashRegister = false;
   totalIngresos: number;
   totalsIngresosPaymentTypes: Array<any> = [];
@@ -84,7 +84,7 @@ export class ArqueoCajaEditComponent implements OnInit {
             this.cashCount.cashRegister = cashRegister.name;                                
           },
           error => {
-            this.errorMessage = <any>error;
+            this.showModalError(<any>error);
           }
         );
 
@@ -172,7 +172,7 @@ export class ArqueoCajaEditComponent implements OnInit {
                 this.paymentDetail.push({ paymentTypeName: paymentType.name, paymentAmount: realAmount.amount });
               },
               error => {
-                this.errorMessage = <any>error;
+                this.showModalError(<any>error);
               }
             )
           })
@@ -200,18 +200,15 @@ export class ArqueoCajaEditComponent implements OnInit {
     this._cashCountService.updateArqueo(this.cashCount).subscribe(
         cashCount => { this.cashCount = cashCount,
                       this.onBack()},
-        error => { this.errorMessage = <any>error,
-                  this.showModalError(this.errorTemplate)});
+        error => { 
+          this.showModalError(<any>error)
+        });
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

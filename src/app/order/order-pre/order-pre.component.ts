@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
 
@@ -11,6 +11,7 @@ import {
   ProductsInUserOrder,
   TableService
 } from '../../../shared/index';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-order-pre',
@@ -21,15 +22,16 @@ export class OrderPreComponent implements OnInit {
   
   @Input() selectedTable: Table;
   @Output() close = new EventEmitter<string>();
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  private errorMessage: string;
   private title: string = 'Nuevo Pedido';
   private tableNumber: string = 'Numero de mesa';
 	private	cancelButton: string = 'Cancelar';
 	private	confirmButton: string = 'Aceptar';
 
   constructor(private _orderService: OrderService,
-              private _tableService: TableService,
+							private _tableService: TableService,
+							private modalService: BsModalService,
               private _router: Router) { }
 
   ngOnInit() {
@@ -68,12 +70,22 @@ export class OrderPreComponent implements OnInit {
 							this.selectedTable = table;
 							this._router.navigate(['./orders/orderNew', this.selectedTable.number]); 
 						},
-						error => { this.errorMessage = <any>error }
+						error => { 
+							this.showModalError(this.serviceErrorTitle, <any>error);
+						}
 					)
 				})
 			},
-			error => { this.errorMessage = <any>error }
+			error => { 
+				this.showModalError(this.serviceErrorTitle, <any>error);
+			 }
 		)			
+	}
+	
+	showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
   
   closeModal(){

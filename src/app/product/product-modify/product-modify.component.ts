@@ -12,6 +12,7 @@ import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-product-modify',
@@ -19,6 +20,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./product-modify.component.css']
 })
 export class ProductModifyComponent implements OnInit {
+  private serviceErrorTitle = 'Error de Servicio';
   pictureTouched: boolean;
   validPicture: string;
   pageTitle: string = 'Product Modify';
@@ -29,7 +31,6 @@ export class ProductModifyComponent implements OnInit {
   productNameModified: string;
   productCategoryModified: string;
   productPicModified: string;
-  errorMessage: string;
   idProduct: string;
   categorySelect: Category;  
   clickAceptar: Boolean;
@@ -146,9 +147,17 @@ export class ProductModifyComponent implements OnInit {
     this.fileInputComponent.startUpload();
     this._productService.updateProduct(prod).subscribe(
       product => this.product = product,
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      });
     this.clickAceptar = true;
     this.onBack();
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onNotified(validator: string) {

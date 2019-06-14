@@ -13,6 +13,7 @@ import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { PaymentType } from '../../../shared/models/payment-type';
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-flows-edit',
@@ -23,11 +24,11 @@ export class CashFlowsEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   paymentTypes: PaymentType[];
   cashRegisters: CashRegister[];
   cashFlow: CashFlow;
-  errorMessage: string;  
   typesArray: Array<string> = new Array("Ingreso", "Egreso");
   paymentTypeName: String;
 
@@ -48,7 +49,7 @@ export class CashFlowsEditComponent implements OnInit {
             this.cashFlow.cashRegister = cashRegister.name;
           },
           error => {
-            this.errorMessage = <any>error;
+            this.showModalError(this.serviceErrorTitle, <any>error);
           }
         );
 
@@ -57,7 +58,7 @@ export class CashFlowsEditComponent implements OnInit {
             this.paymentTypeName = paymentType.name;
           },
           error => {
-            this.errorMessage = <any>error;
+            this.showModalError(this.serviceErrorTitle, <any>error);
           }
         )
       }
@@ -66,14 +67,10 @@ export class CashFlowsEditComponent implements OnInit {
     this.paymentTypes = this._route.snapshot.data['paymentTypes'];
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

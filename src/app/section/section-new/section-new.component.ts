@@ -8,6 +8,7 @@ import { Section } from '../../../shared/models/section';
 import { SectionService } from '../../../shared/services/section.service';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ModalDirective} from 'ng-mdb-pro/free/modals'
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 
 
@@ -17,18 +18,12 @@ import { ModalDirective} from 'ng-mdb-pro/free/modals'
   styleUrls: ['./section-new.component.scss']
 })
 export class SectionNewComponent implements OnInit {
+  private serviceErrorTitle = 'Error de Servicio';
   pageTitle: String = 'Nueva Sala';
   newSection: Section;
-  errorMessage: string;
   public modalRef: BsModalRef;
   section: Section = new Section();
   sectionForm: FormGroup;
-
-  /*
-  @Output() notifyParent = new EventEmitter<Boolean>();
-
-  @ViewChild('fluid') public fluid:ModalDirective;
-*/
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
   
 
@@ -42,7 +37,6 @@ export class SectionNewComponent implements OnInit {
     this.sectionForm = this.formBuilder.group({
       name: ['', Validators.required]  
     });
-    //this.newSection = new Section(); 
   }
   
   saveSection(){
@@ -55,18 +49,9 @@ export class SectionNewComponent implements OnInit {
           this._router.navigate(['/settings/general/sections', { outlets: { edit: ['selectItem'] } }])
         },        
         (error: any) => { 
-          this.errorMessage = <any>error,
-          this.showModalError(this.errorTemplate)
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       );
-      /*
-      this._sectionService.saveSection(this.newSection).subscribe(
-        section => { this.newSection = section,
-                    this.callParent();  
-                    this.fluid.hide(); },
-        error => { this.errorMessage = <any>error,
-                    this.showModalError(this.errorTemplate)});
-      }*/
     }
   }
 
@@ -74,11 +59,9 @@ export class SectionNewComponent implements OnInit {
       this._router.navigate(['/settings/section/tables']);
     }
   
-    showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
-  
-  /*callParent() {
-    this.notifyParent.next(true);
-  }*/
 }

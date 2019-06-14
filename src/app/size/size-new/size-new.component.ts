@@ -9,6 +9,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Size } from '../../../shared/models/size';
 import { SizeService } from '../../../shared/services/size.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-size-new',
@@ -19,9 +20,9 @@ export class SizeNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   size: Size = new Size();
-  errorMessage: string;
   sizeForm: FormGroup;
   pageTitle: String = 'Nuevo Tamaño';
 
@@ -48,15 +49,16 @@ export class SizeNewComponent implements OnInit {
               this._router.navigate(['/settings/general/sizes', { outlets: { edit: ['selectItem'] } }])
             },        
             (error: any) => { 
-              this.errorMessage = <any>error,
-              this.showModalError(this.errorTemplate)
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
     }
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

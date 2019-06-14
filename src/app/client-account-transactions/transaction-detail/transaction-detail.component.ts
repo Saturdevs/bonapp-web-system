@@ -12,6 +12,7 @@ import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { PaymentType } from '../../../shared/models/payment-type';
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -22,9 +23,9 @@ export class TransactionDetailComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  transaction: Transaction;
-  errorMessage: string;  
+  transaction: Transaction;   
   transactionPaymentMethodName: String;
   transactionCashRegisterName: String;
 
@@ -45,7 +46,7 @@ export class TransactionDetailComponent implements OnInit {
             this.transactionPaymentMethodName = paymentMethod.name;
           },
           error => {
-            this.errorMessage = <any>error;
+            this.showModalError(<any>error);
           }
         );
 
@@ -54,7 +55,7 @@ export class TransactionDetailComponent implements OnInit {
             this.transactionCashRegisterName =cashRegister.name;
           },
           error => {
-            this.errorMessage = <any>error;
+            this.showModalError(<any>error);
           }
         );
         
@@ -66,23 +67,14 @@ export class TransactionDetailComponent implements OnInit {
     this._router.navigate(['/clients-module/accountTransactions', { outlets: { edit: null } }]);
   }
   
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   showModalCancel(template: TemplateRef<any>){
     this.modalRef = this.modalService.show(template, {backdrop: false});
-  }
-
-  cancel(){
-    this.onBack();
-    this.closeModal();
-  }
-
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
   }
 
 }

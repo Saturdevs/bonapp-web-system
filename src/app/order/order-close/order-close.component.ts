@@ -14,6 +14,8 @@ import {
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-order-close',
@@ -28,6 +30,7 @@ export class OrderCloseComponent implements OnInit {
   @Output() close = new EventEmitter<string>();
 
   constructor(private _router: Router,
+              private modalService: BsModalService,
               private tableService: TableService,
               private orderService: OrderService,
               private arqueoCajaService: ArqueoCajaService
@@ -45,7 +48,8 @@ export class OrderCloseComponent implements OnInit {
   private closeOrderWithoutAditions: String = "La mesa no contiene adiciones.";
   private confirmButtonLabel: String = "Confirmar";
   private cancelButtonLabel: String = "Cancelar";
-  errorMessage: string;
+  private serviceErrorTitle = 'Error de Servicio';
+  public modalRef: BsModalRef;
   private cashRegistersSelect: Array<any> = [];
   private selectedCashRegister: string = '';
   private paymentTypesSelect: Array<any> = [];
@@ -250,13 +254,13 @@ export class OrderCloseComponent implements OnInit {
               this._router.navigate(['./orders']);
             },
             error => {
-              this.errorMessage = <any>error;
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           )
         }
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     )
   }
@@ -303,15 +307,21 @@ export class OrderCloseComponent implements OnInit {
           this.arqueoCajaService.updateArqueo(cashCount).subscribe(
             cashCount => {},
             error => {
-              this.errorMessage = <any>error;
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           )
         }                
       },
       error => { 
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     )
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
 }

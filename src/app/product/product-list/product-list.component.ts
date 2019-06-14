@@ -10,6 +10,7 @@ import { Category } from '../../../shared/models/category';
 import { CategoryService } from '../../../shared/services/category.service';
 
 import { CurrencyPipe } from '@angular/common';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-product-list',
@@ -18,9 +19,11 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class ProductListComponent implements OnInit {
 
-  public modalRef: BsModalRef;
   pageTitle: string = 'Productos';
-  errorMessage: string;
+  private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Producto";
+  private modalDeleteMessage: string = "¿Esta seguro que desea eliminar este producto?";
+  public modalRef: BsModalRef;
   filteredProducts: Product[];
   products: Product[];
   _listFilter: string;
@@ -108,7 +111,9 @@ export class ProductListComponent implements OnInit {
         });
         this.filteredProducts = this.products;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      });
   }
 
   getProductsByCategory(idCategory): void {
@@ -125,8 +130,9 @@ export class ProductListComponent implements OnInit {
         });
         this.filteredProducts = this.products;
       },
-      error => { this.errorMessage = <any>error; }
-      )
+      error => { 
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      })
   }
 
   filterByCategoria(value) {
@@ -143,7 +149,9 @@ export class ProductListComponent implements OnInit {
     this.productService.updateProduct(product)
       .subscribe(
         product => {},
-        error => { this.errorMessage = <any>error }
+        error => { 
+          this.showModalError(this.serviceErrorTitle, <any>error);
+        }
       );
   }
 
@@ -173,6 +181,12 @@ export class ProductListComponent implements OnInit {
         this.getProducts();
       });
     }
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

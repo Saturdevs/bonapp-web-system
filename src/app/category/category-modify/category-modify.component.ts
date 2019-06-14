@@ -11,6 +11,7 @@ import { Menu } from '../../../shared/models/menu';
 import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-category-modify',
@@ -25,6 +26,7 @@ export class CategoryModifyComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   pageTitle: string = 'Category Modify';
   category: Category;
@@ -33,7 +35,6 @@ export class CategoryModifyComponent implements OnInit {
   categoryMenuModified: string;
   CategoryPicModified: string;
   CategoryNumberOfItemsModified: number;
-  errorMessage: string;
   id: string;
   menuSelect: Menu;
   private sub: Subscription;
@@ -48,7 +49,7 @@ export class CategoryModifyComponent implements OnInit {
               private modalService: BsModalService,
               private _menuService: MenuService) { }
 
-              ngOnInit(): void {
+  ngOnInit(): void {
     this.category = this._route.snapshot.data['category'];
     this.path = this.path + this.category.picture;
     this.categoryNameModified = this.category.name;
@@ -72,8 +73,9 @@ export class CategoryModifyComponent implements OnInit {
     this._categoryService.updateCategory(category).subscribe(
           category => { this.category = category,
             this.onBack()},
-          error => { this.errorMessage = <any>error,
-            this.showModalError(this.errorTemplate)});
+          error => {
+            this.showModalError(<any>error);
+          });
   }
 
   
@@ -90,8 +92,10 @@ export class CategoryModifyComponent implements OnInit {
     this._router.navigate(['/restaurant/category']);
   }
   
-  showModalError(errorTemplate: TemplateRef<any>){
-      this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

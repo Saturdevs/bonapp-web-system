@@ -8,6 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Client } from '../../../shared/models/client';
 import { ClientService } from '../../../shared/services/client.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-client-new',
@@ -18,8 +19,8 @@ export class ClientNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  errorMessage: string;
   pageTitle: String = 'Nuevo Cliente';
   newClient: Client;
 
@@ -41,20 +42,15 @@ export class ClientNewComponent implements OnInit {
       },
       error => 
       { 
-        this.errorMessage = <any>error,
-        this.showModalError(this.errorTemplate)
+        this.showModalError(<any>error)
       }
     );
   }
 
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   onBack(): void {

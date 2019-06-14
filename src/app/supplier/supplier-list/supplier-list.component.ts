@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SupplierService } from '../../../shared/services/supplier.service';
 import { Supplier } from '../../../shared/models/supplier';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-supplier-list',
@@ -15,10 +16,12 @@ import { Supplier } from '../../../shared/models/supplier';
 export class SupplierListComponent implements OnInit {
 
   pageTitle: string = "Proveedores";
+  private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Proveedor";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar este Proveedor?";
   public modalRef: BsModalRef;
   suppliers: Supplier[];
   filteredSuppliers: Supplier[];
-  errorMessage: string;  
   idSupplierDelete: any;
   checkboxText: string = "Mostrar proveedores inactivos";
   showInactiveSuppliers: Boolean = false;
@@ -43,7 +46,7 @@ export class SupplierListComponent implements OnInit {
         this.filteredSuppliers = this.suppliers;
       },
       error => {
-        this.errorMessage = <any>error;
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
@@ -67,6 +70,12 @@ export class SupplierListComponent implements OnInit {
         }
       );
     }
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   reloadItems(event) {

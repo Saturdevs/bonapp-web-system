@@ -23,6 +23,7 @@ import {
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-order-new',
@@ -30,8 +31,9 @@ import { OrderCloseComponent } from '../order-close/order-close.component';
   styleUrls: ['./order-new.component.scss']
 })
 export class OrderNewComponent implements OnInit {
-  public modalRef: BsModalRef;
 
+  private serviceErrorTitle = 'Error de Servicio';
+  public modalRef: BsModalRef;
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   @ViewChild('fluid') public fluid:ModalDirective;
 
@@ -46,7 +48,6 @@ export class OrderNewComponent implements OnInit {
   pageTitle: String = 'Nuevo Pedido'; 
   noProductsText: string = 'Debe seleccionar un menu y una categoria de la lista.';
   prodObservation: string = 'Agregue una observación aquí...';
-  errorMessage: string; 
   menus : Menu[];
   categories : Category[];
   products: Product[]; 
@@ -109,7 +110,9 @@ export class OrderNewComponent implements OnInit {
       .subscribe(categories => {
         this.categories = categories;
       },
-      error => { this.errorMessage = <any>error['message'];});
+      error => { 
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      });
   }
 
   /**Actualiza el pedido actual
@@ -119,15 +122,16 @@ export class OrderNewComponent implements OnInit {
     let ord = this.orderService.transformOrderFromBusinessToDb(order);
     this.orderService.updateOrder(ord).subscribe(
       orderReturned => {},
-      error => {
-        this.errorMessage = <any>error,
-        this.showModalError(this.errorTemplate)
+      error => {        
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     )
   }
   
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   /**Devuelve los productos para la categoría pasada como parámetro almacenados en el sistema
@@ -139,7 +143,9 @@ export class OrderNewComponent implements OnInit {
       .subscribe(products => {
         this.products = products;
       },
-      error => { this.errorMessage = <any>error['message'];}
+      error => { 
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      }
     );
   }
 

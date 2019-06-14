@@ -10,6 +10,7 @@ import { MenuService } from '../../../shared/services/menu.service';
 import { Menu } from '../../../shared/models/menu';
 import { Product } from '../../../shared/models/product';
 import { ProductService } from '../../../shared/services/product.service';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 
 @Component({
@@ -19,9 +20,11 @@ import { ProductService } from '../../../shared/services/product.service';
 })
 export class CategoryComponent implements OnInit {
 
-  public modalRef: BsModalRef;
   pageTitle: string = 'Categorías';
-  errorMessage: string;
+  private serviceErrorTitle = 'Error de Servicio';    
+  private modalDeleteTitle: string = "Eliminar Categoría";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Categoría?";
+  public modalRef: BsModalRef;
   filteredCategories: Category[];
   categories: Category[];
   _listFilter: string;
@@ -70,9 +73,9 @@ export class CategoryComponent implements OnInit {
                   this.categories = categories;
                   this.filteredCategories = this.categories;
                 },
-                 error => { this.errorMessage = <any>error;
-                             alert(this.errorMessage['message'])
-                          });
+                error => { 
+                  this.showModalError(this.serviceErrorTitle, <any>error);                             
+                });
   }
 
   getCategoriesByMenu(idMenu): void {
@@ -81,7 +84,9 @@ export class CategoryComponent implements OnInit {
         this.categories = categories;
         this.filteredCategories = this.categories;
         },
-      error => { this.errorMessage = <any>error; }
+      error => { 
+        this.showModalError(this.serviceErrorTitle, <any>error); 
+      }
       )
   }
 
@@ -111,6 +116,12 @@ export class CategoryComponent implements OnInit {
         this.getCategories();
       });
     }
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

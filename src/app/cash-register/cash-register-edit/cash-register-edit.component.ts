@@ -11,6 +11,7 @@ import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
 import { isNullOrUndefined } from 'util';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-register-edit',
@@ -21,12 +22,12 @@ export class CashRegisterEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   cashRegister: CashRegister;
   cashRegisterNameModified: String;
   cashRegisterDefault: Boolean;
   cashRegisterAvailable: Boolean;
-  errorMessage: string;
   cashRegisterForm: FormGroup;
   errorArqueo: Boolean = false;
   errorMsg: string;
@@ -102,14 +103,15 @@ export class CashRegisterEditComponent implements OnInit {
         },
         error => 
         { 
-          this.errorMessage = <any>error,
-          this.showModalError(this.errorTemplate)
+          this.showModalError(<any>error);
         }
     );
   }
 
-  showModalError(errorTemplate: TemplateRef<any>){
-    this.modalRef = this.modalService.show(errorTemplate, {backdrop: true});
+  showModalError(errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = this.serviceErrorTitle;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   closeModal(){

@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SizeService } from '../../../shared/services/size.service';
 import { Size } from '../../../shared/models/size';
+import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-size-list',
@@ -14,9 +15,11 @@ import { Size } from '../../../shared/models/size';
 })
 export class SizeListComponent implements OnInit, OnChanges {
   pageTitle: string = "Tamaños";
+  private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Tamaño";
+  private modalDeleteMessage: string = "¿Estas seguro que desea eliminar este tamaño?";
   public modalRef: BsModalRef;
   sizes: Size[];
-  errorMessage: string;
   filteredSizes: Size[];
   _listFilter: string;
   idSizeDelete: any;
@@ -76,7 +79,15 @@ export class SizeListComponent implements OnInit, OnChanges {
         });
         this.filteredSizes = this.sizes;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      });
+  }
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+    this.modalRef.content.errorTitle = errorTitleReceived;
+    this.modalRef.content.errorMessage = errorMessageReceived;
   }
 
   showModalDelete(template: TemplateRef<any>, idSize: any){
