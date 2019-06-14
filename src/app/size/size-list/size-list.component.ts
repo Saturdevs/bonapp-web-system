@@ -16,6 +16,8 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class SizeListComponent implements OnInit, OnChanges {
   pageTitle: string = "Tamaños";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Tamaño";
+  private modalDeleteMessage: string = "¿Estas seguro que desea eliminar este tamaño?";
   public modalRef: BsModalRef;
   sizes: Size[];
   filteredSizes: Size[];

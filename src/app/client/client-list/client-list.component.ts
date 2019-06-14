@@ -17,6 +17,8 @@ export class ClientListComponent implements OnInit {
 
   pageTitle: string = "Clientes";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Cliente";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar este Cliente?";
   public modalRef: BsModalRef;
   clients: Client[];
   filteredClients: Client[];

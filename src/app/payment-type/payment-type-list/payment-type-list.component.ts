@@ -17,6 +17,8 @@ export class PaymentTypeListComponent implements OnInit {
 
   pageTitle: string = "Formas de Pago";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Forma de Pago";
+  private modalDeleteMessage: string = "¿Estas seguro que desea eliminar la Forma de Pago?";
   public modalRef: BsModalRef;
   paymentTypes: PaymentType[];
   filteredPaymentTypes: PaymentType[];

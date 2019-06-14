@@ -17,6 +17,8 @@ export class SectionListConfigComponent implements OnInit {
 
   pageTitle: string = "Salas";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Sala";
+  private modalDeleteMessage: string = "¿Está seguro que desea eliminar la Sala?";
   public modalRef: BsModalRef;
   sections: Section[];
   filteredSections: Section[];

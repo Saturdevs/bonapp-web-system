@@ -18,6 +18,8 @@ export class TransactionListComponent implements OnInit {
 
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = "Cuentas Corrientes";
+  private modalDeleteTitle: string = "Eliminar Transacción";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Transacción?";
   public modalRef: BsModalRef;
   transactions: Transaction[];
   filteredTransactions: Transaction[];

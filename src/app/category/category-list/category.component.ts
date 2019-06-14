@@ -20,9 +20,11 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class CategoryComponent implements OnInit {
 
-  private serviceErrorTitle = 'Error de Servicio';
-  public modalRef: BsModalRef;
   pageTitle: string = 'Categorías';
+  private serviceErrorTitle = 'Error de Servicio';    
+  private modalDeleteTitle: string = "Eliminar Categoría";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Categoría?";
+  public modalRef: BsModalRef;
   filteredCategories: Category[];
   categories: Category[];
   _listFilter: string;

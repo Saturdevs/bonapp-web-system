@@ -22,10 +22,10 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class ArqueoCajaListComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   pageTitle: string = "Arqueos de Caja";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Arqueo";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar este Arqueo?";
   public modalRef: BsModalRef;
   arqueos: ArqueoCaja[];
   filteredArqueos: ArqueoCaja[];
@@ -127,7 +127,7 @@ export class ArqueoCajaListComponent implements OnInit {
   }
 
   showModalDelete(template: TemplateRef<any>, idArqueo: any){
-    this.idArqueoDelete = idArqueo;
+    this.idArqueoDelete = idArqueo;    
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 

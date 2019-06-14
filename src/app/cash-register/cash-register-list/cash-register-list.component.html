@@ -1,62 +1,58 @@
 <ng-template #deleteTemplate>
-    <div class="modal-header">
-      <h4 class="modal-title">Eliminar Caja</h4>
-    </div>
-    <div class="modal-body">
-      ¿Está seguro que desea eliminar la Caja?
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="button special" (click)="deleteCashRegister()">Ok</button>
-      <button type="button" class="button special" (click)="closeModal()">Cancel</button>
-    </div>
-  </ng-template>
-  <div class="row">
+    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteCashRegister()"
+        (close)="closeModal()">
+    </app-delete-template>
+</ng-template>
+<div class="row">
     <div class="col-md-6 col-lg-6 mr-0 pr-0">
-      <div class="settingsTitle">
-          <div style="float: left">
-              <header class="major">
-                      <h5>{{ pageTitle }}</h5>
-              </header>
-          </div>
-          <div style="float: right">
-              <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['newCashRegister'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nueva Caja</a>
-          </div>
-          </div>
-          <div class="ml-5 mr-5 pl-5 pr-5  pt-1 pb-2 mt-2 text-center">
-          <div class="row mb-2 customBox">
-              <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
-                  <h6 class="pt-2">Filtrar:</h6>
-                  <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
-                      <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
-                  </div>          
-              </form>    
-          </div>
-  
-          <div class="row">
-              <table class="table table-bordered table-hover customTable">
-                  <thead class="primary-color customTableText">
-                      <tr>
-                          <th>Nombre</th>
-                          <th>Disponible</th>
-                          <th>Acciones</th>
-                      </tr>
-                  </thead>
-                  <tbody class="table-wrapper" *ngIf='cashRegisters && cashRegisters.length'>
-                      <tr *ngFor = 'let cashRegister of filteredCashRegisters ' >
-                          <td>{{ cashRegister.name }}</td>
-                          <td>{{ cashRegister.available }}</td>
-                          <td class="align-middle">
-                              <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
-                              <a (click) = "showModalDelete(deleteTemplate, cashRegister._id)" class="btn btn-red btn-sm">Eliminar</a>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-      </div>
+        <div class="settingsTitle">
+            <div style="float: left">
+                <header class="major">
+                    <h5>{{ pageTitle }}</h5>
+                </header>
+            </div>
+            <div style="float: right">
+                <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['newCashRegister'] } }]" class="btn btn-primary btn-sm waves-light customButton"
+                    mdbRippleRadius> + Nueva Caja</a>
+            </div>
+        </div>
+        <div class="ml-5 mr-5 pl-5 pr-5  pt-1 pb-2 mt-2 text-center">
+            <div class="row mb-2 customBox">
+                <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+                    <h6 class="pt-2">Filtrar:</h6>
+                    <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
+                        <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+                            id="query">
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+                <table class="table table-bordered table-hover customTable">
+                    <thead class="primary-color customTableText">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Disponible</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-wrapper" *ngIf='cashRegisters && cashRegisters.length'>
+                        <tr *ngFor='let cashRegister of filteredCashRegisters '>
+                            <td>{{ cashRegister.name }}</td>
+                            <td>{{ cashRegister.available }}</td>
+                            <td class="align-middle">
+                                <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
+                                    class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                                <a (click)="showModalDelete(deleteTemplate, cashRegister._id)" class="btn btn-red btn-sm">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  
+
     <div class="col-md-6 col-lg-6 mr-0 pr-0">
-      <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
     </div>
-  </div>
+</div>

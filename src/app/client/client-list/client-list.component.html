@@ -1,14 +1,7 @@
 <ng-template #deleteTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title">Eliminar Cliente</h4>
-  </div>
-  <div class="modal-body">
-    ¿Seguro desea eliminar este Cliente?
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="deleteClient()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
-  </div>
+    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteClient()"
+        (close)="closeModal()">
+    </app-delete-template>
 </ng-template>
 <div class="row">
     <div class="col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 pr-0 customTitleBar">

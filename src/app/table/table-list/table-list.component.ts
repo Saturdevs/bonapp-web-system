@@ -30,6 +30,8 @@ interface Box {
 })
 export class TableListComponent implements OnInit{
 	private serviceErrorTitle = 'Error de Servicio';
+	private modalDeleteMessage = "¿Estas seguro que desea eliminar esta mesa?";
+	private modalDeleteTitle = "Eliminar Mesa";
 	public modalRef: BsModalRef;
   private boxes: Array<Box> = [];
 	private rgb: string = '#efefef';
@@ -57,7 +59,7 @@ export class TableListComponent implements OnInit{
 		'zoom_on_drag': false,
 		'limit_to_screen': true
 	};
-@ViewChild('openNewOrderTemplate') openNewOrderTemplate;
+	@ViewChild('openNewOrderTemplate') openNewOrderTemplate;
 
 	private itemPositions: Array<any> = [];
 	tablesNow: Array<Table> = [];

@@ -21,6 +21,8 @@ export class ProductListComponent implements OnInit {
 
   pageTitle: string = 'Productos';
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Producto";
+  private modalDeleteMessage: string = "¿Esta seguro que desea eliminar este producto?";
   public modalRef: BsModalRef;
   filteredProducts: Product[];
   products: Product[];

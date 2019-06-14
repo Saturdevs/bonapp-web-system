@@ -17,6 +17,8 @@ export class CashRegisterListComponent implements OnInit {
 
   pageTitle: string = "Cajas";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Caja Registradora";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Caja Registradora?";
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
   filteredCashRegisters: CashRegister[];

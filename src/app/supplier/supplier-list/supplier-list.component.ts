@@ -17,6 +17,8 @@ export class SupplierListComponent implements OnInit {
 
   pageTitle: string = "Proveedores";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle: string = "Eliminar Proveedor";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar este Proveedor?";
   public modalRef: BsModalRef;
   suppliers: Supplier[];
   filteredSuppliers: Supplier[];

@@ -1,14 +1,7 @@
 <ng-template #deleteTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title">Eliminar Categoría</h4>
-  </div>
-  <div class="modal-body">
-    ¿Estas seguro que desea eliminar esta categoría?
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="closeModal()">Cancelar</button>  
-    <button type="button" class="btn btn-primary" (click)="deleteCategory()">Confirmar</button>
-  </div>
+    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteCategory()"
+        (close)="closeModal()">
+    </app-delete-template>
 </ng-template>
 
 <ng-template #noDelete>

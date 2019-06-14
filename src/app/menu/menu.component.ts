@@ -21,6 +21,8 @@ export class MenuComponent implements OnInit {
   public modalRef: BsModalRef;
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = 'Cartas';
+  private modalDeleteTitle: string = "Eliminar Carta";
+  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Carta?";
   filteredMenus: Menu[];
   menus: Menu[];
   _listFilter: string;

@@ -23,6 +23,8 @@ export class CashFlowsListComponent implements OnInit {
 
   pageTitle: string = "Movimientos de Caja";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalDeleteTitle = "Eliminar Movimiento";
+  private modalDeleteMessage = "¿Seguro desea eliminar este Movimiento?";
   public modalRef: BsModalRef;
   cashFlows: CashFlow[];
   filteredCashFlows: CashFlow[];
