@@ -1,7 +1,12 @@
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
 <!-- Form -->
 <div *ngIf='cashFlow'>
   <header class="major" align="center">
-    <h2>Editando:</h2>
+    <h2>Detalle:</h2>
   </header>
   <div class="row">
     <div class="col-md-6">

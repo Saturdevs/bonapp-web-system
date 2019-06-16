@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,7 +6,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { CashRegister } from '../../../shared/models/cash-register';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-register-list',
@@ -15,10 +14,13 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class CashRegisterListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Cajas";
   private serviceErrorTitle = 'Error de Servicio';
-  private modalDeleteTitle: string = "Eliminar Caja Registradora";
-  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Caja Registradora?";
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
   filteredCashRegisters: CashRegister[];
@@ -82,13 +84,15 @@ export class CashRegisterListComponent implements OnInit {
 
   showModalDelete(template: TemplateRef<any>, idCashRegister: any){
     this.idCashRegisterDelete = idCashRegister;
+    this.modalDeleteTitle = "Eliminar Caja Registradora";
+    this.modalDeleteMessage = "¿Seguro desea eliminar esta Caja Registradora?";
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){
@@ -101,6 +105,9 @@ export class CashRegisterListComponent implements OnInit {
     if (this.closeModal()){
       this._cashRegisterService.deleteCashRegister(this.idCashRegisterDelete).subscribe( success=> {
         this.getCashRegisters();
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error)
       });
     }
   }

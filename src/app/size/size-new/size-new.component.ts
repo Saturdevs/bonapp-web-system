@@ -1,15 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Size } from '../../../shared/models/size';
 import { SizeService } from '../../../shared/services/size.service';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-size-new',
@@ -19,9 +16,12 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class SizeNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
   size: Size = new Size();
   sizeForm: FormGroup;
   pageTitle: String = 'Nuevo Tamaño';
@@ -46,7 +46,7 @@ export class SizeNewComponent implements OnInit {
       this._sizeService.saveSize(s)
           .subscribe(    
             size => {
-              this._router.navigate(['/settings/general/sizes', { outlets: { edit: ['selectItem'] } }])
+              this.onBack();
             },        
             (error: any) => { 
               this.showModalError(this.serviceErrorTitle, <any>error);
@@ -55,10 +55,10 @@ export class SizeNewComponent implements OnInit {
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){
@@ -69,11 +69,17 @@ export class SizeNewComponent implements OnInit {
 
   showModalCancel(template: TemplateRef<any>, idSize: any){
     this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
   }
 
   cancel(){
-    this.sizeForm.reset();
+    this.onBack();
     this.closeModal();
+  }
+
+  onBack() {
+    this._router.navigate(['/settings/general/sizes', { outlets: { edit: ['selectItem'] } }]);
   }
 
 }

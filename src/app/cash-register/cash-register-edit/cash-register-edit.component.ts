@@ -1,8 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
@@ -11,7 +9,6 @@ import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
 import { isNullOrUndefined } from 'util';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-register-edit',
@@ -21,9 +18,12 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class CashRegisterEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   cashRegister: CashRegister;
   cashRegisterNameModified: String;
   cashRegisterDefault: Boolean;
@@ -72,6 +72,10 @@ export class CashRegisterEditComponent implements OnInit {
           {
             this.updateCashRegister(cashRegisterUpdate);
           }
+        },
+        error => 
+        { 
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       )
     }
@@ -95,23 +99,23 @@ export class CashRegisterEditComponent implements OnInit {
               },
               error =>
               {
-                console.log(error);
+                this.showModalError(this.serviceErrorTitle, <any>error);
               }
             );
           }
-          this._router.navigate(['/settings/general/cashRegisters', { outlets: { edit: ['selectItem'] } }])
+          this.onBack();
         },
         error => 
         { 
-          this.showModalError(<any>error);
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
     );
   }
 
-  showModalError(errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = this.serviceErrorTitle;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){
@@ -120,12 +124,14 @@ export class CashRegisterEditComponent implements OnInit {
     return true;     
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){
+  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
     this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
-  cancel(){
-    this.cashRegisterForm.reset();
+  cancel(){    
+    this.onBack();
     this.closeModal();
   }
 
@@ -167,6 +173,10 @@ export class CashRegisterEditComponent implements OnInit {
     {
       this.cashRegisterForm.get('default').disable();
     }
+  }
+
+  onBack() {
+    this._router.navigate(['/settings/general/cashRegisters', { outlets: { edit: ['selectItem'] } }]);
   }
 
 }

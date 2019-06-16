@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, OnChanges } from '@angular/core';
+import { Component, OnInit, TemplateRef, OnChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,7 +6,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SizeService } from '../../../shared/services/size.service';
 import { Size } from '../../../shared/models/size';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-size-list',
@@ -14,8 +13,12 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
   styleUrls: ['./size-list.component.scss']
 })
 export class SizeListComponent implements OnInit, OnChanges {
+
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Tamaños";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Tamaño";
   private modalDeleteMessage: string = "¿Estas seguro que desea eliminar este tamaño?";
   public modalRef: BsModalRef;
@@ -84,10 +87,10 @@ export class SizeListComponent implements OnInit, OnChanges {
       });
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   showModalDelete(template: TemplateRef<any>, idSize: any){
@@ -105,6 +108,9 @@ export class SizeListComponent implements OnInit, OnChanges {
     if (this.closeModal()){
       this.sizeService.deleteSize(this.idSizeDelete).subscribe( success=> {
         this.getSizes();
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
       });
     }
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -9,9 +9,6 @@ import { Product } from '../../../shared/models/product';
 import { Category } from '../../../shared/models/category';
 import { CategoryService } from '../../../shared/services/category.service';
 
-import { CurrencyPipe } from '@angular/common';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
-
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
@@ -19,10 +16,13 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class ProductListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = 'Productos';
   private serviceErrorTitle = 'Error de Servicio';
-  private modalDeleteTitle: string = "Eliminar Producto";
-  private modalDeleteMessage: string = "¿Esta seguro que desea eliminar este producto?";
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   filteredProducts: Product[];
   products: Product[];
@@ -168,10 +168,14 @@ export class ProductListComponent implements OnInit {
     this.idProductDelete = idProduct;
     let canDelete = this.productService.validateProductsBeforeChanges(this.idProductDelete);
     if(await canDelete.then(x => x == true)){
+      this.modalDeleteTitle = "Eliminar Producto";
+      this.modalDeleteMessage = "¿Esta seguro que desea eliminar este producto?";
       this.modalRef = this.modalService.show(template, {backdrop: true});
     }
-    else{
-      this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});
+    else{      
+      let noDeleteTitle = "Eliminar Producto";
+      let noDeleteMessage = "El producto no puede ser eliminado ya que ya ha sido adicionado en ventas."
+      this.showModalError(noDeleteTitle, noDeleteMessage);
     }
   }
 
@@ -179,14 +183,17 @@ export class ProductListComponent implements OnInit {
     if (this.closeModal()){
       this.productService.deleteProduct(this.idProductDelete).subscribe( success=> {
         this.getProducts();
+      },
+      error => { 
+        this.showModalError(this.serviceErrorTitle, <any>error);
       });
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){

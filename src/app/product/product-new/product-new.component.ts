@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
 import { Product } from '../../../shared/models/product';
 import { Category } from '../../../shared/models/category';
@@ -14,12 +14,9 @@ import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { UploadFile, UploadInput, UploadOutput } from 'ng-mdb-pro/pro/file-input';
 import { humanizeBytes } from 'ng-mdb-pro/pro/file-input';
 import { FileInputComponent } from '../../file-input/file-input.component';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { Collections } from '../../../shared/enums/collections.enum';
-
-
 
 @Component({
   selector: 'app-product-new',
@@ -27,8 +24,16 @@ import { Collections } from '../../../shared/enums/collections.enum';
   styleUrls: ['./product-new.component.css']
 })
 export class ProductNewComponent implements OnInit {
+
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: string;
+  private modalCancelMessage: string;
+  private modalPriceNotMatchTitle: string;
+  private modalPriceNotMatchMessage: string;
   pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();
@@ -53,8 +58,6 @@ export class ProductNewComponent implements OnInit {
   private fileInputComponent: FileInputComponent;
 
   @ViewChild('priceNotMatch') priceNotMatchTemplate:TemplateRef<any>; 
-  @ViewChild('nameInvalid') nameInvalidTemplate:TemplateRef<any>; 
-  @ViewChild('duplicatedSizes') duplicatedSizesTemplate:TemplateRef<any>; 
   get sizes(): FormArray{
     return <FormArray>this.productForm.get('sizes');
   }
@@ -129,9 +132,10 @@ export class ProductNewComponent implements OnInit {
 
   getSizes(){
     this._sizeService.getAll().subscribe(
-      sizes => {this.sizesArray = sizes;
-    },
-    error => this.showModalError(this.serviceErrorTitle, <any>error)
+      sizes => {
+        this.sizesArray = sizes;
+      },
+      error => this.showModalError(this.serviceErrorTitle, <any>error)
     );
   }
 
@@ -158,7 +162,9 @@ export class ProductNewComponent implements OnInit {
           }
         });
         if(this.duplicatedSizesArray.length > 0){
-          this.modalRef = this.modalService.show(this.duplicatedSizesTemplate, {backdrop: true});
+          let duplicatedSizeModalTitle = "Agregar Producto";
+          let duplicatedSizeModalMessage = "Existen tamanos duplicados, por favor corrija e intente nuevamente.";
+          this.showModalError(duplicatedSizeModalTitle, duplicatedSizeModalMessage);          
         }
         this.lowestPrice = product.sizes.reduce((min, p) => p.price < min ? p.price : min, product.sizes[0].price);
       } 
@@ -167,6 +173,8 @@ export class ProductNewComponent implements OnInit {
         this.lowestPrice = product.sizes[0].price;
       }
       if(product.price != this.lowestPrice){
+        this.modalPriceNotMatchTitle = "Agregar Producto";
+        this.modalPriceNotMatchMessage = "El precio del producto no coincide con el precio del menor tamano. Se modificara el precio del producto para hacerlo coincidir.";
         this.modalRef = this.modalService.show(this.priceNotMatchTemplate, {backdrop: true});
       }
       else{
@@ -201,9 +209,14 @@ export class ProductNewComponent implements OnInit {
             this.saveProduct();
           }
           else{
-            this.modalRef = this.modalService.show(this.nameInvalidTemplate, {backdrop: true});
+            let nameInvalidModalTitle = "Agregar Producto";
+            let nameInvalidModalMessage = "Ya existe un producto con ese nombre, por favor ingrese uno diferente.";
+            this.showModalError(nameInvalidModalTitle, nameInvalidModalMessage);
           }
-      })
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, <any>error);
+        })
   }
 
   saveProduct() {
@@ -233,10 +246,16 @@ export class ProductNewComponent implements OnInit {
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
   }
 
   onSaveComplete() {
@@ -246,5 +265,10 @@ export class ProductNewComponent implements OnInit {
 
   onBack(): void {
     this._router.navigate(['/restaurant/product']);
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
 }

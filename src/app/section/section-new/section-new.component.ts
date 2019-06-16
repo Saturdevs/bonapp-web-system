@@ -1,16 +1,12 @@
-import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { Section } from '../../../shared/models/section';
 
 import { SectionService } from '../../../shared/services/section.service';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ModalDirective} from 'ng-mdb-pro/free/modals'
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
-
-
 
 @Component({
   selector: 'app-section-new',
@@ -19,6 +15,10 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class SectionNewComponent implements OnInit {
   private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
   pageTitle: String = 'Nueva Sala';
   newSection: Section;
   public modalRef: BsModalRef;
@@ -46,7 +46,7 @@ export class SectionNewComponent implements OnInit {
       this._sectionService.saveSection(s)
       .subscribe(    
         section => {
-          this._router.navigate(['/settings/general/sections', { outlets: { edit: ['selectItem'] } }])
+          this.onBack();
         },        
         (error: any) => { 
           this.showModalError(this.serviceErrorTitle, <any>error);
@@ -56,12 +56,29 @@ export class SectionNewComponent implements OnInit {
   }
 
   onBack(): void {
-      this._router.navigate(['/settings/section/tables']);
-    }
+    this._router.navigate(['/settings/general/sections', { outlets: { edit: ['selectItem'] } }]);
+  }
   
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+    return true;     
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
 }

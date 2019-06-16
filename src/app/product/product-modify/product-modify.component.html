@@ -1,15 +1,15 @@
-<!-- Form -->
-<ng-template #noModify>
-  <div class="modal-header">
-    <h4 class="modal-title">Modificar Producto</h4>
-  </div>
-  <div class="modal-body">
-    No se puede modificar el producto seleccionado porque se encuentra en algun pedido.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModalAndGoBack()">Ok</button>
-  </div>
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+      (handleCancelButton)="closeModal()">
+  </app-cancel-template>
 </ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<!-- Form -->
 <div *ngIf='product'>
   <header class="major" align="center">
     <h2>Editando: {{productNameModified}}</h2>
@@ -169,7 +169,7 @@
         <div class="12u$">
           <ul class="actions" align="right">
             <li><input [disabled]="productForm.invalid" type="submit" value="Aceptar" class="special" (click)="updateProduct()"/></li>
-            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
           </ul>
         </div> 
       </div>    

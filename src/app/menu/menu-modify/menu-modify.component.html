@@ -1,13 +1,12 @@
-<ng-template #noModify>
-  <div class="modal-header">
-    <h4 class="modal-title">Modificar Carta</h4>
-  </div>
-  <div class="modal-body">
-    No se puede modificar la carta seleccionada porque tiene categorias asociadas.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModalAndGoBack()">Ok</button>
-  </div>
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+      (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <!-- Form -->
@@ -29,11 +28,6 @@
                 id="menuName" [(ngModel)]="menu.name">
         </div>
 
-        <div class="form-group">
-          <label>Nombre Carta:</label>
-          <label>{{ menu.name }}</label>
-        </div>
-
         <div *ngIf="menuName.invalid && (menuName.dirty || menuName.touched)" class="alert alert-danger">
           El nombre de la carta es requerido.
         </div>
@@ -46,7 +40,7 @@
         <div class="12u$">
           <ul class="actions" align="center">
             <li><input [disabled]="form.invalid" type="submit" value="Aceptar" class="special" (click)="updateMenu(menu)"/></li>
-            <li><input type="reset" value="Atras" (click)='onBack()' /></li>
+            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
           </ul>
         </div>    
 

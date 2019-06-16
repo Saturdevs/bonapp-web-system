@@ -4,16 +4,9 @@
     </app-delete-template>
 </ng-template>
 
-<ng-template #noDelete>
-  <div class="modal-header">
-    <h4 class="modal-title">Eliminar Categoría</h4>
-  </div>
-  <div class="modal-body">
-    No se puede eliminar la categoría seleccionada porque tiene productos asociados.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModal()">Ok</button>
-  </div>
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="pageTitle">

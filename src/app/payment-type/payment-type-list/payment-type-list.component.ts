@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,7 +6,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 import { PaymentType } from '../../../shared/models/payment-type';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-payment-type-list',
@@ -15,8 +14,11 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class PaymentTypeListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Formas de Pago";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Forma de Pago";
   private modalDeleteMessage: string = "¿Estas seguro que desea eliminar la Forma de Pago?";
   public modalRef: BsModalRef;
@@ -97,14 +99,17 @@ export class PaymentTypeListComponent implements OnInit {
     if (this.closeModal()){
       this.paymentTypeService.deletePaymentType(this.idPaymentTypeDelete).subscribe( success=> {
         this.getPaymentTypes();
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
       });
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   reloadItems(event) {

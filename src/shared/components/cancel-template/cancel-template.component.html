@@ -1,0 +1,18 @@
+<div class="container col-md-12">
+  <div class="row pageTitle primary-color">
+    <div class="col-md-12">
+      <h4 class="text-white text-center mb-0">{{ modalTitle }}</h4>    
+    </div>
+  </div>
+
+  <div class="modalContent modalContentCancel">
+    {{modalMessage}}
+  </div>
+  
+  <div class="row customFooterModal">
+    <div class="footerButtons">
+      <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="handleCancelButtonClick()">{{cancelButton}}</button>
+      <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="handleOkButtonClick()">{{ okButton }}</button>
+    </div>
+  </div>
+</div>

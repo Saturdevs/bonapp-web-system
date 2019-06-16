@@ -9,6 +9,7 @@ import { ApiService } from '../shared/services/api.service';
 import { SharedService } from './services/shared.service';
 import { ErrorTemplateComponent } from '../shared/components/error-template/error-template.component';
 import { DeleteTemplateComponent } from '../shared/components/delete-template/delete-template.component';
+import { CancelTemplateComponent } from './components/cancel-template/cancel-template.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { DeleteTemplateComponent } from '../shared/components/delete-template/de
   ],
   declarations: [
     ErrorTemplateComponent,
-    DeleteTemplateComponent
+    DeleteTemplateComponent,
+    CancelTemplateComponent
   ],
   providers: [ 
     ApiService,
@@ -33,7 +35,8 @@ import { DeleteTemplateComponent } from '../shared/components/delete-template/de
     MDBBootstrapModules,
     ModalModule,
     ErrorTemplateComponent,
-    DeleteTemplateComponent
+    DeleteTemplateComponent,
+    CancelTemplateComponent
   ],
   entryComponents: [
     ErrorTemplateComponent

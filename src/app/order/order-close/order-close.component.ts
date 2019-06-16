@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
 import { 
   Order,
   PaymentType,
@@ -14,7 +14,6 @@ import {
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -28,6 +27,7 @@ export class OrderCloseComponent implements OnInit {
   @Input() cashRegisters: Array<CashRegister> = [];
   @Input() paymentTypes: Array<PaymentType> = [];
   @Output() close = new EventEmitter<string>();
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
   constructor(private _router: Router,
               private modalService: BsModalService,
@@ -49,6 +49,8 @@ export class OrderCloseComponent implements OnInit {
   private confirmButtonLabel: String = "Confirmar";
   private cancelButtonLabel: String = "Cancelar";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   public modalRef: BsModalRef;
   private cashRegistersSelect: Array<any> = [];
   private selectedCashRegister: string = '';
@@ -318,10 +320,15 @@ export class OrderCloseComponent implements OnInit {
     )
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;
   }
 
 }

@@ -1,3 +1,8 @@
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
 <!-- Form -->
 <div *ngIf='transaction'>
   <header class="major" align="center">

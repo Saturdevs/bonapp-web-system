@@ -1,3 +1,8 @@
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
 <div class="container col-md-12">
   <!-- Titulo del form -->
   <div class="row pageTitle primary-color">

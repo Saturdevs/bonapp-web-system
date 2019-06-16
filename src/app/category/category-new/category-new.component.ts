@@ -9,7 +9,6 @@ import { Menu } from '../../../shared/models/menu';
 import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-category-new',
@@ -22,9 +21,12 @@ export class CategoryNewComponent implements OnInit {
   private fileInputComponent: FileInputComponent;
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
   categories: Category[];
   newCategory: Category;
   menus: Menu[];
@@ -49,7 +51,7 @@ export class CategoryNewComponent implements OnInit {
       category =>{ this.newCategory = category,
                    this.onBack()},
       error => { 
-        this.showModalError(<any>error);
+        this.showModalError(this.serviceErrorTitle, <any>error);
       });
   }
 
@@ -68,14 +70,20 @@ export class CategoryNewComponent implements OnInit {
             this.menus = menus
           },
           error => { 
-            this.showModalError(<any>error['message']);
+            this.showModalError(this.serviceErrorTitle, <any>error);
           });
   }
 
-  showModalError(errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = this.serviceErrorTitle;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
   }
 
   onBack(): void {
@@ -88,6 +96,16 @@ export class CategoryNewComponent implements OnInit {
     } else {
       this.hasCategory = false;
     }
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;    
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -7,7 +7,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ClientService } from '../../../shared/services/client.service';
 import { Transaction } from '../../../shared/models/transaction';
 import { Client } from '../../../shared/models/client';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-transaction-list',
@@ -16,10 +15,13 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class TransactionListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = "Cuentas Corrientes";
-  private modalDeleteTitle: string = "Eliminar Transacción";
-  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Transacción?";
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   transactions: Transaction[];
   filteredTransactions: Transaction[];
@@ -96,6 +98,8 @@ export class TransactionListComponent implements OnInit {
   showModalDelete(template: TemplateRef<any>, idClient: any, idTransaction: Number){
     this.idClientTransactionDelete = idClient;
     this.idTransactionDelete = idTransaction;
+    this.modalDeleteTitle = "Eliminar Transacción";
+    this.modalDeleteMessage = "¿Seguro desea eliminar esta Transacción?";
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 
@@ -120,17 +124,23 @@ export class TransactionListComponent implements OnInit {
           this._clientService.updateClient(client).subscribe(
             success=> {
               this.getTransactions();
+            },
+            error => {
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           )
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       );
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   reloadItems(event) {

@@ -11,7 +11,6 @@ import { Menu } from '../../../shared/models/menu';
 import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-category-modify',
@@ -24,10 +23,12 @@ export class CategoryModifyComponent implements OnInit {
   private fileInputComponent: FileInputComponent;
   
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-  @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: string;
+  private modalCancelMessage: string;
   pageTitle: string = 'Category Modify';
   category: Category;
   menus: Menu[];
@@ -64,7 +65,9 @@ export class CategoryModifyComponent implements OnInit {
   async validateCategoryBeforeModify(){
     let canDelete = this._categoryService.validateCategoriesBeforeChanges(this.category._id);
     if (await canDelete.then(x => x == false)){
-      this.modalRef = this.modalService.show(this.noModifyTemplate, {backdrop: true});
+      let noModifyTitle = "Modificar Categoría";
+      let noModifyMessage = "No se puede modificar la categoría seleccionada porque tiene productos asociados.";
+      this.showModalError(noModifyTitle, noModifyMessage);
     }
   }
 
@@ -74,7 +77,7 @@ export class CategoryModifyComponent implements OnInit {
           category => { this.category = category,
             this.onBack()},
           error => {
-            this.showModalError(<any>error);
+            this.showModalError(this.serviceErrorTitle, <any>error);
           });
   }
 
@@ -92,10 +95,16 @@ export class CategoryModifyComponent implements OnInit {
     this._router.navigate(['/restaurant/category']);
   }
   
-  showModalError(errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = this.serviceErrorTitle;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
   closeModal(){
@@ -116,6 +125,11 @@ export class CategoryModifyComponent implements OnInit {
     } else {
       this.hasCategory = false;
     }
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
 
 }
