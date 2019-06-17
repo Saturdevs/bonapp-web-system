@@ -15,7 +15,7 @@ export class SharedService {
   ) { }
 
   validateName(collectionName, objectName){
-    return this.apiService.post(`/validateName/${collectionName}/${objectName}`)
+    return this.apiService.post(`/genericValidations/validateName/${collectionName}/${objectName}`)
     .map(data => data.result)
     .catch(this.handleError);
   }
