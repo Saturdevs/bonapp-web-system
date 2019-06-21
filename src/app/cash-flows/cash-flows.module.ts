@@ -12,7 +12,7 @@ import { CashFlowsNewComponent } from './cash-flows-new/cash-flows-new.component
 import { CashFlowService } from '../../shared/index';
 import { CashFlowResolverService } from './cash-flows-list/cash-flow-resolver.service';
 import { CashFlowEditResolverService } from './cash-flows-edit/cash-flow-edit-resolver.service';
-import { CashFlowSearchPipe } from "../../shared/Pipes/cash-flow-search-pipe";
+import { CashFlowSearchPipe } from "../../shared/pipes/cash-flow-search.pipe";
 
 @NgModule({
   imports: [
