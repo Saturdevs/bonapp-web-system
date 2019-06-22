@@ -10,6 +10,8 @@ import { CategoryService } from '../../../shared/services/category.service';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
+import { SharedService } from '../../../shared/index';
+import { Collections } from '../../../shared/enums/collections.enum';
 
 @Component({
   selector: 'app-category-new',
@@ -21,7 +23,8 @@ export class CategoryNewComponent implements OnInit {
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;  
+  @ViewChild('nameInvalid') nameInvalidTemplate:TemplateRef<any>; 
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
@@ -31,16 +34,20 @@ export class CategoryNewComponent implements OnInit {
   hasCategory = false;
   pictureTouched: boolean;
   validPicture: string;
+  currentCollection : string;
+  nameIsAvailable: boolean = false;
 
   constructor(private _router: Router,
               private _categoryService: CategoryService,
               private modalService: BsModalService,
-              private _menuService: MenuService) { }
+              private _menuService: MenuService,
+              private _sharedService: SharedService) { }
 
   ngOnInit() {
     this.newCategory = new Category();
     this.newCategory.menuId = "default";
     this.getMenus();
+    this.currentCollection = Collections[1]; 
   }
 
   saveCategory(){
@@ -60,6 +67,25 @@ export class CategoryNewComponent implements OnInit {
     if(this.validPicture != ''){
       this.newCategory.picture = this.validPicture;
     }
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+    return true;     
+  }
+
+  validateName(){
+      this._sharedService.validateName(this.currentCollection,this.newCategory.name)
+        .subscribe(result => {
+          this.nameIsAvailable = result;
+          if(this.nameIsAvailable === true){
+            this.saveCategory();
+          }
+          else{
+            this.modalRef = this.modalService.show(this.nameInvalidTemplate, {backdrop: true});
+          }
+      })
   }
 
   getMenus(){

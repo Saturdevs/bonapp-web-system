@@ -11,6 +11,8 @@ import { Menu } from '../../../shared/models/menu';
 import { MenuService } from '../../../shared/services/menu.service';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
+import { SharedService } from '../../../shared/index';
+import { Collections } from '../../../shared/enums/collections.enum';
 
 @Component({
   selector: 'app-menu-new',
@@ -21,7 +23,8 @@ export class MenuNewComponent implements OnInit {
   
 
   @ViewChild(FileInputComponent)
-  private fileInputComponent: FileInputComponent;
+  private fileInputComponent: FileInputComponent; 
+  @ViewChild('nameInvalid') nameInvalidTemplate:TemplateRef<any>; 
 
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
@@ -32,6 +35,8 @@ export class MenuNewComponent implements OnInit {
   menus: Menu[];   
   newMenu: Menu;
   validPicture: string = '';
+  nameIsAvailable: boolean = false;
+  currentCollection : string;
   pictureTouched: boolean;
 
    private sub: Subscription;
@@ -39,10 +44,12 @@ export class MenuNewComponent implements OnInit {
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private modalService: BsModalService,
-              private _menuService: MenuService) { }
+              private _menuService: MenuService,
+              private _sharedService: SharedService) { }
 
   ngOnInit(): void {
-    this.newMenu = new Menu();      
+    this.newMenu = new Menu();     
+    this.currentCollection = Collections[3]; 
   }
 
 
@@ -73,6 +80,26 @@ export class MenuNewComponent implements OnInit {
     this.modalRef.content.errorTitle = errorTitleReceived;
     this.modalRef.content.errorMessage = errorMessageReceived;
   }
+
+  validateName(){
+      this._sharedService.validateName(this.currentCollection, this.newMenu.name)
+        .subscribe(result => {
+          this.nameIsAvailable = result;
+          if(this.nameIsAvailable === true){
+            this.saveMenu();
+          }
+          else{
+            this.modalRef = this.modalService.show(this.nameInvalidTemplate, {backdrop: true});
+          }
+      })
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+    return true;     
+  }
+
 
   onBack(): void {
     this._router.navigate(['/restaurant/menu']);

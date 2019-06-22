@@ -1,4 +1,16 @@
 <!-- Form -->
+<ng-template #nameInvalid>
+  <div class="modal-header">
+    <h4 class="modal-title">Agregar Producto</h4>
+  </div>
+  <div class="modal-body">
+    Ya existe una carta con ese nombre, elija uno diferente.
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button special" (click)="closeModal()">Ok</button>
+    <button type="button" class="button special" (click)="closeModal()">Cancelar</button>
+  </div>
+</ng-template>
 <div class="container">
   <header class="major" align="center">
     <h2>Nueva Carta</h2>
@@ -24,7 +36,7 @@
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="form.invalid" type="submit" value="Guardar" class="special" (click)="saveMenu(newMenu)"/></li>
+            <li><input [disabled]="form.invalid" type="submit" value="Guardar" class="special" (click)="validateName()"/></li>
             <li><input type="reset" value="Atras" (click)='onBack()' /></li>
           </ul>
         </div>    
