@@ -16,9 +16,19 @@
                     <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
             <a class="customFloatedButton" [routerLink]="['/clients-module/clients', { outlets: { edit: ['newClient'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Cliente</a>
-        </div>
+        </div>        
+
         <div class="row ml-1">
-            <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">                
+            <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">  
+                <div class="row mb-2 customBox pt-1 pb-2 mt-2 text-center">
+                    <form #form="ngForm" novalidate class="form-inline">
+                        <h6 class="pt-2">{{ filterLabel }}</h6>
+                        <div class="md-form form-group mr-0 ml-0 col-md-7 col-lg-7">
+                            <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
+                        </div>
+                    </form>    
+                </div>
+
                 <div class="row">
                     <table class="table table-bordered table-hover customTable">
                         <thead class="primary-color customTableText">
@@ -49,6 +59,6 @@
                 <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
             </div>
         </div>
-  </div>
+    </div>
 
 </div>

@@ -17,6 +17,7 @@ export class ClientListComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Clientes";
   private serviceErrorTitle = 'Error de Servicio';
+  private filterLabel = 'Filtrar por Cliente:';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string;
@@ -25,6 +26,15 @@ export class ClientListComponent implements OnInit {
   clients: Client[];
   filteredClients: Client[];
   idClientDelete: any;
+  _listFilter: string;
+
+  get listFilter(): string {
+      return this._listFilter;
+  }
+  set listFilter(value: string) {
+      this._listFilter = value;
+      this.filteredClients = this.listFilter ? this.performFilter(this.listFilter) : this.clients;
+  }
 
   constructor(private _clientService: ClientService,
               private route: ActivatedRoute,
@@ -38,6 +48,11 @@ export class ClientListComponent implements OnInit {
         this.filteredClients = this.clients;
       }
     )
+  }
+
+  performFilter(filterBy: string): Client[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.clients.filter((client: Client) => client.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 
   getClients(): void {

@@ -24,16 +24,17 @@
 
                     <h6 class="pt-2">Cliente:</h6>
                     <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
-                        <mdb-select #clientId name="clientId" (selected)="filterTransactions(clientId.value)" id="clientId" [options]="clientsSelect"  
+                        <mdb-select #client name="client" (selected)="filterTransactions(client.value)" id="client" [options]="clientsSelect"  
                         [(ngModel)]="selectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>
-                    </div>
-                    
-                    <br>
-                    <hr>
-                    
-                    <span *ngIf="clientId.value === 'default'">Todos los clientes</span>
-                    <span *ngIf="clientId.value !== 'default'">{{ clientId.label }}</span>
+                    </div>                                      
                   </form>    
+
+                  <span *ngIf="client.value === 'default'">Todos los clientes</span>
+                  <span *ngIf="client.value !== 'default'">{{ selectedClientName }}</span>
+                  <br>
+                  <span>{{ cantTransactions + " registros" }}</span>
+
+                  <span>{{ "Saldo: " + amount }}</span>
               </div>
               <div class="row">
                   <table class="table table-bordered table-hover customTable">

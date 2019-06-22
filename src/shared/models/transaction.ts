@@ -5,8 +5,7 @@ export class Transaction {
   paymentMethod: any;
   cashRegister: any;
   date: Date;
-  amount: Number;
-  balance: Number;
+  amount: number;
   deleted: Boolean;
   comment: String;
 }
