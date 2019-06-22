@@ -188,3 +188,30 @@
 .activeItem{
     border-bottom: solid 3px #4c4c4c;
 }
+
+.increaseDecreaceIcon{
+    color: #730;
+    opacity: .5;
+}
+
+.increaseDecreaceButton{
+    border: 1px solid #f5c963;
+    background-color: transparent;
+}
+
+.increaseDecreaceButton:active {
+    box-shadow: 0 1px 3px #da6 inset
+}
+
+.increaseDecreaceButton:hover,.increaseDecreaceButton:focus {
+    background: #ffe391;
+    opacity: .8;
+}
+
+.productQuantityPriceContainer{
+    border: 1px solid #f5c963;
+}
+
+.productPrice{
+    padding-bottom: .65rem;
+}

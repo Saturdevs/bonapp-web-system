@@ -4,7 +4,7 @@ export enum Collections {
     client,
     menu,
     order,
-    paymenttype,
+    paymentType,
     product,
     section,
     size,

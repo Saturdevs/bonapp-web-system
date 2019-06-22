@@ -158,11 +158,9 @@
           </div>
       </div>
       <div class="col-12 cashRegisterSelectSection" *ngIf='showDiscount===true'>
-        <div class="row buttonsRow">
-            <ul class="actions" align="center">
-              <li><input [disabled]="formDiscount.invalid" value="{{ confirmButtonLabel }}" class="special" (click)="addDiscount()"/></li>
-              <li><input type="reset" value="{{ cancelButtonLabel }}" (click)='showDiscountSection(false)' /></li>
-            </ul>
+        <div class="col-6 offset-6 buttonsRow pl-4 pr-0">
+          <button type="button" class="btn customButtonCancel btn-sm waves-light" (click)='showDiscountSection(false)'>{{ cancelButtonLabel }}</button>
+          <button [disabled]="formDiscount.invalid" type="button" class="btn btn-sm btn-primary waves-light" (click)="addDiscount()">{{ confirmButtonLabel }}</button>
         </div>
       </div>
 

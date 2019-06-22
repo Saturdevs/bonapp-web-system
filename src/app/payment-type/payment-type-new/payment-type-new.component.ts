@@ -10,6 +10,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { PaymentType } from '../../../shared/models/payment-type';
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
+import { Collections } from '../../../shared/enums/collections.enum';
+import { SharedService } from '../../../shared/index';
 
 @Component({
   selector: 'app-payment-type-new',
@@ -19,25 +21,44 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class PaymentTypeNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
+  @ViewChild('nameInvalid') nameInvalidTemplate:TemplateRef<any>; 
+  
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   paymentType: PaymentType = new PaymentType();
   paymentTypeForm: FormGroup;
   pageTitle: String = 'Nueva Forma de Pago';
+  nameIsAvailable: boolean = false;
+  currentCollection : string;
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _paymentTypeService: PaymentTypeService,
               private modalService: BsModalService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private _sharedService: SharedService) { }
 
   ngOnInit() {
     this.paymentTypeForm = this.formBuilder.group({
       name: ['', Validators.required],      
       available: true   
     });
+    this.currentCollection = Collections[5];    
   } 
+
+  validateName(){
+    let p = Object.assign({}, this.paymentTypeForm.value);
+      this._sharedService.validateName(this.currentCollection,p.name)
+        .subscribe(result => {
+          this.nameIsAvailable = result;
+          if(this.nameIsAvailable === true){
+            this.savePaymentType();
+          }
+          else{
+            this.modalRef = this.modalService.show(this.nameInvalidTemplate, {backdrop: true});
+          }
+      })
+  }
 
   savePaymentType() {
     if (this.paymentTypeForm.dirty && this.paymentTypeForm.valid) {

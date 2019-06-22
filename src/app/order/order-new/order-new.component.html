@@ -86,31 +86,33 @@ overflow: auto; overflow-x: hidden;">
     <div class="row customPreOrderAdition" *ngIf='preOrderProducts && preOrderProducts.length'>
       <div class="col-md-12 col-lg-12 col-sm-12 preordeerProduct" *ngFor="let product of preOrderProducts">
         <div class="row mb-2">
-          <div class="col-3 p-0">
-            <label (click)="updateProductQty(product, -1)" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left m-0">
-              <span class="pb-0 mb-0">-</span>
-            </label>
+          <div class="col-3 p-0 productQuantityPriceContainer">
+            <button (click)="updateProductQty(product, -1)" class="z-depth-0 btn buttonOrder btn-tb increaseDecreaceButton waves-effect waves-light float-left m-0">
+              <span class="pb-0 mb-0"><i class="fa fa-minus increaseDecreaceIcon"></i></span>
+            </button>
             
-            <span class="pt-1 pr-2 pl-2">{{ product.quantity }}</span>
+            <span class="pt-1 pr-2 pl-4">{{ product.quantity }}</span>
 
-            <label (click)="updateProductQty(product, 1)" class="z-depth-0 buttonOrder btn btn-tb btn-primary waves-effect waves-light float-right m-0">
-              <span class="pb-0 mb-0">+</span>
-            </label>
+            <button (click)="updateProductQty(product, 1)" class="z-depth-0 buttonOrder btn btn-tb increaseDecreaceButton waves-effect waves-light float-right m-0">
+              <span class="pb-0 mb-0"><i class="fa fa-plus increaseDecreaceIcon"></i></span>
+            </button>
           </div>
           <div class="col-6 pl-0 pr-0">
             <span class="ml-2">
                 {{ product.name }}            
             </span>  
-            <span class="pl-1 pr-1">$ {{ product.price }} </span>  
+            <span class="ml-4"><i class="fa fa-dollar fa-lg increaseDecreaceIcon"></i></span>
+            <span class="pl-5 pr-2 productQuantityPriceContainer productPrice">
+              {{ product.price }}
+            </span>  
           </div>
-          <div class="col-3 pl-0 pr-1">
-            <label (click)="showObservationBox(product)" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left m-0 mr-2">
-              <span class="pb-0 mb-0"><i class="fa fa-comment fa-1x"></i></span>
-            </label> 
-            
-            <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn buttonOrder btn-tb btn-primary waves-effect waves-light float-left m-0 ml-2">
-              <span class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></span>
-            </label>         
+          <div class="col-3 pl-0 pr-1 pl-4">
+            <label (click)="showObservationBox(product)" class="z-depth-0 btn buttonOrder btn-tb increaseDecreaceButton waves-effect waves-light float-left m-0 mr-1">
+              <span><i class="fa fa-comment increaseDecreaceIcon fa-lg"></i></span>
+            </label>            
+            <label (click)="removeProductFromPreOrder(product)" class="z-depth-0 btn buttonOrder btn-tb waves-effect increaseDecreaceButton waves-light float-left m-0 ml-1">
+              <span><i class="fa fa-times increaseDecreaceIcon fa-lg"></i></span>
+            </label>
           </div>
         </div>
         <div class="row mb-2 pr-2" *ngIf="product.observations !== undefined && product.observations !== ''">
@@ -119,7 +121,7 @@ overflow: auto; overflow-x: hidden;">
       </div>
       <div class="col-md-12 col-lg-12 col-sm-12 pt-2 pb-2 pl-1 totalToConfirm"><span>Total a confirmar: ${{ totalToConfirm }}</span></div>
       <div class="col-md-12 col-lg-12 col-sm-12 p-0 m-0 infoSection">
-        <div class="float-left col-md-6 col-lg-6 col-sm-6 offset-md-6 pl-0">
+        <div class="float-left col-md-5 col-lg-5 col-sm-5 offset-md-7 pl-0">
           <button type="button" class="float-left btn btn-sm customButtonCancel waves-light ml-4 mr-0" mdbRippleRadius (click)="cancelPreOrder()" >Cancelar</button>
           <button type="button" class="float-right btn btn-sm btn-primary waves-light" mdbRippleRadius (click)="confirmPreOrder()" >Confirmar</button>
         </div>  
@@ -137,7 +139,7 @@ overflow: auto; overflow-x: hidden;">
           <div class="col-6 p-0">
             <span>{{ product.name }}</span>
           </div>
-          <div class="col-2 p-0">
+          <div class="pl-4 pr-1 pb-2">
             <span>$ {{ product.price }} </span>
           </div>
           <div class="col-2 p-0">
