@@ -6,7 +6,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { ClientService } from '../../../shared/services/client.service';
 import { Client } from '../../../shared/models/client';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-client-list',
@@ -15,14 +14,27 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class ClientListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Clientes";
   private serviceErrorTitle = 'Error de Servicio';
-  private modalDeleteTitle: string = "Eliminar Cliente";
-  private modalDeleteMessage: string = "¿Seguro desea eliminar este Cliente?";
+  private filterLabel = 'Filtrar por Cliente:';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   clients: Client[];
   filteredClients: Client[];
   idClientDelete: any;
+  _listFilter: string;
+
+  get listFilter(): string {
+      return this._listFilter;
+  }
+  set listFilter(value: string) {
+      this._listFilter = value;
+      this.filteredClients = this.listFilter ? this.performFilter(this.listFilter) : this.clients;
+  }
 
   constructor(private _clientService: ClientService,
               private route: ActivatedRoute,
@@ -38,6 +50,11 @@ export class ClientListComponent implements OnInit {
     )
   }
 
+  performFilter(filterBy: string): Client[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.clients.filter((client: Client) => client.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
+  }
+
   getClients(): void {
     this._clientService.getAll()
       .subscribe(clients => {
@@ -50,14 +67,16 @@ export class ClientListComponent implements OnInit {
     );
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   showModalDelete(template: TemplateRef<any>, idClient: any){
     this.idClientDelete = idClient;
+    this.modalDeleteTitle = "Eliminar Cliente";
+    this.modalDeleteMessage = "¿Seguro desea eliminar este Cliente?";
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 
@@ -72,6 +91,9 @@ export class ClientListComponent implements OnInit {
       this._clientService.deleteClient(this.idClientDelete).subscribe( 
         success=> {
           this.getClients();
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       );
     }

@@ -1,14 +1,11 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgForm } from '@angular/forms/src/directives/ng_form';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Supplier } from '../../../shared/models/supplier';
 import { SupplierService } from '../../../shared/services/supplier.service';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-supplier-edit',
@@ -18,9 +15,12 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class SupplierEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
   supplier: Supplier;
   pageTitle: String = 'Editando proveedor: ';
   supplierNameModified: String;
@@ -55,14 +55,16 @@ export class SupplierEditComponent implements OnInit {
     this._router.navigate(['/suppliers-module/suppliers', { outlets: { edit: ['selectItem'] } }]);
   }
   
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   showModalCancel(template: TemplateRef<any>){
     this.modalRef = this.modalService.show(template, {backdrop: false});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
   cancel(){

@@ -1,15 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { Size } from '../../../shared/models/size';
 import { SizeService } from '../../../shared/services/size.service';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-size-edit',
@@ -19,9 +16,12 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class SizeEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
   size: Size;
   sizeNameModified: String;
   sizeForm: FormGroup;
@@ -49,18 +49,19 @@ export class SizeEditComponent implements OnInit {
   updateSize() {
     let sizeUpdate = Object.assign({}, this.size, this.sizeForm.value);
     this._sizeService.updateSize(sizeUpdate).subscribe(
-        size => { this.size = size;
-                  this._router.navigate(['/settings/general/sizes', { outlets: { edit: ['selectItem'] } }])
-                },
+        size => { 
+          this.size = size;
+          this.onBack();
+        },
         error => { 
           this.showModalError(this.serviceErrorTitle, <any>error)
         });
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){
@@ -71,10 +72,12 @@ export class SizeEditComponent implements OnInit {
 
   showModalCancel(template: TemplateRef<any>, idSize: any){
     this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
   cancel(){
-    this.sizeForm.reset();
+    this.onBack();
     this.closeModal();
   }
 
@@ -85,6 +88,10 @@ export class SizeEditComponent implements OnInit {
       name: this.size.name,
       available: this.size.available
     });
+  }
+
+  onBack() {
+    this._router.navigate(['/settings/general/sizes', { outlets: { edit: ['selectItem'] } }]);
   }
 
 }

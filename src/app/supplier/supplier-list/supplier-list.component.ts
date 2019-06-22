@@ -6,7 +6,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SupplierService } from '../../../shared/services/supplier.service';
 import { Supplier } from '../../../shared/models/supplier';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-supplier-list',
@@ -15,8 +14,11 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class SupplierListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Proveedores";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Proveedor";
   private modalDeleteMessage: string = "¿Seguro desea eliminar este Proveedor?";
   public modalRef: BsModalRef;
@@ -67,15 +69,18 @@ export class SupplierListComponent implements OnInit {
       this._supplierService.deleteSupplier(this.idSupplierDelete).subscribe( 
         success=> {
           this.getSuppliers();
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       );
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   reloadItems(event) {

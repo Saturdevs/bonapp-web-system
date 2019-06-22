@@ -6,7 +6,7 @@ export class Client {
   addressNumber: String;
   addressDpto: String;
   enabledTransactions: Boolean;
-  balance: Number;
+  balance: number;
   transactions: Array<any>;
   dateOfLastTransaction: Date;
 }

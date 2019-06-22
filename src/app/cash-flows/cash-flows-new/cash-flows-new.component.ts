@@ -1,7 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgForm } from '@angular/forms/src/directives/ng_form';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
@@ -9,13 +7,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { CashFlow } from '../../../shared/models/cash-flow';
 import { CashFlowService } from '../../../shared/services/cash-flow.service';
 import { CashRegister } from '../../../shared/models/cash-register';
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { PaymentType } from '../../../shared/models/payment-type';
-import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
 import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
 import { isNullOrUndefined } from 'util';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-cash-flows-new',
@@ -25,9 +20,12 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class CashFlowsNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   paymentTypes: PaymentType[];
   cashRegisters: CashRegister[];
   newCashFlow: CashFlow;
@@ -92,31 +90,50 @@ export class CashFlowsNewComponent implements OnInit {
               this.onBack();
             },
             error => {
-              this.showModalError(<any>error);
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           )
         }        
       },
       error => {
-        this.showModalError(<any>error);
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     )
   }
 
   saveCashFlow(){
     this._cashFlowService.saveCashFlow(this.newCashFlow).subscribe(
-      cashFlow =>{ this.newCashFlow = cashFlow,
-                   this.saveCashFlowIntoCashCount(this.newCashFlow);
-                   this.onBack()},
+      cashFlow => { 
+        this.newCashFlow = cashFlow,
+        this.saveCashFlowIntoCashCount(this.newCashFlow);
+        this.onBack()
+      },
       error => { 
-                this.showModalError(<any>error)
-              });
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      });
   }
 
-  showModalError(errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = this.serviceErrorTitle;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>, idCashRegister: any){
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
+  }
+
+  cancel(){
+    this.onBack();
+    this.closeModal();
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;   
+    return true;     
   }
 
   onBack(): void {

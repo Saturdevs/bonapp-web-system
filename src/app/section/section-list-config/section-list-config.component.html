@@ -4,6 +4,11 @@
     </app-delete-template>
 </ng-template>
 
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
 <div class="row">
   <div class="col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 pr-0 customTitleBar">
     <div class="row ml-1 settingsTitle">

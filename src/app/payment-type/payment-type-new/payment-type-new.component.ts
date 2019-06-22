@@ -1,8 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
@@ -25,6 +23,10 @@ export class PaymentTypeNewComponent implements OnInit {
   
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: String;
+  private modalCancelMessage: String;
   paymentType: PaymentType = new PaymentType();
   paymentTypeForm: FormGroup;
   pageTitle: String = 'Nueva Forma de Pago';
@@ -68,7 +70,7 @@ export class PaymentTypeNewComponent implements OnInit {
           .subscribe(    
             paymentType => {
               console.log(paymentType)
-              this._router.navigate(['/settings/general/paymentTypes', { outlets: { edit: ['selectItem'] } }])
+              this.onBack();
             },        
             (error: any) => {               
               this.showModalError(this.serviceErrorTitle, <any>error);
@@ -77,10 +79,10 @@ export class PaymentTypeNewComponent implements OnInit {
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){
@@ -91,11 +93,17 @@ export class PaymentTypeNewComponent implements OnInit {
 
   showModalCancel(template: TemplateRef<any>, idSize: any){
     this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
   }
 
   cancel(){
-    this.paymentTypeForm.reset();
+    this.onBack();
     this.closeModal();
+  }
+
+  onBack() {
+    this._router.navigate(['/settings/general/paymentTypes', { outlets: { edit: ['selectItem'] } }]);
   }
 
 }

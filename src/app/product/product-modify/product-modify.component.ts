@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
 import { Subscription }       from 'rxjs/Subscription';
 
@@ -12,7 +12,6 @@ import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-product-modify',
@@ -20,7 +19,14 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
   styleUrls: ['./product-modify.component.css']
 })
 export class ProductModifyComponent implements OnInit {
-  private serviceErrorTitle = 'Error de Servicio';
+
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  private serviceErrorTitle = 'Error de Servicio';  
+  public modalRef: BsModalRef;
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: string;
+  private modalCancelMessage: string;
   pictureTouched: boolean;
   validPicture: string;
   pageTitle: string = 'Product Modify';
@@ -36,13 +42,10 @@ export class ProductModifyComponent implements OnInit {
   clickAceptar: Boolean;
   private sub: Subscription;
   sizesArr: Array<string> = new Array("Chico", "Mediano", "Grande");
-  path: string = '../../../assets/img/products/';
-  public modalRef: BsModalRef;
+  path: string = '../../../assets/img/products/';  
   
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
-   
-  @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
 
   get sizes(): FormArray{
     return <FormArray>this.productForm.get('sizes');
@@ -81,7 +84,9 @@ export class ProductModifyComponent implements OnInit {
   async validateProductsBeforeModify(){
     let canModify = this._productService.validateProductsBeforeChanges(this.product.code);
     if (await canModify.then(x => x == false)){
-      this.modalRef = this.modalService.show(this.noModifyTemplate, {backdrop: true});
+      let noModifyTitle = "Modificar Producto";
+      let noModifyMessage = "El producto no puede ser eliminado ya que ya ha sido adicionado en ventas.";
+      this.showModalError(noModifyTitle, noModifyMessage);
     }
   }
 
@@ -154,10 +159,16 @@ export class ProductModifyComponent implements OnInit {
     this.onBack();
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
   onNotified(validator: string) {
@@ -178,6 +189,11 @@ export class ProductModifyComponent implements OnInit {
   closeModalAndGoBack(){
     this.closeModal();
     this.onBack();
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
 
   onBack(): void {

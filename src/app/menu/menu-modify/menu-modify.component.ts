@@ -6,12 +6,9 @@ import { Subscription }       from 'rxjs/Subscription';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { MenuGuardService } from '../menu-guard.service';
 import { Menu } from '../../../shared/models/menu';
 import { MenuService } from '../../../shared/services/menu.service';
-import { isNullOrUndefined } from 'util';
 import { FileInputComponent } from '../../file-input/file-input.component';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   templateUrl: './menu-modify.component.html'
@@ -22,12 +19,13 @@ export class MenuModifyComponent implements OnInit {
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
   
-  
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-  @ViewChild('noModify') noModifyTemplate:TemplateRef<any>; 
-
   private serviceErrorTitle = 'Error de Servicio';
-  public modalRef: BsModalRef;
+  public modalRef: BsModalRef;  
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: string;
+  private modalCancelMessage: string;
   pageTitle: string = 'Menu Modify';
   menu: Menu;
   menuNameModified: string;
@@ -54,7 +52,9 @@ export class MenuModifyComponent implements OnInit {
   async validateMenuBeforeModify(){
     let canModify = this._menuService.validateMenuBeforeChanges(this.menu._id);
     if (await canModify.then(x => x == false)){
-      this.modalRef = this.modalService.show(this.noModifyTemplate, {backdrop: true});
+      let noModifyTitle = "Modificar Carta";
+      let noModifyMessage = "No se puede modificar la carta seleccionada porque tiene categorias asociadas.";
+      this.showModalError(noModifyTitle, noModifyMessage);
     }
   }
   
@@ -80,10 +80,21 @@ export class MenuModifyComponent implements OnInit {
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  }
+
+  showModalCancel(template: TemplateRef<any>){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
   
   onBack(): void {

@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgGrid, NgGridItem, NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
+import { NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
@@ -8,14 +8,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
 	Table,
 	TableService,
-	Order,
-	OrderService,
-	UsersInOrder,
-	ProductsInUserOrder
+	OrderService
 } from '../../../shared/index';
 import { ToastService } from 'ng-mdb-pro/pro/alerts';
 import { isNullOrUndefined } from 'util';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 interface Box {
     id: number;
@@ -29,7 +25,11 @@ interface Box {
   styleUrls: ['./table-list.component.scss']
 })
 export class TableListComponent implements OnInit{
+
+	@ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
 	private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
 	private modalDeleteMessage = "¿Estas seguro que desea eliminar esta mesa?";
 	private modalDeleteTitle = "Eliminar Mesa";
 	public modalRef: BsModalRef;
@@ -278,7 +278,10 @@ export class TableListComponent implements OnInit{
       this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe( success=> {
 				console.log("delete")
         this.getTables();
-      });
+      },
+			error => {
+				this.showModalError(this.serviceErrorTitle, <any>error);
+			});
     }
 	}
 	
@@ -302,10 +305,10 @@ export class TableListComponent implements OnInit{
 		)
 	}
 
-	showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+	showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
 	closeModal(){

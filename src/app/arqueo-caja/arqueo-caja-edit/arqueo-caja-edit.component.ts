@@ -1,21 +1,17 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-import { NgForm } from '@angular/forms/src/directives/ng_form';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
 import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
-import { CashRegister } from '../../../shared/models/cash-register';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { PaymentType } from '../../../shared/models/payment-type';
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 
 import { StringsFunctions } from '../../../shared/functions/stringsFunctions';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-arqueo-caja-edit',
@@ -24,9 +20,14 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class ArqueoCajaEditComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
   cashCountForm: FormGroup;
   public modalRef: BsModalRef;  
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalCancelTitle: string;
+  private modalCancelMessage: string;
   paymentTypes: PaymentType[];
   cashCount: ArqueoCaja;
   hasCashRegister = false;
@@ -84,7 +85,7 @@ export class ArqueoCajaEditComponent implements OnInit {
             this.cashCount.cashRegister = cashRegister.name;                                
           },
           error => {
-            this.showModalError(<any>error);
+            this.showModalError(this.serviceErrorTitle, <any>error);
           }
         );
 
@@ -172,7 +173,7 @@ export class ArqueoCajaEditComponent implements OnInit {
                 this.paymentDetail.push({ paymentTypeName: paymentType.name, paymentAmount: realAmount.amount });
               },
               error => {
-                this.showModalError(<any>error);
+                this.showModalError(this.serviceErrorTitle, <any>error);
               }
             )
           })
@@ -185,6 +186,10 @@ export class ArqueoCajaEditComponent implements OnInit {
         }));
         const typesOfPaymentsArray = this.formBuilder.array(typesOfPayments);
         this.cashCountForm.setControl('realAmount', typesOfPaymentsArray); 
+
+        this.cashCountForm.patchValue({
+          comment: this.cashCount.comment
+        });
       }
     )            
   }
@@ -201,14 +206,14 @@ export class ArqueoCajaEditComponent implements OnInit {
         cashCount => { this.cashCount = cashCount,
                       this.onBack()},
         error => { 
-          this.showModalError(<any>error)
+          this.showModalError(this.serviceErrorTitle, <any>error);
         });
   }
 
-  showModalError(errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = this.serviceErrorTitle;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   onBack(): void {
@@ -235,6 +240,22 @@ export class ArqueoCajaEditComponent implements OnInit {
       this.difference = this.realAmountTotal - this.estimatedAmount;
       console.log(this.difference)
     }
+  }
+
+  closeModal(){
+    this.modalRef.hide();
+    this.modalRef = null;
+  }
+
+  showModalCancel(template: TemplateRef<any>){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Cancelar Cambios";
+    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
+  }
+
+  cancel(){    
+    this.onBack();
+    this.closeModal();
   }
 
 }

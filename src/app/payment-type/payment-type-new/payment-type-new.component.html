@@ -1,14 +1,12 @@
 <ng-template #cancelTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title">Cancelar Cambios</h4>
-  </div>
-  <div class="modal-body">
-    ¿Está seguro que desea salir sin guardar los cambios?
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="cancel()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancel</button>
-  </div>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+      (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 <ng-template #nameInvalid>
   <div class="modal-header">

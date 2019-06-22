@@ -1,5 +1,4 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, OnInit, DoCheck, Input, Output, EventEmitter } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 
 @Component({
@@ -9,12 +8,13 @@ import { isNullOrUndefined } from 'util';
 })
 export class ErrorTemplateComponent implements OnInit, DoCheck {
 
-  errorTitle: string;
-  errorMessage: string;  
+  @Input() errorTitle: string;
+  @Input() errorMessage: string;  
+  @Output() close = new EventEmitter<string>();  
   errorMessageDefault: string = 'Ocurrió un problema con la conexión a la base de datos. \n\rIntenté de nuevo, si el problema persiste comuniquese con Soporte de BonAPP.'
   buttonOk: string = 'Ok';  
 
-  constructor(private modalRef: BsModalRef) { }
+  constructor() { }
 
   ngOnInit() {}
 
@@ -25,7 +25,7 @@ export class ErrorTemplateComponent implements OnInit, DoCheck {
   }
 
   closeModal(){   
-    this.modalRef.hide()
+    this.close.emit('');
   }
 
 }

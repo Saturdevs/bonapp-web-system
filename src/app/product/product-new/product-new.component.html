@@ -1,38 +1,20 @@
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+      (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
 <ng-template #priceNotMatch>
-  <div class="modal-header">
-    <h4 class="modal-title">Agregar Producto</h4>
-  </div>
-  <div class="modal-body">
-    El precio del producto no coincide con el precio del menor tamano. Se modificara el precio del producto para hacerlo coincidir.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModalAndContinue()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancelar</button>
-  </div>
+  <app-cancel-template [modalTitle]="modalPriceNotMatchTitle" [modalMessage]="modalPriceNotMatchMessage" (handleOkButton)="closeModalAndContinue()"
+      (handleCancelButton)="closeModal()">
+  </app-cancel-template>
 </ng-template>
-<ng-template #nameInvalid>
-  <div class="modal-header">
-    <h4 class="modal-title">Agregar Producto</h4>
-  </div>
-  <div class="modal-body">
-    Ya existe un producto con ese nombre, elija uno diferente.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModal()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancelar</button>
-  </div>
-</ng-template>
-<ng-template #duplicatedSizes>
-  <div class="modal-header">
-    <h4 class="modal-title">Agregar Producto</h4>
-  </div>
-  <div class="modal-body">
-    Existen tamanos duplicados, por favor corrija e intente nuevamente.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModal()">Ok</button>
-  </div>
-</ng-template>
+
 <div class="pageTitle">
   <div class="float-left">
     <header>
@@ -192,7 +174,7 @@
         </div>
       </div>
       <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
-        <button class="btn btn-md btn-primary" type="reset" (click)='onBack()'>Atras</button> 
+        <button class="btn btn-md btn-primary" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button> 
         <button class="btn btn-md btn-primary" [disabled]="productForm.invalid" type="submit" (click)="validateSizes()">Guardar</button>
       </div>    
     </form>

@@ -4,57 +4,50 @@
     </app-delete-template>
 </ng-template>
 
-<ng-template #noDelete>
-  <div class="modal-header">
-    <h4 class="modal-title">Eliminar Carta</h4>
-  </div>
-  <div class="modal-body">
-    No se puede eliminar la carta seleccionada porque tiene categorías asociadas.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModal()">Ok</button>
-  </div>
+<ng-template #errorTemplate>
+    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+    </app-error-template>
 </ng-template>
 
-    <div class="pageTitle">
-        <div style="float: left">
-            <header class="major">
-                    <h5>{{pageTitle}}</h5>
-            </header>
-        </div>
-        <div style="float: right">
-            <a [routerLink]="['newMenu']" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nueva Carta</a>
-        </div>
+<div class="pageTitle">
+    <div style="float: left">
+        <header class="major">
+                <h5>{{pageTitle}}</h5>
+        </header>
     </div>
-    <div class="ml-5 mr-5 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
-        <div class="row mb-2 customBox">
-            <form #form="ngForm" novalidate class="form-inline">
-                <h6 class="pt-2">Filtrar:</h6>
-                <div class="md-form form-group mr-0 ml-0 col-md-10 col-lg-10">
-                    <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
-                </div>
-            </form>    
-        </div>
-    
-        <div class="row">
-            <table class="table table-bordered table-hover customTable">
-                <thead class="primary-color customTableText">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Imagen</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="table-wrapper"  *ngIf='menus && menus.length'>
-                    <tr *ngFor='let menu of filteredMenus' >
-                        <td class="align-middle">{{ menu.name }}</td>
-                        <td class="align-middle">{{ menu.picture }}</td>                        
-                        <td class="align-middle">
-                            <a [routerLink]="['edit', menu._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
-                            <a (click) = "showModalDelete(deleteTemplate, noDelete, menu._id)" class="btn btn-red btn-sm">Eliminar</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div style="float: right">
+        <a [routerLink]="['newMenu']" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nueva Carta</a>
     </div>
+</div>
+<div class="ml-5 mr-5 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
+    <div class="row mb-2 customBox">
+        <form #form="ngForm" novalidate class="form-inline">
+            <h6 class="pt-2">Filtrar:</h6>
+            <div class="md-form form-group mr-0 ml-0 col-md-10 col-lg-10">
+                <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
+            </div>
+        </form>    
+    </div>
+
+    <div class="row">
+        <table class="table table-bordered table-hover customTable">
+            <thead class="primary-color customTableText">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-wrapper"  *ngIf='menus && menus.length'>
+                <tr *ngFor='let menu of filteredMenus' >
+                    <td class="align-middle">{{ menu.name }}</td>
+                    <td class="align-middle">{{ menu.picture }}</td>                        
+                    <td class="align-middle">
+                        <a [routerLink]="['edit', menu._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                        <a (click) = "showModalDelete(deleteTemplate, noDelete, menu._id)" class="btn btn-red btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

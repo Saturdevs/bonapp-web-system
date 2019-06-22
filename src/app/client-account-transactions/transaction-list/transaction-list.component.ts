@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -7,7 +7,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ClientService } from '../../../shared/services/client.service';
 import { Transaction } from '../../../shared/models/transaction';
 import { Client } from '../../../shared/models/client';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-transaction-list',
@@ -16,10 +15,13 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class TransactionListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = "Cuentas Corrientes";
-  private modalDeleteTitle: string = "Eliminar Transacción";
-  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Transacción?";
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   transactions: Transaction[];
   filteredTransactions: Transaction[];
@@ -28,20 +30,25 @@ export class TransactionListComponent implements OnInit {
   clientsWithTransactions: Client[];
   clientsSelect: Array<any> = [];
   selectedValue: string = '';
+  selectedClientName: String;
+  amount: number;
+  cantTransactions: number;
 
   constructor(private _clientService: ClientService,
               private route: ActivatedRoute,
               private modalService: BsModalService) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.route.data.subscribe(
       data => {
         this.transactions = data['transactions'];
         this.filteredTransactions = this.transactions;
+        this.clientsWithTransactions = data['clientsWithTransactions'];
+        this.calculateAmountAndCantTransactions(this.filteredTransactions);
       }
     );  
     
-    this.getClientsWithTransactions();    
+    this.buildClientsSelectArray();    
   }
 
   getTransactions(): void {
@@ -49,6 +56,7 @@ export class TransactionListComponent implements OnInit {
       .subscribe(transactions => {
         this.transactions = transactions;
         this.filteredTransactions = this.transactions;
+        this.calculateAmountAndCantTransactions(this.filteredTransactions);
       },
       error => {
         this.showModalError(this.serviceErrorTitle, <any>error);
@@ -56,27 +64,19 @@ export class TransactionListComponent implements OnInit {
     );
   }
 
-  getClientsWithTransactions(): void {
-    this._clientService.getClientsWithTransactions()
-      .subscribe(clients => {
-        this.clientsWithTransactions = clients;        
-
-        this.clientsSelect.push({ value: 'default', label: 'Todos', selected: true });
-        this.clientsWithTransactions.map(client => {
-          this.clientsSelect.push({value: client._id, label: client.name})
-        });        
-        this.selectedValue = 'default';        
-      },
-      error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
-      }
-    );
+  buildClientsSelectArray(): void {
+    this.clientsSelect.push({ value: 'default', label: 'Todos', selected: true });
+    this.clientsWithTransactions.map(client => {
+      this.clientsSelect.push({value: client._id, label: client.name})
+    });        
+    this.selectedValue = 'default';  
   }
 
   getTransactionsByClient(clientId) {
     this._clientService.getTransactionsByClient(clientId)
       .subscribe(transactions => {
         this.filteredTransactions = transactions;
+        this.calculateAmountAndCantTransactions(this.filteredTransactions);
       },
       error => {
         this.showModalError(this.serviceErrorTitle, <any>error);
@@ -84,18 +84,34 @@ export class TransactionListComponent implements OnInit {
     );
   }
 
-  filterTransactions(clientId): void {
+  filterTransactions(clientId): void {    
     if (clientId === 'default') {
       this.getTransactions();
     }
     else {
+      let selectedClient = this.clientsWithTransactions.find(c => c._id == clientId);
+      this.selectedClientName = selectedClient.name;      
       this.getTransactionsByClient(clientId);
     }    
+  }
+
+  calculateAmountAndCantTransactions(transactions: Array<Transaction>) {
+    this.amount = 0;
+    this.cantTransactions = 0;
+    transactions.map(t => {
+      if (t.deleted === false) {
+          this.amount += t.amount;
+          this.cantTransactions += 1;
+        }
+      }
+    )
   }
 
   showModalDelete(template: TemplateRef<any>, idClient: any, idTransaction: Number){
     this.idClientTransactionDelete = idClient;
     this.idTransactionDelete = idTransaction;
+    this.modalDeleteTitle = "Eliminar Transacción";
+    this.modalDeleteMessage = "¿Seguro desea eliminar esta Transacción?";
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 
@@ -113,6 +129,7 @@ export class TransactionListComponent implements OnInit {
             if (transaction._id === this.idTransactionDelete) 
             {
               transaction.deleted = true; 
+              client.balance -= transaction.amount;              
               return;             
             }
           })
@@ -120,17 +137,23 @@ export class TransactionListComponent implements OnInit {
           this._clientService.updateClient(client).subscribe(
             success=> {
               this.getTransactions();
+            },
+            error => {
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           )
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       );
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   reloadItems(event) {

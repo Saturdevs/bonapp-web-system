@@ -10,6 +10,12 @@
     (close)="closeModal()">
   </app-delete-template>
 </ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
 <!-- Grid Tables -->
 
 <div class="row">

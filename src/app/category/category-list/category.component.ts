@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -10,7 +10,6 @@ import { MenuService } from '../../../shared/services/menu.service';
 import { Menu } from '../../../shared/models/menu';
 import { Product } from '../../../shared/models/product';
 import { ProductService } from '../../../shared/services/product.service';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 
 @Component({
@@ -20,10 +19,13 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class CategoryComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = 'Categorías';
-  private serviceErrorTitle = 'Error de Servicio';    
-  private modalDeleteTitle: string = "Eliminar Categoría";
-  private modalDeleteMessage: string = "¿Seguro desea eliminar esta Categoría?";
+  private serviceErrorTitle = 'Error de Servicio';   
+  private modalErrorTittle: string;
+  private modalErrorMessage: string; 
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   filteredCategories: Category[];
   categories: Category[];
@@ -69,35 +71,41 @@ export class CategoryComponent implements OnInit {
 
   getCategories(): void {
     this.categoryService.getCategoriesWithMenu()
-      .subscribe(categories => {
-                  this.categories = categories;
-                  this.filteredCategories = this.categories;
-                },
-                error => { 
-                  this.showModalError(this.serviceErrorTitle, <any>error);                             
-                });
+      .subscribe(
+        categories => {
+          this.categories = categories;
+          this.filteredCategories = this.categories;
+        },
+        error => { 
+          this.showModalError(this.serviceErrorTitle, <any>error);                             
+        });
   }
 
   getCategoriesByMenu(idMenu): void {
     this.categoryService.getCategoriesByMenu(idMenu)
-      .subscribe(categories => {
-        this.categories = categories;
-        this.filteredCategories = this.categories;
+      .subscribe(
+        categories => {
+          this.categories = categories;
+          this.filteredCategories = this.categories;
         },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error); 
-      }
+        error => { 
+          this.showModalError(this.serviceErrorTitle, <any>error); 
+        }
       )
   }
 
   async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idCategory: any){
-    this.idCategoryDelete = idCategory;
+    this.idCategoryDelete = idCategory;    
     let canDelete = this.categoryService.validateCategoriesBeforeChanges(this.idCategoryDelete);
     if (await canDelete.then(x=>x == true)){
+      this.modalDeleteTitle = "Eliminar Categoría";
+      this.modalDeleteMessage = "¿Seguro desea eliminar esta Categoría?";
       this.modalRef = this.modalService.show(templateDelete, {backdrop: true});
     }
     else{
-      this.modalRef = this.modalService.show(templateNoDelete, {backdrop: true});
+      let noDeleteTittle = "Eliminar Categoría";
+      let noDeleteMessage = "No se puede eliminar la categoría seleccionada porque tiene productos asociados.";
+      this.showModalError(noDeleteTittle, noDeleteMessage);
     }
   }
 
@@ -114,14 +122,17 @@ export class CategoryComponent implements OnInit {
     if (this.closeModal()){
       this.categoryService.deleteCategory(this.idCategoryDelete).subscribe( success=> {
         this.getCategories();
+      },
+      error => { 
+        this.showModalError(this.serviceErrorTitle, <any>error); 
       });
     }
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){

@@ -18,6 +18,7 @@ import { TransactionResolverService } from '../client-account-transactions/trans
 import { TransactionDetailResolverService } from '../client-account-transactions/transaction-detail/transaction-detail-resolver.service';
 import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
 import { PaymentTypeResolverService } from '../payment-type/payment-type-list/payment-type-resolver.service';
+import { ClientWithTransactionsResolverService } from '../client-account-transactions/transaction-list/client-with-transactions-resolver.service';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { PaymentTypeResolverService } from '../payment-type/payment-type-list/pa
             path: 'accountTransactions',
             component: TransactionListComponent,   
             resolve: {
-              transactions: TransactionResolverService
+              transactions: TransactionResolverService,
+              clientsWithTransactions: ClientWithTransactionsResolverService
             },        
             children: [
               {

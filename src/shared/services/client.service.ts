@@ -49,7 +49,7 @@ export class ClientService {
   }
 
   getTransactionsByClient(idClient): Observable<Transaction[]> {
-    return this.apiService.get(`/client/${idClient}/transaction`)
+    return this.apiService.get(`/client/${idClient}/transactions`)
       .map(data => data.transactions)
       .catch(this.handleError);
   }

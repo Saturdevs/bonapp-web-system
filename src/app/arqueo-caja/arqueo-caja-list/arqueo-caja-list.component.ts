@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -11,10 +10,6 @@ import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { CashRegister } from '../../../shared/models/cash-register';
 
-import { DatePickerComponent } from '../../../shared/components/date-picker/date-picker.component';
-import { error } from 'util';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
-
 @Component({
   selector: 'app-arqueo-caja-list',
   templateUrl: './arqueo-caja-list.component.html',
@@ -22,10 +17,13 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class ArqueoCajaListComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Arqueos de Caja";
   private serviceErrorTitle = 'Error de Servicio';
-  private modalDeleteTitle: string = "Eliminar Arqueo";
-  private modalDeleteMessage: string = "¿Seguro desea eliminar este Arqueo?";
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
+  private modalDeleteTitle: string;
+  private modalDeleteMessage: string;
   public modalRef: BsModalRef;
   arqueos: ArqueoCaja[];
   filteredArqueos: ArqueoCaja[];
@@ -57,7 +55,7 @@ export class ArqueoCajaListComponent implements OnInit {
               arqueo.cashRegister = cashRegister.name;
             },
             error => {
-              this.showModalError(<any>error);
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
 
@@ -97,7 +95,7 @@ export class ArqueoCajaListComponent implements OnInit {
               arqueo.cashRegister = cashRegister.name;
             },
             error => {
-              this.showModalError(<any>error);
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
 
@@ -121,13 +119,15 @@ export class ArqueoCajaListComponent implements OnInit {
         this.filteredArqueos = this.arqueos;
       },
       error => {
-        this.showModalError(<any>error);
+        this.showModalError(this.serviceErrorTitle, <any>error);
       }
     );
   }
 
   showModalDelete(template: TemplateRef<any>, idArqueo: any){
     this.idArqueoDelete = idArqueo;    
+    this.modalDeleteTitle = "Eliminar Arqueo";
+    this.modalDeleteMessage = "¿Seguro desea eliminar este Arqueo?";
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 
@@ -137,10 +137,10 @@ export class ArqueoCajaListComponent implements OnInit {
     return true;     
   }
 
-  showModalError(errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = this.serviceErrorTitle;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   deleteArqueo(){
@@ -153,12 +153,12 @@ export class ArqueoCajaListComponent implements OnInit {
               this.getArqueos();
             },
             error => { 
-              this.showModalError(<any>error)
+              this.showModalError(this.serviceErrorTitle, <any>error);
             }
           );
         },
         error => { 
-          this.showModalError(<any>error)
+          this.showModalError(this.serviceErrorTitle, <any>error);
         }
       );
     }

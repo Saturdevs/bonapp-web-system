@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,7 +6,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SectionService } from '../../../shared/services/section.service';
 import { Section } from '../../../shared/models/section';
-import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
 @Component({
   selector: 'app-section-list-config',
@@ -15,8 +14,11 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class SectionListConfigComponent implements OnInit {
 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Salas";
   private serviceErrorTitle = 'Error de Servicio';
+  private modalErrorTittle: string;
+  private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Sala";
   private modalDeleteMessage: string = "¿Está seguro que desea eliminar la Sala?";
   public modalRef: BsModalRef;
@@ -69,10 +71,10 @@ export class SectionListConfigComponent implements OnInit {
     this.modalRef = this.modalService.show(template, {backdrop: true});
   }
 
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
-    this.modalRef.content.errorTitle = errorTitleReceived;
-    this.modalRef.content.errorMessage = errorMessageReceived;
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
   closeModal(){
@@ -85,6 +87,9 @@ export class SectionListConfigComponent implements OnInit {
     if (this.closeModal()){
       this._sectionService.deleteSection(this.idSectionDelete).subscribe( success=> {
         this.getSections();
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
       });
     }
   }
