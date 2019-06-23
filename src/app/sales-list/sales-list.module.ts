@@ -19,6 +19,7 @@ import { CashRegisterResolverService } from '../cash-register/cash-register-list
 import { PaymentTypeResolverService } from '../payment-type/payment-type-list/payment-type-resolver.service';
 import { ArqueoCajaResolverService } from '../arqueo-caja/arqueo-caja-list/arqueo-caja-resolver.service';
 import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/arqueo-caja-edit-resolver.service';
+import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 
 @NgModule({
   imports: [
@@ -47,7 +48,7 @@ import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/a
                 component: CashFlowsEditComponent,
                 resolve: { 
                           cashFlow: CashFlowEditResolverService, 
-                          cashRegisters: CashRegisterResolverService, 
+                          cashRegisters: CashRegisterAvailablesResolverService, 
                           paymentTypes: PaymentTypeResolverService 
                         },
                 outlet: 'edit'
@@ -56,7 +57,7 @@ import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/a
                 path: 'newCashFlow',
                 component: CashFlowsNewComponent,
                 resolve: { 
-                          cashRegisters: CashRegisterResolverService, 
+                          cashRegisters: CashRegisterAvailablesResolverService, 
                           paymentTypes: PaymentTypeResolverService 
                          },
                 outlet: 'edit'
@@ -81,7 +82,7 @@ import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/a
                 component: ArqueoCajaEditComponent,
                 resolve: {
                   arqueo: ArqueoCajaEditResolverService,
-                  cashRegisters: CashRegisterResolverService, 
+                  cashRegisters: CashRegisterAvailablesResolverService, 
                   paymentTypes: PaymentTypeResolverService 
                 },
                 outlet: 'edit'
@@ -90,7 +91,7 @@ import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/a
                 path: 'newCashCount',
                 component: ArqueoCajaNewComponent,
                 resolve: {
-                  cashRegisters: CashRegisterResolverService
+                  cashRegisters: CashRegisterAvailablesResolverService
                 },
                 outlet: 'edit'
               },

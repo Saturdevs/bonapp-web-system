@@ -8,6 +8,7 @@ import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
 import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
 import { CashRegister } from '../../../shared/models/cash-register';
 import { isNullOrUndefined, error } from 'util';
+import { CashRegisterService } from '../../../shared';
 
 @Component({
   selector: 'app-arqueo-caja-new',
@@ -42,6 +43,7 @@ export class ArqueoCajaNewComponent implements OnInit {
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _arqueoService: ArqueoCajaService,
+              private _cashRegister: CashRegisterService,
               private modalService: BsModalService) { }
 
   ngOnInit() {
@@ -55,19 +57,24 @@ export class ArqueoCajaNewComponent implements OnInit {
       }
     ) 
     
-    if (this.cashRegisters.length != 0)
-    {
+    this.shouldDisplayCashRegisterCombo();  
+  }
+
+  private shouldDisplayCashRegisterCombo() {
+    if (this.cashRegisters.length != 0) {
       if (this.cashRegisters.length > 1) {
-        this.lengthCashRegister = true;        
-      } else {
+        this.lengthCashRegister = true;
+      }
+      else {
         this.newArqueo.cashRegisterId = this.cashRegisters[0]._id;
         this.lengthCashRegister = false;
         this.hasCashRegister = false;
       }
-    } else {
-      this.lengthCashRegister = false
+    }
+    else {
+      this.lengthCashRegister = false;
       this.hasCashRegister = false;
-    }        
+    }
   }
 
   saveArqueo(){    

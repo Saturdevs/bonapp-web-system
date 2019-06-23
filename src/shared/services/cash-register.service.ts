@@ -26,6 +26,12 @@ export class CashRegisterService {
            .catch(this.handleError);
   }
 
+  getAvailables(): Observable<CashRegister[]> {
+    return this.apiService.get('/cashRegister/availables')
+           .map(data => data.cashRegisters)
+           .catch(this.handleError);
+  }
+
   getCashRegister(idCashRegister): Observable<CashRegister> {
     return this.apiService.get(`/cashRegister/${idCashRegister}`)
            .map(data => data.cashRegister);

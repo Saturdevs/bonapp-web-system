@@ -38,6 +38,7 @@ export class CashFlowsNewComponent implements OnInit {
   showMessageType = false;
   typesArray: Array<string> = new Array("Ingreso", "Egreso");
   cashCount: ArqueoCaja;
+  lengthCashRegister: Boolean;
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
@@ -63,6 +64,25 @@ export class CashFlowsNewComponent implements OnInit {
       }
     )
 
+    this.shouldDisplayCashRegisterCombo(); 
+
+  }
+
+  private shouldDisplayCashRegisterCombo() {
+    if (this.cashRegisters.length != 0) {
+      if (this.cashRegisters.length > 1) {
+        this.lengthCashRegister = true;
+      }
+      else {
+        this.newCashFlow.cashRegisterId = this.cashRegisters[0]._id;
+        this.lengthCashRegister = false;
+        this.hasCashRegister = false;
+      }
+    }
+    else {
+      this.lengthCashRegister = false;
+      this.hasCashRegister = false;
+    }
   }
 
   saveCashFlowIntoCashCount(cashFlow: CashFlow) {

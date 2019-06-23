@@ -18,7 +18,7 @@ import { ProductResolverService } from '../product/product-list/product-resolver
 import { MenuResolverService } from '../menu/menu-resolver.service';
 import { CategoryResolverService } from '../category/category-list/category-resolver.service';
 import { PaymentTypeResolverService } from '../payment-type/payment-type-list/payment-type-resolver.service';
-import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
+import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 
 @NgModule({
   imports: [
@@ -50,7 +50,7 @@ import { CashRegisterResolverService } from '../cash-register/cash-register-list
                       products: ProductResolverService,
                       categories: CategoryResolverService,
                       menus: MenuResolverService,
-                      cashRegisters: CashRegisterResolverService,
+                      cashRegisters: CashRegisterAvailablesResolverService,
                       paymentTypes: PaymentTypeResolverService
                     }
           },

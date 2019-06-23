@@ -62,7 +62,7 @@
           El Medio de Pago es requerido.
         </div>
         
-        <div class="form-group" [class.has-error]="showMessageCashRegister">
+        <div class="form-group" [class.has-error]="showMessageCashRegister" *ngIf="lengthCashRegister === true">
             <label>Caja:</label>
             <div class="select-wrapper">
               <select #transactionCashRegister="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="showMessageCashRegister" name="transactionCashRegister" 

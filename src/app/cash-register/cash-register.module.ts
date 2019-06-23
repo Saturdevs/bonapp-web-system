@@ -10,6 +10,7 @@ import { CashRegisterListComponent } from './cash-register-list/cash-register-li
 import { CashRegisterService } from '../../shared/index';
 import { CashRegisterResolverService } from './cash-register-list/cash-register-resolver.service';
 import { CashRegisterEditResolverService } from './cash-register-edit/cash-register-edit-resolver.service';
+import { CashRegisterAvailablesResolverService } from './resolvers/cash-register-availables-resolver.service';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { CashRegisterEditResolverService } from './cash-register-edit/cash-regis
   providers: [
     CashRegisterService,
     CashRegisterResolverService,
+    CashRegisterAvailablesResolverService,
     CashRegisterEditResolverService
   ]
 })

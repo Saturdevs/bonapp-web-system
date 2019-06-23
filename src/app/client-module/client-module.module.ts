@@ -16,9 +16,9 @@ import { ClientResolverService } from '../client/client-list/client-resolver.ser
 import { ClientEditResolverService } from '../client/client-edit/client-edit-resolver.service';
 import { TransactionResolverService } from '../client-account-transactions/transaction-list/transaction-resolver.service';
 import { TransactionDetailResolverService } from '../client-account-transactions/transaction-detail/transaction-detail-resolver.service';
-import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
 import { PaymentTypeResolverService } from '../payment-type/payment-type-list/payment-type-resolver.service';
 import { ClientWithTransactionsResolverService } from '../client-account-transactions/transaction-list/client-with-transactions-resolver.service';
+import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 
 @NgModule({
   imports: [
@@ -77,7 +77,7 @@ import { ClientWithTransactionsResolverService } from '../client-account-transac
                 path: 'newTransaction',
                 component: TransactionNewComponent,
                 resolve: {
-                  cashRegisters: CashRegisterResolverService, 
+                  cashRegisters: CashRegisterAvailablesResolverService, 
                   paymentTypes: PaymentTypeResolverService,
                   clients: ClientResolverService
                 },

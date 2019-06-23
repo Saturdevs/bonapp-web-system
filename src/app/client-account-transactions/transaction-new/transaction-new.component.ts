@@ -36,6 +36,7 @@ export class TransactionNewComponent implements OnInit {
   showMessagePaymentType = false;
   hasClient = true;
   showMessageClient = false;
+  lengthCashRegister: Boolean;
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
@@ -67,6 +68,24 @@ export class TransactionNewComponent implements OnInit {
       }
     )
 
+    this.shouldDisplayCashRegisterCombo();
+  }
+
+  private shouldDisplayCashRegisterCombo() {
+    if (this.cashRegisters.length != 0) {
+      if (this.cashRegisters.length > 1) {
+        this.lengthCashRegister = true;
+      }
+      else {
+        this.newTransaction.cashRegister = this.cashRegisters[0]._id;
+        this.lengthCashRegister = false;
+        this.hasCashRegister = false;
+      }
+    }
+    else {
+      this.lengthCashRegister = false;
+      this.hasCashRegister = false;
+    }
   }
 
   saveTransaction(){
