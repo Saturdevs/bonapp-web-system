@@ -23,16 +23,14 @@ import { OrderNewResolverService } from './order-new/order-new-resolver.service'
     OrderNewComponent, 
     OrderDetailComponent, 
     OrderListComponent, 
-    OrderCloseComponent, 
-    OrderPreComponent
+    OrderCloseComponent
   ],
   providers: [
     OrderService,
     OrderNewResolverService
   ],
   exports: [
-    OrderNewComponent,
-    OrderPreComponent
+    OrderNewComponent
   ]
 })
 export class OrderModule { }

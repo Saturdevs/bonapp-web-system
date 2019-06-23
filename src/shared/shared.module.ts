@@ -10,6 +10,7 @@ import { SharedService } from './services/shared.service';
 import { ErrorTemplateComponent } from '../shared/components/error-template/error-template.component';
 import { DeleteTemplateComponent } from '../shared/components/delete-template/delete-template.component';
 import { CancelTemplateComponent } from './components/cancel-template/cancel-template.component';
+import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { CancelTemplateComponent } from './components/cancel-template/cancel-tem
   declarations: [
     ErrorTemplateComponent,
     DeleteTemplateComponent,
-    CancelTemplateComponent
+    CancelTemplateComponent,
+    OrderPreComponent
   ],
   providers: [ 
     ApiService,
@@ -36,7 +38,8 @@ import { CancelTemplateComponent } from './components/cancel-template/cancel-tem
     ModalModule,
     ErrorTemplateComponent,
     DeleteTemplateComponent,
-    CancelTemplateComponent
+    CancelTemplateComponent,
+    OrderPreComponent
   ],
   entryComponents: [
     ErrorTemplateComponent
