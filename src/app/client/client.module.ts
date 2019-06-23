@@ -10,6 +10,7 @@ import { ClientEditComponent } from './client-edit/client-edit.component';
 import { ClientService } from '../../shared/services/client.service';
 import { ClientResolverService } from './client-list/client-resolver.service';
 import { ClientEditResolverService } from './client-edit/client-edit-resolver.service';
+import { ClientCurrentAccountResolverService } from './resolvers/client-current-account-resolver.service';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { ClientEditResolverService } from './client-edit/client-edit-resolver.se
   providers: [
     ClientService,
     ClientResolverService,
-    ClientEditResolverService
+    ClientEditResolverService,
+    ClientCurrentAccountResolverService
   ]
 })
 export class ClientModule { }

@@ -25,6 +25,12 @@ export class ClientService {
            .catch(this.handleError);
   }
 
+  getWithCurrentAccountEnabled(): Observable<Client[]> {
+    return this.apiService.get('/client/withCurrentAccountEnabled')
+           .map(data => data.clients)
+           .catch(this.handleError);
+  }
+
   getClient(idClient): Observable<Client> {
     return this.apiService.get(`/client/${idClient}`)
         .map(data => data.client);
