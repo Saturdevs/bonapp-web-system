@@ -56,7 +56,7 @@ export class CashRegisterService {
   }
 
   unSetDefaultCashRegister(idCashRegister): Observable<any> {
-    return this.http.get(`${environment.api_url}/cashRegister/unSetDefaultCashRegister/${idCashRegister}`, { headers: new HttpHeaders({'Content-Type': 'application/json', 'Accept': 'application/json'}) })
+    return this.apiService.put(`/cashRegister/unSetDefaultCashRegister/${idCashRegister}`, {})
       .map(data => data)
       .catch(this.handleError);
   }
