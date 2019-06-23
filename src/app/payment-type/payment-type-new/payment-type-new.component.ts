@@ -45,7 +45,7 @@ export class PaymentTypeNewComponent implements OnInit {
       name: ['', Validators.required],      
       available: true   
     });
-    this.currentCollection = Collections[5];    
+    this.currentCollection = Collections.PaymentType;    
   } 
 
   validateName(){

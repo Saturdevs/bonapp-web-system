@@ -51,7 +51,7 @@ export class CategoryNewComponent implements OnInit {
     this.newCategory = new Category();
     this.newCategory.menuId = "default";
     this.getMenus();
-    this.currentCollection = Collections[1]; 
+    this.currentCollection = Collections.Category; 
   }
 
   saveCategory(){

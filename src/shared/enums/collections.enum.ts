@@ -1,13 +1,13 @@
 export enum Collections {
-    cashregister,
-    category,
-    client,
-    menu,
-    order,
-    paymentType,
-    product,
-    section,
-    size,
-    table,
-    user
-  }
+  CashRegister = 'cashRegister',
+  Category = 'category',
+  Client = 'client',
+  Menu = 'menu',
+  Order = 'order',
+  PaymentType = 'paymentType',
+  Product = 'product',
+  Section = 'section',
+  Size = 'size',
+  Table = 'table',
+  User = 'user'
+}

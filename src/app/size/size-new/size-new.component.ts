@@ -45,7 +45,7 @@ export class SizeNewComponent implements OnInit {
       name: ['', Validators.required],      
       available: true   
     });
-    this.currentCollection = Collections[8];
+    this.currentCollection = Collections.Size;
   }
 
   saveSize() {

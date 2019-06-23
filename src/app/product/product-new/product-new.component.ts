@@ -86,7 +86,7 @@ export class ProductNewComponent implements OnInit {
       options: this.formBuilder.array([]),
       available: true
     });
-    this.currentCollection = Collections.product;
+    this.currentCollection = Collections.Product;
     this.files = [];
     this.uploadInput = new EventEmitter<UploadInput>();
     this.humanizeBytes = humanizeBytes;

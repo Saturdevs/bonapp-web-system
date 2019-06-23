@@ -50,7 +50,8 @@ export class MenuNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.newMenu = new Menu();     
-    this.currentCollection = Collections[3]; 
+    this.currentCollection = Collections.Menu; 
+    console.log(this.currentCollection)
   }
 
 
