@@ -17,10 +17,11 @@ export class CashRegisterListComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Cajas";
   private serviceErrorTitle = 'Error de Servicio';
+  private cantDeleteDefaultLabel = 'La caja por defecto no puede ser eliminada.'
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string;
-  private modalDeleteMessage: string;
+  private modalDeleteMessage: string;  
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
   filteredCashRegisters: CashRegister[];
