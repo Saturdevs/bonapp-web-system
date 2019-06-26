@@ -4,8 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { SectionService } from '../../../shared/services/section.service';
-import { Section } from '../../../shared/models/section';
+import { TableService, SectionService, Section } from '../../../shared';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-section-list-config',
@@ -15,6 +15,7 @@ import { Section } from '../../../shared/models/section';
 export class SectionListConfigComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('deleteTemplate') deleteTemplate:TemplateRef<any>; 
   pageTitle: string = "Salas";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -36,6 +37,7 @@ export class SectionListConfigComponent implements OnInit {
   }
 
   constructor(private _sectionService: SectionService,
+              private _tableService: TableService,
               private route: ActivatedRoute,
               private modalService: BsModalService) { }
 
@@ -81,6 +83,26 @@ export class SectionListConfigComponent implements OnInit {
     this.modalRef.hide();
     this.modalRef = null;   
     return true;     
+  }
+
+  validate(sectionId: string) {
+    this._tableService.getTablesBySection(sectionId).subscribe(
+      tables => {
+        if (tables.length > 0 && !isNullOrUndefined(tables))
+        {
+          let errorTitle = 'Eliminar Sala';
+          let errorMessage = 'La sala no puede ser eliminada porque todavía tiene mesas.';
+          this.showModalError(errorTitle, errorMessage);          
+        }
+        else
+        {
+          this.showModalDelete(this.deleteTemplate, sectionId);          
+        }
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, <any>error);
+      }
+    )
   }
 
   deleteSection(){
