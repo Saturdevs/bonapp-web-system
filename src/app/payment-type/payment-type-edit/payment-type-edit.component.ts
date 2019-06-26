@@ -24,6 +24,7 @@ export class PaymentTypeEditComponent implements OnInit {
   private modalCancelMessage: String;
   paymentType: PaymentType;
   paymentTypeNameModified: String;
+  paymentTypeDefault: Boolean;
   paymentTypeForm: FormGroup;
 
   constructor(private _route: ActivatedRoute,
@@ -35,7 +36,8 @@ export class PaymentTypeEditComponent implements OnInit {
   ngOnInit() {
     this.paymentTypeForm = this.formBuilder.group({
       name: ['', Validators.required],      
-      available: ''   
+      available: '',
+      default: ''    
     });
 
     this._route.data.subscribe(
@@ -51,6 +53,19 @@ export class PaymentTypeEditComponent implements OnInit {
     this._paymentTypeService.updatePaymentType(paymentTypeUpdate).subscribe(
         paymentType => { 
           this.paymentType = paymentType;
+          if (this.paymentTypeDefault === false && paymentTypeUpdate.default !== this.paymentTypeDefault)
+          {
+            this._paymentTypeService.unSetDefaultPaymentType(paymentTypeUpdate._id).subscribe(
+              data =>
+              {
+                console.log(data);
+              },
+              error =>
+              {
+                this.showModalError(this.serviceErrorTitle, <any>error);
+              }
+            );
+          }
           this.onBack();
         },
         error => { 
@@ -84,10 +99,41 @@ export class PaymentTypeEditComponent implements OnInit {
   onPaymentTypeRetrieved(paymentType: PaymentType): void {
     this.paymentType = paymentType;
     this.paymentTypeNameModified = this.paymentType.name;
+    this.paymentTypeDefault = this.paymentType.default;
     this.paymentTypeForm.patchValue({
       name: this.paymentType.name,
-      available: this.paymentType.available
+      available: this.paymentType.available,
+      default: this.paymentType.default
     });
+
+    if (this.paymentTypeForm.get('default').value === true)
+    {
+      this.paymentTypeForm.get('default').disable();
+      this.paymentTypeForm.get('available').disable();
+    }
+    else
+    {
+      this.paymentTypeForm.get('available').enable();
+      if (this.paymentTypeForm.get('available').value === true)
+      {
+        this.paymentTypeForm.get('default').enable();
+      }
+      else
+      {
+        this.paymentTypeForm.get('default').disable();
+      }
+    }
+  }
+
+  handleClickAvailable() {
+    if (this.paymentTypeForm.get('available').value === true)
+    {
+      this.paymentTypeForm.get('default').enable();
+    }
+    else
+    {
+      this.paymentTypeForm.get('default').disable();
+    }
   }
 
   onBack() {

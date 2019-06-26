@@ -20,6 +20,7 @@ import { PaymentTypeResolverService } from '../payment-type/payment-type-list/pa
 import { ArqueoCajaResolverService } from '../arqueo-caja/arqueo-caja-list/arqueo-caja-resolver.service';
 import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/arqueo-caja-edit-resolver.service';
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
+import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
 
 @NgModule({
   imports: [
@@ -58,7 +59,7 @@ import { CashRegisterAvailablesResolverService } from '../cash-register/resolver
                 component: CashFlowsNewComponent,
                 resolve: { 
                           cashRegisters: CashRegisterAvailablesResolverService, 
-                          paymentTypes: PaymentTypeResolverService 
+                          paymentTypes: PaymentTypeAvailableResolverService 
                          },
                 outlet: 'edit'
               },

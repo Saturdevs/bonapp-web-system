@@ -10,6 +10,7 @@ import { PaymentTypeEditComponent } from './payment-type-edit/payment-type-edit.
 import { PaymentTypeService } from '../../shared/index';
 import { PaymentTypeResolverService } from './payment-type-list/payment-type-resolver.service';
 import { PaymentTypeEditResolverService } from './payment-type-edit/payment-type-edit-resolver.service';
+import { PaymentTypeAvailableResolverService } from './resolvers/payment-type-available-resolver.service';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { PaymentTypeEditResolverService } from './payment-type-edit/payment-type
   providers: [
     PaymentTypeService,
     PaymentTypeResolverService,
-    PaymentTypeEditResolverService
+    PaymentTypeEditResolverService,
+    PaymentTypeAvailableResolverService
   ]
 })
 export class PaymentTypeModule { }

@@ -59,6 +59,12 @@ export class PaymentTypeService {
           .catch(this.handleError);
   }
 
+  unSetDefaultPaymentType(idPaymentType): Observable<any> {
+    return this.apiService.put(`/paymentType/unSetDefaultPaymentType/${idPaymentType}`, {})
+      .map(data => data)
+      .catch(this.handleError);
+  }
+
   private handleError(err: HttpErrorResponse){
     console.log(err.message);
     return Observable.throw(err.message);
