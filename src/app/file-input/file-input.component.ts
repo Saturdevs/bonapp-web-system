@@ -24,10 +24,13 @@ export class FileInputComponent implements OnInit  {
 
   @Input() type: string;
   @Input() subtype: string;
-  @Output() validator = new EventEmitter<string>();
+  @Output() validator = new EventEmitter<Array<string>>();
 
   ngOnInit() {
     this.newFile = new File();
+    this.files = [];
+    this.uploadInput = new EventEmitter<UploadInput>();
+    this.humanizeBytes = humanizeBytes;
   }
 
   ngAfterContentInit(){
@@ -36,9 +39,6 @@ export class FileInputComponent implements OnInit  {
     }
   }
   constructor(private _fileInputService:  FileInputService) {
-      this.files = [];
-      this.uploadInput = new EventEmitter<UploadInput>();
-      this.humanizeBytes = humanizeBytes;
     }
 
   showFiles() {
@@ -56,8 +56,8 @@ export class FileInputComponent implements OnInit  {
         let reader = new FileReader();
         if(event.target.files && event.target.files.length > 0) {
           let file = event.target.files[0]; 
-          this.validator.emit(file.name);
           await this.loadFileReader(reader, file);
+          this.validator.emit([file.name,reader.result]);
           this.newFile.data = reader.result.split(',')[1];
           this.newFile.name = file.name;
           this.newFile.type = file.type;
@@ -70,7 +70,7 @@ export class FileInputComponent implements OnInit  {
           reader.onerror = () => {
             reader.abort();
           };
-          reader.onload = () => {
+          reader.onload = (e) => {
             resolve(reader.result);
           };
           reader.readAsDataURL(file);

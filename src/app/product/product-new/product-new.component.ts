@@ -34,6 +34,7 @@ export class ProductNewComponent implements OnInit {
   private modalCancelMessage: string;
   private modalPriceNotMatchTitle: string;
   private modalPriceNotMatchMessage: string;
+  private newProductPictureData: string;
   pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();
@@ -237,9 +238,10 @@ export class ProductNewComponent implements OnInit {
     }
   }
 
-  onNotified(validator: string) {
-    console.log(validator);
-    validator != '' ? this.validPicture = validator: this.validPicture = '';
+  onNotified(validator: Array<string>) {
+    //console.log(validator);
+    validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
+    validator[1] != '' ? this.newProductPictureData = validator[1]: this.newProductPictureData = '';    
     this.pictureTouched = true;
     if(this.validPicture != ''){
       this.productForm.controls.picture.setValue(this.validPicture);

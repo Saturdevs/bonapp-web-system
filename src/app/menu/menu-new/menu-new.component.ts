@@ -32,6 +32,7 @@ export class MenuNewComponent implements OnInit {
   private modalErrorMessage: string;
   private modalCancelTitle: string;
   private modalCancelMessage: String;
+  private newMenuPictureData: string = '';
   pageTitle: string = 'New Menu';
   menus: Menu[];   
   newMenu: Menu;
@@ -68,9 +69,10 @@ export class MenuNewComponent implements OnInit {
     
   }
 
-  onNotified(validator: string) {
+  onNotified(validator: Array<string>) {
     console.log(validator);
-    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
+    validator[1] != '' ? this.newMenuPictureData = validator[1]: this.newMenuPictureData = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
       this.newMenu.picture =this.validPicture;

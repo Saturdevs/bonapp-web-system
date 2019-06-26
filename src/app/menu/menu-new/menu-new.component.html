@@ -41,13 +41,13 @@
         </div>
 
         <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'"></app-file-input>
-        <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+        <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
           La imagen de la carta es requerida.
         </div>        
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="form.invalid" type="submit" value="Guardar" class="special" (click)="validateName()"/></li>
+            <li><input [disabled]="form.invalid || validPicture === ''" type="submit" value="Guardar" class="special" (click)="validateName()"/></li>
             <li><input type="button" value="Cancelar" (click)="showModalCancel(cancelTemplate)" /></li>
           </ul>
         </div>    
@@ -55,7 +55,7 @@
       </form>
     </div>
     <div class="col-md-6">
-      <img [src]="newMenu.picture"  onerror="this.src='../../../assets/img/No_image_available.svg'"/>
+      <img [src]="newMenuPictureData"  onerror="this.src='../../../assets/img/No_image_available.svg'"/>
     </div>
   </div>
 </div>
