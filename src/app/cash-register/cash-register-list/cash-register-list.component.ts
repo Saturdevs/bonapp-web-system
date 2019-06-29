@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { CashRegister } from '../../../shared/models/cash-register';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-cash-register-list',
@@ -21,7 +22,8 @@ export class CashRegisterListComponent implements OnInit {
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string;
-  private modalDeleteMessage: string;  
+  private modalDeleteMessage: string; 
+  private validationMessage: string; 
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
   filteredCashRegisters: CashRegister[];
@@ -104,11 +106,22 @@ export class CashRegisterListComponent implements OnInit {
 
   deleteCashRegister(){
     if (this.closeModal()){
-      this._cashRegisterService.deleteCashRegister(this.idCashRegisterDelete).subscribe( success=> {
+      this._cashRegisterService.deleteCashRegister(this.idCashRegisterDelete).subscribe( success=> {        
         this.getCashRegisters();
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, <any>error)
+      error => {                
+        if (!isNullOrUndefined(error) && error.length > 0) {
+          this.validationMessage = 'Esta caja no puede ser eliminada debido a que:'
+
+          error.forEach(message => {
+            this.validationMessage += '\n\r\t- ' + message;            
+          });
+
+          this.validationMessage += '\n\rMárquela como inactiva en su lugar.'
+        }
+        else {
+          this.showModalError(this.serviceErrorTitle, <any>error);
+        }
       });
     }
   }

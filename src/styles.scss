@@ -329,3 +329,8 @@ width: 100%!important;
     color: rgba(184, 11, 11, 0.856);
     font-weight: 600;    
 }
+
+.errorMessage {
+    white-space: pre-line;
+    color: red;
+}
