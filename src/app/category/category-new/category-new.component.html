@@ -43,7 +43,7 @@
         <div class="form-group" [class.has-error]="hasCategory">
             <label>Menu:</label>
             <div class="select-wrapper">
-              <select #categoryMenu="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="hasCategory" name="categoryMenu" 
+              <select #categoryMenu="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="hasCategory && menuTouched" name="categoryMenu" 
                 (blur)="validateCategory(categoryMenu.value)"
                 (change)="validateCategory(categoryMenu.value)"
                 id="categoryMenu" [(ngModel)]="newCategory.menuId">
@@ -53,18 +53,18 @@
             </div>
         </div>
 
-        <div *ngIf="hasCategory" class="alert alert-danger">
+        <div *ngIf="hasCategory && menuTouched" class="alert alert-danger">
           El Menu de la Categoría es requerido.
         </div>
 
         <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'"></app-file-input>
-          <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+          <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
             La imagen de la categoria es requerida.
           </div>           
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Guardar" class="special" (click)="validateName()"/></li>
+            <li><input [disabled]="form.invalid || hasCategory || validPicture === ''" type="submit" value="Guardar" class="special" (click)="validateName()"/></li>
             <li><input type="button" value="Cancelar" (click)="showModalCancel(cancelTemplate)" /></li>
           </ul>
         </div>    
@@ -72,7 +72,7 @@
     </div>
 
     <div class="col-md-6">
-      <img [src]="newCategory.picture"  onerror="this.src='../../../assets/img/No_image_available.svg'"/>
+      <img [src]="newCategoryPictureData"  onerror="this.src='../../../assets/img/No_image_available.svg'"/>
     </div>
   </div>
 </div>

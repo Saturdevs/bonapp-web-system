@@ -35,11 +35,13 @@ export class CategoryNewComponent implements OnInit {
   categories: Category[];
   newCategory: Category;
   menus: Menu[];
-  hasCategory = false;
+  hasCategory: boolean = true;
+  menuTouched: boolean = false;
   pictureTouched: boolean;
-  validPicture: string;
+  validPicture: string = '';
   currentCollection : string;
   nameIsAvailable: boolean = false;
+  private newCategoryPictureData: string;
 
   constructor(private _router: Router,
               private _categoryService: CategoryService,
@@ -64,9 +66,10 @@ export class CategoryNewComponent implements OnInit {
       });
   }
 
-  onNotified(validator: string) {
+  onNotified(validator: Array<string>) {
     console.log(validator);
-    validator != '' ? this.validPicture = validator: this.validPicture = '';
+    validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
+    validator[1] != '' ? this.newCategoryPictureData = validator[1]: this.newCategoryPictureData = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
       this.newCategory.picture = this.validPicture;
@@ -113,6 +116,7 @@ export class CategoryNewComponent implements OnInit {
   }
 
   validateCategory(value) {   
+    this.menuTouched = true;
     if (value === 'default') {
       this.hasCategory = true;
     } else {
