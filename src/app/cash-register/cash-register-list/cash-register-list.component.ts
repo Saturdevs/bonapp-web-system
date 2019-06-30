@@ -110,14 +110,8 @@ export class CashRegisterListComponent implements OnInit {
         this.getCashRegisters();
       },
       error => {                
-        if (!isNullOrUndefined(error) && error.length > 0) {
-          this.validationMessage = 'Esta caja no puede ser eliminada debido a que:'
-
-          error.forEach(message => {
-            this.validationMessage += '\n\r\t- ' + message;            
-          });
-
-          this.validationMessage += '\n\rMárquela como inactiva en su lugar.'
+        if (!isNullOrUndefined(error)) {
+          this.validationMessage = error;
         }
         else {
           this.showModalError(this.serviceErrorTitle, <any>error);
