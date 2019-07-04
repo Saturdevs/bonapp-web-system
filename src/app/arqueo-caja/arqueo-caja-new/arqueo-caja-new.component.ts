@@ -31,15 +31,19 @@ export class ArqueoCajaNewComponent implements OnInit {
   errorDateLastArqueoMsg = "La fecha de apertura del arqueo es menor a la fecha de cierre de un arqueo posterior de la misma caja";
   errorArqueoOpen = "Ya existe un arqueo de caja abierto";
   serviceErrorTitle: string = 'Error de Servicio';
-  pageTitle: String = 'Nuevo Arqueo de Caja';
+  pageTitle: String = 'Nuevo Arqueo';
+  cancelButton: String = "Cancelar";
+  saveButton: String = "Guardar";
   hasCashRegister = true;
   showMessageCashRegister = false;
+  cashRegistersTouched = false;
   lengthCashRegister: Boolean;
   dateCreated_at: Date;
   hourCreated_at: Date;
   arqueoOpen: ArqueoCaja;
   errorArqueo: Boolean = false;
-
+  cashRegistersSelect: Array<any> = [];
+  
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _arqueoService: ArqueoCajaService,
@@ -55,7 +59,13 @@ export class ArqueoCajaNewComponent implements OnInit {
       data => {
         this.cashRegisters = data['cashRegisters'];
       }
-    ) 
+    )
+    
+    for (let cashRegister of this.cashRegisters) {
+      if (cashRegister.available === true) {
+        this.cashRegistersSelect.push({value: cashRegister._id, label: cashRegister.name})
+      }
+    };
     
     this.shouldDisplayCashRegisterCombo();  
   }
@@ -174,7 +184,7 @@ export class ArqueoCajaNewComponent implements OnInit {
     this._router.navigate(['/sales/cash-counts', { outlets: { edit: ['selectItem'] } }]);
   }
 
-  validateCashRegister(value) {   
+  validateCashRegister(value) {
     if (value === 'default') {
       this.hasCashRegister = true;
       this.showMessageCashRegister = true;
