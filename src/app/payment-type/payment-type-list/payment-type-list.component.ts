@@ -6,6 +6,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { PaymentTypeService } from '../../../shared/services/payment-type.service';
 import { PaymentType } from '../../../shared/models/payment-type';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-payment-type-list',
@@ -22,6 +23,7 @@ export class PaymentTypeListComponent implements OnInit {
   private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Forma de Pago";
   private modalDeleteMessage: string = "¿Estas seguro que desea eliminar la Forma de Pago?";
+  private validationMessage: string;
   public modalRef: BsModalRef;
   paymentTypes: PaymentType[];
   filteredPaymentTypes: PaymentType[];
@@ -101,8 +103,13 @@ export class PaymentTypeListComponent implements OnInit {
       this.paymentTypeService.deletePaymentType(this.idPaymentTypeDelete).subscribe( success=> {
         this.getPaymentTypes();
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+      error => {                
+        if (!isNullOrUndefined(error)) {
+          this.validationMessage = error;
+        }
+        else {
+          this.showModalError(this.serviceErrorTitle, <any>error);
+        }
       });
     }
   }
