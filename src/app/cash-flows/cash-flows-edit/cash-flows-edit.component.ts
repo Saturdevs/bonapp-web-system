@@ -20,6 +20,7 @@ export class CashFlowsEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
+  private pageTitle: string = "Detalle";
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;

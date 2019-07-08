@@ -342,3 +342,11 @@ width: 100%!important;
     white-space: pre-line;
     color: red;
 }
+
+button.btn-primary:disabled {
+    background-color: red;
+ }
+
+ .formNewEdit {
+    height: 82vh;
+ }

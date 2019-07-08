@@ -10,13 +10,13 @@
 </ng-template>
 
 <!-- Form -->
-<div class="col-12 pl-0 pr-0" style="height: 78vh;">
+<div class="col-12 pl-0 pr-0 formNewEdit">
   <div class="col-12 pr-0 outletTitle">
     <h5>
       {{pageTitle}}
     </h5>
   </div>
-  <form #form="ngForm" method="post" novalidate>  
+  <form class="pt-4 pr-3 pl-3" #form="ngForm" method="post" novalidate>  
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
@@ -75,7 +75,7 @@
   </form>
 </div>
 <div class="col-12">
-  <div class="col-7 offset-5 closeOrderButton">
+  <div class="col-7 offset-5">
     <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
     <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="(form.invalid || hasCashRegister)" (click)="validate()">{{saveButton}}</button>
   </div>

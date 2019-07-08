@@ -22,6 +22,9 @@ export class ArqueoCajaEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
+  private pageTitle: String = 'Editando';
+  private saveButton: String = 'Finalizar Arqueo';
+  private cancelButton: String = 'Cancel';
   cashCountForm: FormGroup;
   public modalRef: BsModalRef;  
   private modalErrorTittle: string;
@@ -71,6 +74,8 @@ export class ArqueoCajaEditComponent implements OnInit {
         this.estimatedAmount = 0;
         this.paymentTypesCashRegister = [];
         this.paymentDetail = [];
+        this.totalsIngresosPaymentTypes = [];
+        this.totalsEgresosPaymentTypes = [];
 
         this.cashCount = data['arqueo'];
         this.paymentTypes = data['paymentTypes'];

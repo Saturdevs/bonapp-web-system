@@ -19,7 +19,7 @@ import { isNullOrUndefined } from 'util';
 })
 export class CashFlowsNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;   
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalCancelTitle: String;
@@ -30,6 +30,8 @@ export class CashFlowsNewComponent implements OnInit {
   cashRegisters: CashRegister[];
   newCashFlow: CashFlow;
   pageTitle: String = 'Nuevo Movimiento';
+  cancelButton: String = "Cancelar";
+  saveButton: String = "Guardar";
   hasCashRegister = true;
   showMessageCashRegister = false;
   hasPaymentType = true;
