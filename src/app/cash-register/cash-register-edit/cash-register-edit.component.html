@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -8,52 +8,59 @@
   <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
   </app-error-template>
 </ng-template>
-   
-  <!-- Form -->
-  <div *ngIf='cashRegister'>
-    <header class="major" align="center">
-      <h2>Editando: {{cashRegisterNameModified}}</h2>
-    </header>
-    <div class="posts">
-          
-        <form method="post" novalidate [formGroup]="cashRegisterForm">
-  
-          <div class="form-group">
-            <label>Nombre:</label>
-            <input formControlName="name" type="text" class="form-control" [class.is-invalid]="cashRegisterForm.get('name').invalid && (cashRegisterForm.get('name').dirty || cashRegisterForm.get('name').touched)"
-                  id="name">
-          </div>
-  
-          <div *ngIf="cashRegisterForm.get('name').invalid && (cashRegisterForm.get('name').dirty || cashRegisterForm.get('name').touched)" class="alert alert-danger">
-            El nombre de la Caja es requerido.
-          </div>   
-  
-          <div class="form-group">
-            <label class="custom-control custom-checkbox">
-              <input type="checkbox" formControlName="available" class="custom-control-input" (change)="clickAvailable()">
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">Disponible</span>
-            </label>
-          </div>
 
-          <div class="form-group">
-            <label class="custom-control custom-checkbox">
-              <input type="checkbox" formControlName="default" class="custom-control-input">
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">Caja por defecto</span>
-            </label>
-          </div>
-
-          <div *ngIf="errorArqueo === true" class="alert alert-danger">
-            {{ errorMsg }}
-          </div>   
-  
-          <div class="">
-            <ul class="actions" align="center">
-              <li><input [disabled]="cashRegisterForm.invalid" type="submit" value="Aceptar" class="special" (click)="validate()"/></li>
-              <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
-            </ul>
-          </div>    
-        </form>
-    </div>
+<!-- Form -->
+<div *ngIf='cashRegister' class="col-12 pl-0 pr-0 formNewEditSettings">
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{pageTitle + ': ' + cashRegisterNameModified}}
+    </h5>
   </div>
+  <form method="post" novalidate [formGroup]="cashRegisterForm">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Nombre:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input formControlName="name" type="text" class="form-control" [class.is-invalid]="cashRegisterForm.get('name').invalid && (cashRegisterForm.get('name').dirty || cashRegisterForm.get('name').touched)"
+            id="name">
+        </div>
+      </div>
+      <div *ngIf="cashRegisterForm.get('name').invalid && (cashRegisterForm.get('name').dirty || cashRegisterForm.get('name').touched)"
+        class="alert alert-danger">
+        El nombre de la Caja es requerido.
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <label class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="available" class="custom-control-input" (change)="clickAvailable()">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Disponible</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <label class="custom-control custom-checkbox">
+          <input type="checkbox" formControlName="default" class="custom-control-input">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Caja por defecto</span>
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="errorArqueo === true" class="alert alert-danger">
+      {{ errorMsg }}
+    </div>
+  </form>
+</div>
+<div class="col-12">
+  <div class="col-7 offset-5">
+    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="cashRegisterForm.invalid" (click)="validate()">{{saveButton}}</button>
+  </div>
+</div>

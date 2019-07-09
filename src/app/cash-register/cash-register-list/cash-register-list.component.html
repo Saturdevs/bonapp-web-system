@@ -9,15 +9,15 @@
   </app-error-template>
 </ng-template>
 
-<div class="row">
-    <div class="col-md-6 col-lg-6 mr-0 pr-0">
+<div class="row pl-0 pr-0 ml-0 mr-0">
+    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0">
         <div class="settingsTitle">
-            <div style="float: left">
+            <div class="float-left">
                 <header class="major">
-                    <h5>{{ pageTitle }}</h5>
+                    <h5 class="customTitle">{{ pageTitle }}</h5>
                 </header>
             </div>
-            <div style="float: right">
+            <div class="float-right">
                 <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['newCashRegister'] } }]" class="btn btn-primary btn-sm waves-light customButton"
                     mdbRippleRadius> + Nueva Caja</a>
             </div>
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-    <div class="col-md-6 col-lg-6 mr-0 pr-0">
+    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
         <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
     </div>
 </div>

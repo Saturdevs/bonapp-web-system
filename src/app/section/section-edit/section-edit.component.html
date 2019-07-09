@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -10,32 +10,33 @@
 </ng-template>
 
 <!-- Form -->
-<div *ngIf='section'>
-  <header class="major" align="center">
-    <h2>Editando: {{sectionNameModified}}</h2>
-  </header>
-  <div class="posts">
-        
-      <form method="post" novalidate [formGroup]="sectionForm">
-
-        <div class="form-group">
+<div *ngIf='section' class="col-12 pl-0 pr-0 formNewEditSettings">
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{pageTitle + ': ' + cashRegisterNameModified}}
+    </h5>
+  </div>
+  <form method="post" novalidate [formGroup]="sectionForm">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
           <label>Nombre:</label>
-          <input formControlName="name" type="text" class="form-control" 
-            [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
-                id="name">
         </div>
-
-        <div *ngIf="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)" 
-          class="alert alert-danger">
-          El nombre de la Sala es requerido.
-        </div>   
-
-        <div class="">
-          <ul class="actions" align="center">
-            <li><input [disabled]="sectionForm.invalid" type="submit" value="Aceptar" class="special" (click)="updateSection()"/></li>
-            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
-          </ul>
-        </div>    
-      </form>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input formControlName="name" type="text" class="form-control" [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
+            id="name">
+        </div>
+      </div>
+      <div *ngIf="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
+        class="alert alert-danger">
+        El nombre de la Sala es requerido.
+      </div>
+    </div>
+  </form>
+</div>
+<div class="col-12">
+  <div class="col-7 offset-5">
+    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="sectionForm.invalid" (click)="updateSection()">{{saveButton}}</button>
   </div>
 </div>

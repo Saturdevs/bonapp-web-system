@@ -19,6 +19,9 @@ export class CashRegisterEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
+  private pageTitle: String = 'Editando';
+  private cancelButton: String = 'Cancelar';
+  private saveButton: String = 'Aceptar';
   public modalRef: BsModalRef;
   private modalCancelTitle: String;
   private modalCancelMessage: String;

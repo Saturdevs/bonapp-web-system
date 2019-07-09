@@ -30,6 +30,8 @@ export class SizeNewComponent implements OnInit {
   size: Size = new Size();
   sizeForm: FormGroup;
   pageTitle: String = 'Nuevo Tamaño';
+  private saveButton: String = 'Guardar';
+  private cancelButton: String = 'Cancelar';
   nameIsAvailable: boolean = false;
   currentCollection : string;
 

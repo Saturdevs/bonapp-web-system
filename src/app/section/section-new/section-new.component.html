@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -10,72 +10,33 @@
 </ng-template>
 
 <!-- Form -->
-<div class="animated fadeIn" *ngIf='section'>
-    <div class="card card-cascade customHeightCard">
-        <div class="view overlay hm-white-slight waves-light customCardCascade text-center pt-3 pl-3 pr-3 pb-3" mdbRippleRadius>
-          <h3>{{ pageTitle }}</h3>
+<div class="col-12 pl-0 pr-0 formNewEditSettings" *ngIf='section'>
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{pageTitle}}
+    </h5>
+  </div>
+  <form class="pt-4 pr-3 pl-3" method="post" novalidate [formGroup]="sectionForm">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Nombre:</label>
         </div>
-        <div class="card-body customHeightCard"> 
-          <form method="post" novalidate [formGroup]="sectionForm">
-            <div class="md-form mt-3">
-              <input mdbActive formControlName="name" type="text" class="form-control" 
-                [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)" 
-                id="name">
-              <label for="name">Nombre:</label>
-              <div *ngIf="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)" 
-                class="alert alert-danger">
-              El nombre de la Sala es requerido.
-              </div>
-            </div>
-            <div class="modal-footer">
-              <div class="options">
-                <button class="btn btn-primary waves-light" type="button"  value="Cancel" 
-                  (click)="showModalCancel(cancelTemplate)" mdbRippleRadius>Cancelar</button>
-                <button class="btn btn-primary waves-light" [disabled]="sectionForm.invalid" type="button" value="Guardar" 
-                  (click)="saveSection()" mdbRippleRadius>Aceptar</button>
-              </div>
-            </div>
-          </form>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input mdbActive formControlName="name" type="text" class="form-control" [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
+            id="name">
         </div>
-    </div>
-</div>
-
-<!--
-<div class="customButtonAlternative">
-<a class="btn btn-primary btn-sm waves-light customButton" data-toggle="modal" data-target="#basicExample" 
-  (click)="fluid.show()" mdbRippleRadius>
-  + Nueva Sala
-</a>
-</div>
-
-<div mdbModal #fluid="mdb-modal" class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" 
-  aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-full-height modal-right" role="document">
-      <div class="modal-content">
-          <div class="modal-header secondary-color">
-              <h4 class="modal-title w-100" id="myModalLabel">{{ pageTitle }}</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="fluid.hide()">
-                  <span aria-hidden="true">×</span>
-              </button>
-          </div>
-          <div class="modal-body">
-            <form #form="ngForm" method="post" novalidate>
-              <div class="md-form">
-                <label>Nombre Sala:</label>
-                <input #sectionName="ngModel" mdbActive required type="text" class="form-control" [class.is-invalid]="sectionName.invalid && (sectionName.dirty || sectionName.touched)" name="sectionName" 
-                      id="sectionName" [(ngModel)]="newSection.name">
-              </div>
-      
-              <div *ngIf="sectionName.invalid && (sectionName.dirty || sectionName.touched)" class="alert alert-danger">
-                El nombre de la sala es requerido.
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="fluid.hide()" mdbRippleRadius>Close</button>
-              <button type="button" class="btn btn-primary waves-light" mdbRippleRadius (click)="saveSection()" >Guardar</button>
-          </div>
       </div>
+      <div *ngIf="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
+        class="alert alert-danger">
+        El nombre de la Sala es requerido.
+      </div>
+    </div>    
+  </form>
+</div>
+<div class="col-12">
+  <div class="col-7 offset-5">
+    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="sectionForm.invalid" (click)="saveSection()">{{saveButton}}</button>
   </div>
 </div>
--->

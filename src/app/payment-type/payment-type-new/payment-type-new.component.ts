@@ -30,6 +30,8 @@ export class PaymentTypeNewComponent implements OnInit {
   paymentType: PaymentType = new PaymentType();
   paymentTypeForm: FormGroup;
   pageTitle: String = 'Nueva Forma de Pago';
+  private saveButton: String = 'Guardar';
+  private cancelButton: String = 'Cancelar';
   nameIsAvailable: boolean = false;
   currentCollection : string;
 

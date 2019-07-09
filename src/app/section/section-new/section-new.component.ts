@@ -20,6 +20,8 @@ export class SectionNewComponent implements OnInit {
   private modalCancelTitle: String;
   private modalCancelMessage: String;
   pageTitle: String = 'Nueva Sala';
+  private saveButton: String = 'Guardar';
+  private cancelButton: String = 'Cancelar';
   newSection: Section;
   public modalRef: BsModalRef;
   section: Section = new Section();
