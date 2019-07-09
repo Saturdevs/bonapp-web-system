@@ -9,17 +9,17 @@
   </app-error-template>
 </ng-template>
 
-<div class="row">
-    <div class="col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 pr-0 customTitleBar">
-        <div class="row ml-1 settingsTitle">
+<div class="row pl-0 pr-0 ml-0 mr-0">
+    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+        <div class="row pr-0 ml-0 mr-0 pageTitle">
             <header class="major">
-                    <h5 class="customTitle">{{ pageTitle }}</h5>
+                <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
             <a class="customFloatedButton" [routerLink]="['/clients-module/clients', { outlets: { edit: ['newClient'] } }]" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Cliente</a>
         </div>        
 
-        <div class="row ml-1">
-            <div class="col-md-8 col-lg-8 col-sm-8 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">  
+        <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
+            <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">  
                 <div class="row mb-2 customBox pt-1 pb-2 mt-2 text-center">
                     <form #form="ngForm" novalidate class="form-inline">
                         <h6 class="pt-2">{{ filterLabel }}</h6>
@@ -45,7 +45,7 @@
                                     <td>{{ client.name }}</td>
                                     <td>{{ client.tel }}</td>
                                     <td>{{ client.addressStreet || ' '}} {{ client.addressNumber || ' '}} {{ client.addressDpto || ' ' }}</td>
-                                    <td>{{ client.balance }}</td>
+                                    <td>{{ client.balance | currency:'USD':code:'2.2-2'}}</td>
                                     <td class="align-middle">
                                         <a [routerLink]="['/clients-module/clients', { outlets: { edit: ['editClient', client._id] } }]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                                         <a (click) = "showModalDelete(deleteTemplate, client._id)" class="btn btn-red btn-sm">Eliminar</a>
@@ -54,11 +54,10 @@
                         </tbody>
                     </table>
                 </div>
-            </div>    
-            <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-5 pt-1 pb-2 mt-2">
-                <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
-            </div>
+            </div>                
         </div>
     </div>
-
+    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+    </div>
 </div>

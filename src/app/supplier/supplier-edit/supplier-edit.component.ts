@@ -23,6 +23,8 @@ export class SupplierEditComponent implements OnInit {
   private modalCancelMessage: String;
   supplier: Supplier;
   pageTitle: String = 'Editando proveedor: ';
+  private cancelButton: String = 'Cancelar';
+  private saveButton: String = 'Aceptar';
   supplierNameModified: String;
 
   constructor(private _route: ActivatedRoute,

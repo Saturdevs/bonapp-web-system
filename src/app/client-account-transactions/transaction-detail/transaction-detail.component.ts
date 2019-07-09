@@ -18,6 +18,7 @@ export class TransactionDetailComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
+  private pageTitle: String = 'Detalle'
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;

@@ -22,6 +22,8 @@ export class SupplierNewComponent implements OnInit {
   private modalCancelTitle: string;
   private modalCancelMessage: String;
   pageTitle: String = 'Nuevo Proveedor';
+  private cancelButton: String = 'Cancelar';
+  private saveButton: String = 'Aceptar';
   newSupplier: Supplier;
 
   constructor(private _supplierService: SupplierService,

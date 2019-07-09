@@ -23,6 +23,8 @@ export class ClientEditComponent implements OnInit {
   private modalCancelMessage: String;
   client: Client;
   pageTitle: String = 'Editando cliente: ';
+  private saveButton: String = 'Aceptar';
+  private cancelButton: String = 'Cancelar';
   clientNameModified: String;
 
   constructor(private _route: ActivatedRoute,

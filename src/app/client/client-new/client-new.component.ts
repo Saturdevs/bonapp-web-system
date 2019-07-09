@@ -22,6 +22,8 @@ export class ClientNewComponent implements OnInit {
   private modalCancelTitle: String;
   private modalCancelMessage: String;
   pageTitle: String = 'Nuevo Cliente';
+  private saveButton: String = 'Guardar';
+  private cancelButton: String = 'Cancelar';
   newClient: Client;
 
   constructor(private _clientService: ClientService,
