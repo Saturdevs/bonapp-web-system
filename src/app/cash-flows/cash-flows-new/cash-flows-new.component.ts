@@ -112,13 +112,13 @@ export class CashFlowsNewComponent implements OnInit {
               this.onBack();
             },
             error => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           )
         }        
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
@@ -131,7 +131,7 @@ export class CashFlowsNewComponent implements OnInit {
         this.onBack()
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
   }
 

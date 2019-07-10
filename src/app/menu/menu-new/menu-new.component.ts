@@ -64,7 +64,7 @@ export class MenuNewComponent implements OnInit {
             this.onBack();
           },
           error => { 
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           });
     
   }

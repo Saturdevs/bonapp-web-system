@@ -153,7 +153,7 @@ export class ProductModifyComponent implements OnInit {
     this._productService.updateProduct(prod).subscribe(
       product => this.product = product,
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
     this.clickAceptar = true;
     this.onBack();

@@ -75,7 +75,7 @@ export class PaymentTypeNewComponent implements OnInit {
               this.onBack();
             },        
             (error: any) => {               
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
     }

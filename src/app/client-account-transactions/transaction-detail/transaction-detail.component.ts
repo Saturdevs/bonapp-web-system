@@ -43,7 +43,7 @@ export class TransactionDetailComponent implements OnInit {
             this.transactionPaymentMethodName = paymentMethod.name;
           },
           error => {
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           }
         );
 
@@ -52,7 +52,7 @@ export class TransactionDetailComponent implements OnInit {
             this.transactionCashRegisterName =cashRegister.name;
           },
           error => {
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           }
         );
         

@@ -48,7 +48,7 @@ export class SupplierListComponent implements OnInit {
         this.filteredSuppliers = this.suppliers;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }
@@ -71,7 +71,7 @@ export class SupplierListComponent implements OnInit {
           this.getSuppliers();
         },
         error => {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
     }

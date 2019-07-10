@@ -56,7 +56,7 @@ export class CashFlowService {
 
   private handleError(err: HttpErrorResponse){
     console.log(err.message);
-    return Observable.throw(err.message);
+    return Observable.throw(err);
   }
 
 }

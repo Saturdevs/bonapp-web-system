@@ -82,7 +82,7 @@ export class FileInputComponent implements OnInit  {
             .subscribe(file => {
               console.log(file);
             },
-            error => this.errorMessage = <any>error
+            error => this.errorMessage = error.error.message
           );
     this.files = [];
   }

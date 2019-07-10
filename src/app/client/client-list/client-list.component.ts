@@ -62,7 +62,7 @@ export class ClientListComponent implements OnInit {
         this.filteredClients = this.clients;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }
@@ -93,7 +93,7 @@ export class ClientListComponent implements OnInit {
           this.getClients();
         },
         error => {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
     }

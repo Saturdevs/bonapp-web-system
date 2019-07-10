@@ -78,7 +78,7 @@ export class CashRegisterEditComponent implements OnInit {
         },
         error => 
         { 
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       )
     }
@@ -102,7 +102,7 @@ export class CashRegisterEditComponent implements OnInit {
               },
               error =>
               {
-                this.showModalError(this.serviceErrorTitle, <any>error);
+                this.showModalError(this.serviceErrorTitle, error.error.message);
               }
             );
           }
@@ -110,7 +110,7 @@ export class CashRegisterEditComponent implements OnInit {
         },
         error => 
         { 
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
     );
   }

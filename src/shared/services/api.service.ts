@@ -23,7 +23,7 @@ export class ApiService {
   }
 
   private formatErrors(err: HttpErrorResponse) {
-    return Observable.throw(err.error);
+    return Observable.throw(err);
   }
 
   get(path: string, params: HttpParams = new HttpParams()): Observable<any> {

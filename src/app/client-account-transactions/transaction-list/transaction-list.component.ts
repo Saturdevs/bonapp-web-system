@@ -59,7 +59,7 @@ export class TransactionListComponent implements OnInit {
         this.calculateAmountAndCantTransactions(this.filteredTransactions);
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }
@@ -79,7 +79,7 @@ export class TransactionListComponent implements OnInit {
         this.calculateAmountAndCantTransactions(this.filteredTransactions);
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }
@@ -139,12 +139,12 @@ export class TransactionListComponent implements OnInit {
               this.getTransactions();
             },
             error => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           )
         },
         error => {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
     }

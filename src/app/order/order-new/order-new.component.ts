@@ -111,7 +111,7 @@ export class OrderNewComponent implements OnInit {
         this.categories = categories;
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
   }
 
@@ -123,7 +123,7 @@ export class OrderNewComponent implements OnInit {
     this.orderService.updateOrder(ord).subscribe(
       orderReturned => {},
       error => {        
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
@@ -144,7 +144,7 @@ export class OrderNewComponent implements OnInit {
         this.products = products;
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }

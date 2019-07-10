@@ -90,7 +90,7 @@ export class ArqueoCajaEditComponent implements OnInit {
             this.cashCount.cashRegister = cashRegister.name;                                
           },
           error => {
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           }
         );
 
@@ -178,7 +178,7 @@ export class ArqueoCajaEditComponent implements OnInit {
                 this.paymentDetail.push({ paymentTypeName: paymentType.name, paymentAmount: realAmount.amount });
               },
               error => {
-                this.showModalError(this.serviceErrorTitle, <any>error);
+                this.showModalError(this.serviceErrorTitle, error.error.message);
               }
             )
           })
@@ -211,7 +211,7 @@ export class ArqueoCajaEditComponent implements OnInit {
         cashCount => { this.cashCount = cashCount,
                       this.onBack()},
         error => { 
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         });
   }
 

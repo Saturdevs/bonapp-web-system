@@ -112,7 +112,7 @@ export class ProductListComponent implements OnInit {
         this.filteredProducts = this.products;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
   }
 
@@ -131,7 +131,7 @@ export class ProductListComponent implements OnInit {
         this.filteredProducts = this.products;
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       })
   }
 
@@ -150,7 +150,7 @@ export class ProductListComponent implements OnInit {
       .subscribe(
         product => {},
         error => { 
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
   }
@@ -185,7 +185,7 @@ export class ProductListComponent implements OnInit {
         this.getProducts();
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
     }
   }

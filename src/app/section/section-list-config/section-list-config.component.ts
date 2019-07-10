@@ -64,7 +64,7 @@ export class SectionListConfigComponent implements OnInit {
         this.filteredSections = this.sections;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
   }
 
@@ -100,7 +100,7 @@ export class SectionListConfigComponent implements OnInit {
         }
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
@@ -111,7 +111,7 @@ export class SectionListConfigComponent implements OnInit {
         this.getSections();
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
     }
   }

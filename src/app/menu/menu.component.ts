@@ -62,7 +62,7 @@ export class MenuComponent implements OnInit {
           this.filteredMenus = this.menus
         },
         error => {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         });        
   }
 
@@ -87,7 +87,7 @@ export class MenuComponent implements OnInit {
         this.getMenus();
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
     }
   }

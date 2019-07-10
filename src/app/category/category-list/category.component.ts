@@ -77,7 +77,7 @@ export class CategoryComponent implements OnInit {
           this.filteredCategories = this.categories;
         },
         error => { 
-          this.showModalError(this.serviceErrorTitle, <any>error);                             
+          this.showModalError(this.serviceErrorTitle, error.error.message);                             
         });
   }
 
@@ -89,7 +89,7 @@ export class CategoryComponent implements OnInit {
           this.filteredCategories = this.categories;
         },
         error => { 
-          this.showModalError(this.serviceErrorTitle, <any>error); 
+          this.showModalError(this.serviceErrorTitle, error.error.message); 
         }
       )
   }
@@ -124,7 +124,7 @@ export class CategoryComponent implements OnInit {
         this.getCategories();
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error); 
+        this.showModalError(this.serviceErrorTitle, error.error.message); 
       });
     }
   }

@@ -82,7 +82,7 @@ export class PaymentTypeListComponent implements OnInit {
         this.filteredPaymentTypes = this.paymentTypes;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
@@ -108,7 +108,7 @@ export class PaymentTypeListComponent implements OnInit {
           this.validationMessage = error;
         }
         else {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       });
     }

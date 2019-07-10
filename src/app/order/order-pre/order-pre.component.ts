@@ -71,13 +71,13 @@ export class OrderPreComponent implements OnInit {
 							this._router.navigate(['./orders/orderNew', this.selectedTable.number]); 
 						},
 						error => { 
-							this.showModalError(this.serviceErrorTitle, <any>error);
+							this.showModalError(this.serviceErrorTitle, error.error.message);
 						}
 					)
 				})
 			},
 			error => { 
-				this.showModalError(this.serviceErrorTitle, <any>error);
+				this.showModalError(this.serviceErrorTitle, error.error.message);
 			 }
 		)			
 	}

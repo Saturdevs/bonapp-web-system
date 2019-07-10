@@ -77,7 +77,7 @@ export class CategoryModifyComponent implements OnInit {
           category => { this.category = category,
             this.onBack()},
           error => {
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           });
   }
 

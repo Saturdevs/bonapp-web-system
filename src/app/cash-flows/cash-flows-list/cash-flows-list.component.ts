@@ -53,7 +53,7 @@ export class CashFlowsListComponent implements OnInit {
               cashFlow.cashRegister = cashRegister.name                
             },  
             error => { 
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
 
@@ -92,7 +92,7 @@ export class CashFlowsListComponent implements OnInit {
               cashFlow.cashRegister = cashRegister.name                
             },  
             error => { 
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );  
 
@@ -102,7 +102,7 @@ export class CashFlowsListComponent implements OnInit {
         this.filteredCashFlows = this.cashFlows;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       })
   }
 
@@ -131,7 +131,7 @@ export class CashFlowsListComponent implements OnInit {
         this.getCashFlows();
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
     }
   }

@@ -262,12 +262,12 @@ export class TableListComponent implements OnInit{
 							}
 						},
 						error => { 
-							this.showModalError(this.serviceErrorTitle, <any>error);
+							this.showModalError(this.serviceErrorTitle, error.error.message);
 						 }
 					)
 				},
 				error => { 
-					this.showModalError(this.serviceErrorTitle, <any>error);
+					this.showModalError(this.serviceErrorTitle, error.error.message);
 				 }
 			)			
 		}		
@@ -276,11 +276,10 @@ export class TableListComponent implements OnInit{
 	deleteTable(){
     if (this.closeModal()){
       this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe( success=> {
-				console.log("delete")
         this.getTables();
       },
 			error => {
-				this.showModalError(this.serviceErrorTitle, <any>error);
+				this.showModalError(this.serviceErrorTitle, error.error.message);
 			});
     }
 	}
@@ -300,7 +299,7 @@ export class TableListComponent implements OnInit{
 				)
 			},
 			error => {
-				this.showModalError(this.serviceErrorTitle, <any>error);
+				this.showModalError(this.serviceErrorTitle, error.error.message);
 			}
 		)
 	}

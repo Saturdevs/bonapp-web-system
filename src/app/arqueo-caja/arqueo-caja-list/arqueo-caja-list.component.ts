@@ -55,7 +55,7 @@ export class ArqueoCajaListComponent implements OnInit {
               arqueo.cashRegister = cashRegister.name;
             },
             error => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
 
@@ -95,7 +95,7 @@ export class ArqueoCajaListComponent implements OnInit {
               arqueo.cashRegister = cashRegister.name;
             },
             error => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
 
@@ -119,7 +119,7 @@ export class ArqueoCajaListComponent implements OnInit {
         this.filteredArqueos = this.arqueos;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }
@@ -153,12 +153,12 @@ export class ArqueoCajaListComponent implements OnInit {
               this.getArqueos();
             },
             error => { 
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
         },
         error => { 
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
     }

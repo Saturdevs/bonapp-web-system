@@ -125,7 +125,7 @@ export class TransactionNewComponent implements OnInit {
                     this._arqueoService.updateArqueo(arqueo).subscribe(
                       success => {},
                       error => {
-                        this.showModalError(this.serviceErrorTitle, <any>error);
+                        this.showModalError(this.serviceErrorTitle, error.error.message);
                       }
                     );
                   }
@@ -134,7 +134,7 @@ export class TransactionNewComponent implements OnInit {
               this.onBack();
             },
             error => { 
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
         } else {
@@ -145,7 +145,7 @@ export class TransactionNewComponent implements OnInit {
       },
       error => 
       { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );        
   }

@@ -256,13 +256,13 @@ export class OrderCloseComponent implements OnInit {
               this._router.navigate(['./orders']);
             },
             error => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           )
         }
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
@@ -309,13 +309,13 @@ export class OrderCloseComponent implements OnInit {
           this.arqueoCajaService.updateArqueo(cashCount).subscribe(
             cashCount => {},
             error => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           )
         }                
       },
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }

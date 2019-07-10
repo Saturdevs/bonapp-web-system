@@ -47,7 +47,7 @@ export class CashFlowsEditComponent implements OnInit {
             this.cashFlow.cashRegister = cashRegister.name;
           },
           error => {
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           }
         );
 
@@ -56,7 +56,7 @@ export class CashFlowsEditComponent implements OnInit {
             this.paymentTypeName = paymentType.name;
           },
           error => {
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           }
         )
       }

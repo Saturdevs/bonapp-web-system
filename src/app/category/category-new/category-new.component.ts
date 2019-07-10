@@ -62,7 +62,7 @@ export class CategoryNewComponent implements OnInit {
       category =>{ this.newCategory = category,
                    this.onBack()},
       error => { 
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
   }
 
@@ -95,7 +95,7 @@ export class CategoryNewComponent implements OnInit {
             this.menus = menus
           },
           error => { 
-            this.showModalError(this.serviceErrorTitle, <any>error);
+            this.showModalError(this.serviceErrorTitle, error.error.message);
           });
   }
 

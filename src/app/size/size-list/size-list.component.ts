@@ -83,7 +83,7 @@ export class SizeListComponent implements OnInit, OnChanges {
         this.filteredSizes = this.sizes;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
   }
 
@@ -110,7 +110,7 @@ export class SizeListComponent implements OnInit, OnChanges {
         this.getSizes();
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error);
+        this.showModalError(this.serviceErrorTitle, error.error.message);
       });
     }
   }

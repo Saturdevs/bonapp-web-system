@@ -136,7 +136,7 @@ export class ProductNewComponent implements OnInit {
       sizes => {
         this.sizesArray = sizes;
       },
-      error => this.showModalError(this.serviceErrorTitle, <any>error)
+      error => this.showModalError(this.serviceErrorTitle, error.error.message)
     );
   }
 
@@ -145,7 +145,7 @@ export class ProductNewComponent implements OnInit {
       categories => {
         this.categories = categories;
       },
-      error => this.showModalError(this.serviceErrorTitle, <any>error)
+      error => this.showModalError(this.serviceErrorTitle, error.error.message)
     );
   }
   
@@ -216,7 +216,7 @@ export class ProductNewComponent implements OnInit {
           }
         },
         error => {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         })
   }
 
@@ -230,7 +230,7 @@ export class ProductNewComponent implements OnInit {
               this.onSaveComplete();
             },
             (error: any) => {
-              this.showModalError(this.serviceErrorTitle, <any>error);
+              this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           );
     } else if (!this.productForm.dirty) {

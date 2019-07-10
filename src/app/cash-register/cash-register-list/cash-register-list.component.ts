@@ -81,7 +81,7 @@ export class CashRegisterListComponent implements OnInit {
         this.filteredCashRegisters = this.cashRegisters;
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, <any>error)
+        this.showModalError(this.serviceErrorTitle, error.error.message)
       });
   }
 
@@ -114,7 +114,7 @@ export class CashRegisterListComponent implements OnInit {
           this.validationMessage = error;
         }
         else {
-          this.showModalError(this.serviceErrorTitle, <any>error);
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       });
     }
