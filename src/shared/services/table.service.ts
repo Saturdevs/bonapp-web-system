@@ -65,7 +65,7 @@ export class TableService {
     return this.apiService.post('/table', table)
           .map(data => data.table)
           .catch(this.handleError);
-  }
+  }  
 
   private handleError(err: HttpErrorResponse){
     console.log(err.message);

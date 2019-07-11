@@ -16,6 +16,12 @@
   </app-error-template>
 </ng-template>
 
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="delete()"
+    (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
 <!-- Grid Tables -->
 
 <div class="row">

@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
+import { CONFLICT } from 'http-status-codes';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
@@ -27,11 +28,14 @@ interface Box {
 export class TableListComponent implements OnInit{
 
 	@ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
+	@ViewChild('cancelTemplate') cancelTemplate:TemplateRef<any>;
 	private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
 	private modalDeleteMessage = "¿Estas seguro que desea eliminar esta mesa?";
 	private modalDeleteTitle = "Eliminar Mesa";
+  private modalCancelTitle: string;
+  private modalCancelMessage: string;
 	public modalRef: BsModalRef;
   private boxes: Array<Box> = [];
 	private rgb: string = '#efefef';
@@ -275,13 +279,45 @@ export class TableListComponent implements OnInit{
 
 	deleteTable(){
     if (this.closeModal()){
-      this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe( success=> {
-        this.getTables();
-      },
+      this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe( 
+				success=> {
+					this.getTables();
+				},
+				error => {
+					if (error.status === CONFLICT) {
+						this.showModalCancel(this.cancelTemplate, error.error.message)
+					} 
+					else {
+						this.showModalError(this.serviceErrorTitle, error.error.message);
+					}
+				}
+			);
+    }
+	}
+
+	showModalCancel(template: TemplateRef<any>, modalMessage: string){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = "Eliminar Mesa";
+    this.modalCancelMessage = modalMessage;
+	}
+	
+	delete() {
+		this._orderService.unSetTable(this.tableNumberDelete).subscribe(
+			succes => {
+				this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe(
+					success=> {						
+						this.getTables();
+						this.closeModal();
+					},
+					error => {
+						this.showModalError(this.serviceErrorTitle, error.error.message);
+					}
+				)
+			},
 			error => {
 				this.showModalError(this.serviceErrorTitle, error.error.message);
-			});
-    }
+			}
+		)
 	}
 	
 	getTables() {
@@ -315,6 +351,4 @@ export class TableListComponent implements OnInit{
         this.modalRef = null;
         return true;        
 	}
-
-
 }

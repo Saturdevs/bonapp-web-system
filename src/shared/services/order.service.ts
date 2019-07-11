@@ -63,6 +63,12 @@ export class OrderService {
           .catch(this.handleError);
   }
 
+  unSetTable(tableNumber) {
+    return this.apiService.put(`/order/unsettable/${tableNumber}`)
+            .map(data =>data.table)
+            .catch(this.handleError);
+  }
+
   /**
    * Transforma el pedido recuperado de la base de datos en un objeto "Order" para utilizar en el front end
    * @param order pedido recuperado de la base de datos
