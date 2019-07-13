@@ -2,12 +2,11 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
-import { CompleterData } from 'ng-mdb-pro/pro/autocomplete';
-
-import { CompleterService } from 'ng-mdb-pro/pro/autocomplete';
+import { Observable, Subject } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ModalDirective } from 'ng-mdb-pro/free';
+import { ModalDirective } from 'ng-uikit-pro-standard';
 import { 
   Menu, 
   CategoryService, 
@@ -42,8 +41,7 @@ export class OrderNewComponent implements OnInit {
               private productService: ProductService,
               private orderService : OrderService,
               private modalService: BsModalService,
-              private categoryService : CategoryService,
-              private completerService: CompleterService) { }
+              private categoryService : CategoryService) { }
 
   pageTitle: String = 'Nuevo Pedido'; 
   noProductsText: string = 'Debe seleccionar un menu y una categoria de la lista.';
@@ -64,8 +62,6 @@ export class OrderNewComponent implements OnInit {
   thereIsDiscount: Boolean;
   /**String de búsqueda mdb-completer. */
   searchStr: string;
-  /** */
-  dataService: CompleterData;  
   /**Producto a eliminar del array de productos del pedido. */
   productToRemoveFromOrder:ProductsInUserOrder;
   /**Motivo para eliminar el producto del pedido. */
@@ -82,6 +78,8 @@ export class OrderNewComponent implements OnInit {
   config = {
 		backdrop: true,
   }
+  results: Observable<Product[]>;
+  searchText = new Subject();
   /** Variables para setear la clase de los menues dinamicamente segun el que esta seleccionado*/
   private activeMenu : string = '';
   /** Variables para setear la clase de las categorias dinamicamente segun la que esta seleccionada*/
@@ -97,7 +95,15 @@ export class OrderNewComponent implements OnInit {
     this.paymentTypes = this._route.snapshot.data['paymentTypes'];    
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;    
-    this.dataService = this.completerService.local(this.filteredProducts, 'name', 'name');
+    this.results = this.searchText.pipe(
+      startWith(''),
+      map((value: Product) => this.filter(value.name))
+    )
+  }
+
+  filter(value: string): Product[] {
+    const filterValue = value.toLowerCase();
+    return this.filteredProducts.filter((item: Product) => item.name.toLowerCase().includes(filterValue));
   }
 
   /**Devuelve las categorías para el menu pasado como parámetro almacenadas en el sistema

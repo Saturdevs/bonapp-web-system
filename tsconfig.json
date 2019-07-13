@@ -14,7 +14,8 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "strictPropertyInitialization": false
   },
   "include": ["node_modules/ng-mdb-pro/**/*.ts",  "src/**/*.ts"]
 }

@@ -3,19 +3,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { DOCUMENT } from '@angular/platform-browser';
-import {} from '@types/googlemaps';
+//import {} from '@types/googlemaps';
 
 import { Client } from '../../shared/models/client';
-import { CompleterData, CompleterService } from "ng-mdb-pro/pro/autocomplete";
 
 @Component({
   selector: 'app-delivery',
   templateUrl: './delivery.component.html',
   styleUrls: ['./delivery.component.scss']
 })
-export class DeliveryComponent implements OnInit {
+export class DeliveryComponent {
 
-  public dataClientService: CompleterData;
+  /* public dataClientService: CompleterData;
   public latitude: number;
   public longitude: number;
   public searchControl: FormControl;
@@ -138,5 +137,5 @@ export class DeliveryComponent implements OnInit {
 
 
     
-  }
+  } */
 }

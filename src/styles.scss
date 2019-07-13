@@ -1,5 +1,14 @@
-@import './node_modules/ng-mdb-pro/assets/scss/mdb/free/data/_colors';
+@import './node_modules/ng-uikit-pro-standard/assets/scss/core/_colors';
 
+$primary-color: #c24c4c !default;
+.primary-color {
+  background-color: $primary-color!important;
+}
+
+$alternative-color:  #f56a6a !default;
+.alternative-color {
+  background-color: $alternative-color!important;
+}
 
 .navBarColor {
     background-color: #f2f2f2;

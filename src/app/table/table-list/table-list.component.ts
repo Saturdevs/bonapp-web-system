@@ -11,7 +11,7 @@ import {
 	TableService,
 	OrderService
 } from '../../../shared/index';
-import { ToastService } from 'ng-mdb-pro/pro/alerts';
+import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
 
 interface Box {

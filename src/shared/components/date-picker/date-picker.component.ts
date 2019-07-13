@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IMyOptions, IMyDate } from 'ng-mdb-pro/pro/date-picker';
+import { IMyOptions, IMyDate } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-date-picker',

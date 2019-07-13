@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
-import { UploadFile, UploadInput, UploadOutput } from 'ng-mdb-pro/pro/file-input';
-import { humanizeBytes } from 'ng-mdb-pro/pro/file-input';
+import { UploadFile, UploadInput, UploadOutput } from 'ng-uikit-pro-standard';
+import { humanizeBytes } from 'ng-uikit-pro-standard';
 
 import { FileInputService } from '../../shared/services/file-input.service';
 import { File } from '../../shared/models/file';

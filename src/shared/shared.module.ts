@@ -2,9 +2,7 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { MDBBootstrapModules } from 'ng-mdb-pro';
-import { MDBSpinningPreloader } from 'ng-mdb-pro';
-import { ToastModule } from 'ng-mdb-pro/pro/alerts';
+import { MDBBootstrapModulesPro, MDBSpinningPreloader, ToastModule } from 'ng-uikit-pro-standard';
 import { ApiService } from '../shared/services/api.service';
 import { SharedService } from './services/shared.service';
 import { ErrorTemplateComponent } from '../shared/components/error-template/error-template.component';
@@ -17,7 +15,7 @@ import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
     CommonModule,
     ModalModule.forRoot(),
     ToastModule.forRoot(),
-    MDBBootstrapModules.forRoot(),    
+    MDBBootstrapModulesPro.forRoot(),    
   ],
   declarations: [
     ErrorTemplateComponent,
@@ -34,7 +32,7 @@ import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MDBBootstrapModules,
+    MDBBootstrapModulesPro,
     ModalModule,
     ErrorTemplateComponent,
     DeleteTemplateComponent,

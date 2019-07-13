@@ -11,8 +11,6 @@ import { SizeService } from '../../../shared/services/size.service';
 import { SharedService } from '../../../shared/services/shared.service';
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
-import { UploadFile, UploadInput, UploadOutput } from 'ng-mdb-pro/pro/file-input';
-import { humanizeBytes } from 'ng-mdb-pro/pro/file-input';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
@@ -44,9 +42,6 @@ export class ProductNewComponent implements OnInit {
   sizesArray: Size[];
   pageTitle: string = "Nuevo Producto";
   formData: FormData;
-  files: UploadFile[];
-  uploadInput: EventEmitter<UploadInput>;
-  humanizeBytes: Function;
   dragOver: boolean;
   lastProductCode: string;
   validPicture: string = '';
@@ -88,9 +83,6 @@ export class ProductNewComponent implements OnInit {
       available: true
     });
     this.currentCollection = Collections.Product;
-    this.files = [];
-    this.uploadInput = new EventEmitter<UploadInput>();
-    this.humanizeBytes = humanizeBytes;
     
     this.getCategories();
     this.getSizes();
