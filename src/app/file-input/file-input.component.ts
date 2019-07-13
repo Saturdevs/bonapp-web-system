@@ -58,7 +58,7 @@ export class FileInputComponent implements OnInit  {
           let file = event.target.files[0]; 
           await this.loadFileReader(reader, file);
           this.validator.emit([file.name,reader.result]);
-          this.newFile.data = reader.result.split(',')[1];
+          this.newFile.data = reader.result.toString().split(',')[1];
           this.newFile.name = file.name;
           this.newFile.type = file.type;
           this.newFile.subtype = this.subtype;
