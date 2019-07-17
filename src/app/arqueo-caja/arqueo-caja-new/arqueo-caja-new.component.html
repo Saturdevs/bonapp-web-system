@@ -57,10 +57,13 @@
           <label>Caja:</label>
         </div>  
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <mdb-select #arqueoCashRegister="ngModel" required type="text" (ngModelChange)="validateCashRegister(arqueoCashRegister.value)" [class.is-invalid]="showMessageCashRegister" name="arqueoCashRegister"
-          id="arqueoCashRegister" [(ngModel)]="newArqueo.cashRegisterId" (closed)="cashRegistersTouched = true"
-          [options]="cashRegistersSelect" placeholder="Seleccione la caja" class="mdbSelectClass">
-          </mdb-select>
+          <select #arqueoCashRegister="ngModel" required type="text" class="form-control browser-default"
+          [class.is-invalid]="showMessageCashRegister" name="arqueoCashRegister"
+          id="arqueoCashRegister" (blur)="validateCashRegister(arqueoCashRegister.value)"
+            (change)="validateCashRegister(arqueoCashRegister.value)" [(ngModel)]="newArqueo.cashRegisterId">
+            <option value="default" default>Seleccione la caja...</option>
+            <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+          </select>
         </div>
       </div>
       <div *ngIf="showMessageCashRegister && cashRegistersTouched === true" class="alert alert-danger mt-2">
