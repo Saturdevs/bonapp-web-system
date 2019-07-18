@@ -1,6 +1,7 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MDBBootstrapModulesPro, MDBSpinningPreloader, ToastModule } from 'ng-uikit-pro-standard';
 import { ApiService } from '../shared/services/api.service';
@@ -15,7 +16,8 @@ import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
     CommonModule,
     ModalModule.forRoot(),
     ToastModule.forRoot(),
-    MDBBootstrapModulesPro.forRoot(),    
+    MDBBootstrapModulesPro.forRoot(),  
+    BrowserAnimationsModule 
   ],
   declarations: [
     ErrorTemplateComponent,

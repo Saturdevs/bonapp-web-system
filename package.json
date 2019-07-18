@@ -35,7 +35,6 @@
     "hammerjs": "^2.0.8",
     "http-status-codes": "^1.3.2",
     "jquery": "^3.2.1",
-    "ng-uikit-pro-standard": "git+https://oauth2:9SXT_TL9a7ZNifFyNaLe@git.mdbootstrap.com/mdb/angular/ng-uikit-pro-standard.git",
     "ngx-bootstrap": "^1.9.3",
     "node-sass": "^4.7.2",
     "rxjs": "^6.5.2",

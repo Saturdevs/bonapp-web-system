@@ -1,9 +1,6 @@
 @import './node_modules/ng-uikit-pro-standard/assets/scss/core/_colors';
 
-$primary-color: #c24c4c !default;
-.primary-color {
-  background-color: $primary-color!important;
-}
+$primary-color: #c24c4c !important;
 
 $alternative-color:  #f56a6a !default;
 .alternative-color {
@@ -21,6 +18,25 @@ $alternative-color:  #f56a6a !default;
 
 .navBarColor a {
     color: $alternative-color;
+}
+
+.classic-tabs.tabs-primary li a.active {
+    border-color: #FFFFFF;
+}
+
+.classic-tabs li a.active {
+    border-bottom: 3px solid;
+    color: #fff;
+}
+
+.classic-tabs li a {
+    display: block;
+    padding: 20px 24px;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    border-radius: 0;
 }
 
 .customLi{
