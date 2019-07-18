@@ -60,13 +60,6 @@ export class ArqueoCajaNewComponent implements OnInit {
         this.cashRegisters = data['cashRegisters'];
       }
     )
-    
-    for (let cashRegister of this.cashRegisters) {
-      if (cashRegister.available === true) {
-        this.cashRegistersSelect.push({value: cashRegister._id, label: cashRegister.name})
-      }
-    };
-    
     this.shouldDisplayCashRegisterCombo();  
   }
 
