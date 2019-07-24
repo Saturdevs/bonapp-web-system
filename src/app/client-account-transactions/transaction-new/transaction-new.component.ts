@@ -99,7 +99,8 @@ export class TransactionNewComponent implements OnInit {
             paymentMethod: this.newTransaction.paymentType,
             cashRegister: this.newTransaction.cashRegister,
             comment: this.newTransaction.comment,
-            deleted: false
+            deleted: false,
+            date: new Date()
           };
   
           client.transactions.push(transact);
