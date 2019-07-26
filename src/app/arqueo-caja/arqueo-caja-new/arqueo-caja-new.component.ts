@@ -85,30 +85,22 @@ export class ArqueoCajaNewComponent implements OnInit {
     let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
     let dateCreatedAt = new Date(stringDate);
     this.newArqueo.createdAt = dateCreatedAt;
-    this._arqueoService.getCashMovementsByDate(this.newArqueo.cashRegisterId, dateCreatedAt).subscribe(
-      data => {
-        data.ingresos.forEach(ingreso => {
-          this.newArqueo.ingresos.push(ingreso);
-        });
-        data.egresos.forEach(egreso => {
-          this.newArqueo.egresos.push(egreso);
-        });
-        this._arqueoService.saveArqueo(this.newArqueo).subscribe(
-          arqueo =>
-          { 
-            this.newArqueo = arqueo,
-            this.onBack()
-          },
-          error => 
-          { 
-            this.showModalError(this.serviceErrorTitle, error.error.message);
-          }
-        );
+    //Los ingresos y egresos se van a inicializar en el metodo save del backend en caso de que haya movimientos de dinero
+    //para esa caja con fecha posterior a la fecha con la que se abre el arqueo.
+    this.newArqueo.ingresos = [];
+    this.newArqueo.egresos = []; 
+    
+    this._arqueoService.saveArqueo(this.newArqueo).subscribe(
+      arqueo =>
+      { 
+        this.newArqueo = arqueo,
+        this.onBack()
       },
-      error => {
+      error => 
+      { 
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
-    )                                                                             
+    );
   }
 
   validate() {

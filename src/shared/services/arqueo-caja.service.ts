@@ -47,12 +47,6 @@ export class ArqueoCajaService {
            .catch(this.handleError);
   }
 
-  getCashMovementsByDate(idCashRegister, date) {
-    return this.apiService.get(`/arqueo/cashMovements/${idCashRegister}?date=${date}`)
-      .map(data => data)
-      .catch(this.handleError);
-  }
-
   updateArqueo(arqueo){
     console.log(arqueo)
     return this.apiService.put(`/arqueo/${arqueo._id}`, arqueo)
