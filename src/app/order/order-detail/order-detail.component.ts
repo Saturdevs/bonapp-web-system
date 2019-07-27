@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Order } from '../../../shared';
 
 @Component({
   selector: 'app-order-detail',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OrderDetailComponent implements OnInit {
 
-  constructor() { }
+  /**Labels and strings */
+  private pageTitle: string = "Detalle";
+
+  order: Order;
+
+  constructor(private _route: ActivatedRoute) { }
 
   ngOnInit() {
+    this._route.data.subscribe(
+      data => {
+        this.order = this._route.snapshot.data['order'];
+      }
+    )
   }
 
 }

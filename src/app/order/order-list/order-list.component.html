@@ -1,3 +1,71 @@
-<p>
-  order-list works!
-</p>
+<ng-template #deleteTemplate>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteOrder()"
+    (close)="closeModal()">
+  </app-delete-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<div class="row pl-0 pr-0 ml-0 mr-0">
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+    <div class="row pr-0 ml-0 mr-0 pageTitle">
+      <header class="major">
+        <h5 class="customTitle">{{ pageTitle }}</h5>
+      </header>
+    </div>
+    <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
+      <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
+        <!-- <div class="row mb-2 customBox">
+          <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+            <div class="row col-md-12">
+              <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
+                <select #queryStatus name="queryStatus" id="queryStatus" [(ngModel)]="statusSelectedValue">
+                  <option value="default" default>Seleccione la caja...</option>
+                  <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div> -->
+        <div class="row">
+          <table class="table table-bordered table-hover customTable">
+            <thead class="primary-color customTableText">
+              <tr>
+                <th>Hora Inicio</th>
+                <th>Hora Cierre</th>
+                <th>Estado</th>
+                <th>Mesa</th>
+                <th>Mozo</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-wrapper" *ngIf='filteredOrders && filteredOrders.length'>
+              <tr *ngFor='let order of filteredOrders'>
+                <td>{{ order.created_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td>{{ order.completed_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.table }}</td>
+                <td>{{ order.waiter }}</td>
+                <td></td>
+                <td *ngIf="order.totalPrice !== undefined">{{ order.totalPrice | currency:'USD':code:'2.2-2' }}</td>
+                <td *ngIf="order.totalPrice === undefined">{{ price | currency:'USD':code:'2.2-2' }}</td>
+                <td class="align-middle">
+                  <a [routerLink]="['/sales/sales-list', { outlets: { edit: ['orderDetail', order._id] } }]" class="btn btn-yellow btn-sm customButtonText">Detalle</a>
+                  <a (click)="showModalDelete(deleteTemplate, order._id)" class="btn btn-red btn-sm">Eliminar</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+    <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+  </div>
+</div>

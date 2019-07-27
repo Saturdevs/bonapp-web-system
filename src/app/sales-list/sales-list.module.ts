@@ -12,6 +12,7 @@ import { ArqueoCajaListComponent } from '../arqueo-caja/arqueo-caja-list/arqueo-
 import { ArqueoCajaEditComponent } from '../arqueo-caja/arqueo-caja-edit/arqueo-caja-edit.component';
 import { ArqueoCajaNewComponent } from '../arqueo-caja/arqueo-caja-new/arqueo-caja-new.component';
 import { SelectItemComponent } from '../select-item/select-item.component';
+import { OrderDetailComponent } from '../order/order-detail/order-detail.component';
 
 import { CashFlowResolverService } from '../cash-flows/cash-flows-list/cash-flow-resolver.service';
 import { CashFlowEditResolverService } from '../cash-flows/cash-flows-edit/cash-flow-edit-resolver.service';
@@ -21,6 +22,8 @@ import { ArqueoCajaResolverService } from '../arqueo-caja/arqueo-caja-list/arque
 import { ArqueoCajaEditResolverService } from '../arqueo-caja/arqueo-caja-edit/arqueo-caja-edit-resolver.service';
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
+import { OrderResolverService } from '../order/order-list/order-resolver.service';
+import { OrderDetailService } from '../order/order-detail/order-detail.service';
 
 @NgModule({
   imports: [
@@ -34,7 +37,20 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
           },
           {
             path: 'sales-list',
-            component: OrderListComponent            
+            component: OrderListComponent,
+            resolve: {
+              orders: OrderResolverService
+            },
+            children: [
+              {
+                path: 'orderDetail/:id',
+                component: OrderDetailComponent,
+                resolve: { 
+                  order: OrderDetailService
+                },
+                outlet: 'edit'                
+              }
+            ]              
           },
           {
             path: 'cash-flows',
