@@ -46,9 +46,11 @@ export class ProductNewComponent implements OnInit {
   lastProductCode: string;
   validPicture: string = '';
   lowestPrice: Number = 0;
+  defaultPrice: Number = 0;
   duplicatedSizesArray: string[] = []; 
   nameIsAvailable: boolean = false;
   currentCollection : string;
+  defaultSize: Number = -1;
   
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
@@ -96,7 +98,8 @@ export class ProductNewComponent implements OnInit {
   buildProductSizes(): FormGroup {
     return this.formBuilder.group({
                 name: ['default', ComboValidators.hasValue],
-                price: ['', Validators.required]
+                price: ['', Validators.required],
+                default: ['']
               })
   }
 
@@ -159,15 +162,17 @@ export class ProductNewComponent implements OnInit {
           let duplicatedSizeModalMessage = "Existen tamanos duplicados, por favor corrija e intente nuevamente.";
           this.showModalError(duplicatedSizeModalTitle, duplicatedSizeModalMessage);          
         }
+        this.defaultPrice = product.sizes[this.defaultSize.valueOf()].price;
         this.lowestPrice = product.sizes.reduce((min, p) => p.price < min ? p.price : min, product.sizes[0].price);
       } 
       else{
-        console.log(product.sizes); 
+        this.defaultPrice = product.sizes[this.defaultSize.valueOf()].price;
         this.lowestPrice = product.sizes[0].price;
       }
-      if(product.price != this.lowestPrice){
+      console.log(this.defaultPrice);
+      if(product.price != this.defaultPrice){
         this.modalPriceNotMatchTitle = "Agregar Producto";
-        this.modalPriceNotMatchMessage = "El precio del producto no coincide con el precio del menor tamano. Se modificara el precio del producto para hacerlo coincidir.";
+        this.modalPriceNotMatchMessage = "El precio del producto no coincide con el precio del tama&ntilde;o po defecto. Se modificara el precio del producto para hacerlo coincidir.";
         this.modalRef = this.modalService.show(this.priceNotMatchTemplate, {backdrop: true});
       }
       else{
@@ -179,7 +184,7 @@ export class ProductNewComponent implements OnInit {
   }
 
   closeModalAndContinue(){
-    this.productForm.controls.price.setValue(this.lowestPrice);
+    this.productForm.controls.price.setValue(this.defaultPrice);
     this.closeModal();
     this.saveProduct();
   }
@@ -259,6 +264,10 @@ export class ProductNewComponent implements OnInit {
 
   onBack(): void {
     this._router.navigate(['/restaurant/product']);
+  }
+
+  setDefaultSize(index){
+    this.defaultSize = index
   }
 
   cancel(){    
