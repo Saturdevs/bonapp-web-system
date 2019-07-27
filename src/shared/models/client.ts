@@ -8,5 +8,4 @@ export class Client {
   enabledTransactions: Boolean;
   balance: number;
   transactions: Array<any>;
-  dateOfLastTransaction: Date;
 }
