@@ -108,7 +108,6 @@ export class TransactionNewComponent implements OnInit {
             client.balance = 0;
           }
           client.balance = client.balance + transact.amount;
-          client.dateOfLastTransaction = new Date();
   
           this._clientService.updateClient(client).subscribe(
             success => { 
