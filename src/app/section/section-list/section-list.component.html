@@ -9,13 +9,14 @@
 
 <!-- Nav tabs -->
 <div class="pageTitle">
-  <div class="row">
+  <div class="row pl-0 pr-0 ml-0 mr-0">
     <div class="col-md-9 col-lg-9 col-sm-9 pl-3">
       <h5>{{ title }}</h5>
     </div>
 
     <div *ngIf="ordersActive === true" class="col-md-3 col-lg-3 col-sm-3 pr-5">
-      <input type="number" class="input-alternate" placeholder="Ir a mesa" 
+      <span style="color: gray;"><i class="fa fa-search pr-2"></i></span>
+      <input type="number" class="input-alternate search-table-box" placeholder="Ir a mesa" 
             name="tableNumber" [(ngModel)]='tableNumber' id="tableNumber"
             (keydown.enter)="onKeyDownEnter($event)" min="0">
     </div>

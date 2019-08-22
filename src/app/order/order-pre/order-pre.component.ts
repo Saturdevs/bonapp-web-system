@@ -59,7 +59,7 @@ export class OrderPreComponent implements OnInit {
 				order.users = new Array<UsersInOrder>();
 				order.users[0] = new UsersInOrder();
 				//aca hay que setear el id del usuario admin. todavia no esta creado.
-				order.users[0].user = "5d38ebfcf361ae0cabe45a8e";
+				order.users[0].user = "5b39625a42d7744c995253c5";
 				order.users[0].owner = true;
 				order.users[0].products = new Array<ProductsInUserOrder>();
 				order.users[0].products = [];		

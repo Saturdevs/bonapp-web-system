@@ -1,7 +1,8 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { OrderService, Order } from '../../../shared';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-order-list',
@@ -21,15 +22,32 @@ export class OrderListComponent implements OnInit {
   orders: Order[];
   filteredOrders: Order[];
   price: Number;
+  previous: any = [];
+
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private orderService: OrderService,
               private route: ActivatedRoute,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.price = 0;
     this.orders = this.route.snapshot.data['orders'];
     this.filteredOrders = this.orders;    
+
+    this.mdbTable.setDataSource(this.filteredOrders);
+    this.filteredOrders = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(9);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   getOrders() {

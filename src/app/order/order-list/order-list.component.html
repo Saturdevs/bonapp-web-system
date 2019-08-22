@@ -31,7 +31,7 @@
           </form>
         </div> -->
         <div class="row">
-          <table class="table table-bordered table-hover customTable">
+          <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
             <thead class="primary-color customTableText">
               <tr>
                 <th>Hora Inicio</th>
@@ -45,21 +45,28 @@
               </tr>
             </thead>
             <tbody class="table-wrapper" *ngIf='filteredOrders && filteredOrders.length'>
-              <tr *ngFor='let order of filteredOrders'>
-                <td>{{ order.created_at | date:'dd/MM/yy HH:mm' }}</td>
-                <td>{{ order.completed_at | date:'dd/MM/yy HH:mm' }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.table }}</td>
-                <td>{{ order.waiter }}</td>
-                <td></td>
-                <td *ngIf="order.totalPrice !== undefined">{{ order.totalPrice | currency:'USD':code:'2.2-2' }}</td>
-                <td *ngIf="order.totalPrice === undefined">{{ price | currency:'USD':code:'2.2-2' }}</td>
-                <td class="align-middle">
+              <tr *ngFor='let order of filteredOrders; let i = index'>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.created_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.completed_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.status }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.table }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.waiter }}</td>
+                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"></td>
+                <td *ngIf="(order.totalPrice !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ order.totalPrice | currency:'USD':code:'2.2-2' }}</td>
+                <td *ngIf="(order.totalPrice === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ price | currency:'USD':code:'2.2-2' }}</td>
+                <td class="align-middle" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
                   <a [routerLink]="['/sales/sales-list', { outlets: { edit: ['orderDetail', order._id] } }]" class="btn btn-yellow btn-sm customButtonText">Detalle</a>
                   <a (click)="showModalDelete(deleteTemplate, order._id)" class="btn btn-red btn-sm">Eliminar</a>
                 </td>
               </tr>
             </tbody>
+            <tfoot class="grey lighten-5 w-100">
+              <tr>
+                <td colspan="8">
+                  <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredOrders"></mdb-table-pagination>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
