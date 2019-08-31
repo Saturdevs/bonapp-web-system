@@ -43,6 +43,7 @@ export class ProductModifyComponent implements OnInit {
   private sub: Subscription;
   sizesArr: Array<string> = new Array("Chico", "Mediano", "Grande");
   path: string = '../../../assets/img/products/';  
+  checkboxAvailableText: String = 'Disponible';
   
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;

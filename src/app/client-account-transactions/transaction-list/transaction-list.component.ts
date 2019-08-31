@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -7,13 +7,14 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ClientService } from '../../../shared/services/client.service';
 import { Transaction } from '../../../shared/models/transaction';
 import { Client } from '../../../shared/models/client';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.scss']
 })
-export class TransactionListComponent implements OnInit {
+export class TransactionListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   private serviceErrorTitle = 'Error de Servicio';
@@ -33,10 +34,15 @@ export class TransactionListComponent implements OnInit {
   selectedClientName: String;
   amount: number;
   cantTransactions: number;
+  previous: any;
 
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  
   constructor(private _clientService: ClientService,
               private route: ActivatedRoute,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {    
     this.route.data.subscribe(
@@ -48,7 +54,20 @@ export class TransactionListComponent implements OnInit {
       }
     );  
     
-    this.buildClientsSelectArray();    
+    this.buildClientsSelectArray();
+    
+    this.mdbTable.setDataSource(this.filteredTransactions);
+    this.filteredTransactions = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(7);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();    
   }
 
   getTransactions(): void {

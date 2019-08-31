@@ -34,7 +34,9 @@ export class CashRegisterEditComponent implements OnInit {
   cashRegisterForm: FormGroup;
   errorArqueo: Boolean = false;
   errorMsg: string;
-  errorArqueoOpen = "Esta caja tiene un arqueo abierto y no puede ser marcada como inactiva hasta que el mismo sea cerrado."
+  errorArqueoOpen = "Esta caja tiene un arqueo abierto y no puede ser marcada como inactiva hasta que el mismo sea cerrado.";
+  checkboxAvailableText = "Disponible";
+  checkboxDefaultText = "Caja por defecto"
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,

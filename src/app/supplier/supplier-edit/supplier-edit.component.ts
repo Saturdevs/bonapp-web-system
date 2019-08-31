@@ -26,6 +26,7 @@ export class SupplierEditComponent implements OnInit {
   private cancelButton: String = 'Cancelar';
   private saveButton: String = 'Aceptar';
   supplierNameModified: String;
+  checkboxText = 'Activo';
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,

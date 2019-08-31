@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="row">
-                    <table class="table table-bordered table-hover customTable">
+                    <table class="table table-bordered table-hover customTable"  mdbTable #tableEl="mdbTable">
                         <thead class="primary-color customTableText">
                             <tr>
                                 <th>Nombre</th>
@@ -41,17 +41,24 @@
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredClients && filteredClients.length'>
-                            <tr *ngFor = 'let client of filteredClients'>
-                                    <td>{{ client.name }}</td>
-                                    <td>{{ client.tel }}</td>
-                                    <td>{{ client.addressStreet || ' '}} {{ client.addressNumber || ' '}} {{ client.addressDpto || ' ' }}</td>
-                                    <td>{{ client.balance | currency:'USD':code:'2.2-2'}}</td>
-                                    <td class="align-middle">
+                            <tr *ngFor = 'let client of filteredClients; let i = index'>
+                                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ client.name }}</td>
+                                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ client.tel }}</td>
+                                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ client.addressStreet || ' '}} {{ client.addressNumber || ' '}} {{ client.addressDpto || ' ' }}</td>
+                                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ client.balance | currency:'USD':code:'2.2-2'}}</td>
+                                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">
                                         <a [routerLink]="['/clients-module/clients', { outlets: { edit: ['editClient', client._id] } }]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                                         <a (click) = "showModalDelete(deleteTemplate, client._id)" class="btn btn-red btn-sm">Eliminar</a>
                                     </td>
                             </tr>
                         </tbody>
+                        <tfoot class="grey lighten-5 w-100">
+                            <tr>
+                                <td colspan="5">
+                                <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredClients"></mdb-table-pagination>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>                

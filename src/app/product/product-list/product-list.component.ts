@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -8,13 +8,14 @@ import { ProductService } from '../../../shared/services/product.service';
 import { Product } from '../../../shared/models/product';
 import { Category } from '../../../shared/models/category';
 import { CategoryService } from '../../../shared/services/category.service';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = 'Productos';
@@ -34,6 +35,10 @@ export class ProductListComponent implements OnInit {
   categories: Category[];
   categoriesOptions: Array<any> = [];
   selectedValue: string = '';
+  previous: any;
+
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   get listFilter(): string {
       return this._listFilter;
@@ -61,7 +66,8 @@ export class ProductListComponent implements OnInit {
   constructor(private productService: ProductService,
               private categoryService: CategoryService,
               private modalService: BsModalService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.products = this.route.snapshot.data['products'].map(product => {
@@ -81,6 +87,20 @@ export class ProductListComponent implements OnInit {
       this.categoriesOptions.push({value: cat._id, label:cat.name})
     };
     this.selectedValue = 'default';
+    
+
+    this.mdbTable.setDataSource(this.filteredProducts);
+    this.filteredProducts = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(12);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   performFilter(filterBy: string): Product[] {

@@ -27,6 +27,7 @@ export class CashRegisterNewComponent implements OnInit {
   pageTitle: String = 'Nueva Caja';
   private saveButton: String = 'Guardar';
   private cancelButton: String = 'Cancelar';
+  private checkboxAvailableText: String = 'Disponible';
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,

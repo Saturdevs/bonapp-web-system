@@ -51,6 +51,7 @@ export class ProductNewComponent implements OnInit {
   nameIsAvailable: boolean = false;
   currentCollection : string;
   defaultSize: Number = -1;
+  checkboxAvailableText: String = 'Disponible';
   
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;

@@ -29,7 +29,9 @@ export class PaymentTypeEditComponent implements OnInit {
   paymentTypeNameModified: String;
   paymentTypeDefault: Boolean;
   paymentTypeForm: FormGroup;
-
+  checkboxDefaultText: String = 'Tipo de pago por defecto';
+  checkboxAvailableText: String = 'Disponible';
+  
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _paymentTypeService: PaymentTypeService,

@@ -35,7 +35,7 @@
     </div>
 
     <div class="row">
-        <table class="table table-bordered table-hover customTable">
+        <table class="table table-bordered table-hover customTable"  mdbTable #tableEl="mdbTable">
             <thead class="primary-color customTableText">
                 <tr>
                     <th>Nombre</th>
@@ -44,15 +44,22 @@
                 </tr>
             </thead>
             <tbody class="table-wrapper" *ngIf='categories && categories.length'>
-                <tr *ngFor = 'let category of filteredCategories ' >
-                    <td>{{category.name}}</td>
-                    <td>{{ category.menuId.name }}</td>
-                    <td class="align-middle">
+                <tr *ngFor = 'let category of filteredCategories; let i = index' >
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{category.name}}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ category.menuId.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">
                         <a [routerLink]="['edit', category._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                         <a (click) = "showModalDelete(deleteTemplate, noDelete, category._id)" class="btn btn-red btn-sm">Eliminar</a>
                     </td>
                 </tr>
             </tbody>
+            <tfoot class="grey lighten-5 w-100">
+                <tr>
+                    <td colspan="3">
+                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCategories"></mdb-table-pagination>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

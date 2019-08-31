@@ -76,10 +76,7 @@
                 </div>     
             </div>
             <div class="col-md-2 col-lg-2">
-              <div class="form-group pt-4 pl-5">
-                <input type="checkbox" formControlName="available" id="available">
-                <label for="available">Disponible</label>
-              </div>
+              <mdb-checkbox formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
             </div>
           </div>
 
@@ -187,7 +184,7 @@
       </div>
       <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
         <button class="btn btn-md btn-primary" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button> 
-        <button class="btn btn-md btn-primary" [disabled]="productForm.invalid || defaultSize === -1" type="submit" (click)="validateSizes()">Guardar</button>
+        <button class="btn btn-md btn-primary" [disabled]="productForm.invalid" type="submit" (click)="validateSizes()">Guardar</button>
       </div>    
     </form>
 </div>      

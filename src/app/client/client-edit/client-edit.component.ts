@@ -26,6 +26,7 @@ export class ClientEditComponent implements OnInit {
   private saveButton: String = 'Aceptar';
   private cancelButton: String = 'Cancelar';
   clientNameModified: String;
+  checkboxText: String = 'Tiene Cta Cte';
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,

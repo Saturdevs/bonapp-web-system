@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -9,13 +9,14 @@ import { CashFlow } from '../../../shared/models/cash-flow';
 
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { CashRegister } from '../../../shared/models/cash-register';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-cash-flows-list',
   templateUrl: './cash-flows-list.component.html',
   styleUrls: ['./cash-flows-list.component.scss']
 })
-export class CashFlowsListComponent implements OnInit {
+export class CashFlowsListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
   pageTitle: string = "Movimientos de Caja";
@@ -38,11 +39,16 @@ export class CashFlowsListComponent implements OnInit {
   startDate: Date;
   endDate: Date;
   typesArray: Array<string> = new Array("Ingreso", "Egreso");
+  previous: any;
+
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private cashFlowService: CashFlowService,
               private cashRegisterService: CashRegisterService,
               private route: ActivatedRoute,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.data.subscribe(
@@ -81,6 +87,20 @@ export class CashFlowsListComponent implements OnInit {
     this.cashSelectedValue = 'default';
 
     this.filteredCashFlows = this.cashFlows;
+
+
+    this.mdbTable.setDataSource(this.filteredCashFlows);
+    this.filteredCashFlows = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(12);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   getCashFlows(): void {

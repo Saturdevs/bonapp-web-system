@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,13 +6,14 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { SupplierService } from '../../../shared/services/supplier.service';
 import { Supplier } from '../../../shared/models/supplier';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-supplier-list',
   templateUrl: './supplier-list.component.html',
   styleUrls: ['./supplier-list.component.scss']
 })
-export class SupplierListComponent implements OnInit {
+export class SupplierListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Proveedores";
@@ -27,10 +28,15 @@ export class SupplierListComponent implements OnInit {
   idSupplierDelete: any;
   checkboxText: string = "Mostrar proveedores inactivos";
   showInactiveSuppliers: Boolean = false;
+  previous: any;
+
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private _supplierService: SupplierService,
               private route: ActivatedRoute,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.data.subscribe(
@@ -39,6 +45,19 @@ export class SupplierListComponent implements OnInit {
         this.filteredSuppliers = this.suppliers;
       }
     )
+
+    this.mdbTable.setDataSource(this.filteredSuppliers);
+    this.filteredSuppliers = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(12);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   getSuppliers(): void {

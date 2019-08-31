@@ -46,7 +46,7 @@
                     </form>
                 </div>
                 <div class="row">
-                    <table class="table table-bordered table-hover customTable">
+                    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
                         <thead class="primary-color customTableText">
                             <tr>
                                 <th>Fecha</th>
@@ -61,19 +61,26 @@
                             <!-- Loren, aca en el *ngFor implemento el pipe que defino en la carpeta shared/pipes -->
                             <!-- El pipe lo agregue en el cash-flows.module -->
                             <!-- Fijate que agrego los ng-model por los que quiero filtrar (cashSelectedValue y typeSelectedValue) -->
-                            <tr *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate'>
-                                <td *ngIf='cashFlow.deleted === false'>{{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
-                                <td *ngIf='cashFlow.deleted === false'>{{ cashFlow.cashRegister }}</td>
-                                <td *ngIf='cashFlow.deleted === false'>{{ cashFlow.totalAmount | currency:'USD':code:'2.2-2' }}</td>
-                                <td *ngIf='cashFlow.deleted === false'>{{ cashFlow.type }}</td>
-                                <td *ngIf='cashFlow.deleted === false'>{{ cashFlow.comment }}</td>
-                                <td class="align-middle" *ngIf='cashFlow.deleted === false'>
+                            <tr *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate; let i = index'>
+                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
+                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.cashRegister }}</td>
+                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.totalAmount | currency:'USD':code:'2.2-2' }}</td>
+                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.type }}</td>
+                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.comment }}</td>
+                                <td class="align-middle" *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
                                     <a [routerLink]="['/sales/cash-flows', { outlets: { edit: ['editCashFlow', cashFlow._id] } }]"
                                         class="btn btn-yellow btn-sm customButtonText">Detalle</a>
                                     <a (click)="showModalDelete(deleteTemplate, cashFlow._id)" class="btn btn-red btn-sm">Eliminar</a>
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot class="grey lighten-5 w-100">
+                          <tr>
+                            <td colspan="6">
+                              <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCashFlows"></mdb-table-pagination>
+                            </td>
+                          </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

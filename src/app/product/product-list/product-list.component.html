@@ -46,7 +46,7 @@
     </div>
 
     <div class="row">
-        <table class="table table-bordered table-hover customTable">
+        <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
             <thead class="primary-color customTableText">
                 <tr>
                     <th class="customShortTh">Código</th>
@@ -59,19 +59,26 @@
                 </tr>
             </thead>
             <tbody class="table-wrapper" *ngIf='products && products.length'>
-                <tr *ngFor = 'let product of filteredProducts ' >
-                    <td class="align-middle customShortTh">{{ product.code }}</td>
-                    <td class="align-middle customLongTh">{{ product.name }}</td>
-                    <td class="align-middle customShortTh">{{ product.price | currency:'USD':code:'2.2-2' }}</td>
-                    <td class="align-middle">{{ product.category.name }}</td>
-                    <td class="align-middle">{{ product.category.menuId.name }}</td>
-                    <td class="align-middle customShortTh">{{ product.available }}</td>
-                    <td class="customThTd align-middle">
+                <tr *ngFor = 'let product of filteredProducts; let i = index' >
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ product.code }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customLongTh">{{ product.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ product.price | currency:'USD':code:'2.2-2' }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">{{ product.category.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">{{ product.category.menuId.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ product.available }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="customThTd align-middle">
                         <a [routerLink]="['edit', product._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                         <a (click) = "showModalDelete(deleteTemplate, noDeleteTemplate, product._id)" class="btn btn-red btn-sm">Eliminar</a>
                     </td>
                 </tr>
             </tbody>
+            <tfoot class="grey lighten-5 w-100">
+                <tr>
+                    <td colspan="7">
+                        <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredProducts"></mdb-table-pagination>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 </div>

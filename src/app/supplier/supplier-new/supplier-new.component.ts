@@ -25,6 +25,7 @@ export class SupplierNewComponent implements OnInit {
   private cancelButton: String = 'Cancelar';
   private saveButton: String = 'Aceptar';
   newSupplier: Supplier;
+  checkboxText = 'Activo';
 
   constructor(private _supplierService: SupplierService,
               private _router: Router,

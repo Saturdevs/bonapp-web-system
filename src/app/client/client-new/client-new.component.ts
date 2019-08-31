@@ -25,7 +25,8 @@ export class ClientNewComponent implements OnInit {
   private saveButton: String = 'Guardar';
   private cancelButton: String = 'Cancelar';
   newClient: Client;
-
+  checkboxText: String = 'Tiene Cta Cte';
+  
   constructor(private _clientService: ClientService,
               private _router: Router,
               private modalService: BsModalService) { }

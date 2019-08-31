@@ -34,6 +34,7 @@ export class PaymentTypeNewComponent implements OnInit {
   private cancelButton: String = 'Cancelar';
   nameIsAvailable: boolean = false;
   currentCollection : string;
+  checkboxAvailableText: string = 'Disponible';
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,

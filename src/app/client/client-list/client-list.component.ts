@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,13 +6,14 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import { ClientService } from '../../../shared/services/client.service';
 import { Client } from '../../../shared/models/client';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.scss']
 })
-export class ClientListComponent implements OnInit {
+export class ClientListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Clientes";
@@ -27,7 +28,11 @@ export class ClientListComponent implements OnInit {
   filteredClients: Client[];
   idClientDelete: any;
   _listFilter: string;
+  previous: any;
 
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  
   get listFilter(): string {
       return this._listFilter;
   }
@@ -38,7 +43,8 @@ export class ClientListComponent implements OnInit {
 
   constructor(private _clientService: ClientService,
               private route: ActivatedRoute,
-              private modalService: BsModalService
+              private modalService: BsModalService,
+              private cdRef: ChangeDetectorRef
             ) { }
 
   ngOnInit() {
@@ -48,6 +54,18 @@ export class ClientListComponent implements OnInit {
         this.filteredClients = this.clients;
       }
     )
+    this.mdbTable.setDataSource(this.filteredClients);
+    this.filteredClients = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(12);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   performFilter(filterBy: string): Client[] {

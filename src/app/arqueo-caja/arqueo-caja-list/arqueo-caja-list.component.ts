@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -9,13 +9,14 @@ import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
 
 import { CashRegisterService } from '../../../shared/services/cash-register.service';
 import { CashRegister } from '../../../shared/models/cash-register';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-arqueo-caja-list',
   templateUrl: './arqueo-caja-list.component.html',
   styleUrls: ['./arqueo-caja-list.component.scss']
 })
-export class ArqueoCajaListComponent implements OnInit {
+export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = "Arqueos de Caja";
@@ -35,11 +36,16 @@ export class ArqueoCajaListComponent implements OnInit {
   totalIngresos: number;
   totalEgresos: number;
   realAmount: number;
+  previous: any;
 
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  
   constructor(private arqueoService: ArqueoCajaService,
               private cashRegisterService: CashRegisterService,
               private route: ActivatedRoute,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {    
 
@@ -80,6 +86,19 @@ export class ArqueoCajaListComponent implements OnInit {
     
     this.filteredArqueos = this.arqueos;
     console.log(this.filteredArqueos)
+
+    this.mdbTable.setDataSource(this.filteredArqueos);
+    this.filteredArqueos = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(12);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   getArqueos(): void {

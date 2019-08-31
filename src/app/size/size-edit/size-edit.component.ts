@@ -28,7 +28,8 @@ export class SizeEditComponent implements OnInit {
   size: Size;
   sizeNameModified: String;
   sizeForm: FormGroup;
-
+  checkboxAvailableText: string = 'Disponible';
+  
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _sizeService: SizeService,

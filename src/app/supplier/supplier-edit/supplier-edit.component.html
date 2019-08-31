@@ -79,8 +79,7 @@
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbDeepDirective [(ngModel)]="supplier.active" type="checkbox" name="checkEnabledTransactions" id="checkEnabledTransactions">
-          <label for="checkEnabledTransactions">Activo</label>
+          <mdb-checkbox name="checkEnabledTransactions" [(ngModel)]="supplier.active"> {{ checkboxText }}</mdb-checkbox>
         </div>
       </div>
     </div>

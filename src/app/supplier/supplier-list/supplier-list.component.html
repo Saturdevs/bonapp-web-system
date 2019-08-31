@@ -24,7 +24,7 @@
                     <mdb-checkbox [(ngModel)]="showInactiveSuppliers" name="inactiveSuppliers">{{ checkboxText }}</mdb-checkbox>
                     <br>
                     <br>
-                    <table class="table table-bordered table-hover customTable">
+                    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
                         <thead class="primary-color customTableText">
                             <tr>
                                 <th>Nombre</th>
@@ -35,23 +35,30 @@
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredSuppliers && filteredSuppliers.length'>
-                            <tr *ngFor='let supplier of filteredSuppliers'>
-                                <td *ngIf='supplier.active === true || showInactiveSuppliers === true'>{{ supplier.name
+                            <tr *ngFor='let supplier of filteredSuppliers; let i = index'>
+                                <td *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ supplier.name
                                     }}</td>
-                                <td *ngIf='supplier.active === true || showInactiveSuppliers === true'>{{
+                                <td *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{
                                     supplier.email }}</td>
-                                <td *ngIf='supplier.active === true || showInactiveSuppliers === true'>{{ supplier.tel
+                                <td *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ supplier.tel
                                     }}</td>
-                                <td *ngIf='supplier.active === true || showInactiveSuppliers === true'>{{
+                                <td *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{
                                     supplier.addressStreet || ' '}} {{ supplier.addressNumber || ' '}} {{
                                     supplier.addressDpto || ' ' }}</td>
-                                <td class="align-middle" *ngIf='supplier.active === true || showInactiveSuppliers === true'>
+                                <td class="align-middle" *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
                                     <a [routerLink]="['/suppliers-module/suppliers', { outlets: { edit: ['editSupplier', supplier._id] } }]"
                                         class="btn btn-yellow btn-sm customButtonText">Editar</a>
                                     <a (click)="showModalDelete(deleteTemplate, supplier._id)" class="btn btn-red btn-sm">Eliminar</a>
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot class="grey lighten-5 w-100">
+                            <tr>
+                                <td colspan="5">
+                                <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredSuppliers"></mdb-table-pagination>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

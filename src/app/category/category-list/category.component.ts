@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -10,14 +10,14 @@ import { MenuService } from '../../../shared/services/menu.service';
 import { Menu } from '../../../shared/models/menu';
 import { Product } from '../../../shared/models/product';
 import { ProductService } from '../../../shared/services/product.service';
-
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css']
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = 'Categorías';
@@ -36,6 +36,10 @@ export class CategoryComponent implements OnInit {
   menus: Menu[];
   menusSelect: Array<any> = [];
   selectedValue: string = '';
+  previous: any;
+
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   get listFilter(): string {
       return this._listFilter;
@@ -49,7 +53,8 @@ export class CategoryComponent implements OnInit {
               private _productService: ProductService,
               private modalService: BsModalService,
               private _menuService: MenuService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.categories = this.route.snapshot.data['categories'];
@@ -61,6 +66,19 @@ export class CategoryComponent implements OnInit {
       this.menusSelect.push({value: menu._id, label:menu.name})
     };
     this.selectedValue = 'default';
+
+    this.mdbTable.setDataSource(this.filteredCategories);
+    this.filteredCategories = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
+  }
+
+
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(12);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
   }
 
   performFilter(filterBy: string): Category[] {
