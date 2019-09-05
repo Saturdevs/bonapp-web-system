@@ -18,18 +18,52 @@
     </div>
     <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
       <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
-        <!-- <div class="row mb-2 customBox">
-          <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
-            <div class="row col-md-12">
-              <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
-                <select #queryStatus name="queryStatus" id="queryStatus" [(ngModel)]="statusSelectedValue">
-                  <option value="default" default>Seleccione la caja...</option>
-                  <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
-                </select>
-              </div>
-            </div>
-          </form>
-        </div> -->
+        <div class="row mb-2 customBox">
+            <form #form="ngForm" novalidate class="form-imd-form form-group mr-2 col-md-3 col-lg-3 text-leftnline col-md-12 col-lg-12">
+                <div class="row col-md-12">
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-1 col-lg-1 text-left">
+                    <h6 class="pt-2">Estado:</h6>
+                    <mdb-select #queryStatus name="queryStatus" id="queryStatus" [options]="statusSelect"
+                        [(ngModel)]="statusSelectedValue" placeholder="Estado" class="colorful-select dropdown-primary"></mdb-select>
+                  </div>
+
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+                      <h6 class="pt-2">Mozo:</h6>
+                      <mdb-select #queryWaiter name="queryWaiter" id="queryWaiter"
+                          [options]="waitersSelect" [(ngModel)]="waiterSelectedValue" placeholder="Choose your option"
+                          class="colorful-select dropdown-primary"></mdb-select>
+                  </div>
+
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+                      <h6 class="pt-2">Forma de pago:</h6>
+                      <mdb-select #queryPayments name="queryPayments" id="queryPayments"
+                          [options]="paymentsSelect" [(ngModel)]="paymentsValue" placeholder="Choose your option"
+                          class="colorful-select dropdown-primary"></mdb-select>
+                  </div>
+                  
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+                    <h6 class="pt-2">Caja:</h6>
+                    <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
+                        [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Choose your option"
+                        class="colorful-select dropdown-primary"></mdb-select>
+                  </div>
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-1 col-lg-1 text-left">
+                    <h6 class="pt-2">Mesa:</h6>
+                    <mdb-select #queryTables name="queryTables" id="queryTables"
+                        [options]="tableSelect" [(ngModel)]="tableSelectedValue" placeholder="Nro."
+                        class="colorful-select dropdown-primary"></mdb-select>
+                  </div>
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+                    <h6 class="pt-2">Fecha Desde:</h6>
+                    <input type="date" #queryDateFrom name="queryDateFrom" id="queryDateFrom" [(ngModel)]="dateFromSelectedValue">
+                  </div>
+                  <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+                    <h6 class="pt-2">Fecha Hasta:</h6>
+                    <input type="date"  #queryDateTo name="queryDateTo" id="queryDateTo" [(ngModel)]="dateToSelectedValue">
+                  </div>
+                </div>
+            </form>
+        </div>
         <div class="row">
           <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
             <thead class="primary-color customTableText">
@@ -45,18 +79,18 @@
               </tr>
             </thead>
             <tbody class="table-wrapper" *ngIf='filteredOrders && filteredOrders.length'>
-              <tr *ngFor='let order of filteredOrders; let i = index'>
-                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.created_at | date:'dd/MM/yy HH:mm' }}</td>
-                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.completed_at | date:'dd/MM/yy HH:mm' }}</td>
-                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.status }}</td>
-                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.table }}</td>
-                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.waiter }}</td>
-                <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"></td>
-                <td *ngIf="(order.totalPrice !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ order.totalPrice | currency:'USD':code:'2.2-2' }}</td>
-                <td *ngIf="(order.totalPrice === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ price | currency:'USD':code:'2.2-2' }}</td>
-                <td class="align-middle" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
+              <tr *ngFor='let order of filteredOrders | orderListSearch: statusSelectedValue:waiterSelectedValue:paymentsValue:cashSelectedValue:tableSelectedValue:dateFromSelectedValue:dateToSelectedValue; let i = index'>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.created_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.completed_at | date:'dd/MM/yy HH:mm' }}</td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.status }}</td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.table }}</td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ order.waiter }}</td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"></td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="(order.totalPrice !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ order.totalPrice | currency:'USD':code:'2.2-2' }}</td>
+                <td [ngStyle]="{'color': order.status === 'Deleted'? 'red': 'black'}" *ngIf="(order.totalPrice === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ price | currency:'USD':code:'2.2-2' }}</td>
+                <td  class="align-middle" *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
                   <a [routerLink]="['/sales/sales-list', { outlets: { edit: ['orderDetail', order._id] } }]" class="btn btn-yellow btn-sm customButtonText">Detalle</a>
-                  <a (click)="showModalDelete(deleteTemplate, order._id)" class="btn btn-red btn-sm">Eliminar</a>
+                  <a *ngIf="order.status !== 'Deleted'" (click)="showModalDelete(deleteTemplate, order._id)" class="btn btn-red btn-sm">Eliminar</a>
                 </td>
               </tr>
             </tbody>

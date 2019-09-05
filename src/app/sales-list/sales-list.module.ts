@@ -24,6 +24,7 @@ import { CashRegisterAvailablesResolverService } from '../cash-register/resolver
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
 import { OrderResolverService } from '../order/order-list/order-resolver.service';
 import { OrderDetailService } from '../order/order-detail/order-detail.service';
+import { TableAllResolverService } from '../table/table-list/table-all-resolver.service';
 
 @NgModule({
   imports: [
@@ -39,7 +40,10 @@ import { OrderDetailService } from '../order/order-detail/order-detail.service';
             path: 'sales-list',
             component: OrderListComponent,
             resolve: {
-              orders: OrderResolverService
+              orders: OrderResolverService,
+              cashRegisters: CashRegisterAvailablesResolverService, 
+              paymentTypes: PaymentTypeAvailableResolverService,
+              tables: TableAllResolverService
             },
             children: [
               {

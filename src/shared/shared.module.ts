@@ -10,6 +10,7 @@ import { ErrorTemplateComponent } from '../shared/components/error-template/erro
 import { DeleteTemplateComponent } from '../shared/components/delete-template/delete-template.component';
 import { CancelTemplateComponent } from './components/cancel-template/cancel-template.component';
 import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
+import { OrderListSearchPipe } from './pipes/order-list-search.pipe';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
     ModalModule.forRoot(),
     ToastModule.forRoot(),
     MDBBootstrapModulesPro.forRoot(),  
-    BrowserAnimationsModule 
+    BrowserAnimationsModule,
   ],
   declarations: [
     ErrorTemplateComponent,

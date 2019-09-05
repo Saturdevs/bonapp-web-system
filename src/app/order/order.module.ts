@@ -11,6 +11,7 @@ import { OrderPreComponent } from './order-pre/order-pre.component';
 
 import { OrderService } from '../../shared/services/order.service';
 import { OrderNewResolverService } from './order-new/order-new-resolver.service';
+import { OrderListSearchPipe } from '../../shared/pipes/order-list-search.pipe';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { OrderNewResolverService } from './order-new/order-new-resolver.service'
     OrderNewComponent, 
     OrderDetailComponent, 
     OrderListComponent, 
-    OrderCloseComponent
+    OrderCloseComponent,
+    OrderListSearchPipe
   ],
   providers: [
     OrderService,
