@@ -39,12 +39,6 @@ export class OrderService {
            .catch(this.handleError);
   }
 
-  getLastOrder(): Observable<Order> {
-    return this.apiService.get(`/order/lastOrder`)
-            .map(data => data.lastOrder)
-            .catch(this.handleError);
-  }
-
   updateOrder(order){
     return this.apiService.put(`/order/${order._id}`, order)
             .map(data => data.order)
