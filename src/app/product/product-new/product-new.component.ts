@@ -221,7 +221,6 @@ export class ProductNewComponent implements OnInit {
   saveProduct() {
     if (this.productForm.dirty && this.productForm.valid) {
       let p = Object.assign({}, this.productForm.value);
-      this.fileInputComponent.startUpload();
       this._productService.saveProduct(p)
           .subscribe(
             () => {
@@ -237,12 +236,12 @@ export class ProductNewComponent implements OnInit {
   }
 
   onNotified(validator: Array<string>) {
-    //console.log(validator);
     validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
     validator[1] != '' ? this.newProductPictureData = validator[1]: this.newProductPictureData = '';    
     this.pictureTouched = true;
     if(this.validPicture != ''){
-      this.productForm.controls.picture.setValue(this.validPicture);
+      console.log(this.validPicture);
+      this.productForm.controls.picture.setValue(this.newProductPictureData);
     }
   }
 

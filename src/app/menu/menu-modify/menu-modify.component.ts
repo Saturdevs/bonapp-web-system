@@ -59,7 +59,6 @@ export class MenuModifyComponent implements OnInit {
   }
   
   updateMenu(menu: Menu) {
-    this.fileInputComponent.startUpload();
     this._menuService.updateMenu(menu).subscribe(
           menu => { 
             this.menu = menu;
@@ -71,9 +70,8 @@ export class MenuModifyComponent implements OnInit {
   }
 
 
-  onNotified(validator: string) {
-    console.log(validator);
-    validator != '' ? this.validPicture = validator: this.validPicture = '';
+  onNotified(validator: Array<string>) {
+    validator[1] != '' ? this.validPicture = validator[1]: this.validPicture = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
       this.menu.picture = this.validPicture;
