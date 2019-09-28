@@ -35,6 +35,7 @@ export class OrderNewComponent implements OnInit {
   public modalRef: BsModalRef;
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   @ViewChild('fluid') public fluid:ModalDirective;
+  @ViewChild('optionsAndSizesTemplate') optionsAndSizesTemplate:TemplateRef<any>;
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
@@ -46,10 +47,17 @@ export class OrderNewComponent implements OnInit {
   pageTitle: String = 'Nuevo Pedido'; 
   noProductsText: string = 'Debe seleccionar un menu y una categoria de la lista.';
   prodObservation: string = 'Agregue una observación aquí...';
+  sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños'
   menus : Menu[];
   categories : Category[];
   products: Product[]; 
   filteredProducts: Product[];
+  /** Para mostrar los tamanos. */
+  sizesSelect: Array<any> = [];
+  /** Tamano por default. */
+  sizeSelectedValue: string;
+  /** Array para guardar las opciones seleccionadas */
+  selectedOptions: Array<any> = [];
   /** Pedido en curso. */
   order: Order;
   /** Array para almacenar los productos antes de confirmarlos en el pedido. */
@@ -64,6 +72,8 @@ export class OrderNewComponent implements OnInit {
   searchStr: string;
   /**Producto a eliminar del array de productos del pedido. */
   productToRemoveFromOrder:ProductsInUserOrder;
+  /**Producto para mostrar las opciones y los tamanos. */
+  productToFindSizesAndOptions:Product;
   /**Motivo para eliminar el producto del pedido. */
   deletedReason: string;
   /**Cantidad del producto seleccionado por la lista. */
@@ -160,28 +170,73 @@ export class OrderNewComponent implements OnInit {
     let product = new Product();
 
     product = this.filteredProducts.find(p => p.name === this.searchStr);
-    this.addProductToPreOrder(product, this.qtyProd);
+    this.validateSizesAndOptions(product, this.qtyProd);
   }
   
+  /**Muestra la modal de tamanos y opciones si corresponde, si no agrega el producto a la preorden
+   * @param product producto seleccionado para agregar al array de preOrderProducts y verificar los tamanos y opciones
+   * @param quantity cantidad del producto seleccionado.
+   */
+  validateSizesAndOptions(product: Product, quantity:number){
+    if(product.sizes.length > 0 || product.options.length > 0){
+      this.showOptionsAndSizes(product)
+    }
+    else{
+      let selectedSize = null;
+      let selectedOptions = null;
+      this.addProductToPreOrder(product,quantity,selectedSize,selectedOptions);
+    }
+  }
+
   /**Agrega los productos al array de preOrderProducts.
    * @param currentProduct producto seleccionado para agregar al array de preOrderProducts
    * @param quantity cantidad del producto seleccionado. Cuando el mismo se elige de la lista será la cantidad seleccionada, si se 
    *                 selecciona haciendo click sobre el nombre del producto es 1
    */
-  addProductToPreOrder(product:Product, quantity:number):void {  
+  addProductToPreOrder(product:Product, quantity:number, selectedSizeId: any, selectedOptions: Array<any>):void {  
     if (!isNullOrUndefined(product))
     {
       let productInPreOrder = new ProductsInUserOrder();
       let currentProduct = new ProductsInUserOrder();
+      let size: any = {};
+      let options: Array<any> = [];
+
+      if(!isNullOrUndefined(selectedSizeId)){
+        let selectedSize = product.sizes.find(x => x._id == selectedSizeId);
+        //Creo el size con el modelo del backend
+        size.price = selectedSize.price;
+        size.name = selectedSize.name;
+        product.price = size.price; 
+      }
+      else{
+        size = selectedSizeId;
+      }
+
+      if(!isNullOrUndefined(selectedOptions)){
+        //Creo las options con el modelo del backend
+        selectedOptions.forEach(opt => {
+          let currentOption: any = {};
+        
+          currentOption.name = opt.name;
+          currentOption.price = opt.price;
+
+          product.price += opt.price;
+
+          options.push(currentOption);
+        })
+      }
+      else{
+        options = selectedOptions;
+      }
 
       //Creo el producto a buscar en el array de preOrderProducts.
       currentProduct.product = product._id;
       currentProduct.name = product.name;
       currentProduct.observations = '';
-      currentProduct.options = null;
+      currentProduct.options = options;
       currentProduct.price = product.price;
       currentProduct.quantity = quantity;
-      currentProduct.size = null;
+      currentProduct.size = size;
       currentProduct.deleted = false;      
 
       //Producto en el array preOrderProducts si existe.
@@ -348,4 +403,43 @@ export class OrderNewComponent implements OnInit {
     this.activeCategory = categoryId;    
   }
 
+  showOptionsAndSizes(product:Product):void {
+    this.productToFindSizesAndOptions = product;
+    
+    for (let size of this.productToFindSizesAndOptions.sizes){
+      if(size.default === true){
+        this.sizesSelect.push({value: size._id, label:size.name, selected:true})
+      }
+      else{
+        this.sizesSelect.push({value: size._id, label:size.name})
+      }
+    };
+    
+    this.sizeSelectedValue = this.productToFindSizesAndOptions.sizes.find(x => x.default == true)._id;
+
+    this.modalRef = this.modalService.show(this.optionsAndSizesTemplate, {backdrop: true, ignoreBackdropClick: true});
+  }
+
+  onOptionSelectedChange(option:any){
+    let optionIndex = this.selectedOptions.indexOf(option);
+    if(optionIndex !== -1){
+      this.selectedOptions.splice(optionIndex, 1);
+    }
+    else{
+      this.selectedOptions.push(option);
+    }
+  }
+
+  setProductOptionsAndSize(product){
+    this.addProductToPreOrder(product,1,this.sizeSelectedValue, this.selectedOptions)
+    this.closeModalOptionsAndSizes();
+  }
+
+  closeModalOptionsAndSizes(){
+    this.sizesSelect = [];
+    this.sizeSelectedValue = '';
+    this.selectedOptions = [];
+    this.modalRef.hide();
+    this.modalRef = null;       
+  }
 }
