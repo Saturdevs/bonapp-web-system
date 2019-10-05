@@ -72,7 +72,6 @@ export class CategoryModifyComponent implements OnInit {
   }
 
   updateCategory(category: Category) {
-    this.fileInputComponent.startUpload();
     this._categoryService.updateCategory(category).subscribe(
           category => { this.category = category,
             this.onBack()},
@@ -82,9 +81,8 @@ export class CategoryModifyComponent implements OnInit {
   }
 
   
-  onNotified(validator: string) {
-    console.log(validator);
-    validator != '' ? this.validPicture = validator: this.validPicture = '';
+  onNotified(validator: Array<string>) {
+    validator[1] != '' ? this.validPicture = validator[1]: this.validPicture = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
       this.category.picture = this.validPicture;

@@ -157,6 +157,12 @@ export class ProductNewComponent implements OnInit {
           if(filteredNames.length > 1){
             this.duplicatedSizesArray.push(size.name);
           }
+          if(product.sizes.indexOf(size) == this.defaultSize.valueOf()){
+            size.default = true;
+          }
+          else{
+            size.default = false;
+          }
         });
         if(this.duplicatedSizesArray.length > 0){
           let duplicatedSizeModalTitle = "Agregar Producto";
@@ -170,10 +176,9 @@ export class ProductNewComponent implements OnInit {
         this.defaultPrice = product.sizes[this.defaultSize.valueOf()].price;
         this.lowestPrice = product.sizes[0].price;
       }
-      console.log(this.defaultPrice);
       if(product.price != this.defaultPrice){
         this.modalPriceNotMatchTitle = "Agregar Producto";
-        this.modalPriceNotMatchMessage = "El precio del producto no coincide con el precio del tama&ntilde;o po defecto. Se modificara el precio del producto para hacerlo coincidir.";
+        this.modalPriceNotMatchMessage = "El precio del producto no coincide con el precio del tamaño por defecto. Se modificara el precio del producto para hacerlo coincidir.";
         this.modalRef = this.modalService.show(this.priceNotMatchTemplate, {backdrop: true});
       }
       else{
@@ -221,7 +226,6 @@ export class ProductNewComponent implements OnInit {
   saveProduct() {
     if (this.productForm.dirty && this.productForm.valid) {
       let p = Object.assign({}, this.productForm.value);
-      this.fileInputComponent.startUpload();
       this._productService.saveProduct(p)
           .subscribe(
             () => {
@@ -237,12 +241,12 @@ export class ProductNewComponent implements OnInit {
   }
 
   onNotified(validator: Array<string>) {
-    //console.log(validator);
     validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
     validator[1] != '' ? this.newProductPictureData = validator[1]: this.newProductPictureData = '';    
     this.pictureTouched = true;
     if(this.validPicture != ''){
-      this.productForm.controls.picture.setValue(this.validPicture);
+      console.log(this.validPicture);
+      this.productForm.controls.picture.setValue(this.newProductPictureData);
     }
   }
 

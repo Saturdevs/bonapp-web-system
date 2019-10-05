@@ -12,15 +12,15 @@ import { File } from '../../shared/models/file';
   styleUrls: ['./file-input.component.scss']
 })
 
-export class FileInputComponent implements OnInit  {
+export class FileInputComponent implements OnInit {
   allowedTypes: string;
   formData: FormData;
   files: UploadFile[];
   errorMessage: string;
   uploadInput: EventEmitter<UploadInput>;
   humanizeBytes: Function;
-  dragOver: boolean;  
-  newFile : File;
+  dragOver: boolean;
+  newFile: File;
 
   @Input() type: string;
   @Input() subtype: string;
@@ -33,82 +33,65 @@ export class FileInputComponent implements OnInit  {
     this.humanizeBytes = humanizeBytes;
   }
 
-  ngAfterContentInit(){
-    if(this.type == 'img'){
+  ngAfterContentInit() {
+    if (this.type == 'img') {
       this.allowedTypes = ".png, .jpg, .jpeg"
     }
   }
-  constructor(private _fileInputService:  FileInputService) {
-    }
-
-  showFiles() {
-      let files = '';
-      for (let i = 0; i < this.files.length; i ++) {
-        files += this.files[i].name;
-         if (!(this.files.length - 1 === i)) {
-           files += ',';
-          }
-        }
-        return files;
-      }
-      
-      async onFileChange(event) {
-        let reader = new FileReader();
-        if(event.target.files && event.target.files.length > 0) {
-          let file = event.target.files[0]; 
-          await this.loadFileReader(reader, file);
-          this.validator.emit([file.name,reader.result]);
-          this.newFile.data = reader.result.toString().split(',')[1];
-          this.newFile.name = file.name;
-          this.newFile.type = file.type;
-          this.newFile.subtype = this.subtype;
-        }
-      };
-    
-      loadFileReader(reader,file):any{
-        return new Promise((resolve, reject) => {
-          reader.onerror = () => {
-            reader.abort();
-          };
-          reader.onload = (e) => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-
-  startUpload(): void {
-    this._fileInputService.saveFile(this.newFile)
-            .subscribe(file => {
-              console.log(file);
-            },
-            error => this.errorMessage = error.error.message
-          );
-    this.files = [];
+  constructor(private _fileInputService: FileInputService) {
   }
 
+  showFiles() {
+    let files = '';
+    for (let i = 0; i < this.files.length; i++) {
+      files += this.files[i].name;
+      if (!(this.files.length - 1 === i)) {
+        files += ',';
+      }
+    }
+    return files;
+  }
+
+  toBase64(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  async onFileChange(event) {
+    let reader = new FileReader();
+    if (event.target.files && event.target.files.length > 0) {
+      let file = event.target.files[0];
+      let base64File = await this.toBase64(file);
+      this.validator.emit([file.name, base64File]);
+    }
+  };
+
   cancelUpload(id: string): void {
-      this.uploadInput.emit({ type: 'cancel', id: id });
+    this.uploadInput.emit({ type: 'cancel', id: id });
   }
 
   onUploadOutput(output: UploadOutput | any): void {
 
-      if (output.type === 'allAddedToQueue') {
-      } else if (output.type === 'addedToQueue') {
-        this.files.push(output.file); // add file to array when added
-      } else if (output.type === 'uploading') {
-        // update current data in files array for uploading file
-        const index = this.files.findIndex(file => file.id === output.file.id);
-        this.files[index] = output.file;
-      } else if (output.type === 'removed') {
-        // remove file from array when removed
-        this.files = this.files.filter((file: UploadFile) => file !== output.file);
-      } else if (output.type === 'dragOver') {
-        this.dragOver = true;
-      } else if (output.type === 'dragOut') {
-      } else if (output.type === 'drop') {
-        this.dragOver = false;
-      }
-      this.showFiles();
+    if (output.type === 'allAddedToQueue') {
+    } else if (output.type === 'addedToQueue') {
+      this.files.push(output.file); // add file to array when added
+    } else if (output.type === 'uploading') {
+      // update current data in files array for uploading file
+      const index = this.files.findIndex(file => file.id === output.file.id);
+      this.files[index] = output.file;
+    } else if (output.type === 'removed') {
+      // remove file from array when removed
+      this.files = this.files.filter((file: UploadFile) => file !== output.file);
+    } else if (output.type === 'dragOver') {
+      this.dragOver = true;
+    } else if (output.type === 'dragOut') {
+    } else if (output.type === 'drop') {
+      this.dragOver = false;
+    }
+    this.showFiles();
   }
 }

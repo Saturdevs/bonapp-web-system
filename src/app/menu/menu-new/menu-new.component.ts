@@ -57,7 +57,6 @@ export class MenuNewComponent implements OnInit {
 
 
   saveMenu(){
-    this.fileInputComponent.startUpload();
     this._menuService.saveMenu(this.newMenu).subscribe(
           menu => { 
             this.newMenu = menu;
@@ -70,12 +69,11 @@ export class MenuNewComponent implements OnInit {
   }
 
   onNotified(validator: Array<string>) {
-    console.log(validator);
     validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
     validator[1] != '' ? this.newMenuPictureData = validator[1]: this.newMenuPictureData = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
-      this.newMenu.picture =this.validPicture;
+      this.newMenu.picture = this.newMenuPictureData;
     }
   }
 

@@ -150,7 +150,6 @@ export class ProductModifyComponent implements OnInit {
 
   updateProduct() {
     let prod = Object.assign({}, this.product, this.productForm.value);
-    this.fileInputComponent.startUpload();
     this._productService.updateProduct(prod).subscribe(
       product => this.product = product,
       error => {
@@ -172,9 +171,8 @@ export class ProductModifyComponent implements OnInit {
     this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
-  onNotified(validator: string) {
-    console.log(validator);
-    validator != '' ? this.validPicture = validator: this.validPicture = '';
+  onNotified(validator: Array<string>) {
+    validator[1] != '' ? this.validPicture = validator[1]: this.validPicture = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
       this.productForm.controls.picture.setValue(this.validPicture);

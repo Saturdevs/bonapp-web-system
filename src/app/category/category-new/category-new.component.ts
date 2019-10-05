@@ -57,7 +57,6 @@ export class CategoryNewComponent implements OnInit {
   }
 
   saveCategory(){
-    this.fileInputComponent.startUpload();
     this._categoryService.saveCategory(this.newCategory).subscribe(
       category =>{ this.newCategory = category,
                    this.onBack()},
@@ -67,12 +66,11 @@ export class CategoryNewComponent implements OnInit {
   }
 
   onNotified(validator: Array<string>) {
-    console.log(validator);
     validator[0] != '' ? this.validPicture = validator[0]: this.validPicture = '';
     validator[1] != '' ? this.newCategoryPictureData = validator[1]: this.newCategoryPictureData = '';
     this.pictureTouched = true;
     if(this.validPicture != ''){
-      this.newCategory.picture = this.validPicture;
+      this.newCategory.picture = this.newCategoryPictureData;
     }
   }
 

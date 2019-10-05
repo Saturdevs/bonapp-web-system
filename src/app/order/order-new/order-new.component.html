@@ -24,6 +24,40 @@
   <app-order-close [order]="order" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
 </ng-template>
 
+<ng-template #optionsAndSizesTemplate>
+  <div class="container col-md-12">
+    <div class="row pageTitle primary-color">
+      <div class="col-md-12">
+        <h4 class="text-white text-center mb-0">{{ sizesAndOptionsModalTitle }}</h4>    
+      </div>
+    </div>
+    <div class="modalContent">
+      <div class="col-md-12">
+        <div class="row" *ngIf="productToFindSizesAndOptions.sizes && productToFindSizesAndOptions.sizes.length > 0">
+          <h6 class="selectSizeAndOptionsLabel">Tamaño:</h6>
+          <div class="md-form form-group mr-2 col-md-6 col-lg-6 text-left">
+              <mdb-select #queryType name="queryType" id="queryType" [options]="sizesSelect"
+                  [(ngModel)]="sizeSelectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>
+          </div>
+        </div>
+        <div class="row" *ngIf="productToFindSizesAndOptions.options && productToFindSizesAndOptions.options.length > 0">
+          <h6 class="selectSizeAndOptionsLabel">Opciones:</h6>
+          <div class="md-form form-group mr-2 col-md-6 col-lg-6 text-left" *ngFor="let option of productToFindSizesAndOptions.options; let i = index">
+            <mdb-checkbox (change)="onOptionSelectedChange(option)" value="option" name="productOption"> {{ option.name }}</mdb-checkbox>            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row customFooterModal">
+      <div class="footerButtons">
+        <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeModalOptionsAndSizes()">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="setProductOptionsAndSize(productToFindSizesAndOptions)" 
+          [disabled]="productToFindSizesAndOptions.sizes && productToFindSizesAndOptions.sizes.length > 0 && sizeSelectedValue == 'default'">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0" style="height: calc(100vh - 5.4rem);
 overflow: auto; overflow-x: hidden;">
   <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8 pr-0" style="height: 100%">
@@ -48,7 +82,7 @@ overflow: auto; overflow-x: hidden;">
       </div>
       <div *ngIf="products && products.length > 0" class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <div class="productsButtonContainer" *ngFor="let product of products">
-          <a (click)="addProductToPreOrder(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
+          <a (click)="validateSizesAndOptions(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
         </div>
       </div>
       <div *ngIf="products.length == 0" class="col-9 d-flex justify-content-center col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-5 mr-0 ml-0 mt-0 mb-0">
