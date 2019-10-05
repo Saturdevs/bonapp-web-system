@@ -86,7 +86,7 @@ export class OrderNewComponent implements OnInit {
   private activeCategory: string = '';
 
   ngOnInit() {
-    this.order = this.orderService.transformOrderFromDbToBusiness(this._route.snapshot.data['order']);
+    this.order = this._route.snapshot.data['order'];
     this.products = [];
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
@@ -124,9 +124,8 @@ export class OrderNewComponent implements OnInit {
   /**Actualiza el pedido actual
    * @param order pedido a actualizar en la base de datos
    */
-  updateOrder(order:Order):void {
-    let ord = this.orderService.transformOrderFromBusinessToDb(order);
-    this.orderService.updateOrder(ord).subscribe(
+  updateProductsOrder(order:Order):void {
+    this.orderService.updateProductsOrder(order).subscribe(
       orderReturned => {},
       error => {        
         this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -247,7 +246,7 @@ export class OrderNewComponent implements OnInit {
     this.order.users[0].products[prodIndex].deleted = true;
     this.order.users[0].products[prodIndex].deletedReason = this.deletedReason;
     this.order.totalPrice -= this.order.users[0].products[prodIndex].quantity * this.order.users[0].products[prodIndex].price;
-    this.updateOrder(this.order);
+    this.updateProductsOrder(this.order);
     this.closeModalDeleteProd();
   }
 
@@ -307,7 +306,7 @@ export class OrderNewComponent implements OnInit {
     this.totalToConfirm = 0;
     this.preOrderProducts = [];    
 
-    this.updateOrder(this.order);
+    this.updateProductsOrder(this.order);
   }
 
   /**Muestra o esconde la sección de observaciones para cada producto */

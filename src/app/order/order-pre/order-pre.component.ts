@@ -9,7 +9,8 @@ import {
 	OrderService,
 	UsersInOrder,
 	ProductsInUserOrder,
-	TableService
+	TableService,
+	UserMin
 } from '../../../shared/index';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
@@ -47,8 +48,10 @@ export class OrderPreComponent implements OnInit {
 		order.status = "Open";
 		order.users = new Array<UsersInOrder>();
 		order.users[0] = new UsersInOrder();
+		order.users[0].user = new UserMin();
 		//aca hay que setear el id del usuario admin. todavia no esta creado.
-		order.users[0].user = "5d38ebfcf361ae0cabe45a8e";
+		order.users[0].user.id = "5d38ebfcf361ae0cabe45a8e";
+		order.users[0].user.username = "admin";
 		order.users[0].owner = true;
 		order.users[0].products = new Array<ProductsInUserOrder>();
 		order.users[0].products = [];
@@ -63,6 +66,9 @@ export class OrderPreComponent implements OnInit {
 					this.showModalError(this.serviceErrorTitle, error.error.message);
 				}
 			)
+		},
+		error => {
+			this.showModalError(this.serviceErrorTitle, error.error.message);
 		})
 	}
 

@@ -247,10 +247,9 @@ export class OrderCloseComponent implements OnInit {
       tableReturned => {
         if (tableReturned.status === "Libre")
         {
-          let ord = this.orderService.transformOrderFromBusinessToDb(this.order);
-          this.orderService.updateOrder(ord).subscribe(
+          this.orderService.closeOrder(this.order).subscribe(
             orderReturned => {
-              let order = this.orderService.transformOrderFromDbToBusiness(orderReturned);
+              let order = orderReturned;
               this.addOrderToArqueo(orderReturned);
               this.closeForm();
               this._router.navigate(['./orders']);
@@ -271,7 +270,7 @@ export class OrderCloseComponent implements OnInit {
    * @param order pedido para agregar al arqueo
    */
   addOrderToArqueo(order: Order): void{
-    this.arqueoCajaService.getArqueoOpenByCashRegister(order.cashRegister).subscribe(
+    this.arqueoCajaService.getArqueoOpenByCashRegister(order.cashRegister._id).subscribe(
       cashCount => {
         if(!isNullOrUndefined(cashCount)) {
           if(isNullOrUndefined(cashCount.ingresos)) {

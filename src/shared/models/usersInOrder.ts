@@ -1,8 +1,9 @@
 import { ProductsInUserOrder, PaymentInUserOrder } from '../index';
+import { UserMin } from './userMin';
 
 export class UsersInOrder {
   /**Id del usuario */
-  user: string;
+  user: UserMin;
   name: string;
   lastName: string;
   userName: string;
