@@ -18,7 +18,8 @@ import {
   Order,
   OrderDiscount,
   CashRegister,
-  PaymentType
+  PaymentType,
+  UsersInOrder
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -60,6 +61,8 @@ export class OrderNewComponent implements OnInit {
   selectedOptions: Array<any> = [];
   /** Pedido en curso. */
   order: Order;
+  /** Pedido para el frontend */
+  orderUpdate: Order;
   /** Array para almacenar los productos antes de confirmarlos en el pedido. */
   preOrderProducts: Array<ProductsInUserOrder> = [];
   /** Monto total a confirmar de los productos en array preOrderProducts. */
@@ -96,6 +99,7 @@ export class OrderNewComponent implements OnInit {
   private activeCategory: string = '';
 
   ngOnInit() {
+    this.orderUpdate = new Order();
     this.order = this.orderService.transformOrderFromDbToBusiness(this._route.snapshot.data['order']);
     this.products = [];
     this.filteredProducts = this.products;
@@ -136,9 +140,13 @@ export class OrderNewComponent implements OnInit {
    */
   updateOrder(order:Order):void {
     let ord = this.orderService.transformOrderFromBusinessToDb(order);
+    ord._id = null;
     this.orderService.updateOrder(ord).subscribe(
-      orderReturned => {},
-      error => {        
+      orderReturned => {
+      },
+      error => {
+        this.order = JSON.parse(JSON.stringify(this.orderUpdate)) as Order;    
+        this.orderUpdate = new Order();
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
@@ -298,11 +306,12 @@ export class OrderNewComponent implements OnInit {
 
   /**Elimina el producto del array de productos del usuario sin importar la cantidad*/
   deleteProductFromOrder():void {     
+    this.orderUpdate = JSON.parse(JSON.stringify(this.order)) as Order;    
     let prodIndex = this.order.users[0].products.indexOf(this.productToRemoveFromOrder);    
     this.order.users[0].products[prodIndex].deleted = true;
     this.order.users[0].products[prodIndex].deletedReason = this.deletedReason;
     this.order.totalPrice -= this.order.users[0].products[prodIndex].quantity * this.order.users[0].products[prodIndex].price;
-    this.updateOrder(this.order);
+    this.updateOrder(this.orderUpdate);
     this.closeModalDeleteProd();
   }
 
@@ -334,6 +343,7 @@ export class OrderNewComponent implements OnInit {
 
   /**Confirmar pre order */
   confirmPreOrder():void {
+    this.orderUpdate = JSON.parse(JSON.stringify(this.order)) as Order;
     this.preOrderProducts.forEach(productInPreOrder => {
       let productInOrder = new ProductsInUserOrder();
       productInOrder = null;
@@ -361,7 +371,7 @@ export class OrderNewComponent implements OnInit {
     this.order.totalPrice += this.totalToConfirm;
     this.totalToConfirm = 0;
     this.preOrderProducts = [];    
-
+    
     this.updateOrder(this.order);
   }
 
