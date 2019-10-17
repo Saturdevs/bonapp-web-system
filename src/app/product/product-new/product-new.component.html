@@ -129,15 +129,9 @@
                 </div>
                 <div class="col-md-3 col-md-offset-1">
                   <div class="form-check">
-                    <input formControlName="default" type="radio" class="form-check-input form-control" (change)="setDefaultSize(i)" name="default" id="{{ 'default' + i }}">
+                    <input formControlName="default" type="radio" class="form-check-input form-control" (change)="setDefaultSize(i)" name="default"  id="{{ 'default' + i }}" [value]="true">
                     <label class="form-check-label" for="{{ 'default' + i }}">Default</label>
                   </div>
-                  <!-- <input formControlName="price" type="number" placeholder="Precio($)" class="form-control" [class.is-invalid]="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)"
-                    id="{{ 'productSizePrice' + i }}"> -->
-
-                  <!-- <div *ngIf="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)" class="alert alert-danger">
-                    El precio es requerido
-                  </div> -->
                 </div>
               </div>
             </div>

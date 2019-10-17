@@ -141,7 +141,8 @@ export class ProductModifyComponent implements OnInit {
     this.productForm.setControl('options', prodOptFormArray);
     const prodSizes = this.product.sizes.map(sizes => this.formBuilder.group({
       name: [sizes.name, ComboValidators.hasValue],
-      price: [sizes.price, Validators.required]
+      price: [sizes.price, Validators.required],
+      default: [sizes.default]
     }));
     const prodSizesFormArray = this.formBuilder.array(prodSizes);
     this.productForm.setControl('sizes', prodSizesFormArray);

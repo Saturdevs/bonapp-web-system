@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, TemplateRef, ViewChildren, QueryList } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
@@ -52,7 +52,7 @@ export class ProductNewComponent implements OnInit {
   currentCollection : string;
   defaultSize: Number = -1;
   checkboxAvailableText: String = 'Disponible';
-  
+
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
@@ -96,11 +96,11 @@ export class ProductNewComponent implements OnInit {
     this.clickAceptar = false;
   }
 
-  buildProductSizes(): FormGroup {
+  buildProductSizes(checked): FormGroup {
     return this.formBuilder.group({
                 name: ['default', ComboValidators.hasValue],
                 price: ['', Validators.required],
-                default: ['']
+                default: [checked]
               })
   }
 
@@ -112,7 +112,13 @@ export class ProductNewComponent implements OnInit {
   }
 
   addProductSize(): void {
-    this.sizes.push(this.buildProductSizes());
+    if(this.sizes.length === 0){
+      this.sizes.push(this.buildProductSizes(true));
+      this.setDefaultSize(0);
+    }
+    else{
+      this.sizes.push(this.buildProductSizes(false));
+    }
   }
 
   removeSize(index): void {
