@@ -1,4 +1,5 @@
 export class ProductsInUserOrder {
+  _id: String;
   /**Id del producto */
   product: string;
   name: string;

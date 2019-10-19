@@ -19,4 +19,3 @@ export * from './paymentInUserOrder';
 export * from './orderDiscount';
 export * from './user';
 export * from './cash-register';
-export * from './userMin';

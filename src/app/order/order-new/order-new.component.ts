@@ -18,7 +18,8 @@ import {
   Order,
   OrderDiscount,
   CashRegister,
-  PaymentType
+  PaymentType,
+  UserRoles
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -97,6 +98,7 @@ export class OrderNewComponent implements OnInit {
 
   ngOnInit() {
     this.order = this._route.snapshot.data['order'];
+    console.log(this.order)
     this.products = [];
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
@@ -131,12 +133,17 @@ export class OrderNewComponent implements OnInit {
       });
   }
 
-  /**Actualiza el pedido actual
+  /**
+   * Actualiza el pedido actual
    * @param order pedido a actualizar en la base de datos
    */
-  updateProductsOrder(order:Order):void {
-    this.orderService.updateProductsOrder(order).subscribe(
-      orderReturned => {},
+  updateProductsOrder(data:any):void {
+    this.orderService.updateProductsOrder(data).subscribe(
+      orderReturned => {
+        this.order = orderReturned;
+        this.totalToConfirm = 0;
+        this.preOrderProducts = [];
+      },
       error => {        
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
@@ -297,12 +304,22 @@ export class OrderNewComponent implements OnInit {
 
   /**Elimina el producto del array de productos del usuario sin importar la cantidad*/
   deleteProductFromOrder():void {     
-    let prodIndex = this.order.users[0].products.indexOf(this.productToRemoveFromOrder);    
-    this.order.users[0].products[prodIndex].deleted = true;
-    this.order.users[0].products[prodIndex].deletedReason = this.deletedReason;
-    this.order.totalPrice -= this.order.users[0].products[prodIndex].quantity * this.order.users[0].products[prodIndex].price;
-    this.updateProductsOrder(this.order);
+    this.productToRemoveFromOrder.deleted = true;
+    this.productToRemoveFromOrder.deletedReason = this.deletedReason;
+    this.deleteProductOrder(this.productToRemoveFromOrder);
     this.closeModalDeleteProd();
+  }
+
+  deleteProductOrder(product: ProductsInUserOrder): void {
+    let data = { productToRemove: product, order: this.order, username: UserRoles.ADMIN };
+    this.orderService.deleteProductOrder(data).subscribe(
+      orderReturned => {
+        this.order = orderReturned;
+      },
+      error => {        
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      }
+    )
   }
 
   /**Incrementa o disminuye la cantidad del producto en la cantidad pasada como parámetro
@@ -333,35 +350,15 @@ export class OrderNewComponent implements OnInit {
 
   /**Confirmar pre order */
   confirmPreOrder():void {
-    this.preOrderProducts.forEach(productInPreOrder => {
-      let productInOrder = new ProductsInUserOrder();
-      productInOrder = null;
-      
-      //Si ya existen productos en el pedido, verifico si el producto en el pre-pedido existe en el pedido.
-      if (!isNullOrUndefined(this.order.users[0].products) && this.order.users[0].products.length > 0) {
-        productInOrder = this.order.users[0].products.find(product => this.compareProducts(product, productInPreOrder))
-      }
-
-      //Si el produco en el pre pedido existe en el pedido sumo la cantidad, sino lo agrego.
-      if (!isNullOrUndefined(productInOrder)) {
-        productInOrder.quantity += productInPreOrder.quantity
-      }
-      else {
-        //Si el producto en el pre pedido tiene una observacion pero es igual al texto por default se cambia por vacio y 
-        //se setea a false la variable hasDescription
-        if (productInPreOrder.observations === this.prodObservation) {
-          productInPreOrder.observations = '';
+    if (!isNullOrUndefined(this.preOrderProducts) && this.preOrderProducts.length > 0) {
+      this.preOrderProducts.forEach(productInPreOrder => {
+        if (productInPreOrder.observations === this.prodObservation || productInPreOrder.observations === '') {
+          productInPreOrder.observations = null;
         }
-
-        this.order.users[0].products.push(productInPreOrder);
-      }
-    })
-
-    this.order.totalPrice += this.totalToConfirm;
-    this.totalToConfirm = 0;
-    this.preOrderProducts = [];    
-
-    this.updateProductsOrder(this.order);
+      })
+      let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: UserRoles.ADMIN, order: this.order };
+      this.updateProductsOrder(data);      
+    }    
   }
 
   /**Muestra o esconde la sección de observaciones para cada producto */
@@ -374,7 +371,7 @@ export class OrderNewComponent implements OnInit {
   }
 
   showModalRemoveProduct(template: TemplateRef<any>, product:ProductsInUserOrder):void {
-    this.productToRemoveFromOrder = product;
+    this.productToRemoveFromOrder = JSON.parse(JSON.stringify(product)) as ProductsInUserOrder;;
 
     this.modalRef = this.modalService.show(template, {backdrop: true, ignoreBackdropClick: true});
   }
