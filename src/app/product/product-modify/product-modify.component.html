@@ -96,10 +96,10 @@
             <div [formGroupName]="i" class="form-group">              
               <div class="row">
                 <div class="select-wrapper col-md-5">
-                  <select formControlName="name" class="form-control" [class.is-invalid]="productForm.get('sizes').controls[i].controls.name.invalid && (productForm.get('sizes').controls[i].controls.name.dirty || productForm.get('sizes').controls[i].controls.name.touched)"
+                  <select formControlName="name" class="form-control browser-default" [class.is-invalid]="productForm.get('sizes').controls[i].controls.name.invalid && (productForm.get('sizes').controls[i].controls.name.dirty || productForm.get('sizes').controls[i].controls.name.touched)"
                     id="{{ 'name' + i }}">
                     <option value="default" default>Seleccione el tamaño...</option>
-                    <option [value]="size" *ngFor = 'let size of sizesArr; let i=index'>{{size}}</option>
+                    <option [value]="size.name" *ngFor = 'let size of product.sizes; let i=index'>{{size.name}}</option>
                   </select>
 
                   <div *ngIf="productForm.get('sizes').controls[i].controls.name.invalid && (productForm.get('sizes').controls[i].controls.name.dirty || productForm.get('sizes').controls[i].controls.name.touched)" class="alert alert-danger">
@@ -113,6 +113,12 @@
                     <div *ngIf="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)" class="alert alert-danger">
                       El precio es requerido
                     </div>
+                </div>
+                <div class="col-md-3 col-md-offset-1">
+                  <div class="form-check">
+                    <input formControlName="default" type="radio" class="form-check-input form-control" (change)="setDefaultSize(i)" name="default"  id="{{ 'default' + i }}" [value]="true">
+                    <label class="form-check-label" for="{{ 'default' + i }}">Default</label>
+                  </div>
                 </div>                
               </div>
             </div>
