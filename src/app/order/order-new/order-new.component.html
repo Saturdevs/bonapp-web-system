@@ -109,8 +109,17 @@ overflow: auto; overflow-x: hidden;">
           <div class="col-2">
             <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
           </div>
-          <div class="col-9">
-            <mdb-completer style="width:100%!important;" (selected)="addProductToPreOrderFromList()" [label]="'Buscar Producto'" initialValue="Buscar Producto" name="autocomplete" [(ngModel)]="searchStr" [datasource]="dataService" [minSearchLength]="0"></mdb-completer>
+          <div class="md-form col-9">
+            <input type="text" class="completer-input form-control mdb-autocomplete"
+                   [(ngModel)]="searchStr"
+                   (input)="getFilteredData()" (ngModelChange)="onChange()"
+                   [mdbAutoCompleter]="auto"
+                   placeholder="Buscar Producto">
+            <mdb-auto-completer #auto="mdbAutoCompleter" textNoResults="No se encontraron resultados" (select)="addProductToPreOrderFromList()">
+              <mdb-option *ngFor="let option of results" [value]="option.name">
+                {{option.name}}
+              </mdb-option>
+            </mdb-auto-completer>
           </div>
         </div>
       </div>

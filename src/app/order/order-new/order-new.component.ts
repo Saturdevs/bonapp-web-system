@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ModalDirective } from 'ng-uikit-pro-standard';
+import { ModalDirective, MdbAutoCompleterComponent, localDataFactory, MdbOptionComponent } from 'ng-uikit-pro-standard';
 import { 
   Menu, 
   CategoryService, 
@@ -33,10 +33,12 @@ export class OrderNewComponent implements OnInit {
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+ 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   @ViewChild('fluid') public fluid:ModalDirective;
   @ViewChild('optionsAndSizesTemplate') optionsAndSizesTemplate:TemplateRef<any>;
-
+  @ViewChild(MdbAutoCompleterComponent) completer: MdbAutoCompleterComponent;
+ 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private productService: ProductService,
@@ -50,7 +52,10 @@ export class OrderNewComponent implements OnInit {
   sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños'
   menus : Menu[];
   categories : Category[];
+  /** Para mostrar los productos de la categoria seleccionada */
   products: Product[]; 
+  /** Para mostrar los productos de todas las categorias */
+  allProducts: Product[]
   filteredProducts: Product[];
   /** Para mostrar los tamanos. */
   sizesSelect: Array<any> = [];
@@ -87,8 +92,8 @@ export class OrderNewComponent implements OnInit {
   /** Configuracion de la modal de cierre de mesa*/
   config = {
 		backdrop: true,
-  }
-  results: Observable<Product[]>;
+  };
+  results: Product[];
   searchText = new Subject();
   /** Variables para setear la clase de los menues dinamicamente segun el que esta seleccionado*/
   private activeMenu : string = '';
@@ -104,11 +109,8 @@ export class OrderNewComponent implements OnInit {
     this.cashRegisters = this._route.snapshot.data['cashRegisters'];
     this.paymentTypes = this._route.snapshot.data['paymentTypes'];    
     this.totalToConfirm = 0;
-    this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;    
-    this.results = this.searchText.pipe(
-      startWith(''),
-      map((value: Product) => this.filter(value.name))
-    )
+    this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
+    this.getProducts();
   }
 
   filter(value: string): Product[] {
@@ -164,12 +166,27 @@ export class OrderNewComponent implements OnInit {
     );
   }
 
+  /** Obtiene todos los productos de todas las categorias */
+  getProducts() {
+    this.productService.getAll()
+      .subscribe(products => {
+        this.allProducts = products;
+      },
+      error => { 
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      }
+    );
+  }
+
   /**Agrega el producto seleccionado en la lista al pedido. Primero busca el producto en el array filteredProducts por su nombre*/
   addProductToPreOrderFromList():void {    
-    let product = new Product();
-
-    product = this.filteredProducts.find(p => p.name === this.searchStr);
-    this.validateSizesAndOptions(product, this.qtyProd);
+    let selectedProd = this.completer.getSelectedItem();
+    if(selectedProd.text !== 'undefined'){
+      let product = new Product();
+      product = this.allProducts.find(p => p.name === selectedProd.text);
+      this.validateSizesAndOptions(product, this.qtyProd);
+      this.completer.getSelectedItem().text = 'undefined';
+    }
   }
   
   /**Muestra la modal de tamanos y opciones si corresponde, si no agrega el producto a la preorden
@@ -402,6 +419,22 @@ export class OrderNewComponent implements OnInit {
     this.activeCategory = categoryId;    
   }
 
+  /**Metodo para filtrar los productos para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
+  searchEntries(term: string) {
+    return this.allProducts.filter((data: Product) => data.name.toLowerCase().includes(term.toLowerCase()));
+  }
+  
+  /** Retorna los produtctos filtrados para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
+  getFilteredData() {
+    this.results = this.searchEntries(this.searchStr);
+  }
+
+  /** Ejecuta la busqueda cada vez que cambia el ngModel del MDB COMPLETER - Nacho - 19/10/19 */
+  onChange() {
+    this.getFilteredData();
+  }
+
+  /** Arma los combos de sizes y options y muestra la modal */
   showOptionsAndSizes(product:Product):void {
     this.productToFindSizesAndOptions = product;
     
@@ -419,6 +452,7 @@ export class OrderNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.optionsAndSizesTemplate, {backdrop: true, ignoreBackdropClick: true});
   }
 
+  /** Agrega o quita la opcion seleccionada en la modal al array de opciones seleccionadas */
   onOptionSelectedChange(option:any){
     let optionIndex = this.selectedOptions.indexOf(option);
     if(optionIndex !== -1){
@@ -429,6 +463,7 @@ export class OrderNewComponent implements OnInit {
     }
   }
 
+  /** Agrega el producto a la preorder enviandole los sizes y las options */
   setProductOptionsAndSize(product){
     this.addProductToPreOrder(product,1,this.sizeSelectedValue, this.selectedOptions)
     this.closeModalOptionsAndSizes();
