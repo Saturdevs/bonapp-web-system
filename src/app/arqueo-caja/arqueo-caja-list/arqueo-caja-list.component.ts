@@ -4,11 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
-import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
+import {
+  ArqueoCaja,
+  CashRegister,
+  ArqueoCajaService
+} from '../../../shared/index';
 
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
-import { CashRegister } from '../../../shared/models/cash-register';
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
@@ -18,7 +19,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Arqueos de Caja";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -40,52 +41,20 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
-  
+
   constructor(private arqueoService: ArqueoCajaService,
-              private cashRegisterService: CashRegisterService,
-              private route: ActivatedRoute,
-              private modalService: BsModalService,
-              private cdRef: ChangeDetectorRef) { }
+    private route: ActivatedRoute,
+    private modalService: BsModalService,
+    private cdRef: ChangeDetectorRef) { }
 
-  ngOnInit() {    
-
+  ngOnInit() {
     this.route.data.subscribe(
       data => {
-        this.arqueos = data['arqueos'].map(arqueo => {
-          this.totalIngresos = 0;
-          this.totalEgresos = 0;
-          this.realAmount = 0;
-
-          this.cashRegisterService.getCashRegister(arqueo.cashRegisterId).subscribe(
-            cashRegister => {
-              arqueo.cashRegister = cashRegister.name;
-            },
-            error => {
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          );
-
-          arqueo.ingresos.map(ingreso => {
-            this.totalIngresos += ingreso.amount;
-          })
-      
-          arqueo.egresos.map(egreso => {
-            this.totalEgresos += egreso.amount;
-          })
-
-          arqueo.realAmount.map(amount => {
-            this.realAmount += amount.amount;
-          })
-          
-          arqueo.realAmountTotal = this.realAmount;
-          arqueo.estimatedAmount = arqueo.initialAmount + this.totalIngresos - this.totalEgresos;
-          return arqueo;
-        })
+        this.arqueos = data['arqueos'];
       }
     )
-    
+
     this.filteredArqueos = this.arqueos;
-    console.log(this.filteredArqueos)
 
     this.mdbTable.setDataSource(this.filteredArqueos);
     this.filteredArqueos = this.mdbTable.getDataSource();
@@ -101,90 +70,59 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
     this.cdRef.detectChanges();
   }
 
+  /**
+   * Recupera los arqueos no eliminados.
+   */
   getArqueos(): void {
     this.arqueoService.getAll()
       .subscribe(arqueos => {
-        this.arqueos = arqueos.map(arqueo => {
-          this.totalIngresos = 0;
-          this.totalEgresos = 0;
-          this.realAmount = 0;
-
-          this.cashRegisterService.getCashRegister(arqueo.cashRegisterId).subscribe(
-            cashRegister => {
-              arqueo.cashRegister = cashRegister.name;
-            },
-            error => {
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          );
-
-          arqueo.ingresos.map(ingreso => {
-            this.totalIngresos += ingreso.amount;
-          })
-      
-          arqueo.egresos.map(egreso => {
-            this.totalEgresos += egreso.amount;
-          })
-
-          arqueo.realAmount.map(amount => {
-            this.realAmount += amount.amount;
-          })
-          
-          arqueo.realAmountTotal = this.realAmount;
-          arqueo.estimatedAmount = arqueo.initialAmount + this.totalIngresos - this.totalEgresos;
-          return arqueo;
-        });
-
+        this.arqueos = arqueos;
         this.filteredArqueos = this.arqueos;
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
-  }
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
+  } 
 
-  showModalDelete(template: TemplateRef<any>, idArqueo: any){
-    this.idArqueoDelete = idArqueo;    
-    this.modalDeleteTitle = "Eliminar Arqueo";
-    this.modalDeleteMessage = "¿Seguro desea eliminar este Arqueo?";
-    this.modalRef = this.modalService.show(template, {backdrop: true});
-  }
-
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
-    this.modalErrorTittle = errorTittleReceived;
-    this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
-  }
-
-  deleteArqueo(){
-    if (this.closeModal()){
-      this.arqueoService.getArqueo(this.idArqueoDelete).subscribe( 
-        cashCount => {
-          cashCount.deleted = true;
-          this.arqueoService.updateArqueo(cashCount).subscribe(
-            () => {
-              this.getArqueos();
-            },
-            error => { 
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          );
+  /**
+   * Setea la propiedad deleted a true y actualiza el arqueo en la base de datos
+   */
+  deleteArqueo() {
+    if (this.closeModal()) {
+      let cashCount = this.arqueos.find(arqueo => arqueo._id === this.idArqueoDelete);
+      cashCount.deleted = true;
+      this.arqueoService.updateArqueo(cashCount).subscribe(
+        () => {
+          this.getArqueos();
         },
-        error => { 
+        error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
     }
   }
 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
+  }
+  
+  showModalDelete(template: TemplateRef<any>, idArqueo: any) {
+    this.idArqueoDelete = idArqueo;
+    this.modalDeleteTitle = "Eliminar Arqueo";
+    this.modalDeleteMessage = "¿Seguro desea eliminar este Arqueo?";
+    this.modalRef = this.modalService.show(template, { backdrop: true });
+  }
+
+  closeModal() {
+    this.modalRef.hide();
+    this.modalRef = null;
+    return true;
+  } 
+
   reloadItems(event) {
     this.getArqueos();
   }
-
 }

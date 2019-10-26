@@ -29,21 +29,9 @@ export class ArqueoCajaService {
             .map(data => data.arqueo);
   }
 
-  getArqueosByCashRegister(idCashRegister): Observable<ArqueoCaja[]> {
-    return this.apiService.get(`/arqueo/${idCashRegister}/cashRegister`)
-           .map(data => data.arqueos)
-           .catch(this.handleError);
-  }
-
   getArqueoOpenByCashRegister(idCashRegister): Observable<ArqueoCaja> {
     return this.apiService.get(`/arqueo/${idCashRegister}/cashRegister/open`)
            .map(data => data.arqueo)
-           .catch(this.handleError);
-  }
-
-  getLastArqueoByCashRegister(idCashRegister) {
-    return this.apiService.get(`/arqueo/${idCashRegister}/cashRegister/last`)
-           .map(data => data.lastArqueo)
            .catch(this.handleError);
   }
 

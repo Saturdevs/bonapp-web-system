@@ -4,11 +4,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
-import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
-import { CashRegister } from '../../../shared/models/cash-register';
-import { isNullOrUndefined, error } from 'util';
-import { CashRegisterService } from '../../../shared';
+import { CONFLICT } from 'http-status-codes';
+
+import { 
+  ArqueoCaja,
+  ArqueoCajaService,
+  CashRegister
+} from '../../../shared/index';
+
 
 @Component({
   selector: 'app-arqueo-caja-new',
@@ -26,10 +29,7 @@ export class ArqueoCajaNewComponent implements OnInit {
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalCancelTitle: string;
-  private modalCancelMessage: String;
-  errorDateArqueoCurrentDateMsg = "La fecha de apertura del arqueo es mayor a la fecha actual";
-  errorDateLastArqueoMsg = "La fecha de apertura del arqueo es menor a la fecha de cierre de un arqueo posterior de la misma caja";
-  errorArqueoOpen = "Ya existe un arqueo de caja abierto";
+  private modalCancelMessage: String;    
   serviceErrorTitle: string = 'Error de Servicio';
   pageTitle: String = 'Nuevo Arqueo';
   cancelButton: String = "Cancelar";
@@ -37,7 +37,8 @@ export class ArqueoCajaNewComponent implements OnInit {
   hasCashRegister = true;
   showMessageCashRegister = false;
   cashRegistersTouched = false;
-  lengthCashRegister: Boolean;
+  /**Determina si se muestra el combo para seleccionar la caja en la vista */
+  displayCashRegisterCombo: Boolean;
   dateCreated_at: Date;
   hourCreated_at: Date;
   arqueoOpen: ArqueoCaja;
@@ -47,7 +48,6 @@ export class ArqueoCajaNewComponent implements OnInit {
   constructor(private _route: ActivatedRoute,
               private _router: Router,
               private _arqueoService: ArqueoCajaService,
-              private _cashRegister: CashRegisterService,
               private modalService: BsModalService) { }
 
   ngOnInit() {
@@ -63,25 +63,29 @@ export class ArqueoCajaNewComponent implements OnInit {
     this.shouldDisplayCashRegisterCombo();  
   }
 
+  /**
+   * Setea la variable displayCashRegisterCombo si hay mas de una caja registradora.
+   * Si hay una sola caja se la setea al nuevo arqueo y no se muestra el combo para seleccionar una
+   * en la vista
+   */
   private shouldDisplayCashRegisterCombo() {
     if (this.cashRegisters.length != 0) {
       if (this.cashRegisters.length > 1) {
-        this.lengthCashRegister = true;
+        this.displayCashRegisterCombo = true;
       }
       else {
         this.newArqueo.cashRegisterId = this.cashRegisters[0]._id;
-        this.lengthCashRegister = false;
+        this.displayCashRegisterCombo = false;
         this.hasCashRegister = false;
       }
     }
     else {
-      this.lengthCashRegister = false;
+      this.displayCashRegisterCombo = false;
       this.hasCashRegister = false;
     }
   }
 
   saveArqueo(){    
-    console.log('save')
     let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
     let dateCreatedAt = new Date(stringDate);
     this.newArqueo.createdAt = dateCreatedAt;
@@ -89,6 +93,7 @@ export class ArqueoCajaNewComponent implements OnInit {
     //para esa caja con fecha posterior a la fecha con la que se abre el arqueo.
     this.newArqueo.ingresos = [];
     this.newArqueo.egresos = []; 
+    this.newArqueo.createdBy = "5d38ebfcf361ae0cabe45a8e";
     
     this._arqueoService.saveArqueo(this.newArqueo).subscribe(
       arqueo =>
@@ -98,56 +103,12 @@ export class ArqueoCajaNewComponent implements OnInit {
       },
       error => 
       { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
-  }
-
-  validate() {
-    this.errorArqueo = false;
-
-    this._arqueoService.getArqueoOpenByCashRegister(this.newArqueo.cashRegisterId)
-      .subscribe(arqueo => {        
-        if (!isNullOrUndefined(arqueo))
-        {
+        if (error.status === CONFLICT) {
           this.errorArqueo = true;
-          this.errorMsg = this.errorArqueoOpen;
-        } else {          
-          let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
-          let dateCreatedAt = new Date(stringDate);
-          let currentDate = new Date();
-
-          if (dateCreatedAt > currentDate) {  
-            this.errorArqueo = true;
-            this.errorMsg = this.errorDateArqueoCurrentDateMsg;
-          } else {
-            this._arqueoService.getLastArqueoByCashRegister(this.newArqueo.cashRegisterId)
-              .subscribe(lastArqueo => {
-                if (!isNullOrUndefined(lastArqueo)) {
-                  console.log("c")
-                  let stringDate = this.dateCreated_at.toString().concat(' ').concat(this.hourCreated_at.toString());
-                  let dateCreatedAt = new Date(stringDate);
-                  let lastDate = new Date(lastArqueo.closedAt)
-
-                  if (dateCreatedAt < lastDate) {
-                    this.errorArqueo = true;
-                    this.errorMsg = this.errorDateLastArqueoMsg;
-                  } else {
-                    this.saveArqueo();
-                  }
-                } else {
-                  this.saveArqueo();
-                }            
-              },
-              error => {                
-                this.showModalError(this.serviceErrorTitle, error.error.message);
-              }
-            );
-          }
-        }             
-      },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
+          this.errorMsg = error.error.message;
+        } else {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
       }
     );
   }

@@ -1,4 +1,5 @@
 export class ArqueoCaja {
+  _id: String;
   cashRegister: String;
   cashRegisterId: any;
   createdAt:  Date;
