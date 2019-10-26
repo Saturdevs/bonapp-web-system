@@ -50,12 +50,12 @@
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredTransactions && filteredTransactions.length'>
                             <tr *ngFor='let transaction of filteredTransactions; let i = index'>
-                                <td *ngIf='(transaction.deleted === false) && (arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.clientName }}</td>
-                                <td *ngIf='(transaction.deleted === false) && (arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.date | date:'dd/MM/yy HH:mm'
+                                <td *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.clientName }}</td>
+                                <td *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.date | date:'dd/MM/yy HH:mm'
                                     }}</td>
-                                <td *ngIf='(transaction.deleted === false) && (arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.amount |
+                                <td *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.amount |
                                     currency:'USD':code:'2.2-2' }}</td>
-                                <td class="align-middle" *ngIf='(transaction.deleted === false) && (arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                <td class="align-middle" *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
                                     <a [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['editTransaction', transaction.clientId, transaction._id] } }]"
                                         class="btn btn-yellow btn-sm customButtonText">Detalle</a>
                                     <a (click)="showModalDelete(deleteTemplate, transaction.clientId, transaction._id)"
