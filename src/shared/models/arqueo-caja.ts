@@ -16,4 +16,5 @@ export class ArqueoCaja {
   totalEgresos: number = 0;
   comment: string;
   deleted: Boolean;
+  deletedBy: string;
 }

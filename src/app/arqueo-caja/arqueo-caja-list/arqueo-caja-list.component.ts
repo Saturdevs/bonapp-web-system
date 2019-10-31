@@ -92,6 +92,7 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
     if (this.closeModal()) {
       let cashCount = this.arqueos.find(arqueo => arqueo._id === this.idArqueoDelete);
       cashCount.deleted = true;
+      cashCount.deletedBy = "5d38ebfcf361ae0cabe45a8e";
       this.arqueoService.updateArqueo(cashCount).subscribe(
         () => {
           this.getArqueos();
