@@ -29,7 +29,7 @@
                                     [(ngModel)]="typeSelectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>
                             </div>
 
-                            <h6 class="pt-2">Tipo de pago:</h6>
+                            <h6 class="pt-2">Caja Registradora:</h6>
                             <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
                                 <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
                                     [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Choose your option"
@@ -58,9 +58,9 @@
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredCashFlows && filteredCashFlows.length'>
-                            <!-- Loren, aca en el *ngFor implemento el pipe que defino en la carpeta shared/pipes -->
-                            <!-- El pipe lo agregue en el cash-flows.module -->
-                            <!-- Fijate que agrego los ng-model por los que quiero filtrar (cashSelectedValue y typeSelectedValue) -->
+                            <!-- En el *ngFor se implementa el pipe que se definio en la carpeta shared/pipes -->
+                            <!-- El pipe se agrego en el cash-flows.module -->
+                            <!-- Luego se agregan los ng-model por los que se quiere filtrar (cashSelectedValue y typeSelectedValue) -->
                             <tr *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate; let i = index'>
                                 <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
                                 <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.cashRegister }}</td>

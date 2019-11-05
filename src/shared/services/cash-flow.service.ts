@@ -29,14 +29,7 @@ export class CashFlowService {
             .map(data => data.cashFlow);
   }
 
-  getCashFlowsByCashRegister(idCashRegister) {
-    return this.apiService.get(`/cashFlow/${idCashRegister}/cashRegister`)
-           .map(data => data.cashFlows)
-           .catch(this.handleError);
-  }
-
   updateCashFlow(cashFlow){
-    console.log(cashFlow)
     return this.apiService.put(`/cashFlow/${cashFlow._id}`, cashFlow)
             .map(data => data.cashFlow)
             .catch(this.handleError);

@@ -4,12 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { CashFlow } from '../../../shared/models/cash-flow';
-import { CashFlowService } from '../../../shared/services/cash-flow.service';
-import { CashRegister } from '../../../shared/models/cash-register';
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
-import { PaymentType } from '../../../shared/models/payment-type';
-import { PaymentTypeService } from '../../../shared/services/payment-type.service';
+import { 
+  CashFlow
+} from '../../../shared/index';
 
 @Component({
   selector: 'app-cash-flows-edit',
@@ -24,45 +21,19 @@ export class CashFlowsEditComponent implements OnInit {
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
-  paymentTypes: PaymentType[];
-  cashRegisters: CashRegister[];
   cashFlow: CashFlow;
-  typesArray: Array<string> = new Array("Ingreso", "Egreso");
   paymentTypeName: String;
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
-              private _cashFlowService: CashFlowService,
-              private _cashRegisterService: CashRegisterService,
-              private _paymentTypeService: PaymentTypeService,
               private modalService: BsModalService) { }
 
   ngOnInit() {
     this._route.data.subscribe(
       data => {
         this.cashFlow = data['cashFlow'];
-        
-        this._cashRegisterService.getCashRegister(this.cashFlow.cashRegisterId).subscribe(
-          cashRegister => {
-            this.cashFlow.cashRegister = cashRegister.name;
-          },
-          error => {
-            this.showModalError(this.serviceErrorTitle, error.error.message);
-          }
-        );
-
-        this._paymentTypeService.getPaymentType(this.cashFlow.paymentType).subscribe(
-          paymentType => {
-            this.paymentTypeName = paymentType.name;
-          },
-          error => {
-            this.showModalError(this.serviceErrorTitle, error.error.message);
-          }
-        )
       }
     )
-    this.cashRegisters = this._route.snapshot.data['cashRegisters'];
-    this.paymentTypes = this._route.snapshot.data['paymentTypes'];
   }
 
   showModalError(errorTittleReceived: string, errorMessageReceived: string) { 

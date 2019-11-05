@@ -4,12 +4,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { CashFlow } from '../../../shared/models/cash-flow';
-import { CashFlowService } from '../../../shared/services/cash-flow.service';
-import { CashRegister } from '../../../shared/models/cash-register';
-import { PaymentType } from '../../../shared/models/payment-type';
-import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
-import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
+import { 
+  CashFlow,
+  CashRegister,
+  PaymentType,
+  ArqueoCaja,
+  CashFlowService,
+  ArqueoCajaService,
+  CashFlowTypes
+} from '../../../shared/index';
+
 import { isNullOrUndefined } from 'util';
 
 @Component({
@@ -38,7 +42,7 @@ export class CashFlowsNewComponent implements OnInit {
   showMessagePaymentType = false;
   hasType = true;
   showMessageType = false;
-  typesArray: Array<string> = new Array("Ingreso", "Egreso");
+  typesArray: Array<string> = new Array(CashFlowTypes.INGRESO, CashFlowTypes.EGRESO);
   cashCount: ArqueoCaja;
   lengthCashRegister: Boolean;
 
@@ -53,16 +57,12 @@ export class CashFlowsNewComponent implements OnInit {
     this.newCashFlow.cashRegisterId = "default";
     this.newCashFlow.type = "default";
     this.newCashFlow.paymentType = "default";
+    this.newCashFlow.createdBy = "5d38ebfcf361ae0cabe45a8e";
     
     this._route.data.subscribe(
       data => {
-        this.cashRegisters = data['cashRegisters']
-      }
-    )
-
-    this._route.data.subscribe(
-      data => {
-        this.paymentTypes = data['paymentTypes']
+        this.cashRegisters = data['cashRegisters'];
+        this.paymentTypes = data['paymentTypes'];
       }
     )
 
@@ -70,6 +70,10 @@ export class CashFlowsNewComponent implements OnInit {
 
   }
 
+  /**
+   * Si hay mas de una caja registradora se muestra el combo para que el usuario elija sobre que caja se va a realizar 
+   * el movimiento de efectivo. Si hay una sola caja o no hay ninguna no se muestra el combo.
+   */
   private shouldDisplayCashRegisterCombo() {
     if (this.cashRegisters.length != 0) {
       if (this.cashRegisters.length > 1) {
@@ -87,47 +91,10 @@ export class CashFlowsNewComponent implements OnInit {
     }
   }
 
-  saveCashFlowIntoCashCount(cashFlow: CashFlow) {
-    this._cashCountService.getArqueoOpenByCashRegister(cashFlow.cashRegisterId).subscribe(
-      cashCount => {
-        if(!isNullOrUndefined(cashCount)){
-          if(cashFlow.type === "Ingreso"){
-            if(isNullOrUndefined(cashCount.ingresos)){
-              cashCount.ingresos = new Array();              
-            }
-              
-            cashCount.ingresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })            
-          } 
-          else if(cashFlow.type === "Egreso"){
-            if(isNullOrUndefined(cashCount.egresos)){
-              cashCount.egresos = new Array();              
-            }
-
-            cashCount.egresos.push({ paymentType: cashFlow.paymentType, desc: "Movimiento de Caja", amount: cashFlow.totalAmount })
-          }
-
-          this._cashCountService.updateArqueo(cashCount).subscribe(
-            cashCount => {
-              this.cashCount = cashCount;
-              this.onBack();
-            },
-            error => {
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          )
-        }        
-      },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    )
-  }
-
   saveCashFlow(){
     this._cashFlowService.saveCashFlow(this.newCashFlow).subscribe(
       cashFlow => { 
         this.newCashFlow = cashFlow,
-        this.saveCashFlowIntoCashCount(this.newCashFlow);
         this.onBack()
       },
       error => { 

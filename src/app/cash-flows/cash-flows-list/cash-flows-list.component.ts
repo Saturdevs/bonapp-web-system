@@ -4,11 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { CashFlowService } from '../../../shared/services/cash-flow.service';
-import { CashFlow } from '../../../shared/models/cash-flow';
+import {
+  CashFlow,
+  CashRegister,
+  CashFlowService,
+  CashRegisterService,
+  CashFlowTypes
+} from '../../../shared/index';
 
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
-import { CashRegister } from '../../../shared/models/cash-register';
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
@@ -18,7 +21,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class CashFlowsListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Movimientos de Caja";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -38,51 +41,35 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
   cashSelectedValue: string;
   startDate: Date;
   endDate: Date;
-  typesArray: Array<string> = new Array("Ingreso", "Egreso");
+  typesArray: Array<string> = new Array(CashFlowTypes.INGRESO, CashFlowTypes.EGRESO);
   previous: any;
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private cashFlowService: CashFlowService,
-              private cashRegisterService: CashRegisterService,
-              private route: ActivatedRoute,
-              private modalService: BsModalService,
-              private cdRef: ChangeDetectorRef) { }
+    private cashRegisterService: CashRegisterService,
+    private route: ActivatedRoute,
+    private modalService: BsModalService,
+    private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.data.subscribe(
       data => {
-        this.cashFlows = data['cashFlows'].map(cashFlow => {
-          this.cashRegisterService.getCashRegister(cashFlow.cashRegisterId).subscribe(
-            cashRegister => {
-              cashFlow.cashRegister = cashRegister.name                
-            },  
-            error => { 
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          );
-
-          return cashFlow;
-        })
+        this.cashFlows = data['cashFlows'];
+        this.cashRegisters = data['cashRegisters'];
       }
     )
 
-    this.route.data.subscribe(
-      data => {
-        this.cashRegisters = data['cashRegisters']
-      }
-    )
-
-    this.typesSelect.push({ value: 'default', label: 'Todos', selected: true })    
-    for (let type of this.typesArray){
-      this.typesSelect.push({value: type, label:type})
+    this.typesSelect.push({ value: 'default', label: 'Todos', selected: true })
+    for (let type of this.typesArray) {
+      this.typesSelect.push({ value: type, label: type })
     };
     this.typeSelectedValue = 'default';
 
-    this.cashRegistersSelect.push({ value: 'default', label: 'Todas', selected: true })    
-    for (let cashRegister of this.cashRegisters){
-      this.cashRegistersSelect.push({value: cashRegister._id, label:cashRegister.name})
+    this.cashRegistersSelect.push({ value: 'default', label: 'Todas', selected: true })
+    for (let cashRegister of this.cashRegisters) {
+      this.cashRegistersSelect.push({ value: cashRegister._id, label: cashRegister.name })
     };
     this.cashSelectedValue = 'default';
 
@@ -106,53 +93,45 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
   getCashFlows(): void {
     this.cashFlowService.getAll()
       .subscribe(cashFlows => {
-        this.cashFlows = cashFlows.map(cashFlow => {
-          this.cashRegisterService.getCashRegister(cashFlow.cashRegisterId).subscribe(
-            cashRegister => {
-              cashFlow.cashRegister = cashRegister.name                
-            },  
-            error => { 
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          );  
-
-          return cashFlow;
-        });
+        this.cashFlows = cashFlows;
 
         this.filteredCashFlows = this.cashFlows;
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      })
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        })
   }
 
-  showModalDelete(template: TemplateRef<any>, idCashFlow: any){
+  showModalDelete(template: TemplateRef<any>, idCashFlow: any) {
     this.idCashFlowsDelete = idCashFlow;
     this.modalDeleteTitle = "Eliminar Movimiento";
     this.modalDeleteMessage = "¿Seguro desea eliminar este Movimiento?";
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalRef = this.modalService.show(template, { backdrop: true });
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
 
-  deleteCashFlow(){
-    if (this.closeModal()){
-      this.cashFlowService.deleteCashFlow(this.idCashFlowsDelete).subscribe( success=> {
+  deleteCashFlow() {
+    if (this.closeModal()) {
+      let cashFlow = this.cashFlows.find(cashFlow => cashFlow._id === this.idCashFlowsDelete);
+      cashFlow.deleted = true;
+      cashFlow.deletedBy = "5d38ebfcf361ae0cabe45a8e";
+      this.cashFlowService.updateCashFlow(cashFlow).subscribe(success => {
         this.getCashFlows();
       },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      });
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        });
     }
   }
 

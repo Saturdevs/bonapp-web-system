@@ -1,10 +1,14 @@
 export class CashFlow {
+  _id: String;
   cashRegister: String;
   cashRegisterId: any;
   date:  Date;
-  created_by: string;
+  createdBy: string;
   totalAmount: number;
   type: string;
   paymentType: any;
+  paymentTypeName: String;
   comment: string;
+  deleted: Boolean;
+  deletedBy: string;
 }
