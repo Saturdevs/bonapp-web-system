@@ -4,8 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
-import { CashRegister } from '../../../shared/models/cash-register';
+import { CONFLICT } from 'http-status-codes';
+
+import { 
+  CashRegister,
+  CashRegisterService
+} from '../../../shared/index';
+
 import { isNullOrUndefined } from 'util';
 
 @Component({
@@ -28,7 +33,7 @@ export class CashRegisterListComponent implements OnInit {
   cashRegisters: CashRegister[];
   filteredCashRegisters: CashRegister[];
   _listFilter: string;
-  idCashRegisterDelete: any;
+  idCashRegisterDelete: String;
 
   get listFilter(): string {
     return this._listFilter;
@@ -45,15 +50,7 @@ export class CashRegisterListComponent implements OnInit {
   ngOnInit() {
     this.route.data.subscribe(
       data => {
-        this.cashRegisters = data['cashRegisters'].map(cashRegister => {
-          if(cashRegister.available) {
-            cashRegister.available = 'Si';
-          } else {
-            cashRegister.available = 'No';
-          }
-
-          return cashRegister;
-        })
+        this.cashRegisters = data['cashRegisters'];
       }
     )
     
@@ -69,15 +66,7 @@ export class CashRegisterListComponent implements OnInit {
   getCashRegisters(): void {
     this._cashRegisterService.getAll()
       .subscribe(cashRegisters => {
-        this.cashRegisters = cashRegisters.map(cashRegister => {
-          if(cashRegister.available) {
-            cashRegister.available = 'Si';
-          } else {
-            cashRegister.available = 'No';
-          }
-
-          return cashRegister;
-        });
+        this.cashRegisters = cashRegisters;
         this.filteredCashRegisters = this.cashRegisters;
       },
       error => {
@@ -85,7 +74,7 @@ export class CashRegisterListComponent implements OnInit {
       });
   }
 
-  showModalDelete(template: TemplateRef<any>, idCashRegister: any){
+  showModalDelete(template: TemplateRef<any>, idCashRegister: String){
     this.idCashRegisterDelete = idCashRegister;
     this.modalDeleteTitle = "Eliminar Caja Registradora";
     this.modalDeleteMessage = "¿Seguro desea eliminar esta Caja Registradora?";
@@ -107,11 +96,11 @@ export class CashRegisterListComponent implements OnInit {
   deleteCashRegister(){
     if (this.closeModal()){
       this._cashRegisterService.deleteCashRegister(this.idCashRegisterDelete).subscribe( success=> {        
-        this.getCashRegisters();
+        this.reloadItems();
       },
       error => {                
-        if (!isNullOrUndefined(error)) {
-          this.validationMessage = error;
+        if (error.status === CONFLICT) {
+          this.validationMessage = error.error.message;
         }
         else {
           this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -120,7 +109,8 @@ export class CashRegisterListComponent implements OnInit {
     }
   }
 
-  reloadItems(event) {
+  reloadItems() {   
+    this.validationMessage = "";
     this.getCashRegisters();
   }
 

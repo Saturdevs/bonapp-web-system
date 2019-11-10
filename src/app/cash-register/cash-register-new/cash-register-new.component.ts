@@ -5,8 +5,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { CashRegister } from '../../../shared/models/cash-register';
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
+import { 
+  CashRegister,
+  CashRegisterService
+} from '../../../shared/index';
 
 @Component({
   selector: 'app-cash-register-new',
@@ -29,8 +31,7 @@ export class CashRegisterNewComponent implements OnInit {
   private cancelButton: String = 'Cancelar';
   private checkboxAvailableText: String = 'Disponible';
 
-  constructor(private _route: ActivatedRoute,
-              private _router: Router,
+  constructor(private _router: Router,
               private _cashRegisterService: CashRegisterService,
               private modalService: BsModalService,
               private formBuilder: FormBuilder) { }
@@ -70,7 +71,7 @@ export class CashRegisterNewComponent implements OnInit {
     return true;     
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){
+  showModalCancel(template: TemplateRef<any>){
     this.modalRef = this.modalService.show(template, {backdrop: true});
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

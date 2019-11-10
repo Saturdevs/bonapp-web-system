@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div *ngIf="errorArqueo === true" class="alert alert-danger">
+    <div *ngIf="errorCashRegister === true" class="alert alert-danger">
       {{ errorMsg }}
     </div>
   </form>
@@ -53,6 +53,6 @@
 <div class="col-12">
   <div class="col-7 offset-5">
     <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="cashRegisterForm.invalid" (click)="validate()">{{saveButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="cashRegisterForm.invalid" (click)="updateCashRegister()">{{saveButton}}</button>
   </div>
 </div>

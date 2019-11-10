@@ -1,8 +1,7 @@
 export class CashRegister {
-  _id: string;
+  readonly _id: string;
   name: string;
-  available: any;  
-  default: any;
-  cashFlows: Array<any> = [];
-  arqueos: Array<any> = [];
+  available: Boolean;  
+  readonly availableDescription: string;
+  default: Boolean;
 }

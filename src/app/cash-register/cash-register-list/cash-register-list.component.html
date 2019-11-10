@@ -54,7 +54,7 @@
                     <tbody class="table-wrapper" *ngIf='cashRegisters && cashRegisters.length'>
                         <tr *ngFor='let cashRegister of filteredCashRegisters '>
                             <td>{{ cashRegister.name }}</td>
-                            <td>{{ cashRegister.available }}</td>
+                            <td>{{ cashRegister.availableDescription }}</td>
                             <td class="align-middle">
                                 <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
                                     class="btn btn-yellow btn-sm customButtonText">Editar</a>                                
@@ -68,6 +68,6 @@
     </div>
 
     <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
-        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+        <router-outlet name="edit" (deactivate)='reloadItems()'></router-outlet>
     </div>
 </div>

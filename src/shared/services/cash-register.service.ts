@@ -55,12 +55,6 @@ export class CashRegisterService {
           .catch(this.handleError);
   }
 
-  unSetDefaultCashRegister(idCashRegister): Observable<any> {
-    return this.apiService.put(`/cashRegister/unSetDefaultCashRegister/${idCashRegister}`, {})
-      .map(data => data)
-      .catch(this.handleError);
-  }
-
   private handleError(err: HttpErrorResponse){
     console.log(err.message);
     return Observable.throw(err);
