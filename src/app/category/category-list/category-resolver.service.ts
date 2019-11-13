@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Category } from '../../../shared/models/category';
-import { CategoryService } from '../../../shared/services/category.service';
+import {
+  Category,
+  CategoryService
+} from '../../../shared/index';
 
 @Injectable()
 export class CategoryResolverService implements Resolve<Category[]> {
@@ -12,7 +14,7 @@ export class CategoryResolverService implements Resolve<Category[]> {
   constructor(private _categoryService: CategoryService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Category[]>{
-    return this._categoryService.getCategoriesWithMenu();
+    return this._categoryService.getAll();
   }
 
 }

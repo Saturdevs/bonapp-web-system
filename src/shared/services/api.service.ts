@@ -8,10 +8,10 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class ApiService {
-  
+
   constructor(
     private http: HttpClient
-  ){}
+  ) { }
 
   private setHeaders(): HttpHeaders {
     const headersConfig = {
@@ -28,7 +28,7 @@ export class ApiService {
 
   get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http.get(`${environment.api_url}${path}`, { headers: this.setHeaders(), params: params })
-    .catch(this.formatErrors);
+      .catch(this.formatErrors);
   }
 
   put(path: string, body: Object = {}): Observable<any> {
@@ -37,7 +37,7 @@ export class ApiService {
       JSON.stringify(body),
       { headers: this.setHeaders() }
     )
-    .catch(this.formatErrors);
+      .catch(this.formatErrors);
   }
 
   post(path: string, body: Object = {}): Observable<any> {
@@ -46,7 +46,7 @@ export class ApiService {
       JSON.stringify(body),
       { headers: this.setHeaders() }
     )
-    .catch(this.formatErrors);
+      .catch(this.formatErrors);
   }
 
   delete(path): Observable<any> {
@@ -54,6 +54,6 @@ export class ApiService {
       `${environment.api_url}${path}`,
       { headers: this.setHeaders() }
     )
-    .catch(this.formatErrors);
-  }  
+      .catch(this.formatErrors);
+  }
 }

@@ -1,16 +1,20 @@
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Subscription }       from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Category } from '../../../shared/models/category';
-import { Menu } from '../../../shared/models/menu';
-import { CategoryService } from '../../../shared/services/category.service';
-import { MenuService } from '../../../shared/services/menu.service';
+import {
+  Category,
+  Menu,
+  CategoryService,
+  Product
+} from '../../../shared/index';
+
 import { FileInputComponent } from '../../file-input/file-input.component';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-category-modify',
@@ -18,106 +22,106 @@ import { FileInputComponent } from '../../file-input/file-input.component';
   styleUrls: ['./category-modify.component.css']
 })
 export class CategoryModifyComponent implements OnInit {
-  
+
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
-  
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalCancelTitle: string;
   private modalCancelMessage: string;
+  private noModifyMessage = "Esta categoría no puede ser modificada porque tiene productos asociados.";
   pageTitle: string = 'Category Modify';
   category: Category;
   menus: Menu[];
   categoryNameModified: string;
   categoryMenuModified: string;
   CategoryPicModified: string;
-  CategoryNumberOfItemsModified: number;
   id: string;
   menuSelect: Menu;
   private sub: Subscription;
   hasCategory = false;
   pictureTouched: boolean;
   validPicture: string;
+  menuTouched: boolean = false;
   path: string = '../../../assets/img/categories/';
+  product: Product;
+  canEdit: Boolean = true;
+  private categoryPictureData: string;
 
   constructor(private _route: ActivatedRoute,
     private _router: Router,
     private _categoryService: CategoryService,
-              private modalService: BsModalService,
-              private _menuService: MenuService) { }
+    private modalService: BsModalService) { }
 
   ngOnInit(): void {
     this.category = this._route.snapshot.data['category'];
     this.path = this.path + this.category.picture;
     this.categoryNameModified = this.category.name;
-    this.categoryMenuModified = this.category.menuId;
+    this.categoryMenuModified = this.category.menu.name;
     this.CategoryPicModified = this.category.picture;
-    this.CategoryNumberOfItemsModified = this.category.number_of_items;
     this.menus = this._route.snapshot.data['menus'];
+    this.product = this._route.snapshot.data['product'];
+    this.categoryPictureData = this.category.picture;
     
-    this.validateCategoryBeforeModify();
-  }
-  
-  async validateCategoryBeforeModify(){
-    let canDelete = this._categoryService.validateCategoriesBeforeChanges(this.category._id);
-    if (await canDelete.then(x => x == false)){
-      let noModifyTitle = "Modificar Categoría";
-      let noModifyMessage = "No se puede modificar la categoría seleccionada porque tiene productos asociados.";
-      this.showModalError(noModifyTitle, noModifyMessage);
-    }
+    if (!isNullOrUndefined(this.product)) {
+      this.canEdit = false;    
+    }    
   }
 
   updateCategory(category: Category) {
     this._categoryService.updateCategory(category).subscribe(
-          category => { this.category = category,
-            this.onBack()},
-          error => {
-            this.showModalError(this.serviceErrorTitle, error.error.message);
-          });
+      category => {
+      this.category = category,
+        this.onBack()
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      });
   }
 
-  
   onNotified(validator: Array<string>) {
-    validator[1] != '' ? this.validPicture = validator[1]: this.validPicture = '';
+    validator[0] != '' ? this.validPicture = validator[0] : this.validPicture = '';
+    validator[1] != '' ? this.categoryPictureData = validator[1] : this.categoryPictureData = '';
     this.pictureTouched = true;
-    if(this.validPicture != ''){
-      this.category.picture = this.validPicture;
+    if (this.validPicture != '') {
+      this.category.picture = this.categoryPictureData;
     }
   }
 
   onBack(): void {
     this._router.navigate(['/restaurant/category']);
   }
-  
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalCancel(template: TemplateRef<any>){    
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+  showModalCancel(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
 
-  closeModalAndGoBack(){
+  closeModalAndGoBack() {
     this.closeModal();
     this.onBack();
-    return true;     
+    return true;
   }
 
-  validateCategory(value) {   
+  validateCategory(value) {
+    this.menuTouched = true;
     if (value === 'default') {
       this.hasCategory = true;
     } else {
@@ -125,7 +129,7 @@ export class CategoryModifyComponent implements OnInit {
     }
   }
 
-  cancel(){    
+  cancel() {
     this.onBack();
     this.closeModal();
   }

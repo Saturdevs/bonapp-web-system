@@ -13,6 +13,7 @@ import { CategoryResolverService } from './category-list/category-resolver.servi
 import { CategoryModifyResolverService } from './category-modify/category-modify-resolver.service';
 import { MenuResolverService } from '../menu/menu-resolver.service';
 import { FileInputModule } from '../file-input/file-input.module';
+import { CategoryHasproductResolverService } from './resolvers/category-hasproduct-resolver.service';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { FileInputModule } from '../file-input/file-input.module';
     ProductService,
     CategoryResolverService,
     CategoryModifyResolverService,
-    MenuResolverService
+    MenuResolverService,
+    CategoryHasproductResolverService
   ]
 })
 export class CategoryModule { }

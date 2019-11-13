@@ -13,68 +13,59 @@ import { Category } from '../models/category';
 import { ProductService } from './product.service';
 
 @Injectable()
-export class CategoryService {  
+export class CategoryService {
   didValidate: boolean = false;
   productsInCategory: any;
-  
+
   constructor(
     private _productService: ProductService,
     private apiService: ApiService
-  ) {}
+  ) { }
 
   getAll(): Observable<Category[]> {
     return this.apiService.get('/category')
-           .map(data => data.categories)
-           .catch(this.handleError);
+      .map(data => data.categories)
+      .catch(this.handleError);
   }
 
   getCategory(idCategory): Observable<Category> {
-        return this.apiService.get(`/category/${idCategory}`)
-            .map(data => data.category);
+    return this.apiService.get(`/category/${idCategory}`)
+      .map(data => data.category);
   }
 
   getCategoriesByMenu(idMenu) {
     return this.apiService.get(`/category/parent/${idMenu}`)
-           .map(data => data.categories)
-           .catch(this.handleError);
+      .map(data => data.categories)
+      .catch(this.handleError);
   }
 
-  getCategoriesWithMenu(): Observable<Category[]> {
-    return this.apiService.get('/category/category/withmenu')
-           .map(data => data.categories)
-           .catch(this.handleError);
-  }
-
-  updateCategory(category){
+  updateCategory(category) {
     return this.apiService.put(`/category/${category._id}`, category)
-            .map(data => data.menu)
-            .catch(this.handleError);
+      .map(data => data.menu)
+      .catch(this.handleError);
   }
 
-  deleteCategory(idCategory){
+  deleteCategory(idCategory) {
     return this.apiService.delete(`/category/${idCategory}`)
-           .map(data =>data.category)
-           .catch(this.handleError);
+      .map(data => data.category)
+      .catch(this.handleError);
   }
 
-  saveCategory(category){
+  saveCategory(category) {
     return this.apiService.post('/category', category)
-          .map(data => data.category)
-          .catch(this.handleError);
+      .map(data => data.category)
+      .catch(this.handleError);
   }
 
-   async validateCategoriesBeforeChanges(idCategory){
-    let productsInCategory = await this._productService.getProductsByCategory(idCategory).toPromise();
-        if (productsInCategory.length > 0) {
-          return false
-        } else {
-          return true 
-        }
+  hasAtLeastOneProduct(idCategory) {
+    return this.apiService.get(`/category/hasOneProduct/${idCategory}`)
+      .map(data => data.product)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
+  private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }
-  
+
 }

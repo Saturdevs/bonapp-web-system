@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { ArqueoCaja } from '../../../shared/models/arqueo-caja';
-import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
+import {
+  ArqueoCaja,
+  ArqueoCajaService
+} from '../../../shared/index';
 
 @Injectable()
 export class ArqueoCajaResolverService implements Resolve<ArqueoCaja[]> {

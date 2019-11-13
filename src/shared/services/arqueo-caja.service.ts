@@ -20,41 +20,41 @@ export class ArqueoCajaService {
 
   getAll(): Observable<ArqueoCaja[]> {
     return this.apiService.get('/arqueo')
-           .map(data => data.arqueos)
-           .catch(this.handleError);
+      .map(data => data.arqueos)
+      .catch(this.handleError);
   }
 
   getArqueo(idArqueo): Observable<ArqueoCaja> {
-        return this.apiService.get(`/arqueo/${idArqueo}`)
-            .map(data => data.arqueo);
+    return this.apiService.get(`/arqueo/${idArqueo}`)
+      .map(data => data.arqueo);
   }
 
   getArqueoOpenByCashRegister(idCashRegister): Observable<ArqueoCaja> {
     return this.apiService.get(`/arqueo/${idCashRegister}/cashRegister/open`)
-           .map(data => data.arqueo)
-           .catch(this.handleError);
+      .map(data => data.arqueo)
+      .catch(this.handleError);
   }
 
-  updateArqueo(arqueo){
+  updateArqueo(arqueo) {
     console.log(arqueo)
     return this.apiService.put(`/arqueo/${arqueo._id}`, arqueo)
-            .map(data => data.arqueo)
-            .catch(this.handleError);
+      .map(data => data.arqueo)
+      .catch(this.handleError);
   }
 
-  deleteArqueo(idArqueo){
+  deleteArqueo(idArqueo) {
     return this.apiService.delete(`/arqueo/${idArqueo}`)
-           .map(data =>data.arqueo)
-           .catch(this.handleError);
+      .map(data => data.arqueo)
+      .catch(this.handleError);
   }
 
-  saveArqueo(arqueo){
+  saveArqueo(arqueo) {
     return this.apiService.post('/arqueo', arqueo)
-          .map(data => data.arqueo)
-          .catch(this.handleError);
+      .map(data => data.arqueo)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
+  private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }

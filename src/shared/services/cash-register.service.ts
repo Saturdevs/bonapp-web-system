@@ -22,40 +22,40 @@ export class CashRegisterService {
 
   getAll(): Observable<CashRegister[]> {
     return this.apiService.get('/cashRegister')
-           .map(data => data.cashRegisters)
-           .catch(this.handleError);
+      .map(data => data.cashRegisters)
+      .catch(this.handleError);
   }
 
   getAvailables(): Observable<CashRegister[]> {
     return this.apiService.get('/cashRegister/availables')
-           .map(data => data.cashRegisters)
-           .catch(this.handleError);
+      .map(data => data.cashRegisters)
+      .catch(this.handleError);
   }
 
   getCashRegister(idCashRegister): Observable<CashRegister> {
     return this.apiService.get(`/cashRegister/${idCashRegister}`)
-           .map(data => data.cashRegister);
+      .map(data => data.cashRegister);
   }
 
-  updateCashRegister(cashRegister){
+  updateCashRegister(cashRegister) {
     return this.apiService.put(`/cashRegister/${cashRegister._id}`, cashRegister)
-            .map(data => data.cashRegister)
-            .catch(this.handleError);
+      .map(data => data.cashRegister)
+      .catch(this.handleError);
   }
 
-  deleteCashRegister(idCashRegister){
+  deleteCashRegister(idCashRegister) {
     return this.apiService.delete(`/cashRegister/${idCashRegister}`)
-           .map(data =>data.cashRegister)
-           .catch(this.handleError);
+      .map(data => data.cashRegister)
+      .catch(this.handleError);
   }
 
-  saveCashRegister(cashRegister){
+  saveCashRegister(cashRegister) {
     return this.apiService.post('/cashRegister', cashRegister)
-          .map(data => data.cashRegister)
-          .catch(this.handleError);
+      .map(data => data.cashRegister)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
+  private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }

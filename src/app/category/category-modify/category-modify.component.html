@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -14,18 +14,25 @@
   <header class="major" align="center">
     <h2>Editando: {{categoryNameModified}}</h2>
   </header>
+
+  <div class="row mb-2 mt-2 ml-2" *ngIf="!canEdit">
+    <span class="red-label">{{ noModifyMessage }}</span>
+  </div>
+
   <div class="posts">
     <article>
-      <a href="#" class="image "><img class="customImage" [src]='path' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
+      <a href="#" class="image "><img class="customImage" [src]="categoryPictureData"
+          onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
     </article>
     <article>
-    
+
       <form #form="ngForm" method="post" novalidate>
 
         <div class="form-group">
           <label>Nombre Categoría:</label>
-          <input #categoryName="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)" name="categoryName" 
-                id="categoryName" [(ngModel)]="category.name">
+          <input #categoryName="ngModel" required type="text" class="form-control"
+            [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)"
+            name="categoryName" id="categoryName" [(ngModel)]="category.name" [disabled]="!canEdit">
         </div>
 
         <div *ngIf="categoryName.invalid && (categoryName.dirty || categoryName.touched)" class="alert alert-danger">
@@ -33,33 +40,36 @@
         </div>
 
         <div class="form-group">
-            <label>Menu:</label>
-            <div class="select-wrapper">
-              <select #categoryMenu="ngModel" required type="text" class="form-control" [class.is-invalid]="hasCategory" name="categoryMenu" 
-                (blur)="validateCategory(categoryMenu.value)"
-                (change)="validateCategory(categoryMenu.value)"
-                id="categoryMenu" [(ngModel)]="category.menuId">
-                <option value="default">Seleccione la carta...</option>
-                <option [value]="menu._id" *ngFor = 'let menu of menus'>{{menu.name}}</option>
-              </select>
-            </div>
+          <label>Menu:</label>
+          <div class="select-wrapper">
+            <select #categoryMenu="ngModel" required type="text" class="form-control browser-default && menuTouched"
+              [class.is-invalid]="hasCategory" name="categoryMenu" (blur)="validateCategory(categoryMenu.value)"
+              (change)="validateCategory(categoryMenu.value)" id="categoryMenu" [(ngModel)]="category.menuId"
+              [disabled]="!canEdit">
+              <option value="default">Seleccione la carta...</option>
+              <option [value]="menu._id" *ngFor='let menu of menus'>{{menu.name}}</option>
+            </select>
+          </div>
         </div>
 
-        <div *ngIf="hasCategory" class="alert alert-danger">
+        <div *ngIf="hasCategory && menuTouched" class="alert alert-danger">
           El Menu de la Categoría es requerido.
         </div>
 
-        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'"></app-file-input>
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'"
+          [disabled]="canEdit === false">
+        </app-file-input>
         <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
           La imagen de la categoria es requerida.
-        </div>           
+        </div>
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special" (click)="updateCategory(category)"/></li>
+            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special"
+                (click)="updateCategory(category)" [disabled]="!canEdit" /></li>
             <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
           </ul>
-        </div>    
+        </div>
       </form>
     </article>
   </div>

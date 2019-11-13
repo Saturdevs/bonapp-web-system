@@ -4,12 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Category } from '../../../shared/models/category';
-import { CategoryService } from '../../../shared/services/category.service';
-import { MenuService } from '../../../shared/services/menu.service';
-import { Menu } from '../../../shared/models/menu';
-import { Product } from '../../../shared/models/product';
-import { ProductService } from '../../../shared/services/product.service';
+import { 
+  Category,
+  CategoryService,
+  Menu,
+  Product,
+  ProductService
+} from '../../../shared/index';
+
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
@@ -20,21 +22,22 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 export class CategoryComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-  pageTitle: string = 'Categorías';
+  private pageTitle: string = 'Categorías';
   private serviceErrorTitle = 'Error de Servicio';   
   private modalErrorTittle: string;
   private modalErrorMessage: string; 
   private modalDeleteTitle: string;
   private modalDeleteMessage: string;
+  private deleteTitle = "Eliminar Categoría";
   public modalRef: BsModalRef;
   filteredCategories: Category[];
   categories: Category[];
   _listFilter: string;
-  idCategoryDelete: any;
+  idCategoryDelete: String;
   menuCategory: Menu;
   products: Product[];
   menus: Menu[];
-  menusSelect: Array<any> = [];
+  menusSelect: Array<{value: String, label: string, selected: Boolean}> = [];
   selectedValue: string = '';
   previous: any;
 
@@ -52,7 +55,6 @@ export class CategoryComponent implements OnInit, AfterViewInit {
   constructor(private categoryService: CategoryService,
               private _productService: ProductService,
               private modalService: BsModalService,
-              private _menuService: MenuService,
               private route: ActivatedRoute,
               private cdRef: ChangeDetectorRef) { }
 
@@ -63,7 +65,7 @@ export class CategoryComponent implements OnInit, AfterViewInit {
     this.menus = this.route.snapshot.data['menus'];
     
     for (let menu of this.menus){
-      this.menusSelect.push({value: menu._id, label:menu.name})
+      this.menusSelect.push({value: menu._id, label:menu.name, selected: false })
     };
     this.selectedValue = 'default';
 
@@ -88,7 +90,7 @@ export class CategoryComponent implements OnInit, AfterViewInit {
   }
 
   getCategories(): void {
-    this.categoryService.getCategoriesWithMenu()
+    this.categoryService.getAll()
       .subscribe(
         categories => {
           this.categories = categories;
@@ -99,7 +101,7 @@ export class CategoryComponent implements OnInit, AfterViewInit {
         });
   }
 
-  getCategoriesByMenu(idMenu): void {
+  getCategoriesByMenu(idMenu: String): void {
     this.categoryService.getCategoriesByMenu(idMenu)
       .subscribe(
         categories => {
@@ -112,24 +114,16 @@ export class CategoryComponent implements OnInit, AfterViewInit {
       )
   }
 
-  async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idCategory: any){
+  async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idCategory: String){
     this.idCategoryDelete = idCategory;    
-    let canDelete = this.categoryService.validateCategoriesBeforeChanges(this.idCategoryDelete);
-    if (await canDelete.then(x=>x == true)){
-      this.modalDeleteTitle = "Eliminar Categoría";
-      this.modalDeleteMessage = "¿Seguro desea eliminar esta Categoría?";
-      this.modalRef = this.modalService.show(templateDelete, {backdrop: true});
-    }
-    else{
-      let noDeleteTittle = "Eliminar Categoría";
-      let noDeleteMessage = "No se puede eliminar la categoría seleccionada porque tiene productos asociados.";
-      this.showModalError(noDeleteTittle, noDeleteMessage);
-    }
+    this.modalDeleteTitle = this.deleteTitle;
+    this.modalDeleteMessage = "¿Seguro desea eliminar esta Categoría?";
+    this.modalRef = this.modalService.show(templateDelete, {backdrop: true});
   }
 
-  filterMenu(value) {
+  filterMenu(value: string) {
     this._listFilter = '';
-    if (value === 'default') {this._productService.getProductsByCategory(this.idCategoryDelete)
+    if (value === 'default') {
       this.getCategories();
     } else {
       this.getCategoriesByMenu(value);      

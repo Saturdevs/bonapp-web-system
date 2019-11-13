@@ -20,34 +20,34 @@ export class CashFlowService {
 
   getAll(): Observable<CashFlow[]> {
     return this.apiService.get('/cashFlow')
-           .map(data => data.cashFlows)
-           .catch(this.handleError);
+      .map(data => data.cashFlows)
+      .catch(this.handleError);
   }
 
   getCashFlow(idCashFlow): Observable<CashFlow> {
-        return this.apiService.get(`/cashFlow/${idCashFlow}`)
-            .map(data => data.cashFlow);
+    return this.apiService.get(`/cashFlow/${idCashFlow}`)
+      .map(data => data.cashFlow);
   }
 
-  updateCashFlow(cashFlow){
+  updateCashFlow(cashFlow) {
     return this.apiService.put(`/cashFlow/${cashFlow._id}`, cashFlow)
-            .map(data => data.cashFlow)
-            .catch(this.handleError);
+      .map(data => data.cashFlow)
+      .catch(this.handleError);
   }
 
-  deleteCashFlow(idCashFlow){
+  deleteCashFlow(idCashFlow) {
     return this.apiService.delete(`/cashFlow/${idCashFlow}`)
-           .map(data =>data.cashFlow)
-           .catch(this.handleError);
+      .map(data => data.cashFlow)
+      .catch(this.handleError);
   }
 
-  saveCashFlow(cashFlow){
+  saveCashFlow(cashFlow) {
     return this.apiService.post('/cashFlow', cashFlow)
-          .map(data => data.cashFlow)
-          .catch(this.handleError);
+      .map(data => data.cashFlow)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
+  private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }

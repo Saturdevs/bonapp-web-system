@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -32,47 +32,49 @@
 
         <div class="form-group">
           <label>Nombre Categoría:</label>
-          <input #categoryName="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)" name="categoryName" 
-                id="categoryName" [(ngModel)]="newCategory.name">
+          <input #categoryName="ngModel" required type="text" class="form-control"
+            [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)"
+            name="categoryName" id="categoryName" [(ngModel)]="newCategory.name">
         </div>
 
         <div *ngIf="categoryName.invalid && (categoryName.dirty || categoryName.touched)" class="alert alert-danger">
           El nombre de la categoría es requerido.
         </div>
 
-        <div class="form-group" [class.has-error]="hasCategory">
-            <label>Menu:</label>
-            <div class="select-wrapper">
-              <select #categoryMenu="ngModel" required type="text" class="form-control browser-default" [class.is-invalid]="hasCategory && menuTouched" name="categoryMenu" 
-                (blur)="validateCategory(categoryMenu.value)"
-                (change)="validateCategory(categoryMenu.value)"
-                id="categoryMenu" [(ngModel)]="newCategory.menuId">
-                <option value="default" default>Seleccione la carta...</option>
-                <option [value]="menu._id" *ngFor = 'let menu of menus'>{{menu.name}}</option>
-              </select>
-            </div>
+        <div class="form-group" [class.has-error]="hasMenu">
+          <label>Menu:</label>
+          <div class="select-wrapper">
+            <select #categoryMenu="ngModel" required type="text" class="form-control browser-default"
+              [class.is-invalid]="hasMenu && menuTouched" name="categoryMenu"
+              (blur)="validateCategory(categoryMenu.value)" (change)="validateCategory(categoryMenu.value)"
+              id="categoryMenu" [(ngModel)]="menuSelectedId">
+              <option value="default" default>Seleccione la carta...</option>
+              <option [value]="menu._id" *ngFor='let menu of menus'>{{menu.name}}</option>
+            </select>
+          </div>
         </div>
 
-        <div *ngIf="hasCategory && menuTouched" class="alert alert-danger">
+        <div *ngIf="hasMenu && menuTouched" class="alert alert-danger">
           El Menu de la Categoría es requerido.
         </div>
 
         <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'"></app-file-input>
-          <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
-            La imagen de la categoria es requerida.
-          </div>           
+        <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
+          La imagen de la categoria es requerida.
+        </div>
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="form.invalid || hasCategory || validPicture === ''" type="submit" value="Guardar" class="special" (click)="validateName()"/></li>
+            <li><input [disabled]="form.invalid || hasMenu || validPicture === ''" type="submit" value="Guardar"
+                class="special" (click)="saveCategory()" /></li>
             <li><input type="button" value="Cancelar" (click)="showModalCancel(cancelTemplate)" /></li>
           </ul>
-        </div>    
+        </div>
       </form>
     </div>
 
     <div class="col-md-6">
-      <img [src]="newCategoryPictureData"  onerror="this.src='../../../assets/img/No_image_available.svg'"/>
+      <img [src]="newCategoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'" />
     </div>
   </div>
 </div>

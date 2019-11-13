@@ -22,6 +22,7 @@ import { ProductResolverService } from '../product/product-list/product-resolver
 import { ProductModifyResolverService } from '../product/product-modify/product-modify-resolver.service';
 import { ProductEditGuardService } from '../product/product-modify/product-modify-guard.service';
 import { ProductNewGuardService } from '../product/product-new/product-new-guard.service';
+import { CategoryHasproductResolverService } from '../category/resolvers/category-hasproduct-resolver.service';
 
 @NgModule({
   imports: [
@@ -60,11 +61,18 @@ import { ProductNewGuardService } from '../product/product-new/product-new-guard
               },
               { 
                 path: 'newCategory', 
-                component: CategoryNewComponent 
+                component: CategoryNewComponent,
+                resolve: {
+                  menus: MenuResolverService
+                }
               },
               { path: 'edit/:id', 
                 component: CategoryModifyComponent, 
-                resolve: { category: CategoryModifyResolverService, menus: MenuResolverService} 
+                resolve: {
+                  category: CategoryModifyResolverService, 
+                  menus: MenuResolverService,
+                  product: CategoryHasproductResolverService
+                } 
               }
             ]            
           },

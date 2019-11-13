@@ -46,7 +46,7 @@
             <tbody class="table-wrapper" *ngIf='categories && categories.length'>
                 <tr *ngFor = 'let category of filteredCategories; let i = index' >
                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{category.name}}</td>
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ category.menuId.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ category.menu.name }}</td>
                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">
                         <a [routerLink]="['edit', category._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                         <a (click) = "showModalDelete(deleteTemplate, noDelete, category._id)" class="btn btn-red btn-sm">Eliminar</a>
@@ -63,22 +63,4 @@
         </table>
     </div>
 </div>
-<!-- <div class=" float-right">    
-            <label>Categorías para el Menu de:</label>
-            <div class="select-wrapper">
-                <select #queryMenu type="text" class="form-control" name="queryMenu" 
-                    (change)="filterMenu(queryMenu.value)"
-                    id="queryMenu">
-                    <option value="default" default>Todas</option>
-                    <option [value]="menu._id" *ngFor = 'let menu of menus'>{{menu.name}}</option>
-                </select>
-                <mdb-select #queryMenu type="text" name="queryMenu" 
-                (change)="filterMenu(queryMenu.value)"
-                id="queryMenu">
-                    <option value="default" default>Todas</option>
-                    <option [value]="menu._id" *ngFor = 'let menu of menus'>{{
-                </mdb-select>
-                <label>Categorías para el Menu de:</label>
-            </div>    
-        </div> -->
                 

@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { CashFlow } from '../../../shared/models/cash-flow';
-import { CashFlowService } from '../../../shared/services/cash-flow.service';
+import {
+  CashFlow,
+  CashFlowService
+} from '../../../shared/index';
 
 @Injectable()
 export class CashFlowEditResolverService implements Resolve<CashFlow> {
