@@ -1,5 +1,5 @@
 export class Client {
-  _id: String;
+  readonly _id: String;
   tel: String;
   name: String;
   addressStreet: String;
@@ -7,5 +7,4 @@ export class Client {
   addressDpto: String;
   enabledTransactions: Boolean;
   balance: number;
-  transactions: Array<any>;
 }

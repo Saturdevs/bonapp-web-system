@@ -17,7 +17,7 @@
           <label>Cliente:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <label>{{ transaction.clientName }}</label>
+          <label>{{ transaction.client.name }}</label>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
           <label>Medio de Pago:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <label>{{ transactionPaymentMethodName }}</label>
+          <label>{{ transaction.paymentMethod.name }}</label>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@
           <label>Caja:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <label>{{ transactionCashRegisterName }}</label>
+          <label>{{ transaction.cashRegister.name }}</label>
         </div>
       </div>
     </div>

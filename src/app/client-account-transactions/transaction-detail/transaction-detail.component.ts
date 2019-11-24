@@ -4,10 +4,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Transaction } from '../../../shared/models/transaction';
-import { ClientService } from '../../../shared/services/client.service';
-import { CashRegisterService } from '../../../shared/services/cash-register.service';
-import { PaymentTypeService } from '../../../shared/services/payment-type.service';
+import {
+  Transaction
+} from '../../../shared';
 
 @Component({
   selector: 'app-transaction-detail',
@@ -22,40 +21,16 @@ export class TransactionDetailComponent implements OnInit {
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
-  transaction: Transaction;   
-  transactionPaymentMethodName: String;
-  transactionCashRegisterName: String;
+  transaction: Transaction;
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
-              private _clientService: ClientService,
-              private _cashRegisterService: CashRegisterService,
-              private _paymentTypeService: PaymentTypeService,
               private modalService: BsModalService) { }
 
   ngOnInit() {
     this._route.data.subscribe(
       data => {
-        this.transaction = data['transaction'];
-
-        this._paymentTypeService.getPaymentType(this.transaction.paymentMethod).subscribe(
-          paymentMethod => {
-            this.transactionPaymentMethodName = paymentMethod.name;
-          },
-          error => {
-            this.showModalError(this.serviceErrorTitle, error.error.message);
-          }
-        );
-
-        this._cashRegisterService.getCashRegister(this.transaction.cashRegister).subscribe(
-          cashRegister => {
-            this.transactionCashRegisterName =cashRegister.name;
-          },
-          error => {
-            this.showModalError(this.serviceErrorTitle, error.error.message);
-          }
-        );
-        
+        this.transaction = data['transaction'];        
       }
     )
   }

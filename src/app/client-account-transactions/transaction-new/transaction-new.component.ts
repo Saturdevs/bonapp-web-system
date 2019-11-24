@@ -4,12 +4,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Client } from '../../../shared/models/client';
-import { ClientService } from '../../../shared/services/client.service';
-import { ArqueoCajaService } from '../../../shared/services/arqueo-caja.service';
-import { CashRegister } from '../../../shared/models/cash-register';
-import { PaymentType } from '../../../shared/models/payment-type';
-import { isNullOrUndefined } from 'util';
+import {
+  Client,
+  CashRegister,
+  PaymentType,
+  TransactionService
+} from '../../../shared';
 
 @Component({
   selector: 'app-transaction-new',
@@ -42,8 +42,7 @@ export class TransactionNewComponent implements OnInit {
 
   constructor(private _route: ActivatedRoute,
               private _router: Router,
-              private _clientService: ClientService,
-              private _arqueoService: ArqueoCajaService,
+              private _transactionService: TransactionService,
               private modalService: BsModalService) { }
 
   ngOnInit() {
@@ -91,63 +90,14 @@ export class TransactionNewComponent implements OnInit {
   }
 
   saveTransaction(){
-    this._clientService.getClient(this.newTransaction.client).subscribe(
-      client => {
-        if (client.enabledTransactions) {
-          let transact = {
-            amount: this.newTransaction.amount,
-            paymentMethod: this.newTransaction.paymentType,
-            cashRegister: this.newTransaction.cashRegister,
-            comment: this.newTransaction.comment,
-            deleted: false,
-            date: new Date()
-          };
-  
-          client.transactions.push(transact);
-          if (isNullOrUndefined(client.balance)) {
-            client.balance = 0;
-          }
-          client.balance = client.balance + transact.amount;
-  
-          this._clientService.updateClient(client).subscribe(
-            success => { 
-              this._arqueoService.getArqueoOpenByCashRegister(this.newTransaction.cashRegister).subscribe(
-                arqueo => {
-                  if (!isNullOrUndefined(arqueo)) {
-                    let ingreso = {
-                      paymentType: this.newTransaction.paymentType,
-                      desc: 'Cobros clientes cta. cte',
-                      amount: this.newTransaction.amount
-                    };
-
-                    arqueo.ingresos.push(ingreso);
-
-                    this._arqueoService.updateArqueo(arqueo).subscribe(
-                      success => {},
-                      error => {
-                        this.showModalError(this.serviceErrorTitle, error.error.message);
-                      }
-                    );
-                  }
-                }
-              )
-              this.onBack();
-            },
-            error => { 
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          );
-        } else {
-          let errorMessage = "El cliente seleccionado no tiene una cuenta corriente habilitada. Por favor habilite la opción cuenta corriente en la configuración del Cliente.";
-          let errorTitle = "Cta Cte Inhabilitada"
-          this.showModalError(errorTitle, errorMessage)
-        }        
+    this._transactionService.saveTransaction(this.newTransaction).subscribe(
+      transaction => {
+        this.onBack();
       },
-      error => 
-      { 
+      error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
-    );        
+    )  
   }
 
   showModalError(errorTittleReceived: string, errorMessageReceived: string) { 

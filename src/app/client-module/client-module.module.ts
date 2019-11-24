@@ -16,7 +16,6 @@ import { ClientResolverService } from '../client/client-list/client-resolver.ser
 import { ClientEditResolverService } from '../client/client-edit/client-edit-resolver.service';
 import { TransactionResolverService } from '../client-account-transactions/transaction-list/transaction-resolver.service';
 import { TransactionDetailResolverService } from '../client-account-transactions/transaction-detail/transaction-detail-resolver.service';
-import { ClientWithTransactionsResolverService } from '../client-account-transactions/transaction-list/client-with-transactions-resolver.service';
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { ClientCurrentAccountResolverService } from '../client/resolvers/client-current-account-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
@@ -63,11 +62,11 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
             component: TransactionListComponent,   
             resolve: {
               transactions: TransactionResolverService,
-              clientsWithTransactions: ClientWithTransactionsResolverService
+              clientsWithTransactionsEnabled: ClientCurrentAccountResolverService
             },        
             children: [
               {
-                path: 'editTransaction/:idClient/:idTransaction',
+                path: 'editTransaction/:idTransaction',
                 component: TransactionDetailComponent,
                 resolve: {
                   transaction: TransactionDetailResolverService

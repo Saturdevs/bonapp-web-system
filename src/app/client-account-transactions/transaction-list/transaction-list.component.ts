@@ -4,9 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { ClientService } from '../../../shared/services/client.service';
-import { Transaction } from '../../../shared/models/transaction';
-import { Client } from '../../../shared/models/client';
+import {
+  Transaction,
+  Client,
+  TransactionService
+} from '../../../shared';
+
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
@@ -26,9 +29,8 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
   public modalRef: BsModalRef;
   transactions: Transaction[];
   filteredTransactions: Transaction[];
-  idClientTransactionDelete: any;
   idTransactionDelete: any;
-  clientsWithTransactions: Client[];
+  clientsWithTransactionsEnabled: Client[];
   clientsSelect: Array<any> = [];
   selectedValue: string = '';
   selectedClientName: String;
@@ -39,7 +41,7 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
   
-  constructor(private _clientService: ClientService,
+  constructor(private _transactionService: TransactionService,
               private route: ActivatedRoute,
               private modalService: BsModalService,
               private cdRef: ChangeDetectorRef) { }
@@ -49,7 +51,7 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
       data => {
         this.transactions = data['transactions'];
         this.filteredTransactions = this.transactions;
-        this.clientsWithTransactions = data['clientsWithTransactions'];
+        this.clientsWithTransactionsEnabled = data['clientsWithTransactionsEnabled'];
         this.calculateAmountAndCantTransactions(this.filteredTransactions);
       }
     );  
@@ -71,7 +73,7 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
   }
 
   getTransactions(): void {
-    this._clientService.getTransactions()
+    this._transactionService.getAll()
       .subscribe(transactions => {
         this.transactions = transactions;
         this.filteredTransactions = this.transactions;
@@ -85,32 +87,24 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
 
   buildClientsSelectArray(): void {
     this.clientsSelect.push({ value: 'default', label: 'Todos', selected: true });
-    this.clientsWithTransactions.map(client => {
+    this.clientsWithTransactionsEnabled.map(client => {
       this.clientsSelect.push({value: client._id, label: client.name})
     });        
     this.selectedValue = 'default';  
   }
 
   getTransactionsByClient(clientId) {
-    this._clientService.getTransactionsByClient(clientId)
-      .subscribe(transactions => {
-        this.filteredTransactions = transactions;
-        this.calculateAmountAndCantTransactions(this.filteredTransactions);
-      },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+    return this.transactions.filter(t => t.client._id === clientId);
   }
 
   filterTransactions(clientId): void {    
     if (clientId === 'default') {
-      this.getTransactions();
+      this.filteredTransactions = this.transactions;
     }
     else {
-      let selectedClient = this.clientsWithTransactions.find(c => c._id == clientId);
+      let selectedClient = this.clientsWithTransactionsEnabled.find(c => c._id == clientId);
       this.selectedClientName = selectedClient.name;      
-      this.getTransactionsByClient(clientId);
+      this.filteredTransactions = this.getTransactionsByClient(clientId);
     }    
   }
 
@@ -126,8 +120,7 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
     )
   }
 
-  showModalDelete(template: TemplateRef<any>, idClient: any, idTransaction: Number){
-    this.idClientTransactionDelete = idClient;
+  showModalDelete(template: TemplateRef<any>, idTransaction: Number){
     this.idTransactionDelete = idTransaction;
     this.modalDeleteTitle = "Eliminar Transacción";
     this.modalDeleteMessage = "¿Seguro desea eliminar esta Transacción?";
@@ -142,25 +135,9 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
 
   deleteTransaction(){
     if (this.closeModal()){
-      this._clientService.getClient(this.idClientTransactionDelete).subscribe( 
-        client=> {
-          client.transactions.map(transaction => {
-            if (transaction._id === this.idTransactionDelete) 
-            {
-              transaction.deleted = true; 
-              client.balance -= transaction.amount;              
-              return;             
-            }
-          })
-          
-          this._clientService.updateClient(client).subscribe(
-            success=> {
-              this.getTransactions();
-            },
-            error => {
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          )
+      this._transactionService.deleteTransaction(this.idTransactionDelete).subscribe( 
+        transaction=> {
+          this.getTransactions();
         },
         error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);

@@ -4,8 +4,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Client } from '../../../shared/models/client';
-import { ClientService } from '../../../shared/services/client.service';
+import {
+  Client,
+  ClientService
+} from '../../../shared';
 
 @Component({
   selector: 'app-client-edit',

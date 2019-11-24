@@ -20,3 +20,5 @@ export * from './orderDiscount';
 export * from './user';
 export * from './cash-register';
 export * from './menuCategory';
+export * from './paymentTypeMin';
+export * from './cashRegisterMin';

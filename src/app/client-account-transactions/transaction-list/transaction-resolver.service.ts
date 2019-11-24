@@ -3,16 +3,18 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Transaction } from '../../../shared/models/transaction';
-import { ClientService } from '../../../shared/services/client.service';
+import {
+  Transaction,
+  TransactionService
+} from '../../../shared';
 
 @Injectable()
 export class TransactionResolverService implements Resolve<Transaction[]> {
 
-  constructor(private _clientService: ClientService) { }
+  constructor(private _transactionService: TransactionService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Transaction[]> {
-    return this._clientService.getTransactions();
+    return this._transactionService.getAll();
   }
 
 }

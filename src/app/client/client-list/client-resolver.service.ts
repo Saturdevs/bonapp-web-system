@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Client } from '../../../shared/models/client';
-import { ClientService } from '../../../shared/services/client.service';
+import {
+  Client,
+  ClientService
+} from '../../../shared';
 
 @Injectable()
 export class ClientResolverService implements Resolve<Client[]> {

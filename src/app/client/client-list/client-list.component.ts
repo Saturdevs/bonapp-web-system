@@ -4,8 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { ClientService } from '../../../shared/services/client.service';
-import { Client } from '../../../shared/models/client';
+import {
+  Client,
+  ClientService
+} from '../../../shared';
+
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({

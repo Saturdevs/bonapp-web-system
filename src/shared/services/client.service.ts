@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -13,74 +12,50 @@ import { Client } from '../models/client';
 import { Transaction } from '../models/transaction';
 
 @Injectable()
-export class ClientService {  
+export class ClientService {
 
   constructor(
     private apiService: ApiService
-  ) {}
+  ) { }
 
   getAll(): Observable<Client[]> {
     return this.apiService.get('/client')
-           .map(data => data.clients)
-           .catch(this.handleError);
+      .map(data => data.clients)
+      .catch(this.handleError);
   }
 
   getWithCurrentAccountEnabled(): Observable<Client[]> {
     return this.apiService.get('/client/withCurrentAccountEnabled')
-           .map(data => data.clients)
-           .catch(this.handleError);
+      .map(data => data.clients)
+      .catch(this.handleError);
   }
 
   getClient(idClient): Observable<Client> {
     return this.apiService.get(`/client/${idClient}`)
-        .map(data => data.client);
+      .map(data => data.client);
   }
 
-  getClientsWithTransactions(): Observable<Client[]> {
-    return this.apiService.get('/client/clientswithtransactions')
-           .map(data => data.clients)
-           .catch(this.handleError);
-  }
-
-  getTransactions(): Observable<Transaction[]> {
-    return this.apiService.get(`/client/transactions`)
-      .map(data => data.transactions)
-      .catch(this.handleError);
-  }
-
-  getTransactionByClientById(idClient, idTransaction): Observable<Transaction> {
-    return this.apiService.get(`/client/${idClient}/${idTransaction}/transaction`)
-      .map(data => data.transaction)
-      .catch(this.handleError);
-  }
-
-  getTransactionsByClient(idClient): Observable<Transaction[]> {
-    return this.apiService.get(`/client/${idClient}/transactions`)
-      .map(data => data.transactions)
-      .catch(this.handleError);
-  }
-
-  updateClient(client){
+  updateClient(client) {
     return this.apiService.put(`/client/${client._id}`, client)
-            .map(data => data.menu)
-            .catch(this.handleError);
+      .map(data => data.menu)
+      .catch(this.handleError);
   }
 
-  deleteClient(idClient){
+  deleteClient(idClient) {
     return this.apiService.delete(`/client/${idClient}`)
-           .map(data =>data.client)
-           .catch(this.handleError);
+      .map(data => data.client)
+      .catch(this.handleError);
   }
 
-  saveClient(client){
+  saveClient(client) {
     return this.apiService.post('/client', client)
-          .map(data => data.client)
-          .catch(this.handleError);
+      .map(data => data.client)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
+  private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }
-  
+
 }

@@ -1,5 +1,5 @@
 export class CashFlow {
-  _id: String;
+  readonly _id: String;
   cashRegister: String;
   cashRegisterId: any;
   date:  Date;

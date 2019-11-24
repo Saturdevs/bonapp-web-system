@@ -10,7 +10,8 @@ import { TransactionDetailComponent } from './transaction-detail/transaction-det
 import { ClientService } from '../../shared/services/client.service';
 import { TransactionResolverService } from './transaction-list/transaction-resolver.service';
 import { TransactionDetailResolverService } from './transaction-detail/transaction-detail-resolver.service';
-import { ClientWithTransactionsResolverService } from './transaction-list/client-with-transactions-resolver.service';
+import { TransactionService } from '../../shared/services/transaction.service';
+import { ClientCurrentAccountResolverService } from '../client/resolvers/client-current-account-resolver.service';
 
 @NgModule({
   imports: [
@@ -26,9 +27,10 @@ import { ClientWithTransactionsResolverService } from './transaction-list/client
   ],
   providers: [
     ClientService,
+    TransactionService,
     TransactionResolverService,
     TransactionDetailResolverService,
-    ClientWithTransactionsResolverService
+    ClientCurrentAccountResolverService
   ]
 })
 export class ClientAccountTransactionsModule { }

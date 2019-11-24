@@ -1,11 +1,16 @@
+import { 
+  PaymentTypeMin,
+  CashRegisterMin,
+  Client
+} from '../index';
+
 export class Transaction {
-  _id: String;
-  clientId: String;
-  clientName: String;
-  paymentMethod: any;
-  cashRegister: any;
-  date: Date;
+  readonly _id: String;
   amount: number;
-  deleted: Boolean;
+  paymentMethod: PaymentTypeMin;
+  cashRegister: CashRegisterMin;
+  date: Date;  
   comment: String;
+  deleted: Boolean;
+  client: Client;
 }
