@@ -8,8 +8,7 @@ import {
   Category,
   CategoryService,
   Menu,
-  Product,
-  ProductService
+  Product
 } from '../../../shared/index';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -53,7 +52,6 @@ export class CategoryComponent implements OnInit, AfterViewInit {
   }
 
   constructor(private categoryService: CategoryService,
-              private _productService: ProductService,
               private modalService: BsModalService,
               private route: ActivatedRoute,
               private cdRef: ChangeDetectorRef) { }

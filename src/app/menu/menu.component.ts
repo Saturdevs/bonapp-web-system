@@ -4,10 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Menu } from '../../shared/models/menu';
-import { MenuService } from '../../shared/services/menu.service';
-import { Category } from '../../shared/models/category';
-import { CategoryService } from '../../shared/services/category.service';
+import {
+  Menu,
+  MenuService,
+  Category
+} from '../../shared';
 
 @Component({
   templateUrl: './menu.component.html',
@@ -38,7 +39,6 @@ export class MenuComponent implements OnInit {
   }
 
   constructor(private _menuService: MenuService,
-              private _categoryService: CategoryService,
               private modalService: BsModalService,
               private route: ActivatedRoute) { 
 
@@ -68,17 +68,9 @@ export class MenuComponent implements OnInit {
 
   async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idMenu: any){
     this.idMenuDelete = idMenu;       
-    let canDelete = this._menuService.validateMenuBeforeChanges(this.idMenuDelete);
-    if(await canDelete.then(x => x == true)){
       this.modalDeleteTitle = "Eliminar Carta";
       this.modalDeleteMessage = "¿Seguro desea eliminar esta Carta?";
-      this.modalRef = this.modalService.show(templateDelete, {backdrop: true});    
-    }
-    else{
-      let noDeleteTitle = "Eliminar Carta";
-      let noDeleteMessage = "No se puede eliminar la carta seleccionada porque tiene categorías asociadas.";
-      this.showModalError(noDeleteTitle, noDeleteMessage);     
-    }                          
+      this.modalRef = this.modalService.show(templateDelete, {backdrop: true});                                  
   }
 
   deleteMenu(){

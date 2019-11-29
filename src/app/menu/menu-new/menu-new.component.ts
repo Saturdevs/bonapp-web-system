@@ -1,17 +1,18 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Subscription }       from 'rxjs/Subscription';
 
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Menu } from '../../../shared/models/menu';
-import { MenuService } from '../../../shared/services/menu.service';
+import {
+  Menu,
+  MenuService
+} from '../../../shared';
+
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
-import { SharedService } from '../../../shared/index';
-import { Collections } from '../../../shared/enums/collections.enum';
 
 @Component({
   selector: 'app-menu-new',
@@ -23,7 +24,6 @@ export class MenuNewComponent implements OnInit {
 
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent; 
-  @ViewChild('nameInvalid') nameInvalidTemplate:TemplateRef<any>; 
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
@@ -33,26 +33,19 @@ export class MenuNewComponent implements OnInit {
   private modalCancelTitle: string;
   private modalCancelMessage: String;
   private newMenuPictureData: string = '';
-  pageTitle: string = 'New Menu';
-  menus: Menu[];   
+  pageTitle: string = 'New Menu'; 
   newMenu: Menu;
   validPicture: string = '';
-  nameIsAvailable: boolean = false;
-  currentCollection : string;
   pictureTouched: boolean;
 
    private sub: Subscription;
 
-  constructor(private _route: ActivatedRoute,
-              private _router: Router,
+  constructor(private _router: Router,
               private modalService: BsModalService,
-              private _menuService: MenuService,
-              private _sharedService: SharedService) { }
+              private _menuService: MenuService) { }
 
   ngOnInit(): void {
-    this.newMenu = new Menu();     
-    this.currentCollection = Collections.Menu; 
-    console.log(this.currentCollection)
+    this.newMenu = new Menu();
   }
 
 
@@ -94,25 +87,11 @@ export class MenuNewComponent implements OnInit {
     this.closeModal();
   }
 
-  validateName(){
-      this._sharedService.validateName(this.currentCollection, this.newMenu.name)
-        .subscribe(result => {
-          this.nameIsAvailable = result;
-          if(this.nameIsAvailable === true){
-            this.saveMenu();
-          }
-          else{
-            this.modalRef = this.modalService.show(this.nameInvalidTemplate, {backdrop: true});
-          }
-      })
-  }
-
   closeModal(){
     this.modalRef.hide();
     this.modalRef = null;   
     return true;     
   }
-
 
   onBack(): void {
     this._router.navigate(['/restaurant/menu']);

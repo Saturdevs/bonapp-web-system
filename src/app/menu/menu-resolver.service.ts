@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Menu } from '../../shared/models/menu';
-import { MenuService } from '../../shared/services/menu.service';
+import {
+  Menu, 
+  MenuService
+} from '../../shared';
 
 @Injectable()
 export class MenuResolverService implements Resolve<Menu[]> {

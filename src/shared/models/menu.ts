@@ -1,5 +1,5 @@
 export class Menu {
-  _id: string;
+  readonly _id: string;
   name: string;
   picture: string;
 }

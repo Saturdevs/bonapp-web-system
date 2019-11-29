@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -14,38 +14,46 @@
   <header class="major" align="center">
     <h2>Editando: {{menuNameModified}}</h2>
   </header>
+
+  <div class="row mb-2 mt-2 ml-2" *ngIf="!canEdit">
+    <span class="red-label">{{ noModifyMessage }}</span>
+  </div>
+
   <div class="posts">
     <article>
-      <a href="#" class="image "><img class="customImage" [src]='path' onerror="this.src='../../../assets/img/No_image_available.svg'"/></a>
+      <a href="#" class="image "><img class="customImage" [src]='menuPictureData'
+          onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
     </article>
     <article>
-    
+
       <form #form="ngForm" method="post" novalidate>
 
         <div class="form-group">
           <label>Nombre Carta:</label>
-          <input #menuName="ngModel" required type="text" class="form-control" [class.is-invalid]="menuName.invalid && (menuName.dirty || menuName.touched)" name="menuName" 
-                id="menuName" [(ngModel)]="menu.name">
+          <input #menuName="ngModel" required type="text" class="form-control"
+            [class.is-invalid]="menuName.invalid && (menuName.dirty || menuName.touched)" name="menuName" id="menuName"
+            [(ngModel)]="menu.name" [disabled]="!canEdit">
         </div>
 
         <div *ngIf="menuName.invalid && (menuName.dirty || menuName.touched)" class="alert alert-danger">
           El nombre de la carta es requerido.
         </div>
 
-        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'"></app-file-input>
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'" [disabled]="!canEdit">
+        </app-file-input>
         <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
           La imagen de la carta es requerida.
-        </div>        
+        </div>
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="form.invalid" type="submit" value="Aceptar" class="special" (click)="updateMenu(menu)"/></li>
+            <li><input [disabled]="form.invalid" type="submit" value="Aceptar" class="special"
+                (click)="updateMenu(menu)" [disabled]="!canEdit"/></li>
             <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
           </ul>
-        </div>    
+        </div>
 
       </form>
     </article>
   </div>
 </div>
-

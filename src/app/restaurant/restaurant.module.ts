@@ -23,6 +23,7 @@ import { ProductModifyResolverService } from '../product/product-modify/product-
 import { ProductEditGuardService } from '../product/product-modify/product-modify-guard.service';
 import { ProductNewGuardService } from '../product/product-new/product-new-guard.service';
 import { CategoryHasproductResolverService } from '../category/resolvers/category-hasproduct-resolver.service';
+import { MenuHascategoryResolverService } from '../menu/resolvers/menu-hascategory-resolver.service';
 
 @NgModule({
   imports: [
@@ -47,7 +48,10 @@ import { CategoryHasproductResolverService } from '../category/resolvers/categor
               },
               { path: 'edit/:id', 
                 component: MenuModifyComponent,
-                resolve: { menu: MenuModifyResolverService } 
+                resolve: { 
+                  menu: MenuModifyResolverService,
+                  category: MenuHascategoryResolverService
+                } 
               } 
             ]            
           },
