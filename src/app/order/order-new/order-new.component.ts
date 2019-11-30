@@ -286,6 +286,22 @@ export class OrderNewComponent implements OnInit {
    * @returns true si el producto se encuentra en el array preOrderProducts. false si no se encuentra.
    */
   compareProducts(prodInPreOrder: ProductsInUserOrder, product: ProductsInUserOrder):boolean {
+    if (isNullOrUndefined(prodInPreOrder.options)) {
+      prodInPreOrder.options = null;
+    }
+
+    if (isNullOrUndefined(product.options)) {
+      product.options = null;
+    }
+
+    if (isNullOrUndefined(prodInPreOrder.size)) {
+      prodInPreOrder.size = null;
+    }
+
+    if (isNullOrUndefined(product.size)) {
+      product.size = null;
+    }
+    
     if (prodInPreOrder.product === product.product &&
         prodInPreOrder.name === product.name &&
         prodInPreOrder.observations === product.observations &&
@@ -467,7 +483,7 @@ export class OrderNewComponent implements OnInit {
 
   closeModalOptionsAndSizes(){
     this.sizesSelect = [];
-    this.sizeSelectedValue = '';
+    this.sizeSelectedValue = null;
     this.selectedOptions = [];
     this.modalRef.hide();
     this.modalRef = null;       
