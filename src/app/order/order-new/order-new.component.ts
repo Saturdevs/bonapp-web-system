@@ -235,7 +235,7 @@ export class OrderNewComponent implements OnInit {
         size = selectedSizeId;
       }
 
-      if(!isNullOrUndefined(selectedOptions)){
+      if(!isNullOrUndefined(selectedOptions) && selectedOptions.length > 0){
         //Creo las options con el modelo del backend
         selectedOptions.forEach(opt => {
           let currentOption: any = {};
@@ -249,7 +249,7 @@ export class OrderNewComponent implements OnInit {
         })
       }
       else{
-        options = selectedOptions;
+        options = null;
       }
 
       //Creo el producto a buscar en el array de preOrderProducts.
@@ -438,13 +438,12 @@ export class OrderNewComponent implements OnInit {
     for (let size of this.productToFindSizesAndOptions.sizes){
       if(size.default === true){
         this.sizesSelect.push({value: size._id, label:size.name, selected:true})
+        this.sizeSelectedValue = size._id;
       }
       else{
         this.sizesSelect.push({value: size._id, label:size.name})
       }
     };
-    
-    this.sizeSelectedValue = this.productToFindSizesAndOptions.sizes.find(x => x.default == true)._id;
 
     this.modalRef = this.modalService.show(this.optionsAndSizesTemplate, {backdrop: true, ignoreBackdropClick: true});
   }
