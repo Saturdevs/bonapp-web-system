@@ -5,7 +5,7 @@ export * from './menu';
 export * from './table';
 export * from './section';
 export * from './size';
-export * from './payment-type';
+export * from './paymenType';
 export * from './cash-register';
 export * from './cash-flow';
 export * from './arqueo-caja';

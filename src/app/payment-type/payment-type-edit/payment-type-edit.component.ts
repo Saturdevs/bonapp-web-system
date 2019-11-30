@@ -5,8 +5,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { PaymentType } from '../../../shared/models/payment-type';
-import { PaymentTypeService } from '../../../shared/services/payment-type.service';
+import {
+  PaymentType,
+  PaymentTypeService
+} from '../../../shared';
 
 @Component({
   selector: 'app-payment-type-edit',
@@ -15,7 +17,7 @@ import { PaymentTypeService } from '../../../shared/services/payment-type.servic
 })
 export class PaymentTypeEditComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   private pageTitle: String = 'Editando';
   private cancelButton: String = 'Cancelar';
@@ -31,18 +33,18 @@ export class PaymentTypeEditComponent implements OnInit {
   paymentTypeForm: FormGroup;
   checkboxDefaultText: String = 'Tipo de pago por defecto';
   checkboxAvailableText: String = 'Disponible';
-  
+
   constructor(private _route: ActivatedRoute,
-              private _router: Router,
-              private _paymentTypeService: PaymentTypeService,
-              private modalService: BsModalService,
-              private formBuilder: FormBuilder) { }
+    private _router: Router,
+    private _paymentTypeService: PaymentTypeService,
+    private modalService: BsModalService,
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.paymentTypeForm = this.formBuilder.group({
-      name: ['', Validators.required],      
+      name: ['', Validators.required],
       available: '',
-      default: ''    
+      default: ''
     });
 
     this._route.data.subscribe(
@@ -56,47 +58,34 @@ export class PaymentTypeEditComponent implements OnInit {
   updatePaymentType() {
     let paymentTypeUpdate = Object.assign({}, this.paymentType, this.paymentTypeForm.value);
     this._paymentTypeService.updatePaymentType(paymentTypeUpdate).subscribe(
-        paymentType => { 
-          this.paymentType = paymentType;
-          if (this.paymentTypeDefault === false && paymentTypeUpdate.default !== this.paymentTypeDefault)
-          {
-            this._paymentTypeService.unSetDefaultPaymentType(paymentTypeUpdate._id).subscribe(
-              data =>
-              {
-                console.log(data);
-              },
-              error =>
-              {
-                this.showModalError(this.serviceErrorTitle, error.error.message);
-              }
-            );
-          }
-          this.onBack();
-        },
-        error => { 
-          this.showModalError(this.serviceErrorTitle, error.error.message)
-        });
+      paymentType => {
+        this.paymentType = paymentType;        
+        this.onBack();
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, error.error.message)
+      });
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
 
-  showModalCancel(template: TemplateRef<any>, idSize: any){
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+  showModalCancel(template: TemplateRef<any>, idSize: any) {
+    this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
-  cancel(){
+  cancel() {
     this.onBack();
     this.closeModal();
   }
@@ -111,32 +100,26 @@ export class PaymentTypeEditComponent implements OnInit {
       default: this.paymentType.default
     });
 
-    if (this.paymentTypeForm.get('default').value === true)
-    {
+    if (this.paymentTypeForm.get('default').value === true) {
       this.paymentTypeForm.get('default').disable();
       this.paymentTypeForm.get('available').disable();
     }
-    else
-    {
+    else {
       this.paymentTypeForm.get('available').enable();
-      if (this.paymentTypeForm.get('available').value === true)
-      {
+      if (this.paymentTypeForm.get('available').value === true) {
         this.paymentTypeForm.get('default').enable();
       }
-      else
-      {
+      else {
         this.paymentTypeForm.get('default').disable();
       }
     }
   }
 
   handleClickAvailable() {
-    if (this.paymentTypeForm.get('available').value === true)
-    {
+    if (this.paymentTypeForm.get('available').value === true) {
       this.paymentTypeForm.get('default').enable();
     }
-    else
-    {
+    else {
       this.paymentTypeForm.get('default').disable();
     }
   }
@@ -145,4 +128,3 @@ export class PaymentTypeEditComponent implements OnInit {
     this._router.navigate(['/settings/general/paymentTypes', { outlets: { edit: ['selectItem'] } }]);
   }
 }
- 

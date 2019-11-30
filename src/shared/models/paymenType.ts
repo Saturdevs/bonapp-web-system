@@ -1,6 +1,7 @@
 export class PaymentType {
     _id: string;
     name: String;
-    available: any;
+    available: Boolean;
+    readonly availableDescription: string;
     default: Boolean;
   }

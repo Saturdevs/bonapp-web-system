@@ -4,9 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { PaymentTypeService } from '../../../shared/services/payment-type.service';
-import { PaymentType } from '../../../shared/models/payment-type';
-import { isNullOrUndefined } from 'util';
+import { CONFLICT } from 'http-status-codes';
+
+import {
+  PaymentTypeService,
+  PaymentType
+} from '../../../shared';
 
 @Component({
   selector: 'app-payment-type-list',
@@ -15,10 +18,10 @@ import { isNullOrUndefined } from 'util';
 })
 export class PaymentTypeListComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Formas de Pago";
   private cantDeleteDefaultPaymentTypeLabel = 'El tipo de pago por defecto no puede ser eliminado.';
-  private serviceErrorTitle = 'Error de Servicio';  
+  private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Forma de Pago";
@@ -34,90 +37,74 @@ export class PaymentTypeListComponent implements OnInit {
     return this._listFilter;
   }
   set listFilter(value: string) {
-      this._listFilter = value;
-      this.filteredPaymentTypes = this.listFilter ? this.performFilter(this.listFilter) : this.paymentTypes;
+    this._listFilter = value;
+    this.filteredPaymentTypes = this.listFilter ? this.performFilter(this.listFilter) : this.paymentTypes;
   }
 
   constructor(private paymentTypeService: PaymentTypeService,
-              private route: ActivatedRoute,
-              private modalService: BsModalService
-            ) { }
+    private route: ActivatedRoute,
+    private modalService: BsModalService
+  ) { }
 
   ngOnInit() {
     this.route.data.subscribe(
       data => {
-        this.paymentTypes = data['paymentTypes'].map(paymentType => {
-          if(paymentType.available) {
-            paymentType.available = 'Si';
-          } else {
-            paymentType.available = 'No';
-          }
-
-          return paymentType;
-        })
+        this.paymentTypes = data['paymentTypes'];
       }
     )
-    
+
     this.filteredPaymentTypes = this.paymentTypes;
   }
 
   performFilter(filterBy: string): PaymentType[] {
     filterBy = filterBy.toLocaleLowerCase();
     return this.paymentTypes.filter((paymentType: PaymentType) =>
-           paymentType.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
+      paymentType.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 
   getPaymentTypes(): void {
     this.paymentTypeService.getAll()
       .subscribe(paymentTypes => {
-        this.paymentTypes = paymentTypes.map(paymentType => {
-          if(paymentType.available) {
-            paymentType.available = 'Si';
-          } else {
-            paymentType.available = 'No';
-          }
-
-          return paymentType;
-        });
+        this.paymentTypes = paymentTypes;
         this.filteredPaymentTypes = this.paymentTypes;
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    )
-  }
-
-  showModalDelete(template: TemplateRef<any>, idPaymentType: any){
-    this.idPaymentTypeDelete = idPaymentType;
-    this.modalRef = this.modalService.show(template, {backdrop: true});
-  }
-
-  closeModal(){
-    this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
-  }
-
-  deletePaymentType(){
-    if (this.closeModal()){
-      this.paymentTypeService.deletePaymentType(this.idPaymentTypeDelete).subscribe( success=> {
-        this.getPaymentTypes();
-      },
-      error => {                
-        if (!isNullOrUndefined(error)) {
-          this.validationMessage = error;
-        }
-        else {
+        error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);
         }
-      });
+      )
+  }
+
+  showModalDelete(template: TemplateRef<any>, idPaymentType: any) {
+    this.idPaymentTypeDelete = idPaymentType;
+    this.modalRef = this.modalService.show(template, { backdrop: true });
+  }
+
+  closeModal() {
+    this.modalRef.hide();
+    this.modalRef = null;
+    return true;
+  }
+
+  deletePaymentType() {
+    if (this.closeModal()) {
+      this.paymentTypeService.deletePaymentType(this.idPaymentTypeDelete).subscribe(success => {
+        this.getPaymentTypes();
+      },
+        error => {
+          if (error.status === CONFLICT) {
+            this.validationMessage = error.error.message;
+          }
+          else {
+            this.showModalError(this.serviceErrorTitle, error.error.message);
+          }
+        });
     }
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
   reloadItems(event) {

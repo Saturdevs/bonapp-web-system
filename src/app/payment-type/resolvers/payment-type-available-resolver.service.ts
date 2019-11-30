@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { PaymentType, PaymentTypeService } from '../../../shared';
 import { Observable } from 'rxjs';
+import { 
+  PaymentType,
+  PaymentTypeService
+} from '../../../shared';
 
 @Injectable()
 export class PaymentTypeAvailableResolverService implements Resolve<PaymentType[]> {
