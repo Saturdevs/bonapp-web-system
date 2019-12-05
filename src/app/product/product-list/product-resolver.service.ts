@@ -12,7 +12,7 @@ export class ProductResolverService implements Resolve<Product[]> {
   constructor(private _productService: ProductService) { }
 
   resolve(route: ActivatedRouteSnapshot, satate: RouterStateSnapshot): Observable<Product[]> {
-    return this._productService.getProductsWithCategory();
+    return this._productService.getAll();
   }
 
 }
