@@ -23,7 +23,8 @@
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input formControlName="name" type="text" class="form-control" [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
+          <input formControlName="name" type="text" class="form-control"
+            [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
             id="name">
         </div>
       </div>
@@ -36,7 +37,9 @@
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="sectionForm.invalid" (click)="updateSection()">{{saveButton}}</button>
+    <button type="button" class="btn btn-sm customButtonCancel waves-light"
+      (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="sectionForm.invalid"
+      (click)="updateSection()">{{saveButton}}</button>
   </div>
 </div>

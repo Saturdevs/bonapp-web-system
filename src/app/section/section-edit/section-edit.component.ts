@@ -5,9 +5,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Section } from '../../../shared/models/section';
-import { SectionService } from '../../../shared/services/section.service';
-
+import {
+  Section,
+  SectionService
+} from '../../../shared';
 
 @Component({
   selector: 'app-section-edit',
