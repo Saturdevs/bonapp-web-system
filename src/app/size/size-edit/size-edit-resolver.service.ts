@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Size } from '../../../shared/models/size';
-import { SizeService } from '../../../shared/services/size.service';
+import {
+  Size,
+  SizeService
+} from '../../../shared';
 
 @Injectable()
 export class SizeEditResolverService implements Resolve<Size> {

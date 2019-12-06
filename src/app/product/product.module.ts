@@ -13,7 +13,6 @@ import { ProductNewGuardService } from './product-new/product-new-guard.service'
 import { ProductResolverService } from './product-list/product-resolver.service';
 import { ProductModifyResolverService } from './product-modify/product-modify-resolver.service';
 import { FileInputModule } from '../file-input/file-input.module';
-import { SharedService } from '../../shared/services/shared.service';
 import { ProductOrderResolverService } from './resolvers/product-order-resolver.service';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { ProductOrderResolverService } from './resolvers/product-order-resolver.
     ProductEditGuardService,
     ProductModifyResolverService,
     ProductResolverService,
-    SharedService,
     ProductOrderResolverService
   ]
 })
