@@ -1,5 +1,6 @@
 export class Size {
-  _id: String;
+  readonly _id: String;
   name: String;
-  available: any;
+  available: Boolean;
+  readonly availableDescription: string;
 }

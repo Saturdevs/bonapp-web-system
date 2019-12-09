@@ -4,8 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { SizeService } from '../../../shared/services/size.service';
-import { Size } from '../../../shared/models/size';
+import {
+  Size,
+  SizeService
+} from '../../../shared';
 
 @Component({
   selector: 'app-size-list',
@@ -43,15 +45,7 @@ export class SizeListComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.route.data.subscribe(
       data => {
-        this.sizes = data['sizes'].map(size => {
-          if(size.available) {
-            size.available = 'Si';
-          } else {
-            size.available = 'No';
-          }
-
-          return size;
-        })
+        this.sizes = data['sizes'];
       }
     )
     
@@ -71,15 +65,7 @@ export class SizeListComponent implements OnInit, OnChanges {
   getSizes(): void {
     this.sizeService.getAll()
       .subscribe(sizes => {
-        this.sizes = sizes.map(size => {
-          if(size.available) {
-            size.available = 'Si';
-          } else {
-            size.available = 'No';
-          }
-
-          return size;
-        });
+        this.sizes = sizes;
         this.filteredSizes = this.sizes;
       },
       error => {

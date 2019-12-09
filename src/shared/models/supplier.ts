@@ -1,5 +1,5 @@
 export class Supplier {
-  _id: String;
+  readonly _id: String;
   tel: String;
   email: String;
   name: String;

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
@@ -10,70 +9,64 @@ import { Product } from '../models/product';
 import { OrderService } from './order.service';
 
 @Injectable()
-export class ProductService {  
+export class ProductService {
   didValidate: boolean = false;
   ordersWithCurrentMenu: any[];
   orders: any[];
 
   constructor(
-    private apiService: ApiService,
-    private _orderService: OrderService
-  ) {}
+    private apiService: ApiService
+  ) { }
 
   getAll(): Observable<Product[]> {
     return this.apiService.get('/product')
-           .map(data => data.products)
-           .catch(this.handleError);
+      .map(data => data.products)
+      .catch(this.handleError);
   }
 
   getProduct(idProduct): Observable<Product> {
-        return this.apiService.get(`/product/${idProduct}`)
-            .map(data => data.product)
-            .catch(this.handleError);
+    return this.apiService.get(`/product/${idProduct}`)
+      .map(data => data.product)
+      .catch(this.handleError);
   }
 
   getProductsByCategory(idCategory) {
     return this.apiService.get(`/product/category/${idCategory}`)
-           .map(data => data.products)
-           .catch(this.handleError);
+      .map(data => data.products)
+      .catch(this.handleError);
   }
 
-  getProductsWithCategory(): Observable<Product[]> {
-    return this.apiService.get('/product/product/withcategory')
-           .map(data => data.products)
-           .catch(this.handleError);
-  }
-
-  updateProduct(product){
+  updateProduct(product) {
     return this.apiService.put(`/product/${product._id}`, product)
-            .map(data => data.product)
-            .catch(this.handleError);
+      .map(data => data.product)
+      .catch(this.handleError);
   }
 
-  deleteProduct(idProduct){
+  updatePrice(data) {
+    return this.apiService.put(`/product/updatePrice`, data)
+      .map(data => data.products)
+      .catch(this.handleError);
+  }
+
+  deleteProduct(idProduct) {
     return this.apiService.delete(`/product/${idProduct}`)
-           .map(data =>data.product)
-           .catch(this.handleError);
+      .map(data => data.product)
+      .catch(this.handleError);
   }
 
-  saveProduct(product){
+  saveProduct(product) {
     return this.apiService.post('/product', product)
-          .map(data => data.product)
-          .catch(this.handleError);
+      .map(data => data.product)
+      .catch(this.handleError);
   }
 
-  async validateProductsBeforeChanges(idProduct){
-    let orders = await this._orderService.getAll().toPromise();
-    this.ordersWithCurrentMenu = orders.filter(x => x.users[0].products.find(y => y.product == idProduct));
-    if(this.ordersWithCurrentMenu.length > 0){
-      return false;
-    }
-    else{
-      return true;
-    }
+  existInAnOrder(idProduct) {
+    return this.apiService.get(`/product/existInAnOrder/${idProduct}`)
+      .map(data => data.order)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
+  private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }

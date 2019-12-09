@@ -32,7 +32,7 @@
             </div>
             <h6 class="pt-2 ml-2">Categoria:</h6>
             <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left"> 
-                <mdb-select #queryMenu name="queryCategory" (selected)="filterMenu(queryCategory.value)" id="queryCategory" [options]="categoriesOptions"  
+                <mdb-select #queryCategory name="queryCategory" (selected)="filterByCategoria(queryCategory.value)" id="queryCategory" [options]="categoriesOptions"  
                 [(ngModel)]="selectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>    
             </div>
             <h6 class="pt-2 ml-2 customH6">Actualizar Precios:</h6>
@@ -64,8 +64,8 @@
                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customLongTh">{{ product.name }}</td>
                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ product.price | currency:'USD':code:'2.2-2' }}</td>
                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">{{ product.category.name }}</td>
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">{{ product.category.menuId.name }}</td>
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ product.available }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">{{ product.category.menu.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ product.availableDescription }}</td>
                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="customThTd align-middle">
                         <a [routerLink]="['edit', product._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                         <a (click) = "showModalDelete(deleteTemplate, noDeleteTemplate, product._id)" class="btn btn-red btn-sm">Eliminar</a>

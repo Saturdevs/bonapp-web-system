@@ -4,8 +4,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Supplier } from '../../../shared/models/supplier';
-import { SupplierService } from '../../../shared/services/supplier.service';
+import {
+  Supplier,
+  SupplierService
+} from '../../../shared';
 
 @Component({
   selector: 'app-supplier-edit',

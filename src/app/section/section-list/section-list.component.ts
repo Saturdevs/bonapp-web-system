@@ -4,7 +4,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SectionNewComponent } from '../section-new/section-new.component';
 import { isNullOrUndefined } from 'util';
 
-import { TableService, SectionService, Section, OrderService, Table } from '../../../shared';
+import {
+  TableService,
+  SectionService,
+  Section,
+  OrderService,
+  Table,
+  TableStatus
+} from '../../../shared';
+
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -28,6 +36,9 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   title: string;
   tableNumber: number;
   selectedTable: Table;
+  statusLibre = TableStatus.LIBRE;
+  statusOcupada = TableStatus.OCUPADA;
+  statusReservada = TableStatus.RESERVADA;
   configNewOrderTemplate = {
     backdrop: true,
   }
@@ -90,7 +101,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
 
           this._orderService.getOrderOpenByTable(table.number).subscribe(
             order => {
-              if (isNullOrUndefined(order) && table.status === "Libre") {
+              if (isNullOrUndefined(order) && table.status === this.statusLibre) {
                 this.modalRef = this.modalService.show(this.openNewOrderTemplate, Object.assign({}, this.configNewOrderTemplate, { class: 'customNewOrder' }));
               }
               else {
@@ -104,6 +115,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
         },
         error => {
           this.tableNumber = null;
+          this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       )    
     }

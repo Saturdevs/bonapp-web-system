@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -20,35 +19,34 @@ export class SupplierService {
 
   getAll(): Observable<Supplier[]> {
     return this.apiService.get('/supplier')
-           .map(data => data.suppliers)
-           .catch(this.handleError);
+      .map(data => data.suppliers)
+      .catch(this.handleError);
   }
 
   getSupplier(idSupplier): Observable<Supplier> {
-        return this.apiService.get(`/supplier/${idSupplier}`)
-            .map(data => data.supplier);
+    return this.apiService.get(`/supplier/${idSupplier}`)
+      .map(data => data.supplier);
   }
 
-  updateSupplier(supplier){
+  updateSupplier(supplier) {
     return this.apiService.put(`/supplier/${supplier._id}`, supplier)
-            .map(data => data.menu)
-            .catch(this.handleError);
+      .map(data => data.menu)
+      .catch(this.handleError);
   }
 
-  deleteSupplier(idSupplier){
+  deleteSupplier(idSupplier) {
     return this.apiService.delete(`/supplier/${idSupplier}`)
-           .map(data =>data.supplier)
-           .catch(this.handleError);
+      .map(data => data.supplier)
+      .catch(this.handleError);
   }
 
-  saveSupplier(supplier){
+  saveSupplier(supplier) {
     return this.apiService.post('/supplier', supplier)
-          .map(data => data.supplier)
-          .catch(this.handleError);
+      .map(data => data.supplier)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
-    console.log(err.message);
+  private handleError(err: HttpErrorResponse) {
     return Observable.throw(err);
   }
 

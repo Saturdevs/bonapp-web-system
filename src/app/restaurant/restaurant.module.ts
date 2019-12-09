@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -24,80 +24,99 @@ import { ProductEditGuardService } from '../product/product-modify/product-modif
 import { ProductNewGuardService } from '../product/product-new/product-new-guard.service';
 import { CategoryHasproductResolverService } from '../category/resolvers/category-hasproduct-resolver.service';
 import { MenuHascategoryResolverService } from '../menu/resolvers/menu-hascategory-resolver.service';
+import { SizeResolverService } from '../size/size-list/size-resolver.service';
+import { ProductOrderResolverService } from '../product/resolvers/product-order-resolver.service';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
-      { path: 'restaurant',
+      {
+        path: 'restaurant',
         component: RestaurantComponent,
         children: [
           {
             path: '', redirectTo: 'menu', pathMatch: 'full'
           },
           {
-            path: 'menu', 
+            path: 'menu',
             children: [
               {
                 path: '',
                 component: MenuComponent,
                 resolve: { menus: MenuResolverService }
               },
-              { 
-                path: 'newMenu', 
-                component: MenuNewComponent 
+              {
+                path: 'newMenu',
+                component: MenuNewComponent
               },
-              { path: 'edit/:id', 
+              {
+                path: 'edit/:id',
                 component: MenuModifyComponent,
-                resolve: { 
+                resolve: {
                   menu: MenuModifyResolverService,
                   category: MenuHascategoryResolverService
-                } 
-              } 
-            ]            
+                }
+              }
+            ]
           },
           {
-            path: 'category', 
+            path: 'category',
             children: [
               {
                 path: '',
                 component: CategoryComponent,
                 resolve: { categories: CategoryResolverService, menus: MenuResolverService }
               },
-              { 
-                path: 'newCategory', 
+              {
+                path: 'newCategory',
                 component: CategoryNewComponent,
                 resolve: {
                   menus: MenuResolverService
                 }
               },
-              { path: 'edit/:id', 
-                component: CategoryModifyComponent, 
+              {
+                path: 'edit/:id',
+                component: CategoryModifyComponent,
                 resolve: {
-                  category: CategoryModifyResolverService, 
+                  category: CategoryModifyResolverService,
                   menus: MenuResolverService,
                   product: CategoryHasproductResolverService
-                } 
+                }
               }
-            ]            
+            ]
           },
-          { 
-            path: 'product', 
+          {
+            path: 'product',
             children: [
               {
                 path: '',
                 component: ProductListComponent,
-                resolve: { products: ProductResolverService, categories: CategoryResolverService }
+                resolve: { 
+                  products: ProductResolverService, 
+                  categories: CategoryResolverService 
+                }
               },
-              { 
-                path: 'newProduct', 
-                canDeactivate: [ ProductNewGuardService ],
-                component: ProductNewComponent },
-              { path: 'edit/:id', 
-                canDeactivate: [ ProductEditGuardService ], 
+              {
+                path: 'newProduct',
+                canDeactivate: [ProductNewGuardService],
+                component: ProductNewComponent,
+                resolve: { 
+                  sizes: SizeResolverService, 
+                  categories: CategoryResolverService 
+                }
+              },
+              {
+                path: 'edit/:id',
+                canDeactivate: [ProductEditGuardService],
                 component: ProductModifyComponent,
-                resolve: { product: ProductModifyResolverService, categories: CategoryResolverService }
+                resolve: { 
+                  product: ProductModifyResolverService, 
+                  sizes: SizeResolverService, 
+                  categories: CategoryResolverService,
+                  order: ProductOrderResolverService
+                }
               }
-            ]            
+            ]
           }
         ]
       }

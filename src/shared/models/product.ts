@@ -1,13 +1,20 @@
+import { 
+  SizeInProduct,
+  OptionInProduct,
+  Category
+} from '../index';
+
 export class Product {
-  _id:string;
+  readonly _id: string;
   code: string;
   name: string;
-  category: string;
+  category: Category;
   pictures: string;
   description: string;
   price: number;
-  options: Array<any> = [];
-  sizes: Array<any> = [];
+  options: Array<OptionInProduct> = [];
+  sizes: Array<SizeInProduct> = [];
   tags: Array<string> = []
-  available: any;
+  available: Boolean;
+  readonly availableDescription: string;
 }

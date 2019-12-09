@@ -4,8 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { TableService, SectionService, Section } from '../../../shared';
-import { isNullOrUndefined } from 'util';
+import {
+  SectionService,
+  Section
+} from '../../../shared';
 
 @Component({
   selector: 'app-section-list-config',
@@ -37,7 +39,6 @@ export class SectionListConfigComponent implements OnInit {
   }
 
   constructor(private _sectionService: SectionService,
-              private _tableService: TableService,
               private route: ActivatedRoute,
               private modalService: BsModalService) { }
 
@@ -83,26 +84,6 @@ export class SectionListConfigComponent implements OnInit {
     this.modalRef.hide();
     this.modalRef = null;   
     return true;     
-  }
-
-  validate(sectionId: string) {
-    this._tableService.getTablesBySection(sectionId).subscribe(
-      tables => {
-        if (tables.length > 0 && !isNullOrUndefined(tables))
-        {
-          let errorTitle = 'Eliminar Sala';
-          let errorMessage = 'La sala no puede ser eliminada porque todavía tiene mesas.';
-          this.showModalError(errorTitle, errorMessage);          
-        }
-        else
-        {
-          this.showModalDelete(this.deleteTemplate, sectionId);          
-        }
-      },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    )
   }
 
   deleteSection(){
