@@ -36,6 +36,12 @@ export class ProductService {
       .catch(this.handleError);
   }
 
+  getProductsAvailablesByCategory(idCategory){
+    return this.apiService.get(`/product/availables/category/${idCategory}`)
+      .map(data => data.products)
+      .catch(this.handleError);
+  }
+  
   updateProduct(product) {
     return this.apiService.put(`/product/${product._id}`, product)
       .map(data => data.product)

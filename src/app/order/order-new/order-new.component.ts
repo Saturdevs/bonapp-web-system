@@ -173,6 +173,18 @@ export class OrderNewComponent implements OnInit {
     );
   }
 
+  getProductsAvailablesByCategory(categoryId) {
+    this.products = this.filteredProducts = [];
+    this.productService.getProductsAvailablesByCategory(categoryId)
+      .subscribe(products => {
+        this.products = products;
+      },
+      error => { 
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      }
+    );
+  }
+  
   /** Obtiene todos los productos de todas las categorias */
   getProducts() {
     this.productService.getAll()
