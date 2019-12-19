@@ -48,9 +48,12 @@ export class OrderNewComponent implements OnInit {
               private categoryService : CategoryService) { }
 
   pageTitle: String = 'Nuevo Pedido'; 
-  noProductsText: string = 'Debe seleccionar un menu y una categoria de la lista.';
+  noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
+  noProductsAvailablesText: string = 'No hay productos disponibles para la categoria seleccionada.';  
   prodObservation: string = 'Agregue una observación aquí...';
-  sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños'
+  sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños';
+  categorySelected: boolean = false;
+  /*Para mostrar un mensaje diferente si no selecciono categoria o si no hay productos disponibles. */
   menus : Menu[];
   categories : Category[];
   /** Para mostrar los productos de la categoria seleccionada */
