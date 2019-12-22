@@ -1,7 +1,8 @@
 export class Table {
+  _id: string;
   number: number;
-  section: any;
-  status: any;
+  section: string;
+  status: string;
   col: Number;
   row: Number;
   sizex: Number;
