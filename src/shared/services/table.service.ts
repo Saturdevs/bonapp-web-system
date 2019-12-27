@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -15,60 +14,80 @@ export class TableService {
     private apiService: ApiService
   ) { }
 
+  private _addedTables: Array<Table>;
+  private _updatedTables: Array<Table>;
+
+  public get addedTables(): Array<Table> {
+    return this._addedTables;
+  }
+
+  public set addedTables(value: Array<Table>) {
+    this._addedTables = value;
+  }
+
+  public get updatedTables(): Array<Table> {
+    return this._updatedTables;
+  }
+
+  public set updatedTables(value: Array<Table>) {
+    this._updatedTables = value;
+  }
+
+
+
   getAll(): Observable<Table[]> {
     return this.apiService.get('/table')
-           .map(data => data.tables)
-           .catch(this.handleError);
+      .map(data => data.tables)
+      .catch(this.handleError);
   }
 
   getTable(idTable): Observable<Table> {
-        return this.apiService.get(`/table/${idTable}`)
-            .map(data => data.table);
+    return this.apiService.get(`/table/${idTable}`)
+      .map(data => data.table);
   }
 
   getTableByNumber(tableNumber): Observable<Table> {
     return this.apiService.get(`/table/number/${tableNumber}`)
-        .map(data => data.table);
-}
+      .map(data => data.table);
+  }
 
   getTablesBySection(idSection) {
     return this.apiService.get(`/table/section/${idSection}`)
-           .map(data => data.tables)
-           .catch(this.handleError);
+      .map(data => data.tables)
+      .catch(this.handleError);
   }
 
-  updateTable(table){
+  updateTable(table) {
     return this.apiService.put(`/table/${table._id}`, table)
-            .map(data => data.table)
-            .catch(this.handleError);
+      .map(data => data.table)
+      .catch(this.handleError);
   }
 
-  updateTableByNumber(table){
+  updateTableByNumber(table) {
     return this.apiService.put(`/table/byNumber/${table.number}`, table)
-            .map(data => data.table)
-            .catch(this.handleError);
+      .map(data => data.table)
+      .catch(this.handleError);
   }
 
-  deleteTable(idTable){
+  deleteTable(idTable) {
     return this.apiService.delete(`/table/${idTable}`)
-           .map(data =>data.table)
-           .catch(this.handleError);
+      .map(data => data.table)
+      .catch(this.handleError);
   }
 
-  deleteTableByNumber(tableNumber){
-    return this.apiService.delete(`/table/${tableNumber}/byNumber`)
-           .map(data =>data.table)
-           .catch(this.handleError);
-  }
-
-  saveTable(table){
+  saveTable(table) {
     return this.apiService.post('/table', table)
-          .map(data => data.table)
-          .catch(this.handleError);
-  }  
+      .map(data => data.table)
+      .catch(this.handleError);
+  }
 
-  private handleError(err: HttpErrorResponse){
-    console.log(err.message);
+  unSetAndDeleteTable(tableNumber) {
+    return this.apiService.put(`/table/unsetanddeletetable/${tableNumber}`)
+      .map(data => data.table)
+      .catch(this.handleError);
+  }
+
+  private handleError(err: HttpErrorResponse) {
     return Observable.throw(err);
   }
 

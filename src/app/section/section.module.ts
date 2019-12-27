@@ -11,6 +11,7 @@ import { SectionListConfigComponent } from './section-list-config/section-list-c
 import { SectionListResolverService } from './section-list/section-list-resolver.service';
 import { SectionEditResolverService } from './section-edit/section-edit-resolver.service';
 import { SectionService } from '../../shared/services/section.service';
+import { SectionListGuardService } from './section-list/section-list-guard.service';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { SectionService } from '../../shared/services/section.service';
   providers: [ 
     SectionListResolverService,
     SectionService,
-    SectionEditResolverService
+    SectionEditResolverService,
+    SectionListGuardService
   ]  
 })
 export class SectionModule { }
