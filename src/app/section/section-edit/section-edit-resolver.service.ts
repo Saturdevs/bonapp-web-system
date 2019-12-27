@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Section } from '../../../shared/models/section';
-import { SectionService } from '../../../shared/services/section.service';
+import {
+  Section,
+  SectionService
+} from '../../../shared';
 
 @Injectable()
 export class SectionEditResolverService implements Resolve<Section> {

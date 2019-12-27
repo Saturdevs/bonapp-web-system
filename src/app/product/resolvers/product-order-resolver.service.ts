@@ -4,18 +4,19 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs/Observable';
 
 import {
-  Product,
+  Order,
   ProductService
-} from '../../../shared';
+} from '../../../shared/index';
 
-@Injectable()
-export class ProductModifyResolverService implements Resolve<Product> {
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductOrderResolverService implements Resolve<Order> {
 
   constructor(private _productService: ProductService) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Product> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Order> {
     let id = route.params['id'];
-    return this._productService.getProduct(id);
+    return this._productService.existInAnOrder(id);
   }
-
 }

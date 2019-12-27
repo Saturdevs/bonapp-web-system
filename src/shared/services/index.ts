@@ -9,7 +9,7 @@ export * from './cash-flow.service';
 export * from './arqueo-caja.service';
 export * from './table.service';
 export * from './order.service';
-export * from './shared.service';
 export * from './section.service';
 export * from './client.service';
 export * from './transaction.service';
+export * from './supplier.service';

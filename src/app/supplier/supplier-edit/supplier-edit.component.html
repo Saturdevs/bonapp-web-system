@@ -23,7 +23,8 @@
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierName="ngModel" required type="text" class="form-control" [class.is-invalid]="supplierName.invalid && (supplierName.dirty || supplierName.touched)"
+          <input #supplierName="ngModel" required type="text" class="form-control"
+            [class.is-invalid]="supplierName.invalid && (supplierName.dirty || supplierName.touched)"
             name="supplierName" id="supplierName" [(ngModel)]="supplier.name">
         </div>
       </div>
@@ -38,7 +39,8 @@
           <label>Email:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierEmail="ngModel" type="text" class="form-control" [class.is-invalid]="supplierEmail.invalid && (supplierEmail.dirty || supplierEmail.touched)"
+          <input #supplierEmail="ngModel" type="text" class="form-control"
+            [class.is-invalid]="supplierEmail.invalid && (supplierEmail.dirty || supplierEmail.touched)"
             name="supplierEmail" id="supplierEmail" [(ngModel)]="supplier.email">
         </div>
       </div>
@@ -50,8 +52,9 @@
           <label>Teléfono:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierTel="ngModel" type="text" class="form-control" [class.is-invalid]="supplierTel.invalid && (supplierTel.dirty || supplierTel.touched)"
-            name="supplierTel" id="supplierTel" [(ngModel)]="supplier.tel">
+          <input #supplierTel="ngModel" type="text" class="form-control"
+            [class.is-invalid]="supplierTel.invalid && (supplierTel.dirty || supplierTel.touched)" name="supplierTel"
+            id="supplierTel" [(ngModel)]="supplier.tel">
         </div>
       </div>
     </div>
@@ -62,16 +65,16 @@
           <label>Dirección:</label>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 pl-0">
-          <input #supplierAddressStreet="ngModel" type="text" class="form-control" name="supplierAddressStreet" id="supplierAddressStreet"
-            [(ngModel)]="supplier.addressStreet" placeholder="Calle">
+          <input #supplierAddressStreet="ngModel" type="text" class="form-control" name="supplierAddressStreet"
+            id="supplierAddressStreet" [(ngModel)]="supplier.addressStreet" placeholder="Calle">
         </div>
         <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #supplierAddressNumber="ngModel" type="text" class="form-control" name="supplierAddressNumber" id="supplierAddressNumber"
-            [(ngModel)]="supplier.addressNumber" placeholder="Número">
+          <input #supplierAddressNumber="ngModel" type="text" class="form-control" name="supplierAddressNumber"
+            id="supplierAddressNumber" [(ngModel)]="supplier.addressNumber" placeholder="Número">
         </div>
         <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #supplierAddressDpto="ngModel" type="text" class="form-control" name="supplierAddressDpto" id="supplierAddressDpto"
-            [(ngModel)]="supplier.addressDpto" placeholder="Piso / Dpto">
+          <input #supplierAddressDpto="ngModel" type="text" class="form-control" name="supplierAddressDpto"
+            id="supplierAddressDpto" [(ngModel)]="supplier.addressDpto" placeholder="Piso / Dpto">
         </div>
       </div>
     </div>
@@ -86,8 +89,10 @@
 
     <div class="col-12">
       <div class="col-7 offset-5">
-        <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-        <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="form.invalid" (click)="updateSupplier(supplier)">{{saveButton}}</button>
+        <button type="button" class="btn btn-sm customButtonCancel waves-light"
+          (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+        <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="form.invalid"
+          (click)="updateSupplier(supplier)">{{saveButton}}</button>
       </div>
     </div>
   </form>

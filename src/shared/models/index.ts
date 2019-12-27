@@ -22,3 +22,5 @@ export * from './cash-register';
 export * from './menuCategory';
 export * from './paymentTypeMin';
 export * from './cashRegisterMin';
+export * from './sizeInProduct';
+export * from './optionInProduct';

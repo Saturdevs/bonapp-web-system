@@ -4,10 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { ProductService } from '../../../shared/services/product.service';
-import { Product } from '../../../shared/models/product';
-import { Category } from '../../../shared/models/category';
-import { CategoryService } from '../../../shared/services/category.service';
+import {
+  ProductService,
+  Product,
+  Category
+} from '../../../shared';
+
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
@@ -64,21 +66,12 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   constructor(private productService: ProductService,
-              private categoryService: CategoryService,
               private modalService: BsModalService,
               private route: ActivatedRoute,
               private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.products = this.route.snapshot.data['products'].map(product => {
-      if(product.available) {
-        product.available = 'Si';
-      } else {
-        product.available = 'No';
-      }
-
-      return product;
-    });
+    this.products = this.route.snapshot.data['products'];
     this.filteredProducts = this.products;
     this.categoriesOptions.push({ value: 'default', label: 'Todas', selected: 'true' })
     this.categories = this.route.snapshot.data['categories'];
@@ -118,17 +111,9 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   getProducts(): void {
-    this.productService.getProductsWithCategory()
+    this.productService.getAll()
       .subscribe(products => {
-        this.products = products.map(product => {
-          if(product.available) {
-            product.available = 'Si';
-          } else {
-            product.available = 'No';
-          }
-
-          return product;
-        });
+        this.products = products;
         this.filteredProducts = this.products;
       },
       error => {
@@ -136,67 +121,34 @@ export class ProductListComponent implements OnInit, AfterViewInit {
       });
   }
 
-  getProductsByCategory(idCategory): void {
-    this.productService.getProductsByCategory(idCategory)
-      .subscribe(products => {
-        this.products = products.map(product => {
-          if(product.available) {
-            product.available = 'Si';
-          } else {
-            product.available = 'No';
-          }
-
-          return product;
-        });
-        this.filteredProducts = this.products;
-      },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      })
-  }
-
   filterByCategoria(value) {
     this._listFilter = '';
     this._listFilterCod = '';
     if (value === 'default') {
-      this.getProducts();
+      this.filteredProducts = this.products;
     } else {
-      this.getProductsByCategory(value);
+      this.filteredProducts = this.products.filter(pr => pr.category._id === value);
     }
-  }
-
-  updateProduct(product: Product) {
-    this.productService.updateProduct(product)
-      .subscribe(
-        product => {},
-        error => { 
-          this.showModalError(this.serviceErrorTitle, error.error.message);
-        }
-      );
   }
 
   updatePrice() {
-    this.filteredProducts = this.filteredProducts.map(product => {
-      product.price = product.price + (product.price * this.percentage) / 100;
-      this.updateProduct(product);
-      return product;
-    })   
-    this.percentage = 0; 
+    let data = { productsToUpdate: this.filteredProducts, rate: this.percentage/100 };
+    this.productService.updatePrice(data).subscribe(
+      products => {
+        this.getProducts();
+        this.percentage = 0;
+      },
+      error => { 
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      }
+    )
   }
 
   async showModalDelete(template: TemplateRef<any>,templateNoDelete: TemplateRef<any>, idProduct: any){
-    this.idProductDelete = idProduct;
-    let canDelete = this.productService.validateProductsBeforeChanges(this.idProductDelete);
-    if(await canDelete.then(x => x == true)){
-      this.modalDeleteTitle = "Eliminar Producto";
-      this.modalDeleteMessage = "¿Esta seguro que desea eliminar este producto?";
-      this.modalRef = this.modalService.show(template, {backdrop: true});
-    }
-    else{      
-      let noDeleteTitle = "Eliminar Producto";
-      let noDeleteMessage = "El producto no puede ser eliminado ya que ya ha sido adicionado en ventas."
-      this.showModalError(noDeleteTitle, noDeleteMessage);
-    }
+    this.idProductDelete = idProduct;      
+    this.modalDeleteTitle = "Eliminar Producto";
+    this.modalDeleteMessage = "¿Esta seguro que desea eliminar este producto?";
+    this.modalRef = this.modalService.show(template, {backdrop: true});    
   }
 
   deleteProduct(){

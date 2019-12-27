@@ -4,8 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { SupplierService } from '../../../shared/services/supplier.service';
-import { Supplier } from '../../../shared/models/supplier';
+import {
+  Supplier,
+  SupplierService
+} from '../../../shared';
+
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 
 @Component({
@@ -15,7 +18,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class SupplierListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Proveedores";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -34,9 +37,9 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private _supplierService: SupplierService,
-              private route: ActivatedRoute,
-              private modalService: BsModalService,
-              private cdRef: ChangeDetectorRef) { }
+    private route: ActivatedRoute,
+    private modalService: BsModalService,
+    private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.data.subscribe(
@@ -66,27 +69,27 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
         this.suppliers = suppliers;
         this.filteredSuppliers = this.suppliers;
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
   }
 
-  showModalDelete(template: TemplateRef<any>, idSupplier: any){
+  showModalDelete(template: TemplateRef<any>, idSupplier: any) {
     this.idSupplierDelete = idSupplier;
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalRef = this.modalService.show(template, { backdrop: true });
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
 
-  deleteSupplier(){
-    if (this.closeModal()){
-      this._supplierService.deleteSupplier(this.idSupplierDelete).subscribe( 
-        success=> {
+  deleteSupplier() {
+    if (this.closeModal()) {
+      this._supplierService.deleteSupplier(this.idSupplierDelete).subscribe(
+        success => {
           this.getSuppliers();
         },
         error => {
@@ -96,10 +99,10 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
   reloadItems(event) {

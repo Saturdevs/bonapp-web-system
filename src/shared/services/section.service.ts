@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -17,35 +16,34 @@ export class SectionService {
 
   getAll(): Observable<Section[]> {
     return this.apiService.get('/section')
-           .map(data => data.sections)
-           .catch(this.handleError);
+      .map(data => data.sections)
+      .catch(this.handleError);
   }
 
   getSection(idSection): Observable<Section> {
-        return this.apiService.get(`/section/${idSection}`)
-            .map(data => data.section);
+    return this.apiService.get(`/section/${idSection}`)
+      .map(data => data.section);
   }
 
-  updateSection(section){
+  updateSection(section) {
     return this.apiService.put(`/section/${section._id}`, section)
-            .map(data => data.section)
-            .catch(this.handleError);
+      .map(data => data.section)
+      .catch(this.handleError);
   }
 
-  deleteSection(idSection){
+  deleteSection(idSection) {
     return this.apiService.delete(`/section/${idSection}`)
-           .map(data =>data.section)
-           .catch(this.handleError);
+      .map(data => data.section)
+      .catch(this.handleError);
   }
 
-  saveSection(section){
+  saveSection(section) {
     return this.apiService.post('/section', section)
-          .map(data => data.section)
-          .catch(this.handleError);
+      .map(data => data.section)
+      .catch(this.handleError);
   }
 
-  private handleError(err: HttpErrorResponse){
-    console.log(err.message);
+  private handleError(err: HttpErrorResponse) {
     return Observable.throw(err);
   }
 

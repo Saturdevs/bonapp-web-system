@@ -110,12 +110,12 @@
             <div [formGroupName]="i" class="form-group">              
               <div class="row">
                 <div class="select-wrapper col-md-5">
-                  <select formControlName="name" class="form-control  browser-default" [class.is-invalid]="productForm.get('sizes').controls[i].controls.name.invalid && (productForm.get('sizes').controls[i].controls.name.dirty || productForm.get('sizes').controls[i].controls.name.touched)"
+                  <select formControlName="sizeId" class="form-control  browser-default" [class.is-invalid]="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)"
                     id="{{ 'productSize' + i }}">
                     <option value="default" default>Seleccione el tamaño...</option>
                     <option [value]="size._id" *ngFor = 'let size of sizesArray'>{{size.name}}</option>
                   </select>
-                  <div *ngIf="productForm.get('sizes').controls[i].controls.name.invalid && (productForm.get('sizes').controls[i].controls.name.dirty || productForm.get('sizes').controls[i].controls.name.touched)" class="alert alert-danger">
+                  <div *ngIf="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)" class="alert alert-danger">
                     El tamaño es requerido.
                   </div> 
                 </div>

@@ -3,8 +3,10 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 
-import { Supplier } from '../../../shared/models/supplier';
-import { SupplierService } from '../../../shared/services/supplier.service';
+import {
+  Supplier,
+  SupplierService
+} from '../../../shared';
 
 @Injectable()
 export class SupplierEditResolverService implements Resolve<Supplier> {

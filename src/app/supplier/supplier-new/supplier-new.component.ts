@@ -4,8 +4,10 @@ import { Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
-import { Supplier } from '../../../shared/models/supplier';
-import { SupplierService } from '../../../shared/services/supplier.service';
+import {
+  Supplier,
+  SupplierService
+} from '../../../shared';
 
 @Component({
   selector: 'app-supplier-new',
@@ -14,7 +16,7 @@ import { SupplierService } from '../../../shared/services/supplier.service';
 })
 export class SupplierNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
@@ -28,35 +30,33 @@ export class SupplierNewComponent implements OnInit {
   checkboxText = 'Activo';
 
   constructor(private _supplierService: SupplierService,
-              private _router: Router,
-              private modalService: BsModalService) { }
+    private _router: Router,
+    private modalService: BsModalService) { }
 
   ngOnInit() {
     this.newSupplier = new Supplier();
     this.newSupplier.active = true;
   }
 
-  saveSupplier(){
+  saveSupplier() {
     this._supplierService.saveSupplier(this.newSupplier).subscribe(
-      supplier =>
-      { 
+      supplier => {
         this.onBack()
       },
-      error => 
-      {         
+      error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     );
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+  showModalCancel(template: TemplateRef<any>, idCashRegister: any) {
+    this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
   }
@@ -65,12 +65,12 @@ export class SupplierNewComponent implements OnInit {
     this._router.navigate(['/suppliers-module/suppliers', { outlets: { edit: ['selectItem'] } }]);
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;    
+    this.modalRef = null;
   }
 
-  cancel(){    
+  cancel() {
     this.onBack();
     this.closeModal();
   }

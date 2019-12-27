@@ -8,18 +8,6 @@
   <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
   </app-error-template>
 </ng-template>
-<ng-template #nameInvalid>
-  <div class="modal-header">
-    <h4 class="modal-title">Agregar Producto</h4>
-  </div>
-  <div class="modal-body">
-    Ya existe un producto con ese nombre, elija uno diferente.
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="button special" (click)="closeModal()">Ok</button>
-    <button type="button" class="button special" (click)="closeModal()">Cancelar</button>
-  </div>
-</ng-template>
 <!-- Form -->
 <div class="col-12 pl-0 pr-0 formNewEditSettings">
   <div class="col-12 pr-0 outletTitle">
@@ -34,14 +22,15 @@
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-            <input mdbActive formControlName="name" type="text" class="form-control" [class.is-invalid]="sizeForm.get('name').invalid && (sizeForm.get('name').dirty || sizeForm.get('name').touched)"
+          <input mdbActive formControlName="name" type="text" class="form-control"
+            [class.is-invalid]="sizeForm.get('name').invalid && (sizeForm.get('name').dirty || sizeForm.get('name').touched)"
             id="name">
         </div>
       </div>
       <div *ngIf="sizeForm.get('name').invalid && (sizeForm.get('name').dirty || sizeForm.get('name').touched)"
-            class="alert alert-danger">
-            El nombre del Tamaño es requerido.
-          </div>
+        class="alert alert-danger">
+        El nombre del Tamaño es requerido.
+      </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
@@ -55,7 +44,9 @@
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="sizeForm.invalid" (click)="saveSize()">{{saveButton}}</button>
+    <button type="button" class="btn btn-sm customButtonCancel waves-light"
+      (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="sizeForm.invalid"
+      (click)="saveSize()">{{saveButton}}</button>
   </div>
 </div>

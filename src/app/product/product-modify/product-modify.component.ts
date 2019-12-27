@@ -2,16 +2,21 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
-import { Subscription }       from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 
-import { Product } from '../../../shared/models/product';
-import { Category } from '../../../shared/models/category';
-import { ProductService } from '../../../shared/services/product.service';
+import {
+  Product,
+  Category,
+  ProductService,
+  Order,
+  Size
+} from '../../../shared';
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-product-modify',
@@ -20,13 +25,17 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ProductModifyComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-  private serviceErrorTitle = 'Error de Servicio';  
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
+  private noModifyMessage = "Algunos datos de este producto no pueden ser modificados debido a que ya ha sido adicionado en ventas.";
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalCancelTitle: string;
   private modalCancelMessage: string;
+  private modalPriceNotMatchTitle: string;
+  private modalPriceNotMatchMessage: string;
+  private productPictureData: string;
   pictureTouched: boolean;
   validPicture: string;
   pageTitle: string = 'Product Modify';
@@ -35,78 +44,86 @@ export class ProductModifyComponent implements OnInit {
   product: Product = new Product();
   categories: Category[];
   productNameModified: string;
-  productCategoryModified: string;
-  productPicModified: string;
-  idProduct: string;
-  categorySelect: Category;  
   clickAceptar: Boolean;
   private sub: Subscription;
-  sizesArr: Array<string> = new Array("Chico", "Mediano", "Grande");
-  path: string = '../../../assets/img/products/';  
+  path: string = '../../../assets/img/products/';
   checkboxAvailableText: String = 'Disponible';
-  
+  order: Order = new Order();
+  canEdit: Boolean = true;
+  duplicatedSizesArray: string[] = [];
+  defaultSize: Number = -1;
+  defaultPrice: Number = 0;
+  sizesArray: Size[];
+
+  @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
-  get sizes(): FormArray{
+  get sizes(): FormArray {
     return <FormArray>this.productForm.get('sizes');
   }
-  
-  get options(): FormArray{
+
+  get options(): FormArray {
     return <FormArray>this.productForm.get('options');
   }
 
+  setDefaultSize(index) {
+    this.defaultSize = index
+  }
+
   constructor(private _route: ActivatedRoute,
-              private _router: Router,
-              private _productService: ProductService,
-              private formBuilder: FormBuilder,
-              private modalService: BsModalService) { }
-              
+    private _router: Router,
+    private _productService: ProductService,
+    private formBuilder: FormBuilder,
+    private modalService: BsModalService) { }
+
   ngOnInit() {
+    this.order = this._route.snapshot.data['order'];
+    this.sizesArray = this._route.snapshot.data['sizes'];
+    if (!isNullOrUndefined(this.order)) {
+      this.canEdit = false;
+    }
+
     this.productForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
-      category: ['', ComboValidators.hasValue],
+      code: [{ value: '', disabled: !this.canEdit }, Validators.required],
+      name: [{ value: '', disabled: !this.canEdit }, Validators.required],
+      category: [{ value: '', disabled: !this.canEdit }, ComboValidators.hasValue],
       pictures: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [{ value: '', disabled: !this.canEdit }, Validators.required],
       price: ['', Validators.required],
-      sizes: this.formBuilder.array([]),      
+      sizes: this.formBuilder.array([]),
       options: this.formBuilder.array([]),
-      available: ''   
+      available: ''
     });
-    
+
     this.onProductRetrieved(this._route.snapshot.data['product']);
     this.categories = this._route.snapshot.data['categories'];
     this.clickAceptar = false;
-
-    this.validateProductsBeforeModify();
-  }
-  
-  async validateProductsBeforeModify(){
-    let canModify = this._productService.validateProductsBeforeChanges(this.product.code);
-    if (await canModify.then(x => x == false)){
-      let noModifyTitle = "Modificar Producto";
-      let noModifyMessage = "El producto no puede ser eliminado ya que ya ha sido adicionado en ventas.";
-      this.showModalError(noModifyTitle, noModifyMessage);
-    }
   }
 
-  buildProductSizes(): FormGroup {
+  buildProductSizes(checked): FormGroup {
     return this.formBuilder.group({
-                name: ['default', ComboValidators.hasValue],
-                price: ['', Validators.required]
-              })
+      sizeId: ['default', Validators.required],
+      price: ['', Validators.required],
+      default: [checked]
+    })
   }
-  
+
   buildProductOptions(): FormGroup {
     return this.formBuilder.group({
-                  name: ['', Validators.required],
-                  price: ['', Validators.required]
-                })
+      name: ['', Validators.required],
+      price: ['', Validators.required]
+    })
   }
 
   addProductSize(): void {
-    this.sizes.push(this.buildProductSizes());
+    if (this.sizes.length === 0) {
+      this.sizes.push(this.buildProductSizes(true));
+      this.setDefaultSize(0);
+    }
+    else {
+      this.sizes.push(this.buildProductSizes(false));
+    }
   }
 
   removeSize(index): void {
@@ -123,6 +140,7 @@ export class ProductModifyComponent implements OnInit {
 
   onProductRetrieved(product: Product): void {
     this.product = product;
+    this.productPictureData = this.product.pictures;
     this.productNameModified = this.product.name;
     this.productForm.patchValue({
       code: this.product.code,
@@ -134,13 +152,13 @@ export class ProductModifyComponent implements OnInit {
       available: this.product.available
     });
     const prodOpt = this.product.options.map(options => this.formBuilder.group({
-      name: [options.name, Validators.required],
+      name: [{ value: options.name, disabled: true }, Validators.required],
       price: [options.price, Validators.required]
     }));
     const prodOptFormArray = this.formBuilder.array(prodOpt);
     this.productForm.setControl('options', prodOptFormArray);
     const prodSizes = this.product.sizes.map(sizes => this.formBuilder.group({
-      name: [sizes.name, ComboValidators.hasValue],
+      sizeId: [sizes.sizeId, ComboValidators.hasValue],
       price: [sizes.price, Validators.required],
       default: [sizes.default]
     }));
@@ -152,46 +170,100 @@ export class ProductModifyComponent implements OnInit {
   updateProduct() {
     let prod = Object.assign({}, this.product, this.productForm.value);
     this._productService.updateProduct(prod).subscribe(
-      product => this.product = product,
+      product => {
+        this.product = product;
+        this.clickAceptar = true;
+        this.onBack();
+      },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
       });
-    this.clickAceptar = true;
-    this.onBack();
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  validateSizes() {
+    let product = Object.assign({}, this.productForm.value);
+    if (product.sizes.length == 0) {
+      this.updateProduct();
+    }
+    else {
+      if (product.sizes.length > 1) {
+        product.sizes.forEach(size => {
+          let filteredNames = product.sizes.filter(x => x.sizeId == size.sizeId)
+          if (filteredNames.length > 1) {
+            this.duplicatedSizesArray.push(size.sizeId);
+          }
+          if (product.sizes.indexOf(size) == this.defaultSize.valueOf()) {
+            size.default = true;
+          }
+          else {
+            size.default = false;
+          }
+        });
+        if (this.duplicatedSizesArray.length > 0) {
+          let duplicatedSizeModalTitle = "Agregar Producto";
+          let duplicatedSizeModalMessage = "Existen tamanos duplicados, por favor corrija e intente nuevamente.";
+          this.showModalError(duplicatedSizeModalTitle, duplicatedSizeModalMessage);
+        }
+        this.defaultPrice = product.sizes[this.defaultSize.valueOf()].price;
+      }
+      else {
+        this.defaultPrice = product.sizes[this.defaultSize.valueOf()].price;
+      }
+      if (product.price != this.defaultPrice) {
+        this.modalPriceNotMatchTitle = "Agregar Producto";
+        this.modalPriceNotMatchMessage = "El precio del producto no coincide con el precio del tamaño por defecto. Se modificara el precio del producto para hacerlo coincidir.";
+        this.modalRef = this.modalService.show(this.priceNotMatchTemplate, { backdrop: true });
+      }
+      else {
+        if (this.duplicatedSizesArray.length == 0) {
+          this.updateProduct();
+        }
+      }
+    }
+  }
+
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalCancel(template: TemplateRef<any>){    
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+  showModalCancel(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
   onNotified(validator: Array<string>) {
-    validator[1] != '' ? this.validPicture = validator[1]: this.validPicture = '';
+    validator[0] != '' ? this.validPicture = validator[0] : this.validPicture = '';
+    validator[1] != '' ? this.productPictureData = validator[1] : this.productPictureData = '';
     this.pictureTouched = true;
-    if(this.validPicture != ''){
-      this.productForm.controls.picture.setValue(this.validPicture);
+    if (this.validPicture != '') {
+      this.product.pictures = this.productPictureData;
     }
   }
-  
-  closeModal(){
+
+  closeModal() {
+    if (this.duplicatedSizesArray.length > 0) {
+      this.duplicatedSizesArray = [];
+    }
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
-  
-  closeModalAndGoBack(){
+
+  closeModalAndContinue() {
+    this.productForm.controls.price.setValue(this.defaultPrice);
+    this.closeModal();
+    this.updateProduct();
+  }
+
+  closeModalAndGoBack() {
     this.closeModal();
     this.onBack();
   }
 
-  cancel(){    
+  cancel() {
     this.onBack();
     this.closeModal();
   }
@@ -199,5 +271,4 @@ export class ProductModifyComponent implements OnInit {
   onBack(): void {
     this._router.navigate(['/restaurant/product']);
   }
-
 }
