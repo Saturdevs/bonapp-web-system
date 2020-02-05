@@ -9,35 +9,37 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
 	Table,
 	TableService,
-	OrderService
+	OrderService,
+	TableStatus
 } from '../../../shared/index';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
 
 interface Box {
-    id: number;
+	_id: string
+	id: number;
 	config: any;
 	status: any;
 }
 
 @Component({
-  selector: 'app-table-list',
-  templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.scss']
+	selector: 'app-table-list',
+	templateUrl: './table-list.component.html',
+	styleUrls: ['./table-list.component.scss']
 })
-export class TableListComponent implements OnInit{
+export class TableListComponent implements OnInit {
 
-	@ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
-	@ViewChild('cancelTemplate') cancelTemplate:TemplateRef<any>;
+	@ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+	@ViewChild('cancelTemplate') cancelTemplate: TemplateRef<any>;
 	private serviceErrorTitle = 'Error de Servicio';
-  private modalErrorTittle: string;
-  private modalErrorMessage: string;
+	private modalErrorTittle: string;
+	private modalErrorMessage: string;
 	private modalDeleteMessage = "¿Estas seguro que desea eliminar esta mesa?";
 	private modalDeleteTitle = "Eliminar Mesa";
-  private modalCancelTitle: string;
-  private modalCancelMessage: string;
+	private modalCancelTitle: string;
+	private modalCancelMessage: string;
 	public modalRef: BsModalRef;
-  private boxes: Array<Box> = [];
+	private boxes: Array<Box> = [];
 	private rgb: string = '#efefef';
 	private curNum;
 	private gridConfig: NgGridConfig = <NgGridConfig>{
@@ -68,8 +70,6 @@ export class TableListComponent implements OnInit{
 	private itemPositions: Array<any> = [];
 	tablesNow: Array<Table> = [];
 	tablesTotal: Array<Table> = [];
-	deletedTables: Array<any> = [];
-	addedTables: Array<Table> = [];
 	settingsActive: Boolean;
 	ordersActive: Boolean;
 	green: Boolean;
@@ -77,40 +77,58 @@ export class TableListComponent implements OnInit{
 	blue: Boolean;
 	yellow: Boolean;
 	selectedTable: Table;
-	tableNumberDelete: number;
+	boxToDelete: Box;
 	qtyProd: number;
 	config = {
 		backdrop: true,
 	}
 
 	constructor(private _router: Router,
-							private _tableService: TableService,
-							private _orderService: OrderService,
-							private _route: ActivatedRoute,
-							private modalService: BsModalService,
-							private toast: ToastService) 
-				{}
-	
-	ngOnInit() {		
-		//this.tablesNow = this._route.snapshot.data['tables'];
+		private _tableService: TableService,
+		private _orderService: OrderService,
+		private _route: ActivatedRoute,
+		private modalService: BsModalService,
+		private toast: ToastService) { }
+
+	ngOnInit() {
+		this._tableService.addedTables = [];
+		this._tableService.updatedTables = [];
 		this._route.data.subscribe(
-			data => { 
-				this.addedTables = [];
+			data => {
 				this.tablesNow = data['tables'];
 				this.tablesTotal = data['totalTables'];
-				this._setDashConfig(); 
+				if (this._tableService.addedTables.length !== 0) {
+					this._tableService.addedTables.forEach(table => {
+						this.tablesTotal.push(table);
+						if (table.section === this._route.snapshot.params['id']) {
+							this.tablesNow.push(table);
+						}
+					})
+				}
+
+				if (this._tableService.updatedTables.length !== 0) {
+					this._tableService.updatedTables.forEach(table => {
+						this.tablesTotal.push(table);
+						if (table.section === this._route.snapshot.params['id']) {
+							let index = this.tablesNow.findIndex(t => t.number === table.number);
+							if (index !== -1) {
+								this.tablesNow.splice(index, 1);
+							}
+							this.tablesNow.push(table);
+						}
+					})
+				}
+				this._setDashConfig();
 			}
-		);	
-		console.log(this.openNewOrderTemplate);
-		console.log(this.tablesNow);
-			
-		if(this.isSettingsActive()) {
+		);
+
+		if (this.isSettingsActive()) {
 			this.settingsActive = true;
 			this.gridConfig.draggable = true;
 			this.gridConfig.resizable = true;
 		}
-		
-		if(this.isOrdersActive()) {
+
+		if (this.isOrdersActive()) {
 			this.ordersActive = true;
 			this.gridConfig.draggable = false;
 			this.gridConfig.resizable = false;
@@ -118,20 +136,20 @@ export class TableListComponent implements OnInit{
 		}
 	}
 
-	saveChanges(){
+	saveChanges() {
 		let i;
 		let lastIdTablesNow = 0;
 		let indexAdded = 0;
 		//Recorro el array de las mesas existentes y actualizo
 		for (i = 0; i < this.tablesNow.length; i++) {
-			if(this.tablesNow[i]){
-				if(this.tablesNow[i].number === this.boxes[i].id){
+			if (this.tablesNow[i]) {
+				if (this.tablesNow[i].number === this.boxes[i].id) {
 					this.tablesNow[i].col = this.boxes[i].config.col;
 					this.tablesNow[i].row = this.boxes[i].config.row;
 					this.tablesNow[i].sizex = this.boxes[i].config.sizex;
 					this.tablesNow[i].sizey = this.boxes[i].config.sizey;
-					this._tableService.updateTable(this.tablesNow[i]).subscribe( 
-						() => console.log("hizo el update"+this.tablesNow[i].number)
+					this._tableService.updateTable(this.tablesNow[i]).subscribe(
+						() => console.log("hizo el update" + this.tablesNow[i].number)
 					)
 				}
 			}
@@ -139,93 +157,92 @@ export class TableListComponent implements OnInit{
 		}
 		//Recorro el array de las mesas creadas y las agrego.
 		for (i = lastIdTablesNow; i < this.boxes.length; i++) {
-			if(this.addedTables[indexAdded]){
-				if(this.addedTables[indexAdded].number === this.boxes[i].id){
-				this.addedTables[indexAdded].col = this.boxes[i].config.col;
-				this.addedTables[indexAdded].row = this.boxes[i].config.row;
-				this.addedTables[indexAdded].sizex = this.boxes[i].config.sizex;
-				this.addedTables[indexAdded].sizey = this.boxes[i].config.sizey;
-				console.log(this.addedTables[indexAdded])
-				this._tableService.saveTable(this.addedTables[indexAdded]).subscribe(
-				() => {
-					this.addedTables = [];
-					console.log("Agrego las mesas	")
+			if (this._tableService.addedTables[indexAdded]) {
+				if (this._tableService.addedTables[indexAdded].number === this.boxes[i].id) {
+					this._tableService.addedTables[indexAdded].col = this.boxes[i].config.col;
+					this._tableService.addedTables[indexAdded].row = this.boxes[i].config.row;
+					this._tableService.addedTables[indexAdded].sizex = this.boxes[i].config.sizex;
+					this._tableService.addedTables[indexAdded].sizey = this.boxes[i].config.sizey;
+					console.log(this._tableService.addedTables[indexAdded])
+					this._tableService.saveTable(this._tableService.addedTables[indexAdded]).subscribe(
+						() => {
+							this._tableService.addedTables = [];
+							console.log("Agrego las mesas	")
+						}
+					)
 				}
-				)
-				}	
 			}
 			indexAdded = indexAdded + 1;
 		}
-		//Recorro el array de las mesas eliminadas y actualizo.
-		for (i = 0; i < this.deletedTables.length; i++) {
-			this._tableService.deleteTable(this.deletedTables[i].id).subscribe(resp => {
-				this.deletedTables = [];
-				console.log("Elimino"+ this.deletedTables[i].id)
-			})
-		}
+
 		this.showSuccessToast()
 	}
 
 	addBox(): void {
 		const conf: NgGridItemConfig = this._generateDefaultItemConfig();
 		conf.payload = this.curNum++;
-		this.boxes.push({ id: conf.payload, config: conf, status: 'Libre' });
-		this.addedTables.push({number: this.boxes[this.boxes.length-1].id,
-							 section: this._route.snapshot.params['id'],
-							 status: this.boxes[this.boxes.length-1].status,
-							 col: this.boxes[this.boxes.length-1].config.col,
-							 row: this.boxes[this.boxes.length-1].config.row,
-							 sizex: this.boxes[this.boxes.length-1].config.sizex,
-							 sizey: this.boxes[this.boxes.length-1].config.sizey});
-		console.log(this.boxes[this.boxes.length-1])
+		this.boxes.push({ _id: null, id: conf.payload, config: conf, status: TableStatus.LIBRE });
+		this._tableService.addedTables.push(this.createTable(this.boxes[this.boxes.length - 1]));
 	}
 
-	removeWidget(index: number): void {
-		if (this.boxes[index]) {
-			this.boxes.splice(index, 1);
+	createTable(box: Box): Table {
+		let table = new Table();
+
+		table._id = box._id;
+		table.number = box.id;
+		table.section = this._route.snapshot.params['id'];
+		table.status = box.status;
+		table.col = box.config.col;
+		table.row = box.config.row;
+		table.sizex = box.config.sizex;
+		table.sizey = box.config.sizey;
+
+		return table;
+	}
+
+	onChangeStop(box: Box, event: NgGridItemEvent): void {
+		let table = this._tableService.addedTables.find(table => table.number === box.id);
+		if (isNullOrUndefined(table)) {
+			let index = this._tableService.updatedTables.findIndex(table => table.number === box.id);
+			box.config.col = event.col;
+			box.config.row = event.row;
+			box.config.sizex = event.sizex;
+			box.config.sizey = event.sizey;
+			let table = this.createTable(box);
+			if (index === -1) {
+				this._tableService.updatedTables.push(table);
+			} else {
+				this._tableService.updatedTables[index] = table;
+			}
 		}
-		if(this.tablesNow[index]){
-			this.tablesNow.splice(index, 1);
-			this.deletedTables.push({'id': index})
-		}
-	}
-
-	updateItem(index: number, event: NgGridItemEvent): void {
-	}
-
-	onDrag(index: number, event: NgGridItemEvent): void {
-	}
-
-	onResize(index: number, event: NgGridItemEvent): void {
+		console.log("Index: " + table)
+		console.log("onResizeStop: " + box.id)
 	}
 
 	private _generateDefaultItemConfig(): NgGridItemConfig {
-		return {'col': 1, 'row': 1, 'sizex': 5, 'sizey': 20 };
+		return { 'col': 1, 'row': 1, 'sizex': 5, 'sizey': 20 };
 	}
 
-	private _setDashConfig() {	
+	private _setDashConfig() {
 		let i;
 		let dashconf = [];
 		this.boxes = [];
-		//Obtenemos las mesas y asignamos al array boxes que se utiliza para mostrar las mesas en el ngFor.			
-		console.log("dashconfig")
-		console.log(this.tablesNow);
-		for (i = 0; i < this.tablesNow.length; i++) {	
-			console.log(i)		
-			dashconf.push({ 'col': this.tablesNow[i].col, 'row': this.tablesNow[i].row, 'sizex': this.tablesNow[i].sizex, 'sizey': this.tablesNow[i].sizey});
+		//Obtenemos las mesas y asignamos al array boxes que se utiliza para mostrar las mesas en el ngFor.
+		for (i = 0; i < this.tablesNow.length; i++) {
+			dashconf.push({ 'col': this.tablesNow[i].col, 'row': this.tablesNow[i].row, 'sizex': this.tablesNow[i].sizex, 'sizey': this.tablesNow[i].sizey });
 			const conf = dashconf[i];
 			conf.payload = 1 + i;
-			this.boxes[i] = { id: this.tablesNow[i].number, config: conf, status: this.tablesNow[i].status};
+			this.boxes[i] = { _id: this.tablesNow[i]._id, id: this.tablesNow[i].number, config: conf, status: this.tablesNow[i].status };
 		}
 
 		if (isNullOrUndefined(this.tablesTotal) || this.tablesTotal.length === 0) {
 			this.curNum = 1;
-		} 
+		}
 		else {
-			this.curNum = this.tablesTotal[this.tablesTotal.length - 1].number + 1;				
-		}		
+			this.curNum = this.tablesTotal[this.tablesTotal.length - 1].number + 1;
+		}
 	}
-	
+
 	isSettingsActive() {
 		return this._router.isActive('/settings/section/tables/' + this._route.snapshot.params['id'], true);
 	}
@@ -234,19 +251,19 @@ export class TableListComponent implements OnInit{
 		return this._router.isActive('/orders/section/tables/' + this._route.snapshot.params['id'], true);
 	}
 
-	showSuccessToast() { 
+	showSuccessToast() {
 		let options = { timeOut: 2500 };
-		this.toast.success('Se ha guardado correctamente','AppBares Dice:', options);
+		this.toast.success('Se ha guardado correctamente', 'AppBares Dice:', options);
 	}
 
-	showDeleteModal(deleteTemplate: TemplateRef<any>, tableNumber: number){
+	showDeleteModal(deleteTemplate: TemplateRef<any>, box: Box) {
 		if (this.settingsActive === true) {
-			this.tableNumberDelete = tableNumber;
-			this.modalRef = this.modalService.show(deleteTemplate, {backdrop: true});
-		}	
+			this.boxToDelete = box;
+			this.modalRef = this.modalService.show(deleteTemplate, { backdrop: true });
+		}
 	}
 
-	showOpenOrderModal(openNewOrderTemplate: TemplateRef<any>, tableNumber: any){
+	showOpenOrderModal(openNewOrderTemplate: TemplateRef<any>, tableNumber: any) {
 		if (this.ordersActive === true) {
 			this._tableService.getTableByNumber(tableNumber).subscribe(
 				table => {
@@ -257,78 +274,84 @@ export class TableListComponent implements OnInit{
 							//Verifico que el pedido para la mesa no sea nulo o undefined por si se creo el pedido
 							//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
 							//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
-							if (isNullOrUndefined(order) && this.selectedTable.status === "Libre") {
-								this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, {class: 'customNewOrder'}));
+							if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
+								this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
 
 							}
 							else {
 								this._router.navigate(['./orders/orderNew', tableNumber]);
 							}
 						},
-						error => { 
+						error => {
 							this.showModalError(this.serviceErrorTitle, error.error.message);
-						 }
+						}
 					)
 				},
-				error => { 
-					this.showModalError(this.serviceErrorTitle, error.error.message);
-				 }
-			)			
-		}		
-	}
-
-	deleteTable(){
-    if (this.closeModal()){
-      this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe( 
-				success=> {
-					this.getTables();
-				},
 				error => {
-					if (error.status === CONFLICT) {
-						this.showModalCancel(this.cancelTemplate, error.error.message)
-					} 
-					else {
-						this.showModalError(this.serviceErrorTitle, error.error.message);
-					}
+					this.showModalError(this.serviceErrorTitle, error.error.message);
 				}
-			);
-    }
+			)
+		}
 	}
 
-	showModalCancel(template: TemplateRef<any>, modalMessage: string){    
-    this.modalRef = this.modalService.show(template, {backdrop: true});
-    this.modalCancelTitle = "Eliminar Mesa";
-    this.modalCancelMessage = modalMessage;
-	}
-	
-	delete() {
-		this._orderService.unSetTable(this.tableNumberDelete).subscribe(
-			succes => {
-				this._tableService.deleteTableByNumber(this.tableNumberDelete).subscribe(
-					success=> {						
+	deleteTable() {
+		if (this.closeModal()) {
+			if (!isNullOrUndefined(this.boxToDelete._id)) {
+				this._tableService.deleteTable(this.boxToDelete._id).subscribe(
+					success => {
 						this.getTables();
-						this.closeModal();
 					},
 					error => {
-						this.showModalError(this.serviceErrorTitle, error.error.message);
+						if (error.status === CONFLICT) {
+							this.showModalCancel(this.cancelTemplate, error.error.message)
+						}
+						else {
+							this.showModalError(this.serviceErrorTitle, error.error.message);
+						}
 					}
-				)
+				);
+			} else {
+				//Si el id de la box es null quiere decir que recien se agrega al array de boxes y addedTables
+				//Todavia no se guardo la nueva mesa en la base de datos, por lo que debe borrarse de los arrays
+				//this.boxes y this.addedTables
+				let boxIndex = this.boxes.indexOf(this.boxToDelete);
+				if (boxIndex !== -1) {
+					this.boxes.splice(boxIndex, 1);
+				}
+				//creo la tabla para poder hacer el indexOf en el array addedTables
+				let addedTable = this.createTable(this.boxToDelete);
+				let tableIndex = this._tableService.addedTables.indexOf(addedTable);
+				if (tableIndex !== -1) {
+					this._tableService.addedTables.splice(tableIndex, 1);
+				}
+			}
+		}
+	}
+
+	showModalCancel(template: TemplateRef<any>, modalMessage: string) {
+		this.modalRef = this.modalService.show(template, { backdrop: true });
+		this.modalCancelTitle = "Eliminar Mesa";
+		this.modalCancelMessage = modalMessage;
+	}
+
+	delete() {
+		this._tableService.unSetAndDeleteTable(this.boxToDelete.id).subscribe(
+			succes => {
+				this.getTables();
+				this.closeModal();
 			},
 			error => {
 				this.showModalError(this.serviceErrorTitle, error.error.message);
 			}
 		)
 	}
-	
+
 	getTables() {
-		console.log("gettables")
 		this._tableService.getAll().subscribe(
 			allTables => {
-				console.log("alltables")
 				this.tablesTotal = allTables;
 				this._tableService.getTablesBySection(this._route.snapshot.params['id']).subscribe(
 					sectionTables => {
-						console.log("sectiontables")
 						this.tablesNow = sectionTables;
 						this._setDashConfig();
 					}
@@ -340,15 +363,15 @@ export class TableListComponent implements OnInit{
 		)
 	}
 
-	showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
-    this.modalErrorTittle = errorTittleReceived;
-    this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
-  }
+	showModalError(errorTittleReceived: string, errorMessageReceived: string) {
+		this.modalErrorTittle = errorTittleReceived;
+		this.modalErrorMessage = errorMessageReceived;
+		this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
+	}
 
-	closeModal(){
-        this.modalRef.hide();
-        this.modalRef = null;
-        return true;        
+	closeModal() {
+		this.modalRef.hide();
+		this.modalRef = null;
+		return true;
 	}
 }

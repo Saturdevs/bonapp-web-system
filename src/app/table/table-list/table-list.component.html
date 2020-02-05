@@ -3,10 +3,7 @@
 </ng-template>
 
 <ng-template #deleteTemplate>
-  <app-delete-template 
-    [modalTitle]="modalDeleteTitle" 
-    [modalMessage]="modalDeleteMessage" 
-    (delete)="deleteTable()" 
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteTable()"
     (close)="closeModal()">
   </app-delete-template>
 </ng-template>
@@ -25,37 +22,40 @@
 <!-- Grid Tables -->
 
 <div class="row">
-<div class="container-fluid">  
-  <div class="rounded z-depth-2 blue-grey lighten-4 fix" [ngGrid]="gridConfig">
-    <div *ngFor="let box of boxes; let i = index" [(ngGridItem)]="box.config" (onItemChange)="updateItem(i, $event)" (onResize)="onResize(i, $event)" (onDrag)="onDrag(i, $event)">
-      <div class="handle z-depth-3 card accent-4 text-center hoverable" (click)="showOpenOrderModal(openNewOrderTemplate, box.id)" 
-          [class.green]="box.status === 'Libre'" 
-          [class.red]="box.status === 'Ocupada'" 
-          [class.yellow]="box.status === 'Comandada'" 
-          [class.blue]="box.status === 'Reservada'"> 
-      <div class="text-right customCloseCursor" style="position: static;"  *ngIf = "settingsActive === true" 
-           (click)="showDeleteModal(deleteTemplate, box.id)">
-        <span aria-hidden="true" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1">&times;</span>
-      </div>
-        <div class="card-body child">
-          <p class="white-text mb-0">{{box.id}}</p>
+  <div class="container-fluid">
+    <div class="rounded z-depth-2 blue-grey lighten-4 fix" [ngGrid]="gridConfig">
+      <div *ngFor="let box of boxes; let i = index" [(ngGridItem)]="box.config"
+        (onChangeStop)="onChangeStop(box, $event)">
+        <div class="handle z-depth-3 card accent-4 text-center hoverable"
+          (click)="showOpenOrderModal(openNewOrderTemplate, box.id)" [class.green]="box.status === 'Libre'"
+          [class.red]="box.status === 'Ocupada'" [class.yellow]="box.status === 'Comandada'"
+          [class.blue]="box.status === 'Reservada'">
+          <div class="text-right customCloseCursor" style="position: static;" *ngIf="settingsActive === true"
+            (click)="showDeleteModal(deleteTemplate, box)">
+            <span aria-hidden="true" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1">&times;</span>
+          </div>
+          <div class="card-body child">
+            <p class="white-text mb-0">{{box.id}}</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
 <!-- Configuration Buttons -->
 
-<div class="fixed-action-btn" style="bottom: 45px; right: 24px;" *ngIf = "settingsActive === true" (mouseleave)="fixed.toggle()">
+<div class="fixed-action-btn" style="bottom: 45px; right: 24px;" *ngIf="settingsActive === true"
+  (mouseleave)="fixed.toggle()">
 
-    <a class="btn-floating btn-large blue waves-light" mdbRippleRadius (mouseenter)="fixed.toggle()">
-        <i class="fa fa-cog"></i>
-    </a>
+  <a class="btn-floating btn-large blue waves-light" mdbRippleRadius (mouseenter)="fixed.toggle()">
+    <i class="fa fa-cog"></i>
+  </a>
 
-    <div class="fixed_collapse" mdbCollapse="isCollapsed" #fixed="bs-collapse">
-        <a class="btn-floating yellow darken-1 waves-light" (click)="addBox()" mdbRippleRadius><i class="fa fa-plus"></i></a>
-        <a class="btn-floating green darken-1 waves-light" (click)="saveChanges()" mdbRippleRadius><i class="fa fa-save"></i></a>
-    </div>
+  <div class="fixed_collapse" mdbCollapse="isCollapsed" #fixed="bs-collapse">
+    <a class="btn-floating yellow darken-1 waves-light" (click)="addBox()" mdbRippleRadius><i
+        class="fa fa-plus"></i></a>
+    <a class="btn-floating green darken-1 waves-light" (click)="saveChanges()" mdbRippleRadius><i
+        class="fa fa-save"></i></a>
+  </div>
 
 </div>

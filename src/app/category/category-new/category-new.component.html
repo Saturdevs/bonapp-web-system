@@ -72,16 +72,22 @@
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="form.invalid || hasMenu || validPicture === ''" type="submit" value="Guardar" class="special"
-                (click)="saveCategory()" /></li>
-            <li><input type="button" value="Cancelar" (click)="showModalCancel(cancelTemplate)" /></li>
+            <li><input [disabled]="form.invalid || hasMenu || validPicture === ''" type="submit" value="Guardar"
+                class="special" (click)="saveCategory()" /></li>
+            
+			<li>
+			<div class="boton-cancelar">
+			<input type="button" value="Cancelar" (click)="showModalCancel(cancelTemplate)" />
+			</div>
+			</li>
+			
           </ul>
         </div>
       </form>
     </div>
 
     <div class="col-md-6">
-      <img [src]="newCategoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'" />
+      <img [src]="newCategoryPictureData" onerror="this.src='../../../assets/img/no-image.png'" />
     </div>
   </div>
 </div>

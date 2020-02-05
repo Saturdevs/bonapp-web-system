@@ -21,7 +21,6 @@ import { CashRegisterNewComponent } from '../cash-register/cash-register-new/cas
 import { CashRegisterEditComponent } from '../cash-register/cash-register-edit/cash-register-edit.component';
 import { SelectItemComponent } from '../select-item/select-item.component';
 
-import { TableListGuardService } from '../table/table-list/table-list-guard.service';
 import { TableListResolverService } from '../table/table-list/table-list-resolver.service';
 import { TableAllResolverService } from '../table/table-list/table-all-resolver.service';
 import { SectionListResolverService } from '../section/section-list/section-list-resolver.service';
@@ -32,6 +31,7 @@ import { PaymentTypeResolverService } from '../payment-type/payment-type-list/pa
 import { PaymentTypeEditResolverService } from '../payment-type/payment-type-edit/payment-type-edit-resolver.service';
 import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
 import { CashRegisterEditResolverService } from '../cash-register/cash-register-edit/cash-register-edit-resolver.service';
+import { SectionListGuardService } from '../section/section-list/section-list-guard.service';
 
 
 @NgModule({
@@ -145,6 +145,7 @@ import { CashRegisterEditResolverService } from '../cash-register/cash-register-
           {
             path: 'section',
             component: SectionListComponent, 
+            canDeactivate: [SectionListGuardService],
             children: [
               {
                 path: 'tables/:id',
