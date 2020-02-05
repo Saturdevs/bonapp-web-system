@@ -9,20 +9,21 @@
   </app-error-template>
 </ng-template>
 
+<ng-template #confirmDisableCategoryAndProductsTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" 
+      (handleOkButton)="disableCategoryAndProducts(category._id)" (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
 <!-- Form -->
 <div *ngIf='category'>
   <header class="major" align="center">
     <h2>Editando: {{categoryNameModified}}</h2>
   </header>
 
-  <div class="row mb-2 mt-2 ml-2" *ngIf="!canEdit">
-    <span class="red-label">{{ noModifyMessage }}</span>
-  </div>
-
   <div class="posts">
     <article>
-      <a href="#" class="image "><img class="customImage" [src]="categoryPictureData"
-          onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
+      <a href="#" class="image "><img class="customImage" [src]="categoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
     </article>
     <article>
 
@@ -30,9 +31,8 @@
 
         <div class="form-group">
           <label>Nombre Categoría:</label>
-          <input #categoryName="ngModel" required type="text" class="form-control"
-            [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)"
-            name="categoryName" id="categoryName" [(ngModel)]="category.name" [disabled]="!canEdit">
+          <input #categoryName="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)"
+            name="categoryName" id="categoryName" [(ngModel)]="category.name">
         </div>
 
         <div *ngIf="categoryName.invalid && (categoryName.dirty || categoryName.touched)" class="alert alert-danger">
@@ -44,8 +44,7 @@
           <div class="select-wrapper">
             <select #categoryMenu="ngModel" required type="text" class="form-control browser-default && menuTouched"
               [class.is-invalid]="hasCategory" name="categoryMenu" (blur)="validateCategory(categoryMenu.value)"
-              (change)="validateCategory(categoryMenu.value)" id="categoryMenu" [(ngModel)]="category.menuId"
-              [disabled]="!canEdit">
+              (change)="validateCategory(categoryMenu.value)" id="categoryMenu" [(ngModel)]="category.menuId">
               <option value="default">Seleccione la carta...</option>
               <option [value]="menu._id" *ngFor='let menu of menus'>{{menu.name}}</option>
             </select>
@@ -56,8 +55,16 @@
           El Menu de la Categoría es requerido.
         </div>
 
-        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'"
-          [disabled]="canEdit === false">
+        <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+          <div class="row pl-2">
+            <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+              <mdb-checkbox name="categoryAvailable" [(ngModel)]="category.available"> {{ checkboxAvailableText }}
+              </mdb-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'category'">
         </app-file-input>
         <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
           La imagen de la categoria es requerida.
@@ -65,9 +72,9 @@
 
         <div class="12u$">
           <ul class="actions" align="center">
-            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special"
-                (click)="updateCategory(category)" [disabled]="!canEdit" /></li>
-            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
+            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special" 
+                (click)="updateCategory(category)" /></li>
+            <li><input (click)="showModalCancel(cancelTemplate, cancelMessage, cancelTitle)" type="button" value="Cancel" /></li>
           </ul>
         </div>
       </form>

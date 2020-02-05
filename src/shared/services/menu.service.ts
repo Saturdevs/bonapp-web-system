@@ -24,6 +24,12 @@ export class MenuService {
       .catch(this.handleError);
   }
 
+  getAllAvailables(): Observable<Menu[]> {
+    return this.apiService.get('/menu/availables')
+      .map(data => data.menus)
+      .catch(this.handleError);
+  }
+
   updateMenu(menu) {
     return this.apiService.put(`/menu/${menu._id}`, menu)
       .map(data => data.menu)
@@ -54,8 +60,15 @@ export class MenuService {
       .catch(this.handleError);
   }
 
+  disableMenuAndCategoriesAndProducts(idMenu) {
+    return this.apiService.put(`/menu/disable/${idMenu}`)
+    .map(data => data.message)
+    .catch(this.handleError);
+  }
+
   private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);
   }
+  
 }

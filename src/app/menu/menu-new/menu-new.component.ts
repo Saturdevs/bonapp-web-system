@@ -37,6 +37,7 @@ export class MenuNewComponent implements OnInit {
   newMenu: Menu;
   validPicture: string = '';
   pictureTouched: boolean;
+  checkboxAvailableText: String = 'Disponible';
 
    private sub: Subscription;
 

@@ -21,10 +21,6 @@
     <h2>Editando: {{productNameModified}}</h2>
   </header>
 
-  <div class="row mb-2 mt-2 ml-2" *ngIf="!canEdit">
-    <span class="red-label">{{ noModifyMessage }}</span>
-  </div>
-
   <div>
     <form method="post" novalidate [formGroup]="productForm">
       <div class="row">
@@ -103,7 +99,7 @@
             El precio del Producto es requerido.
           </div>
 
-          <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'" [disabled]="!canEdit">
+          <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'">
           </app-file-input>
           <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
             La imagen del producto es requerida.

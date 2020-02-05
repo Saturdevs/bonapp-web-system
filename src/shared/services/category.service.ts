@@ -28,6 +28,12 @@ export class CategoryService {
       .catch(this.handleError);
   }
 
+  getAllAvailables(): Observable<Category[]> {
+    return this.apiService.get('/category/availables')
+      .map(data => data.categories)
+      .catch(this.handleError);
+  }
+
   getCategory(idCategory): Observable<Category> {
     return this.apiService.get(`/category/${idCategory}`)
       .map(data => data.category);
@@ -35,6 +41,12 @@ export class CategoryService {
 
   getCategoriesByMenu(idMenu) {
     return this.apiService.get(`/category/parent/${idMenu}`)
+      .map(data => data.categories)
+      .catch(this.handleError);
+  }
+
+  getCategoriesAvailablesByMenu(idMenu) {
+    return this.apiService.get(`/category/availables/parent/${idMenu}`)
       .map(data => data.categories)
       .catch(this.handleError);
   }
@@ -61,6 +73,12 @@ export class CategoryService {
     return this.apiService.get(`/category/hasOneProduct/${idCategory}`)
       .map(data => data.product)
       .catch(this.handleError);
+  }
+
+  disableCategoryAndProducts(idCategory) {
+    return this.apiService.put(`/category/disable/${idCategory}`)
+    .map(data => data.message)
+    .catch(this.handleError);
   }
 
   private handleError(err: HttpErrorResponse) {

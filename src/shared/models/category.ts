@@ -7,4 +7,5 @@ export class Category {
   name:  string;
   picture: string;
   menu: MenuCategory;
+  available: Boolean;
 }

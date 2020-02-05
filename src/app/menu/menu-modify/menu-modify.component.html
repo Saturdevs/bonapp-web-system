@@ -9,15 +9,17 @@
   </app-error-template>
 </ng-template>
 
+<ng-template #confirmDisableMenuAndCategoriesAndProductsTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" 
+      (handleOkButton)="disableMenuAndCategoriesAndProducts(menu._id)" (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
 <!-- Form -->
 <div *ngIf='menu'>
   <header class="major" align="center">
     <h2>Editando: {{menuNameModified}}</h2>
   </header>
-
-  <div class="row mb-2 mt-2 ml-2" *ngIf="!canEdit">
-    <span class="red-label">{{ noModifyMessage }}</span>
-  </div>
 
   <div class="posts">
     <article>
@@ -32,14 +34,23 @@
           <label>Nombre Carta:</label>
           <input #menuName="ngModel" required type="text" class="form-control"
             [class.is-invalid]="menuName.invalid && (menuName.dirty || menuName.touched)" name="menuName" id="menuName"
-            [(ngModel)]="menu.name" [disabled]="!canEdit">
+            [(ngModel)]="menu.name">
         </div>
 
         <div *ngIf="menuName.invalid && (menuName.dirty || menuName.touched)" class="alert alert-danger">
           El nombre de la carta es requerido.
         </div>
 
-        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'" [disabled]="!canEdit">
+        <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+          <div class="row pl-2">
+            <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+              <mdb-checkbox name="menuAvailable" [(ngModel)]="menu.available"> {{ checkboxAvailableText }}
+              </mdb-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'">
         </app-file-input>
         <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
           La imagen de la carta es requerida.
@@ -48,8 +59,8 @@
         <div class="12u$">
           <ul class="actions" align="center">
             <li><input [disabled]="form.invalid" type="submit" value="Aceptar" class="special"
-                (click)="updateMenu(menu)" [disabled]="!canEdit"/></li>
-            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
+                (click)="updateMenu(menu)"/></li>
+            <li><input (click)="showModalCancel(cancelTemplate, cancelMessage, cancelTitle)" type="button" value="Cancel" /></li>
           </ul>
         </div>
 

@@ -16,7 +16,6 @@ import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { FileInputComponent } from '../../file-input/file-input.component';
 import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-product-modify',
@@ -28,7 +27,6 @@ export class ProductModifyComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
-  private noModifyMessage = "Algunos datos de este producto no pueden ser modificados debido a que ya ha sido adicionado en ventas.";
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalCancelTitle: string;
@@ -49,7 +47,6 @@ export class ProductModifyComponent implements OnInit {
   path: string = '../../../assets/img/products/';
   checkboxAvailableText: String = 'Disponible';
   order: Order = new Order();
-  canEdit: Boolean = true;
   duplicatedSizesArray: string[] = [];
   defaultSize: Number = -1;
   defaultPrice: Number = 0;
@@ -80,16 +77,12 @@ export class ProductModifyComponent implements OnInit {
   ngOnInit() {
     this.order = this._route.snapshot.data['order'];
     this.sizesArray = this._route.snapshot.data['sizes'];
-    if (!isNullOrUndefined(this.order)) {
-      this.canEdit = false;
-    }
-
     this.productForm = this.formBuilder.group({
-      code: [{ value: '', disabled: !this.canEdit }, Validators.required],
-      name: [{ value: '', disabled: !this.canEdit }, Validators.required],
-      category: [{ value: '', disabled: !this.canEdit }, ComboValidators.hasValue],
+      code: ['', Validators.required],
+      name: ['', Validators.required],
+      category: ['', ComboValidators.hasValue],
       pictures: ['', Validators.required],
-      description: [{ value: '', disabled: !this.canEdit }, Validators.required],
+      description: ['', Validators.required],
       price: ['', Validators.required],
       sizes: this.formBuilder.array([]),
       options: this.formBuilder.array([]),
