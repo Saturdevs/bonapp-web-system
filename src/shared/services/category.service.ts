@@ -69,12 +69,6 @@ export class CategoryService {
       .catch(this.handleError);
   }
 
-  hasAtLeastOneProduct(idCategory) {
-    return this.apiService.get(`/category/hasOneProduct/${idCategory}`)
-      .map(data => data.product)
-      .catch(this.handleError);
-  }
-
   disableCategoryAndProducts(idCategory) {
     return this.apiService.put(`/category/disable/${idCategory}`)
     .map(data => data.message)

@@ -7,8 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import {
   Product,
   Category,
-  ProductService,
-  Order,
+  ProductService,  
   Size
 } from '../../../shared';
 
@@ -46,7 +45,6 @@ export class ProductModifyComponent implements OnInit {
   private sub: Subscription;
   path: string = '../../../assets/img/products/';
   checkboxAvailableText: String = 'Disponible';
-  order: Order = new Order();
   duplicatedSizesArray: string[] = [];
   defaultSize: Number = -1;
   defaultPrice: Number = 0;
@@ -74,8 +72,7 @@ export class ProductModifyComponent implements OnInit {
     private formBuilder: FormBuilder,
     private modalService: BsModalService) { }
 
-  ngOnInit() {
-    this.order = this._route.snapshot.data['order'];
+  ngOnInit() {    
     this.sizesArray = this._route.snapshot.data['sizes'];
     this.productForm = this.formBuilder.group({
       code: ['', Validators.required],

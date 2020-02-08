@@ -54,12 +54,6 @@ export class MenuService {
       .catch(this.handleError)
   }
 
-  hasAtLeastOneCategory(idMenu) {
-    return this.apiService.get(`/menu/hasOneCategory/${idMenu}`)
-      .map(data => data.category)
-      .catch(this.handleError);
-  }
-
   disableMenuAndCategoriesAndProducts(idMenu) {
     return this.apiService.put(`/menu/disable/${idMenu}`)
     .map(data => data.message)
