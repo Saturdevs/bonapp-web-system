@@ -23,6 +23,8 @@ import { ProductModifyResolverService } from '../product/product-modify/product-
 import { ProductEditGuardService } from '../product/product-modify/product-modify-guard.service';
 import { ProductNewGuardService } from '../product/product-new/product-new-guard.service';
 import { SizeResolverService } from '../size/size-list/size-resolver.service';
+import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
+import { CategoryAvailablesResolverService } from '../category/resolvers/category-availables-resolver.service';
 
 @NgModule({
   imports: [
@@ -67,7 +69,7 @@ import { SizeResolverService } from '../size/size-list/size-resolver.service';
                 path: 'newCategory',
                 component: CategoryNewComponent,
                 resolve: {
-                  menus: MenuResolverService
+                  menus: MenuAvailablesResolverService
                 }
               },
               {
@@ -97,7 +99,7 @@ import { SizeResolverService } from '../size/size-list/size-resolver.service';
                 component: ProductNewComponent,
                 resolve: { 
                   sizes: SizeResolverService, 
-                  categories: CategoryResolverService 
+                  categories: CategoryAvailablesResolverService 
                 }
               },
               {
