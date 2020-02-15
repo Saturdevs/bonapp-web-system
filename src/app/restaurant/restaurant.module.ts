@@ -22,10 +22,9 @@ import { ProductResolverService } from '../product/product-list/product-resolver
 import { ProductModifyResolverService } from '../product/product-modify/product-modify-resolver.service';
 import { ProductEditGuardService } from '../product/product-modify/product-modify-guard.service';
 import { ProductNewGuardService } from '../product/product-new/product-new-guard.service';
-import { CategoryHasproductResolverService } from '../category/resolvers/category-hasproduct-resolver.service';
-import { MenuHascategoryResolverService } from '../menu/resolvers/menu-hascategory-resolver.service';
 import { SizeResolverService } from '../size/size-list/size-resolver.service';
-import { ProductOrderResolverService } from '../product/resolvers/product-order-resolver.service';
+import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
+import { CategoryAvailablesResolverService } from '../category/resolvers/category-availables-resolver.service';
 
 @NgModule({
   imports: [
@@ -53,8 +52,7 @@ import { ProductOrderResolverService } from '../product/resolvers/product-order-
                 path: 'edit/:id',
                 component: MenuModifyComponent,
                 resolve: {
-                  menu: MenuModifyResolverService,
-                  category: MenuHascategoryResolverService
+                  menu: MenuModifyResolverService                  
                 }
               }
             ]
@@ -71,7 +69,7 @@ import { ProductOrderResolverService } from '../product/resolvers/product-order-
                 path: 'newCategory',
                 component: CategoryNewComponent,
                 resolve: {
-                  menus: MenuResolverService
+                  menus: MenuAvailablesResolverService
                 }
               },
               {
@@ -79,8 +77,7 @@ import { ProductOrderResolverService } from '../product/resolvers/product-order-
                 component: CategoryModifyComponent,
                 resolve: {
                   category: CategoryModifyResolverService,
-                  menus: MenuResolverService,
-                  product: CategoryHasproductResolverService
+                  menus: MenuResolverService
                 }
               }
             ]
@@ -102,7 +99,7 @@ import { ProductOrderResolverService } from '../product/resolvers/product-order-
                 component: ProductNewComponent,
                 resolve: { 
                   sizes: SizeResolverService, 
-                  categories: CategoryResolverService 
+                  categories: CategoryAvailablesResolverService 
                 }
               },
               {
@@ -112,8 +109,7 @@ import { ProductOrderResolverService } from '../product/resolvers/product-order-
                 resolve: { 
                   product: ProductModifyResolverService, 
                   sizes: SizeResolverService, 
-                  categories: CategoryResolverService,
-                  order: ProductOrderResolverService
+                  categories: CategoryResolverService
                 }
               }
             ]

@@ -66,12 +66,6 @@ export class ProductService {
       .catch(this.handleError);
   }
 
-  existInAnOrder(idProduct) {
-    return this.apiService.get(`/product/existInAnOrder/${idProduct}`)
-      .map(data => data.order)
-      .catch(this.handleError);
-  }
-
   private handleError(err: HttpErrorResponse) {
     console.log(err.message);
     return Observable.throw(err);

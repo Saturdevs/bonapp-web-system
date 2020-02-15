@@ -9,8 +9,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
   Category,
   Menu,
-  CategoryService,
-  Product
+  CategoryService  
 } from '../../../shared/index';
 
 import { FileInputComponent } from '../../file-input/file-input.component';
@@ -52,8 +51,7 @@ export class CategoryModifyComponent implements OnInit {
   pictureTouched: boolean;
   validPicture: string;
   menuTouched: boolean = false;
-  path: string = '../../../assets/img/categories/';
-  product: Product;
+  path: string = '../../../assets/img/categories/';  
   private categoryPictureData: string;
   checkboxAvailableText: String = 'Disponible';
 
@@ -69,7 +67,6 @@ export class CategoryModifyComponent implements OnInit {
     this.categoryMenuModified = this.category.menu.name;
     this.CategoryPicModified = this.category.picture;
     this.menus = this._route.snapshot.data['menus'];
-    this.product = this._route.snapshot.data['product'];
     this.categoryPictureData = this.category.picture;
   }
 

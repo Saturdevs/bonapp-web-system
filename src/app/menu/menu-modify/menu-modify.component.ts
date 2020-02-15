@@ -8,8 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import {
   Menu,
-  MenuService,
-  Category
+  MenuService  
 } from '../../../shared';
 
 import { FileInputComponent } from '../../file-input/file-input.component';
@@ -46,8 +45,7 @@ export class MenuModifyComponent implements OnInit {
   private sub: Subscription;
   pictureTouched: boolean;
   validPicture: string;
-  path: string = '../../../assets/img/menus/';
-  category: Category;
+  path: string = '../../../assets/img/menus/';  
   private menuPictureData: string;
   checkboxAvailableText: String = 'Disponible';
 
@@ -58,7 +56,6 @@ export class MenuModifyComponent implements OnInit {
 
   ngOnInit(): void {
     this.menu = this._route.snapshot.data['menu'];
-    this.category = this._route.snapshot.data['category'];
     this.path = this.path + this.menu.picture;
     this.menuPictureData = this.menu.picture;
   }

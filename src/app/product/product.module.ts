@@ -13,7 +13,6 @@ import { ProductNewGuardService } from './product-new/product-new-guard.service'
 import { ProductResolverService } from './product-list/product-resolver.service';
 import { ProductModifyResolverService } from './product-modify/product-modify-resolver.service';
 import { FileInputModule } from '../file-input/file-input.module';
-import { ProductOrderResolverService } from './resolvers/product-order-resolver.service';
 
 @NgModule({
   imports: [
@@ -33,8 +32,7 @@ import { ProductOrderResolverService } from './resolvers/product-order-resolver.
     ProductNewGuardService,
     ProductEditGuardService,
     ProductModifyResolverService,
-    ProductResolverService,
-    ProductOrderResolverService
+    ProductResolverService
   ]
 })
 export class ProductModule { }
