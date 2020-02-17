@@ -7,4 +7,5 @@ export class Client {
   addressDpto: String;
   enabledTransactions: Boolean;
   balance: number;
+  limitCtaCte: number;
 }
