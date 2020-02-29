@@ -7,9 +7,9 @@ import { startWith, map } from 'rxjs/operators';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import { ModalDirective, MdbAutoCompleterComponent, localDataFactory, MdbOptionComponent } from 'ng-uikit-pro-standard';
-import { 
-  Menu, 
-  CategoryService, 
+import {
+  Menu,
+  CategoryService,
   Category,
   ProductsInUserOrder,
   ProductService,
@@ -24,6 +24,8 @@ import {
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
+import { DailyMenu } from '../../../shared/models/dailyMenu';
+import { DailyMenuService } from '../../../shared/services/daily-menu.service';
 
 @Component({
   selector: 'app-order-new',
@@ -34,30 +36,32 @@ export class OrderNewComponent implements OnInit {
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
- 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
-  @ViewChild('fluid') public fluid:ModalDirective;
-  @ViewChild('optionsAndSizesTemplate') optionsAndSizesTemplate:TemplateRef<any>;
-  @ViewChild(MdbAutoCompleterComponent) completer: MdbAutoCompleterComponent;
- 
-  constructor(private _router: Router,
-              private _route: ActivatedRoute,
-              private productService: ProductService,
-              private orderService : OrderService,
-              private modalService: BsModalService,
-              private categoryService : CategoryService) { }
 
-  pageTitle: String = 'Nuevo Pedido'; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('fluid') public fluid: ModalDirective;
+  @ViewChild('optionsAndSizesTemplate') optionsAndSizesTemplate: TemplateRef<any>;
+  @ViewChild(MdbAutoCompleterComponent) completer: MdbAutoCompleterComponent;
+
+  constructor(private _router: Router,
+    private _route: ActivatedRoute,
+    private productService: ProductService,
+    private orderService: OrderService,
+    private modalService: BsModalService,
+    private categoryService: CategoryService,
+    private dailyMenuService: DailyMenuService) { }
+
+  pageTitle: String = 'Nuevo Pedido';
   noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
-  noProductsAvailablesText: string = 'No hay productos disponibles para la categoria seleccionada.';  
+  noProductsAvailablesText: string = 'No hay productos disponibles para la categoria seleccionada.';
   prodObservation: string = 'Agregue una observación aquí...';
   sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños';
   categorySelected: boolean = false;
   /*Para mostrar un mensaje diferente si no selecciono categoria o si no hay productos disponibles. */
-  menus : Menu[];
-  categories : Category[];
+  menus: Menu[];
+  categories: Category[];
+  dailyMenus: DailyMenu[];
   /** Para mostrar los productos de la categoria seleccionada */
-  products: Product[]; 
+  products: Product[];
   /** Para mostrar los productos de todas las categorias */
   allProducts: Product[]
   filteredProducts: Product[];
@@ -74,35 +78,41 @@ export class OrderNewComponent implements OnInit {
   /** Monto total a confirmar de los productos en array preOrderProducts. */
   totalToConfirm: number;
   /** Monto total de los productos ya confirmados en la orden. */
-  total: number;  
+  total: number;
   /**Booleano que indica si el pedido tiene algun descuento. */
   thereIsDiscount: Boolean;
   /**String de búsqueda mdb-completer. */
   searchStr: string;
   /**Producto a eliminar del array de productos del pedido. */
-  productToRemoveFromOrder:ProductsInUserOrder;
+  productToRemoveFromOrder: ProductsInUserOrder;
   /**Producto para mostrar las opciones y los tamanos. */
-  productToFindSizesAndOptions:Product;
+  productToFindSizesAndOptions: Product;
   /**Motivo para eliminar el producto del pedido. */
   deletedReason: string;
   /**Cantidad del producto seleccionado por la lista. */
-  qtyProd: number = 1;   
+  qtyProd: number = 1;
   /**Productos ya almacenados en el pedido */
-  productsInOrder: Array<ProductsInUserOrder> = [];  
+  productsInOrder: Array<ProductsInUserOrder> = [];
   /**Cajas registradoras registradas en la bd*/
   cashRegisters: Array<CashRegister> = [];
   /**Tipos de pago registrados en la bd*/
   paymentTypes: Array<PaymentType> = [];
   /** Configuracion de la modal de cierre de mesa*/
   config = {
-		backdrop: true,
+    backdrop: true,
   };
+  /**Variable para controlar si se devuelve el stock de un producto al eliminarlo de una orden */
+  returnStockValue: Boolean = false;
   results: Product[];
   searchText = new Subject();
   /** Variables para setear la clase de los menues dinamicamente segun el que esta seleccionado*/
-  private activeMenu : string = '';
+  private activeMenu: string = '';
   /** Variables para setear la clase de las categorias dinamicamente segun la que esta seleccionada*/
   private activeCategory: string = '';
+  /** Label de dailyMenus */
+  dailyMenusLabel = "Menu del Dia";
+  /** Variable para verificar si se esta en dailyMenu*/
+  activeDailyMenu = false;
 
   ngOnInit() {
     this.order = this._route.snapshot.data['order'];
@@ -110,9 +120,10 @@ export class OrderNewComponent implements OnInit {
     this.products = [];
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
+    this.dailyMenus = this._route.snapshot.data['dailyMenus'];
     this.categories = [];
     this.cashRegisters = this._route.snapshot.data['cashRegisters'];
-    this.paymentTypes = this._route.snapshot.data['paymentTypes'];    
+    this.paymentTypes = this._route.snapshot.data['paymentTypes'];
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.getProducts();
@@ -126,37 +137,38 @@ export class OrderNewComponent implements OnInit {
   /**Devuelve las categorías para el menu pasado como parámetro almacenadas en el sistema
    * @param menuId id del menu para el que se quieren obtener las categorías
    */
-  getCategories(menuId){
+  getCategories(menuId) {
     this.categories = [];
     this.products = this.filteredProducts = [];
     this.categoryService.getCategoriesByMenu(menuId)
       .subscribe(categories => {
         this.categories = categories;
       },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      });
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        });
   }
 
   /**
    * Actualiza el pedido actual
    * @param order pedido a actualizar en la base de datos
    */
-  updateProductsOrder(data:any):void {
+  updateProductsOrder(data: any): void {
     this.orderService.updateProductsOrder(data).subscribe(
       orderReturned => {
+        console.log(orderReturned);
         this.order = orderReturned;
         this.totalToConfirm = 0;
         this.preOrderProducts = [];
       },
-      error => {        
+      error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
-  
-  showModalError(errorTitleReceived: string, errorMessageReceived: string) { 
-    this.modalRef = this.modalService.show(ErrorTemplateComponent, {backdrop: true});
+
+  showModalError(errorTitleReceived: string, errorMessageReceived: string) {
+    this.modalRef = this.modalService.show(ErrorTemplateComponent, { backdrop: true });
     this.modalRef.content.errorTitle = errorTitleReceived;
     this.modalRef.content.errorMessage = errorMessageReceived;
   }
@@ -170,10 +182,10 @@ export class OrderNewComponent implements OnInit {
       .subscribe(products => {
         this.products = products;
       },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
   }
 
   getProductsAvailablesByCategory(categoryId) {
@@ -182,47 +194,96 @@ export class OrderNewComponent implements OnInit {
       .subscribe(products => {
         this.products = products;
       },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
   }
-  
+
   /** Obtiene todos los productos de todas las categorias */
   getProducts() {
     this.productService.getAll()
       .subscribe(products => {
         this.allProducts = products;
       },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
   }
 
   /**Agrega el producto seleccionado en la lista al pedido. Primero busca el producto en el array filteredProducts por su nombre*/
-  addProductToPreOrderFromList():void {    
+  addProductToPreOrderFromList(): void {
     let selectedProd = this.completer.getSelectedItem();
-    if(selectedProd.text !== 'undefined'){
+    if (selectedProd.text !== 'undefined') {
       let product = new Product();
       product = this.allProducts.find(p => p.name === selectedProd.text);
       this.validateSizesAndOptions(product, this.qtyProd);
       this.completer.getSelectedItem().text = 'undefined';
     }
   }
-  
+
   /**Muestra la modal de tamanos y opciones si corresponde, si no agrega el producto a la preorden
    * @param product producto seleccionado para agregar al array de preOrderProducts y verificar los tamanos y opciones
    * @param quantity cantidad del producto seleccionado.
    */
-  validateSizesAndOptions(product: Product, quantity:number){
-    if(product.sizes.length > 0 || product.options.length > 0){
+  validateSizesAndOptions(product: Product, quantity: number) {
+    if (product.sizes.length > 0 || product.options.length > 0) {
       this.showOptionsAndSizes(product)
     }
-    else{
+    else {
       let selectedSize = null;
       let selectedOptions = null;
-      this.addProductToPreOrder(product,quantity,selectedSize,selectedOptions);
+      this.addProductToPreOrder(product, quantity, selectedSize, selectedOptions);
+    }
+  }
+
+  /** Agrega un menu del dia a la pre orden actual
+   * @param dailyMenu menu del dia a agregar a la orden
+   * @param quantity cantidad del menuDelDia seleccionado.   * 
+   */
+  addDailyMenuToPreOrder(dailyMenu: DailyMenu, quantity: number) {
+    if (!isNullOrUndefined(dailyMenu)) {
+      let currentProduct = new ProductsInUserOrder();
+      let productInPreOrder = new ProductsInUserOrder();
+
+      //Creo el producto a buscar en el array de preOrderProducts.
+      currentProduct.dailyMenuId = dailyMenu._id;
+      currentProduct.product = null;
+      currentProduct.name = dailyMenu.name;
+      currentProduct.observations = '';
+      currentProduct.options = null;
+      currentProduct.price = dailyMenu.price;
+      currentProduct.quantity = quantity;
+      currentProduct.size = null;
+      currentProduct.deleted = false;
+
+      //Producto en el array preOrderProducts si existe.
+      productInPreOrder = this.preOrderProducts.find(x => this.compareProducts(x, currentProduct));
+      //Si el producto ya esta en los productos pre seleccionados aumento la cantidad. Sino hago el push al array
+      if (!isNullOrUndefined(productInPreOrder)) {
+        //Si el producto ya existe en el pre pedido se suma la cantidad nueva.    
+        productInPreOrder.quantity += quantity;
+        this.updateTotalToConfirm(productInPreOrder.price, quantity);
+      }
+      else {
+        //Si el producto no existe en el pre pedido se hace el push al array.
+        this.preOrderProducts.push(currentProduct);
+        this.updateTotalToConfirm(currentProduct.price, quantity);
+      }
+
+      dailyMenu.products.forEach(productId => {
+        this.productService.getProduct(productId)
+          .subscribe(product => {
+            if (product.stockControl) {
+              product.stock.current--;
+              this.productService.updateProduct(product)
+                .subscribe(resp => {
+                  console.log(resp);
+                });
+            }
+          });
+      });
     }
   }
 
@@ -231,30 +292,29 @@ export class OrderNewComponent implements OnInit {
    * @param quantity cantidad del producto seleccionado. Cuando el mismo se elige de la lista será la cantidad seleccionada, si se 
    *                 selecciona haciendo click sobre el nombre del producto es 1
    */
-  addProductToPreOrder(product:Product, quantity:number, selectedSizeId: any, selectedOptions: Array<any>):void {  
-    if (!isNullOrUndefined(product))
-    {
+  addProductToPreOrder(product: Product, quantity: number, selectedSizeId: any, selectedOptions: Array<any>): void {
+    if (!isNullOrUndefined(product)) {
       let productInPreOrder = new ProductsInUserOrder();
       let currentProduct = new ProductsInUserOrder();
       let size: any = {};
       let options: Array<any> = [];
 
-      if(!isNullOrUndefined(selectedSizeId)){
+      if (!isNullOrUndefined(selectedSizeId)) {
         let selectedSize = product.sizes.find(x => x._id == selectedSizeId);
         //Creo el size con el modelo del backend
         size.price = selectedSize.price;
         size.name = selectedSize.name;
-        product.price = size.price; 
+        product.price = size.price;
       }
-      else{
+      else {
         size = selectedSizeId;
       }
 
-      if(!isNullOrUndefined(selectedOptions) && selectedOptions.length > 0){
+      if (!isNullOrUndefined(selectedOptions) && selectedOptions.length > 0) {
         //Creo las options con el modelo del backend
         selectedOptions.forEach(opt => {
           let currentOption: any = {};
-        
+
           currentOption.name = opt.name;
           currentOption.price = opt.price;
 
@@ -263,7 +323,7 @@ export class OrderNewComponent implements OnInit {
           options.push(currentOption);
         })
       }
-      else{
+      else {
         options = null;
       }
 
@@ -275,22 +335,31 @@ export class OrderNewComponent implements OnInit {
       currentProduct.price = product.price;
       currentProduct.quantity = quantity;
       currentProduct.size = size;
-      currentProduct.deleted = false;      
+      currentProduct.deleted = false;
 
       //Producto en el array preOrderProducts si existe.
-      productInPreOrder = this.preOrderProducts.find(x=> this.compareProducts(x, currentProduct));
+      productInPreOrder = this.preOrderProducts.find(x => this.compareProducts(x, currentProduct));
       //Si el producto ya esta en los productos pre seleccionados aumento la cantidad. Sino hago el push al array
-      if (!isNullOrUndefined(productInPreOrder)) {    
+      if (!isNullOrUndefined(productInPreOrder)) {
         //Si el producto ya existe en el pre pedido se suma la cantidad nueva.    
         productInPreOrder.quantity += quantity;
         this.updateTotalToConfirm(productInPreOrder.price, quantity);
       }
-      else
-      {
+      else {
         //Si el producto no existe en el pre pedido se hace el push al array.
         this.preOrderProducts.push(currentProduct);
         this.updateTotalToConfirm(currentProduct.price, quantity);
-      }      
+      }
+
+      if (product.stockControl) {
+        product.stock.current--;
+
+        this.productService.updateProduct(product)
+          .subscribe(resp => {
+            console.log(resp);
+          });
+      }
+
     }
   }
 
@@ -300,7 +369,7 @@ export class OrderNewComponent implements OnInit {
    * @param product producto para el que se quiere determinar su existencia en el array preOrederProducts
    * @returns true si el producto se encuentra en el array preOrderProducts. false si no se encuentra.
    */
-  compareProducts(prodInPreOrder: ProductsInUserOrder, product: ProductsInUserOrder):boolean {
+  compareProducts(prodInPreOrder: ProductsInUserOrder, product: ProductsInUserOrder): boolean {
     if (isNullOrUndefined(prodInPreOrder.options)) {
       prodInPreOrder.options = null;
     }
@@ -316,42 +385,66 @@ export class OrderNewComponent implements OnInit {
     if (isNullOrUndefined(product.size)) {
       product.size = null;
     }
-    
+
     if (prodInPreOrder.product === product.product &&
-        prodInPreOrder.name === product.name &&
-        prodInPreOrder.observations === product.observations &&
-        prodInPreOrder.options === product.options &&
-        prodInPreOrder.price === product.price &&
-        prodInPreOrder.size === product.size &&
-        prodInPreOrder.deleted === product.deleted) 
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+      prodInPreOrder.name === product.name &&
+      prodInPreOrder.observations === product.observations &&
+      prodInPreOrder.options === product.options &&
+      prodInPreOrder.price === product.price &&
+      prodInPreOrder.size === product.size &&
+      prodInPreOrder.deleted === product.deleted) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   /**Elimina el producto del array preOrderProducts sin importar la cantidad
    * @param productToRemove producto a eliminar del array preOrderProducts
    */
-  removeProductFromPreOrder(productToRemove:any):void {    
-    if (this.preOrderProducts.length === 1)
-    {
+  removeProductFromPreOrder(productToRemove: ProductsInUserOrder): void {
+    if (this.preOrderProducts.length === 1) {
       this.updateTotalToConfirm(this.preOrderProducts[0].price, -this.preOrderProducts[0].quantity);
       this.preOrderProducts = [];
     }
-    else
-    {
+    else {
       let indexOfProd = this.preOrderProducts.indexOf(productToRemove);
       this.preOrderProducts.splice(indexOfProd, 1);
       this.updateTotalToConfirm(productToRemove.price, -productToRemove.quantity);
     }
+
+
+    if (isNullOrUndefined(productToRemove.dailyMenuId)) {
+      if (this.products.find(x => x._id === productToRemove.product).stockControl) {
+        let productToUpdateStock = this.products.find(x => x._id === productToRemove.product);
+        productToUpdateStock.stock.current += productToRemove.quantity;
+
+        this.productService.updateProduct(productToUpdateStock)
+          .subscribe(resp => {
+            console.log(resp);
+          });
+      }
+    }
+    else {
+      let dailyMenu = this.dailyMenus.find(x => x._id == productToRemove.dailyMenuId);
+      dailyMenu.products.forEach(productId => {
+        this.productService.getProduct(productId)
+          .subscribe(product => {
+            if (product.stockControl) {
+              product.stock.current += productToRemove.quantity;
+              this.productService.updateProduct(product)
+                .subscribe(resp => {
+                  console.log(resp);
+                });
+            }
+          });
+      });
+    }
   }
 
   /**Elimina el producto del array de productos del usuario sin importar la cantidad*/
-  deleteProductFromOrder():void {     
+  deleteProductFromOrder(): void {
     this.productToRemoveFromOrder.deleted = true;
     this.productToRemoveFromOrder.deletedReason = this.deletedReason;
     this.deleteProductOrder(this.productToRemoveFromOrder);
@@ -363,8 +456,34 @@ export class OrderNewComponent implements OnInit {
     this.orderService.deleteProductOrder(data).subscribe(
       orderReturned => {
         this.order = orderReturned;
+        if (isNullOrUndefined(product.dailyMenuId)) {
+          if (this.products.find(x => x._id === product.product).stockControl) {
+            let productToUpdateStock = this.products.find(x => x._id === product.product);
+            productToUpdateStock.stock.current += product.quantity;
+
+            this.productService.updateProduct(productToUpdateStock)
+              .subscribe(resp => {
+                this.returnStockValue = false;
+              });
+          }
+        }
+        else {
+          let dailyMenu = this.dailyMenus.find(x => x._id == product.dailyMenuId);
+          dailyMenu.products.forEach(productId => {
+            this.productService.getProduct(productId)
+              .subscribe(productObtained => {
+                if (productObtained.stockControl) {
+                  productObtained.stock.current += product.quantity;
+                  this.productService.updateProduct(productObtained)
+                    .subscribe(resp => {
+                      this.returnStockValue = false;
+                    });
+                }
+              });
+          });
+        }
       },
-      error => {        
+      error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
@@ -374,10 +493,9 @@ export class OrderNewComponent implements OnInit {
    * @param productToUpdateQty producto al que se le va a incrementar la cantidad
    * @param qty cantidad a ser incrementada o disminuída. Puede ser un número negativo
    */
-  updateProductQty(productToUpdateQty:any, qty: number): void {
-    if (productToUpdateQty.quantity + qty >= 0)
-    {
-      productToUpdateQty.quantity += qty;  
+  updateProductQty(productToUpdateQty: any, qty: number): void {
+    if (productToUpdateQty.quantity + qty >= 0) {
+      productToUpdateQty.quantity += qty;
       this.updateTotalToConfirm(productToUpdateQty.price, qty);
     }
   }
@@ -386,18 +504,18 @@ export class OrderNewComponent implements OnInit {
    * @param price precio del producto 
    * @param qty cantidad del producto
    */
-  updateTotalToConfirm(price:number, qty:number):void {
+  updateTotalToConfirm(price: number, qty: number): void {
     this.totalToConfirm += price * qty;
   }
 
   /**Cancelar pre order */
-  cancelPreOrder():void {
+  cancelPreOrder(): void {
     this.preOrderProducts = [];
     this.totalToConfirm = 0;
   }
 
   /**Confirmar pre order */
-  confirmPreOrder():void {
+  confirmPreOrder(): void {
     if (!isNullOrUndefined(this.preOrderProducts) && this.preOrderProducts.length > 0) {
       this.preOrderProducts.forEach(productInPreOrder => {
         if (productInPreOrder.observations === this.prodObservation || productInPreOrder.observations === '') {
@@ -405,53 +523,60 @@ export class OrderNewComponent implements OnInit {
         }
       })
       let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: UserRoles.ADMIN, order: this.order };
-      this.updateProductsOrder(data);      
-    }    
+      this.updateProductsOrder(data);
+    }
   }
 
   /**Muestra o esconde la sección de observaciones para cada producto */
-  showObservationBox(product:ProductsInUserOrder):void {
+  showObservationBox(product: ProductsInUserOrder): void {
     product.observations = this.prodObservation;
-  }    
+  }
 
-  selectText(component):void {
+  selectText(component): void {
     component.select();
   }
 
-  showModalRemoveProduct(template: TemplateRef<any>, product:ProductsInUserOrder):void {
+  showModalRemoveProduct(template: TemplateRef<any>, product: ProductsInUserOrder): void {
     this.productToRemoveFromOrder = JSON.parse(JSON.stringify(product)) as ProductsInUserOrder;;
 
-    this.modalRef = this.modalService.show(template, {backdrop: true, ignoreBackdropClick: true});
+    this.modalRef = this.modalService.show(template, { backdrop: true, ignoreBackdropClick: true });
   }
 
-  closeModalDeleteProd(){
+  closeModalDeleteProd() {
     this.deletedReason = undefined;
     this.modalRef.hide();
-    this.modalRef = null;       
+    this.modalRef = null;
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
+    this.modalRef = null;
   }
 
-  closeTable(template){
-		this.modalRef = this.modalService.show(template,  Object.assign({}, this.config, {class: 'closeOrderModal'}));
+  closeTable(template) {
+    this.modalRef = this.modalService.show(template, Object.assign({}, this.config, { class: 'closeOrderModal' }));
   }
 
-  applyClassMenu(menuId){
-    this.activeMenu = menuId;    
+  applyClassMenu(menuId) {
+    this.activeMenu = menuId;
+    this.activeDailyMenu = false;
   }
 
-  applyClassCategory(categoryId){
-    this.activeCategory = categoryId;    
+  applyClassDailyMenu() {
+    this.applyClassMenu(null);
+    this.activeDailyMenu = true;
+  }
+
+  applyClassCategory(categoryId) {
+    this.activeCategory = categoryId;
+    this.activeDailyMenu = false;
   }
 
   /**Metodo para filtrar los productos para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
   searchEntries(term: string) {
     return this.allProducts.filter((data: Product) => data.name.toLowerCase().includes(term.toLowerCase()));
   }
-  
+
   /** Retorna los produtctos filtrados para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
   getFilteredData() {
     this.results = this.searchEntries(this.searchStr);
@@ -463,44 +588,49 @@ export class OrderNewComponent implements OnInit {
   }
 
   /** Arma los combos de sizes y options y muestra la modal */
-  showOptionsAndSizes(product:Product):void {
+  showOptionsAndSizes(product: Product): void {
     this.productToFindSizesAndOptions = product;
-    
-    for (let size of this.productToFindSizesAndOptions.sizes){
-      if(size.default === true){
-        this.sizesSelect.push({value: size._id, label:size.name, selected:true})
+
+    for (let size of this.productToFindSizesAndOptions.sizes) {
+      if (size.default === true) {
+        this.sizesSelect.push({ value: size._id, label: size.name, selected: true })
         this.sizeSelectedValue = size._id;
       }
-      else{
-        this.sizesSelect.push({value: size._id, label:size.name})
+      else {
+        this.sizesSelect.push({ value: size._id, label: size.name })
       }
     };
 
-    this.modalRef = this.modalService.show(this.optionsAndSizesTemplate, {backdrop: true, ignoreBackdropClick: true});
+    this.modalRef = this.modalService.show(this.optionsAndSizesTemplate, { backdrop: true, ignoreBackdropClick: true });
   }
 
   /** Agrega o quita la opcion seleccionada en la modal al array de opciones seleccionadas */
-  onOptionSelectedChange(option:any){
+  onOptionSelectedChange(option: any) {
     let optionIndex = this.selectedOptions.indexOf(option);
-    if(optionIndex !== -1){
+    if (optionIndex !== -1) {
       this.selectedOptions.splice(optionIndex, 1);
     }
-    else{
+    else {
       this.selectedOptions.push(option);
     }
   }
 
+  /**Verifica la variable para devolver el stock de un producto al eliminarlo de la orden */
+  returnStock() {
+    this.returnStockValue = !this.returnStockValue;
+  }
+
   /** Agrega el producto a la preorder enviandole los sizes y las options */
-  setProductOptionsAndSize(product){
-    this.addProductToPreOrder(product,1,this.sizeSelectedValue, this.selectedOptions)
+  setProductOptionsAndSize(product) {
+    this.addProductToPreOrder(product, 1, this.sizeSelectedValue, this.selectedOptions)
     this.closeModalOptionsAndSizes();
   }
 
-  closeModalOptionsAndSizes(){
+  closeModalOptionsAndSizes() {
     this.sizesSelect = [];
     this.sizeSelectedValue = null;
     this.selectedOptions = [];
     this.modalRef.hide();
-    this.modalRef = null;       
+    this.modalRef = null;
   }
 }

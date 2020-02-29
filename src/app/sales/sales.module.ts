@@ -19,6 +19,7 @@ import { MenuResolverService } from '../menu/menu-resolver.service';
 import { CategoryResolverService } from '../category/category-list/category-resolver.service';
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
+import { DailyMenuResolverService } from '../daily-menu/daily-menu-list/daily-menu-resolver.service';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
                       categories: CategoryResolverService,
                       menus: MenuResolverService,
                       cashRegisters: CashRegisterAvailablesResolverService,
-                      paymentTypes: PaymentTypeAvailableResolverService
+                      paymentTypes: PaymentTypeAvailableResolverService,
+                      dailyMenus: DailyMenuResolverService
                     }
           },
           {

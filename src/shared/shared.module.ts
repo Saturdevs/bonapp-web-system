@@ -23,7 +23,7 @@ import { OrderListSearchPipe } from './pipes/order-list-search.pipe';
     ErrorTemplateComponent,
     DeleteTemplateComponent,
     CancelTemplateComponent,
-    OrderPreComponent
+    OrderPreComponent,
   ],
   providers: [ 
     ApiService,

@@ -11,6 +11,9 @@
         <textarea (click)="selectText(obs)" #obs placeholder="Comentario..." 
         [(ngModel)]="deletedReason"></textarea>
       </div>
+      <div class="row">
+          <mdb-checkbox (change)="returnStock()" name="productOption">Devolver a stock</mdb-checkbox>            
+      </div>
     </div>
   </div>
   <div class="modal-footer">
@@ -69,6 +72,9 @@ overflow: auto; overflow-x: hidden;">
         <div style="margin-left:8%;" *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
           <a (click)="getCategories(menu._id); applyClassMenu(menu._id)" [ngClass]="{'activeItem': activeMenu == menu._id}" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
         </div>
+        <div style="margin-left:8%;" *ngIf="dailyMenus.length > 0" class="d-flex align-items-center menuButtonContainer">
+          <a [ngClass]="{'activeItem': activeDailyMenu}" (click)="applyClassDailyMenu();" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{ dailyMenusLabel }}</span></a>
+        </div>
         <button class="right-paddle paddle btn customPaddle waves-light" mdbRippleRadius>
           >
         </button>
@@ -76,14 +82,25 @@ overflow: auto; overflow-x: hidden;">
     </div>
     <div class="row col-12 pr-0 pl-0 categoriesAndProductsContainer">
       <div class="col-3 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
-        <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
-          <a (click)="getProductsAvailablesByCategory(category._id); applyClassCategory(category._id); categorySelected = true" [ngClass]="{'activeItem': activeCategory == category._id}"  class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
-        </div>
+        <ng-container *ngIf="activeDailyMenu == false">
+          <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
+            <a (click)="getProductsAvailablesByCategory(category._id); applyClassCategory(category._id); categorySelected = true;" [ngClass]="{'activeItem': activeCategory == category._id}"  class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
+          </div>
+        </ng-container>
       </div>
       <div *ngIf="products && products.length > 0" class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
-        <div class="productsButtonContainer" *ngFor="let product of products">
-          <a (click)="validateSizesAndOptions(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
-        </div>
+        <ng-container *ngIf="activeDailyMenu == false">
+          <div class="productsButtonContainer" *ngFor="let product of products">
+            <a (click)="validateSizesAndOptions(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
+          </div>
+        </ng-container>
+      </div>
+      <div class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+        <ng-container *ngIf="dailyMenus && dailyMenus.length > 0 && activeDailyMenu == true">
+          <div class="productsButtonContainer" *ngFor="let dailyMenu of dailyMenus">
+            <a (click)="addDailyMenuToPreOrder(dailyMenu,1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{dailyMenu.name}}</span></a>
+          </div>
+        </ng-container>
       </div>
       <!-- <div *ngIf="products && products.length = 0" class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <span>No hay productos disponibles para la categoria seleccionada.</span>

@@ -31,6 +31,8 @@ import { FileInputModule } from './file-input/file-input.module';
 import { AppComponent } from './app.component';
 import { CounterComponent } from './counter/counter.component';
 import { SelectItemComponent } from './select-item/select-item.component';
+import { DailyMenuModule } from './daily-menu/daily-menu.module';
+import { StockControlModule } from './stock-control/stock-control.module';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import { SelectItemComponent } from './select-item/select-item.component';
     ArqueoCajaModule,
     ClientModuleModule,
     ClientModule,
+    DailyMenuModule,
+    StockControlModule,
     ClientAccountTransactionsModule,
     SupplierModuleModule,
     SupplierModule,

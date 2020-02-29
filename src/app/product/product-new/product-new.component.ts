@@ -43,6 +43,7 @@ export class ProductNewComponent implements OnInit {
   nameIsAvailable: boolean = false;
   defaultSize: Number = -1;
   checkboxAvailableText: String = 'Disponible';
+  stockControlText = "Controla Stock";
 
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
@@ -78,7 +79,12 @@ export class ProductNewComponent implements OnInit {
       price: ['', Validators.required],
       sizes: this.formBuilder.array([]),
       options: this.formBuilder.array([]),
-      available: true
+      available: true,
+      stockControl: false,
+      stock: this.formBuilder.group({
+        min: ['0'],
+        current: ['0']
+      })
     });
 
     this.productForm.patchValue({

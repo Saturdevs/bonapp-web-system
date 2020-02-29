@@ -24,3 +24,4 @@ export * from './paymentTypeMin';
 export * from './cashRegisterMin';
 export * from './sizeInProduct';
 export * from './optionInProduct';
+export * from './productStock';

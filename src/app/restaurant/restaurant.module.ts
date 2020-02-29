@@ -13,6 +13,9 @@ import { CategoryModifyComponent } from '../category/category-modify/category-mo
 import { ProductListComponent } from '../product/product-list/product-list.component';
 import { ProductNewComponent } from '../product/product-new/product-new.component';
 import { ProductModifyComponent } from '../product/product-modify/product-modify.component';
+import { DailyMenuListComponent } from '../daily-menu/daily-menu-list/daily-menu-list.component';
+import { DailyMenuNewComponent } from '../daily-menu/daily-menu-new/daily-menu-new.component';
+import { DailyMenuModifyComponent } from '../daily-menu/daily-menu-modify/daily-menu-modify.component';
 
 import { MenuResolverService } from '../menu/menu-resolver.service';
 import { MenuModifyResolverService } from '../menu/menu-modify/menu-modify-resolver.service';
@@ -26,6 +29,10 @@ import { CategoryHasproductResolverService } from '../category/resolvers/categor
 import { MenuHascategoryResolverService } from '../menu/resolvers/menu-hascategory-resolver.service';
 import { SizeResolverService } from '../size/size-list/size-resolver.service';
 import { ProductOrderResolverService } from '../product/resolvers/product-order-resolver.service';
+import { DailyMenuResolverService } from '../daily-menu/daily-menu-list/daily-menu-resolver.service';
+import { DailyMenuModifyResolverService } from '../daily-menu/daily-menu-modify/daily-menu-modify-resolver.service';
+import { StockControlComponent } from '../stock-control/stock-control.component';
+import { StockControlModifyComponent } from '../stock-control/stock-control-modify/stock-control-modify.component';
 
 @NgModule({
   imports: [
@@ -117,9 +124,53 @@ import { ProductOrderResolverService } from '../product/resolvers/product-order-
                 }
               }
             ]
+          },
+          {
+            path: 'dailyMenu',
+            children: [
+              {
+                path: '',
+                component: DailyMenuListComponent,
+                resolve: { 
+                  dailyMenus: DailyMenuResolverService 
+                }
+              },
+              {
+                path: 'newDailyMenu',
+                component: DailyMenuNewComponent,
+                resolve: { 
+                  products: ProductResolverService 
+                }
+              },
+              {
+                path: 'edit/:id',
+                component: DailyMenuModifyComponent,
+                resolve: { 
+                  products: ProductResolverService,
+                  dailyMenu: DailyMenuModifyResolverService
+                }
+              }
+            ]
+          },
+          {
+            path: 'stockControl',
+            component: StockControlComponent,
+            resolve: { 
+              products: ProductResolverService,
+            },
+            children: [
+              {
+                path: 'edit/:id',
+                component: StockControlModifyComponent,
+                resolve: {
+                  product: ProductModifyResolverService,
+                },
+                outlet: 'edit'
+              }
+            ]
           }
         ]
-      }
+      },
     ]),
     SharedModule
   ],
