@@ -7,7 +7,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
   ArqueoCaja,
   CashRegister,
-  ArqueoCajaService
+  ArqueoCajaService,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../../shared/index';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -38,6 +42,11 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
   totalEgresos: number;
   realAmount: number;
   previous: any;
+  currentUser: User;
+  enableDelete: Boolean;
+  enableEdit: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;  
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
@@ -45,9 +54,18 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
   constructor(private arqueoService: ArqueoCajaService,
     private route: ActivatedRoute,
     private modalService: BsModalService,
-    private cdRef: ChangeDetectorRef) { }
+    private cdRef: ChangeDetectorRef,
+    private _authenticationService: AuthenticationService
+  ) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+
     this.route.data.subscribe(
       data => {
         this.arqueos = data['arqueos'];
@@ -71,6 +89,18 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_CASH_COUNT);
+    this.enableEdit = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.EDIT_CASH_COUNT);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_CASH_COUNT);
+
+    this.enableActionButtons = this.enableDelete || this.enableEdit;
+  }
+
+  /**
    * Recupera los arqueos no eliminados.
    */
   getArqueos(): void {
@@ -83,17 +113,14 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
           this.showModalError(this.serviceErrorTitle, error.error.message);
         }
       );
-  } 
+  }
 
   /**
    * Setea la propiedad deleted a true y actualiza el arqueo en la base de datos
    */
   deleteArqueo() {
     if (this.closeModal()) {
-      let cashCount = this.arqueos.find(arqueo => arqueo._id === this.idArqueoDelete);
-      cashCount.deleted = true;
-      cashCount.deletedBy = "5d38ebfcf361ae0cabe45a8e";
-      this.arqueoService.updateArqueo(cashCount).subscribe(
+      this.arqueoService.logicalDeleteArqueo(this.idArqueoDelete).subscribe(
         () => {
           this.getArqueos();
         },
@@ -109,7 +136,7 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
     this.modalErrorMessage = errorMessageReceived;
     this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
-  
+
   showModalDelete(template: TemplateRef<any>, idArqueo: any) {
     this.idArqueoDelete = idArqueo;
     this.modalDeleteTitle = "Eliminar Arqueo";
@@ -121,7 +148,7 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
     this.modalRef.hide();
     this.modalRef = null;
     return true;
-  } 
+  }
 
   reloadItems(event) {
     this.getArqueos();

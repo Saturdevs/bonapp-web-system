@@ -16,7 +16,8 @@
                 <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
             <a class="customFloatedButton" [routerLink]="['/sales/cash-flows', { outlets: { edit: ['newCashFlow'] } }]"
-                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Movimiento</a>
+                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius 
+                *ngIf='enableNew'> + Nuevo Movimiento</a>
         </div>
         <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
             <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
@@ -26,22 +27,26 @@
                             <h6 class="pt-2">Tipo:</h6>
                             <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
                                 <mdb-select #queryType name="queryType" id="queryType" [options]="typesSelect"
-                                    [(ngModel)]="typeSelectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>
+                                    [(ngModel)]="typeSelectedValue" placeholder="Choose your option"
+                                    class="colorful-select dropdown-primary"></mdb-select>
                             </div>
 
                             <h6 class="pt-2">Caja Registradora:</h6>
                             <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
                                 <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
-                                    [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Choose your option"
-                                    class="colorful-select dropdown-primary"></mdb-select>
+                                    [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue"
+                                    placeholder="Choose your option" class="colorful-select dropdown-primary">
+                                </mdb-select>
                             </div>
                         </div>
 
                         <div class="row">
                             <app-date-picker name="startDate" (onValueChanged)="onValueChangedStartDate($event)"
-                                [(ngModel)]="startDate" [dpPlaceHolder]="'Fecha de Inicio'" ngDefaultControl></app-date-picker>
+                                [(ngModel)]="startDate" [dpPlaceHolder]="'Fecha de Inicio'" ngDefaultControl>
+                            </app-date-picker>
                             <app-date-picker name="endDate" (onValueChanged)="onValueChangedEndDate($event)"
-                                [(ngModel)]="endDate" [dpPlaceHolder]="'Fecha de Fin'" ngDefaultControl></app-date-picker>
+                                [(ngModel)]="endDate" [dpPlaceHolder]="'Fecha de Fin'" ngDefaultControl>
+                            </app-date-picker>
                         </div>
                     </form>
                 </div>
@@ -54,32 +59,48 @@
                                 <th>Monto</th>
                                 <th>Tipo</th>
                                 <th>Comentario</th>
-                                <th>Acciones</th>
+                                <th *ngIf='enableActionButtons'>Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredCashFlows && filteredCashFlows.length'>
                             <!-- En el *ngFor se implementa el pipe que se definio en la carpeta shared/pipes -->
                             <!-- El pipe se agrego en el cash-flows.module -->
                             <!-- Luego se agregan los ng-model por los que se quiere filtrar (cashSelectedValue y typeSelectedValue) -->
-                            <tr *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate; let i = index'>
-                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
-                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.cashRegister }}</td>
-                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.totalAmount | currency:'USD':code:'2.2-2' }}</td>
-                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.type }}</td>
-                                <td *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ cashFlow.comment }}</td>
-                                <td class="align-middle" *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                            <tr
+                                *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate; let i = index'>
+                                <td
+                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
+                                <td
+                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ cashFlow.cashRegister }}</td>
+                                <td
+                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ cashFlow.totalAmount | currency:'USD':code:'2.2-2' }}</td>
+                                <td
+                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ cashFlow.type }}</td>
+                                <td
+                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ cashFlow.comment }}</td>
+                                <td class="align-middle"
+                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
                                     <a [routerLink]="['/sales/cash-flows', { outlets: { edit: ['editCashFlow', cashFlow._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText">Detalle</a>
-                                    <a (click)="showModalDelete(deleteTemplate, cashFlow._id)" class="btn btn-red btn-sm">Eliminar</a>
+                                        class="btn btn-yellow btn-sm customButtonText"
+                                        *ngIf='enableDetail'>Detalle</a>
+                                    <a (click)="showModalDelete(deleteTemplate, cashFlow._id)"
+                                        class="btn btn-red btn-sm"
+                                        *ngIf='enableDelete'>Eliminar</a>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot class="grey lighten-5 w-100">
-                          <tr>
-                            <td colspan="6">
-                              <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCashFlows"></mdb-table-pagination>
-                            </td>
-                          </tr>
+                            <tr>
+                                <td colspan="6">
+                                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCashFlows">
+                                    </mdb-table-pagination>
+                                </td>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>

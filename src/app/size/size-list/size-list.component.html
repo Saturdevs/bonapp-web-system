@@ -19,8 +19,8 @@
             </div>
             <div class="float-right">
                 <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['newSize'] } }]"
-                    class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius>
-                    + Nuevo Tamaño
+                    class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+                    *ngIf='enableNew'> + Nuevo Tamaño
                 </a>
             </div>
         </div>
@@ -41,18 +41,20 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Disponible</th>
-                                <th>Acciones</th>
+                                <th *ngIf='enableActionButtons'>Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='sizes && sizes.length'>
                             <tr *ngFor='let size of filteredSizes '>
                                 <td>{{ size.name }}</td>
                                 <td>{{ size.availableDescription }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle" *ngIf='enableActionButtons'>
                                     <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['editSize', size._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                                        class="btn btn-yellow btn-sm customButtonText"
+                                        *ngIf='enableEdit'>Editar</a>
                                     <a (click)="showModalDelete(deleteTemplate, size._id)"
-                                        class="btn btn-red btn-sm">Eliminar</a>
+                                        class="btn btn-red btn-sm"
+                                        *ngIf='enableDelete'>Eliminar</a>
                                 </td>
                             </tr>
                         </tbody>

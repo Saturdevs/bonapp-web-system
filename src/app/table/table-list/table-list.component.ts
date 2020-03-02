@@ -10,7 +10,11 @@ import {
 	Table,
 	TableService,
 	OrderService,
-	TableStatus
+	TableStatus,
+	AuthenticationService,
+	User,
+	Rights,
+	RightsFunctions
 } from '../../../shared/index';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
@@ -32,6 +36,8 @@ export class TableListComponent implements OnInit {
 	@ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
 	@ViewChild('cancelTemplate') cancelTemplate: TemplateRef<any>;
 	private serviceErrorTitle = 'Error de Servicio';
+	private rightErrorTitle = 'Error de Permisos';
+	private rightErrorMessage = 'Usted no posee los permisos requeridos para realizar la acción deseada. Pongase en contacto con el administrador del sistema.';
 	private modalErrorTittle: string;
 	private modalErrorMessage: string;
 	private modalDeleteMessage = "¿Estas seguro que desea eliminar esta mesa?";
@@ -82,15 +88,27 @@ export class TableListComponent implements OnInit {
 	config = {
 		backdrop: true,
 	}
+	currentUser: User;
+	enableDelete: Boolean;
+	enableEdit: Boolean;
+	enableNew: Boolean;
+	enableActionButtons: Boolean;
 
 	constructor(private _router: Router,
 		private _tableService: TableService,
 		private _orderService: OrderService,
 		private _route: ActivatedRoute,
 		private modalService: BsModalService,
-		private toast: ToastService) { }
+		private toast: ToastService,
+		private _authenticationService: AuthenticationService) { }
 
 	ngOnInit() {
+		this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+      }
+		);
+		
 		this._tableService.addedTables = [];
 		this._tableService.updatedTables = [];
 		this._route.data.subscribe(
@@ -275,8 +293,11 @@ export class TableListComponent implements OnInit {
 							//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
 							//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
 							if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
-								this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
-
+								if (RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_ORDER)) {
+									this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
+								} else {
+									this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
+								}								
 							}
 							else {
 								this._router.navigate(['./orders/orderNew', tableNumber]);

@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketIoService } from '../shared/services/socket-io.service';
+import { Router } from '@angular/router';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { SwPush } from '@angular/service-worker';
-import { NotificationService } from '../shared/services/notification.service';
+
+import {
+  AuthenticationService,
+  NotificationService,
+  SocketIoService,
+  User
+} from '../shared/index';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,13 +20,24 @@ export class AppComponent implements OnInit {
   title: string = 'Web Bar';
   subtitle: string = 'by Los Pibes';
   myDate: Date;
+  currentUser: User;
 
-  constructor(private _socketService: SocketIoService,
+  constructor(
+    private _socketService: SocketIoService,
     private toast: ToastService,
     private swPush: SwPush,
-    private newsletterService: NotificationService) { }
+    private _notificationService: NotificationService,
+    private _authenticationService: AuthenticationService,
+    private _router: Router
+  ) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+      }
+    );
+    
     this.getTime();
 
     this._socketService.waiterCall() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
@@ -45,7 +63,12 @@ export class AppComponent implements OnInit {
     this.swPush.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY
     })
-      .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
+      .then(sub => this._notificationService.addPushSubscriber(sub).subscribe())
       .catch(err => console.error("Could not subscribe to notifications", err));
+  }
+
+  logout() {
+    this._authenticationService.logout();
+    this._router.navigate(['/login']);
   }
 }

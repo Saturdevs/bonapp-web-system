@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -11,6 +11,7 @@ import { SelectItemComponent } from '../select-item/select-item.component';
 
 import { SupplierResolverService } from '../supplier/supplier-list/supplier-resolver.service';
 import { SupplierEditResolverService } from '../supplier/supplier-edit/supplier-edit-resolver.service';
+import { AuthGuard } from '../../shared';
 
 @NgModule({
   imports: [
@@ -24,10 +25,10 @@ import { SupplierEditResolverService } from '../supplier/supplier-edit/supplier-
           },
           {
             path: 'suppliers',
-            component: SupplierListComponent,   
+            component: SupplierListComponent,
             resolve: {
               suppliers: SupplierResolverService
-            },        
+            },
             children: [
               {
                 path: 'editSupplier/:id',
@@ -35,21 +36,29 @@ import { SupplierEditResolverService } from '../supplier/supplier-edit/supplier-
                 resolve: {
                   supplier: SupplierEditResolverService
                 },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'supplier-edit' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newSupplier',
                 component: SupplierNewComponent,
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'supplier-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'selectItem',
                 component: SelectItemComponent,
                 outlet: 'edit'
-              }                              
-            ]
+              }
+            ],
+            data: { menu: 'supplier-list' },
+            canActivate: [AuthGuard]
           }
-        ]
+        ],
+        data: { menu: 'suppliers' },
+        canActivate: [AuthGuard]
       }
     ]),
     SharedModule

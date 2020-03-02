@@ -5,8 +5,8 @@
 </ng-template>
 
 <ng-template #errorTemplate>
-  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-  </app-error-template>
+    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+    </app-error-template>
 </ng-template>
 
 <div class="row pl-0 pr-0 ml-0 mr-0">
@@ -15,13 +15,15 @@
             <header class="major">
                 <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
-            <a class="customFloatedButton" [routerLink]="['/sales/cash-counts', { outlets: { edit: ['newCashCount'] } }]"
-                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nuevo Arqueo</a>
+            <a class="customFloatedButton"
+                [routerLink]="['/sales/cash-counts', { outlets: { edit: ['newCashCount'] } }]"
+                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+                *ngIf='enableNew'> + Nuevo Arqueo</a>
         </div>
         <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
             <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
                 <div class="row">
-                    <table class="table table-bordered table-hover customTable"  mdbTable #tableEl="mdbTable">
+                    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
                         <thead class="primary-color customTableText">
                             <tr>
                                 <th>Hora Apertura</th>
@@ -30,33 +32,52 @@
                                 <th>Estimado</th>
                                 <th>Real</th>
                                 <th>Diferencia</th>
-                                <th>Acciones</th>
+                                <th *ngIf='enableActionButtons'>Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredArqueos && filteredArqueos.length'>
                             <tr *ngFor='let arqueo of filteredArqueos; let i = index'>
-                                <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ arqueo.createdAt | date:'dd/MM/yy HH:mm' }}</td>
-                                <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ arqueo.closedAt | date:'dd/MM/yy HH:mm' }}</td>
-                                <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ arqueo.cashRegister }}</td>
-                                <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ arqueo.estimatedAmount | currency:'USD':code:'2.2-2' }}</td>
-                                <td *ngIf="(arqueo.closedAt === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)"></td>
-                                <td *ngIf="(arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ arqueo.realAmountTotal |
+                                <td
+                                    *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ arqueo.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+                                <td
+                                    *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ arqueo.closedAt | date:'dd/MM/yy HH:mm' }}</td>
+                                <td
+                                    *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ arqueo.cashRegister }}</td>
+                                <td
+                                    *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ arqueo.estimatedAmount | currency:'USD':code:'2.2-2' }}</td>
+                                <td
+                                    *ngIf="(arqueo.closedAt === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">
+                                </td>
+                                <td
+                                    *ngIf="(arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ arqueo.realAmountTotal |
                                     currency:'USD':code:'2.2-2' }}</td>
-                                <td *ngIf="(arqueo.closedAt === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)"></td>
-                                <td *ngIf="(arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ arqueo.realAmountTotal -
+                                <td
+                                    *ngIf="(arqueo.closedAt === undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">
+                                </td>
+                                <td
+                                    *ngIf="(arqueo.closedAt !== undefined) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)">{{ arqueo.realAmountTotal -
                                     arqueo.estimatedAmount | currency:'USD':code:'2.2-2' }}</td>
-                                <td class="align-middle" *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                <td class="align-middle"
+                                    *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
                                     <a [routerLink]="['/sales/cash-counts', { outlets: { edit: ['editCashCount', arqueo._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText">Editar</a>
-                                    <a (click)="showModalDelete(deleteTemplate, arqueo._id)" class="btn btn-red btn-sm">Eliminar</a>
+                                        class="btn btn-yellow btn-sm customButtonText"
+                                        *ngIf='enableEdit'>Editar</a>
+                                    <a (click)="showModalDelete(deleteTemplate, arqueo._id)"
+                                        class="btn btn-red btn-sm"
+                                        *ngIf='enableDelete'>Eliminar</a>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot class="grey lighten-5 w-100">
                             <tr>
-                              <td colspan="7">
-                                <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredArqueos"></mdb-table-pagination>
-                              </td>
+                                <td colspan="7">
+                                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredArqueos">
+                                    </mdb-table-pagination>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>

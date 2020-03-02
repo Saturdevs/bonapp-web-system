@@ -1,6 +1,6 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteTransaction()"
-        (close)="closeModal()">
+    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage"
+        (delete)="deleteTransaction()" (close)="closeModal()">
     </app-delete-template>
 </ng-template>
 
@@ -15,8 +15,10 @@
             <header class="major">
                 <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
-            <a class="customFloatedButton" [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['newTransaction'] } }]"
-                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nueva Transacción</a>
+            <a class="customFloatedButton"
+                [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['newTransaction'] } }]"
+                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+                *ngIf='enableNew'> + Nueva Transacción</a>
         </div>
         <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
             <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
@@ -45,28 +47,36 @@
                                 <th>Cliente</th>
                                 <th>Fecha</th>
                                 <th>Monto</th>
-                                <th>Acciones</th>
+                                <th *ngIf='enableActionButtons'>Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="table-wrapper" *ngIf='filteredTransactions && filteredTransactions.length'>
                             <tr *ngFor='let transaction of filteredTransactions; let i = index'>
-                                <td *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.client.name }}</td>
-                                <td *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.date | date:'dd/MM/yy HH:mm'
+                                <td
+                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                    {{ transaction.client.name }}</td>
+                                <td
+                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.date | date:'dd/MM/yy HH:mm'
                                     }}</td>
-                                <td *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.amount |
+                                <td
+                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.amount |
                                     currency:'USD':code:'2.2-2' }}</td>
-                                <td class="align-middle" *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                                <td class="align-middle"
+                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
                                     <a [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['editTransaction', transaction._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText">Detalle</a>
+                                        class="btn btn-yellow btn-sm customButtonText"
+                                        *ngIf='enableDetail'>Detalle</a>
                                     <a (click)="showModalDelete(deleteTemplate, transaction._id)"
-                                        class="btn btn-red btn-sm">Eliminar</a>
+                                        class="btn btn-red btn-sm"
+                                        *ngIf='enableDelete'>Eliminar</a>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot class="grey lighten-5 w-100">
                             <tr>
                                 <td colspan="4">
-                                <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredTransactions"></mdb-table-pagination>
+                                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredTransactions">
+                                    </mdb-table-pagination>
                                 </td>
                             </tr>
                         </tfoot>

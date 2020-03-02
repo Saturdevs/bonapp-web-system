@@ -13,3 +13,6 @@ export * from './section.service';
 export * from './client.service';
 export * from './transaction.service';
 export * from './supplier.service';
+export * from './socket-io.service';
+export * from './notification.service';
+export * from './authentication.service';

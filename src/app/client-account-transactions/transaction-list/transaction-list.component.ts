@@ -7,7 +7,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
   Transaction,
   Client,
-  TransactionService
+  TransactionService,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../../shared';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -19,7 +23,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class TransactionListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = "Cuentas Corrientes";
   private modalErrorTittle: string;
@@ -37,16 +41,29 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
   amount: number;
   cantTransactions: number;
   previous: any;
+  currentUser: User;
+  enableDelete: Boolean;
+  enableDetail: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
-  
-  constructor(private _transactionService: TransactionService,
-              private route: ActivatedRoute,
-              private modalService: BsModalService,
-              private cdRef: ChangeDetectorRef) { }
 
-  ngOnInit() {    
+  constructor(private _transactionService: TransactionService,
+    private route: ActivatedRoute,
+    private modalService: BsModalService,
+    private cdRef: ChangeDetectorRef,
+    private _authenticationService: AuthenticationService) { }
+
+  ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+
     this.route.data.subscribe(
       data => {
         this.transactions = data['transactions'];
@@ -54,10 +71,10 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
         this.clientsWithTransactionsEnabled = data['clientsWithTransactionsEnabled'];
         this.calculateAmountAndCantTransactions(this.filteredTransactions);
       }
-    );  
-    
+    );
+
     this.buildClientsSelectArray();
-    
+
     this.mdbTable.setDataSource(this.filteredTransactions);
     this.filteredTransactions = this.mdbTable.getDataSource();
     this.previous = this.mdbTable.getDataSource();
@@ -69,7 +86,19 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
 
     this.mdbTablePagination.calculateFirstItemIndex();
     this.mdbTablePagination.calculateLastItemIndex();
-    this.cdRef.detectChanges();    
+    this.cdRef.detectChanges();
+  }
+
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_TRANSACTION);
+    this.enableDetail = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DETAIL_TRANSACTION);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_TRANSACTION);
+
+    this.enableActionButtons = this.enableDelete || this.enableDetail;
   }
 
   getTransactions(): void {
@@ -79,33 +108,33 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
         this.filteredTransactions = this.transactions;
         this.calculateAmountAndCantTransactions(this.filteredTransactions);
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
   }
 
   buildClientsSelectArray(): void {
     this.clientsSelect.push({ value: 'default', label: 'Todos', selected: true });
     this.clientsWithTransactionsEnabled.map(client => {
-      this.clientsSelect.push({value: client._id, label: client.name})
-    });        
-    this.selectedValue = 'default';  
+      this.clientsSelect.push({ value: client._id, label: client.name })
+    });
+    this.selectedValue = 'default';
   }
 
   getTransactionsByClient(clientId) {
     return this.transactions.filter(t => t.client._id === clientId);
   }
 
-  filterTransactions(clientId): void {    
+  filterTransactions(clientId): void {
     if (clientId === 'default') {
       this.filteredTransactions = this.transactions;
     }
     else {
       let selectedClient = this.clientsWithTransactionsEnabled.find(c => c._id == clientId);
-      this.selectedClientName = selectedClient.name;      
+      this.selectedClientName = selectedClient.name;
       this.filteredTransactions = this.getTransactionsByClient(clientId);
-    }    
+    }
   }
 
   calculateAmountAndCantTransactions(transactions: Array<Transaction>) {
@@ -113,30 +142,30 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
     this.cantTransactions = 0;
     transactions.map(t => {
       if (t.deleted === false) {
-          this.amount += t.amount;
-          this.cantTransactions += 1;
-        }
+        this.amount += t.amount;
+        this.cantTransactions += 1;
       }
+    }
     )
   }
 
-  showModalDelete(template: TemplateRef<any>, idTransaction: Number){
+  showModalDelete(template: TemplateRef<any>, idTransaction: Number) {
     this.idTransactionDelete = idTransaction;
     this.modalDeleteTitle = "Eliminar Transacción";
     this.modalDeleteMessage = "¿Seguro desea eliminar esta Transacción?";
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalRef = this.modalService.show(template, { backdrop: true });
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
 
-  deleteTransaction(){
-    if (this.closeModal()){
-      this._transactionService.deleteTransaction(this.idTransactionDelete).subscribe( 
-        transaction=> {
+  deleteTransaction() {
+    if (this.closeModal()) {
+      this._transactionService.deleteTransaction(this.idTransactionDelete).subscribe(
+        transaction => {
           this.getTransactions();
         },
         error => {
@@ -146,10 +175,10 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
   reloadItems(event) {

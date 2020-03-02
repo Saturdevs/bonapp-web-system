@@ -42,6 +42,12 @@ export class ArqueoCajaService {
       .catch(this.handleError);
   }
 
+  logicalDeleteArqueo(idArqueo) {
+    return this.apiService.put(`/arqueo/logicalDelete/${idArqueo}`)
+      .map(data => data.message)
+      .catch(this.handleError);
+  }
+
   deleteArqueo(idArqueo) {
     return this.apiService.delete(`/arqueo/${idArqueo}`)
       .map(data => data.arqueo)

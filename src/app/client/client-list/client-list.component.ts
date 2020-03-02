@@ -6,7 +6,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import {
   Client,
-  ClientService
+  ClientService,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../../shared';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -18,7 +22,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class ClientListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Clientes";
   private serviceErrorTitle = 'Error de Servicio';
   private filterLabel = 'Filtrar por Cliente:';
@@ -32,25 +36,38 @@ export class ClientListComponent implements OnInit, AfterViewInit {
   idClientDelete: any;
   _listFilter: string;
   previous: any;
+  currentUser: User;
+  enableDelete: Boolean;
+  enableEdit: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
-  
+
   get listFilter(): string {
-      return this._listFilter;
+    return this._listFilter;
   }
   set listFilter(value: string) {
-      this._listFilter = value;
-      this.filteredClients = this.listFilter ? this.performFilter(this.listFilter) : this.clients;
+    this._listFilter = value;
+    this.filteredClients = this.listFilter ? this.performFilter(this.listFilter) : this.clients;
   }
 
   constructor(private _clientService: ClientService,
-              private route: ActivatedRoute,
-              private modalService: BsModalService,
-              private cdRef: ChangeDetectorRef
-            ) { }
+    private route: ActivatedRoute,
+    private modalService: BsModalService,
+    private cdRef: ChangeDetectorRef,
+    private _authenticationService: AuthenticationService
+  ) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+
     this.route.data.subscribe(
       data => {
         this.clients = data['clients'];
@@ -71,6 +88,18 @@ export class ClientListComponent implements OnInit, AfterViewInit {
     this.cdRef.detectChanges();
   }
 
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_CLIENT);
+    this.enableEdit = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.EDIT_CLIENT);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_CLIENT);
+
+    this.enableActionButtons = this.enableDelete || this.enableEdit;
+  }
+
   performFilter(filterBy: string): Client[] {
     filterBy = filterBy.toLocaleLowerCase();
     return this.clients.filter((client: Client) => client.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
@@ -82,35 +111,35 @@ export class ClientListComponent implements OnInit, AfterViewInit {
         this.clients = clients;
         this.filteredClients = this.clients;
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      }
-    );
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      );
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalDelete(template: TemplateRef<any>, idClient: any){
+  showModalDelete(template: TemplateRef<any>, idClient: any) {
     this.idClientDelete = idClient;
     this.modalDeleteTitle = "Eliminar Cliente";
     this.modalDeleteMessage = "¿Seguro desea eliminar este Cliente?";
-    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalRef = this.modalService.show(template, { backdrop: true });
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
-    this.modalRef = null;   
-    return true;     
+    this.modalRef = null;
+    return true;
   }
 
-  deleteClient(){
-    if (this.closeModal()){
-      this._clientService.deleteClient(this.idClientDelete).subscribe( 
-        success=> {
+  deleteClient() {
+    if (this.closeModal()) {
+      this._clientService.deleteClient(this.idClientDelete).subscribe(
+        success => {
           this.getClients();
         },
         error => {

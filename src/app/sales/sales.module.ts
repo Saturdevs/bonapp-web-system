@@ -14,17 +14,16 @@ import { SectionListResolverService } from '../section/section-list/section-list
 import { TableListResolverService } from '../table/table-list/table-list-resolver.service';
 import { DeliveryResolverService } from "../delivery/delivery-resolver.service";
 import { OrderNewResolverService } from '../order/order-new/order-new-resolver.service';
-import { ProductResolverService } from '../product/product-list/product-resolver.service';
-import { MenuResolverService } from '../menu/menu-resolver.service';
-import { CategoryResolverService } from '../category/category-list/category-resolver.service';
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
+import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
+import { AuthGuard } from '../../shared';
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {
-        path: 'orders', 
+        path: 'orders',
         component: SalesComponent,
         children: [
           {
@@ -32,38 +31,46 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
           },
           {
             path: 'section',
-            component: SectionListComponent, 
+            component: SectionListComponent,
             children: [
               {
                 path: 'tables/:id',
                 component: TableListComponent,
-                resolve: { tables: TableListResolverService }   
-              }                  
+                resolve: { tables: TableListResolverService },
+                data: { menu: 'section' }
+              }
             ],
-            resolve: { sections: SectionListResolverService }         
+            resolve: { sections: SectionListResolverService },
+            data: { menu: 'section' },
+            canActivate: [AuthGuard]
           },
           {
-            path:'orderNew/:tableNumber',
+            path: 'orderNew/:tableNumber',
             component: OrderNewComponent,
-            resolve:{ 
-                      order: OrderNewResolverService, 
-                      products: ProductResolverService,
-                      categories: CategoryResolverService,
-                      menus: MenuResolverService,
-                      cashRegisters: CashRegisterAvailablesResolverService,
-                      paymentTypes: PaymentTypeAvailableResolverService
-                    }
+            resolve: {
+              order: OrderNewResolverService,
+              menus: MenuAvailablesResolverService,
+              cashRegisters: CashRegisterAvailablesResolverService,
+              paymentTypes: PaymentTypeAvailableResolverService
+            },
+            data: { menu: 'public' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'delivery',
             component: DeliveryComponent,
-            resolve: { clients: DeliveryResolverService }      
+            resolve: { clients: DeliveryResolverService },
+            data: { menu: 'delivery' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'counter',
-            component: CounterComponent 
+            component: CounterComponent,
+            data: { menu: 'counter' },
+            canActivate: [AuthGuard]
           }
-        ]
+        ],
+        data: { menu: 'orders' }
       }
     ]),
     SharedModule
