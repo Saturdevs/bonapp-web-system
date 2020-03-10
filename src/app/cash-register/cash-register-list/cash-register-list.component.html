@@ -18,7 +18,7 @@
                 </header>
             </div>
             <div class="float-right">
-                <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['newCashRegister'] } }]"
+                <a [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['newCashRegister'] } }]"
                     class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius 
                     *ngIf='enableNew'> + Nueva Caja</a>
             </div>
@@ -57,7 +57,7 @@
                             <td>{{ cashRegister.name }}</td>
                             <td>{{ cashRegister.availableDescription }}</td>
                             <td class="align-middle" *ngIf='enableActionButtons'>
-                                <a [routerLink]="['/settings/general/cashRegisters', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
+                                <a [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
                                     class="btn btn-yellow btn-sm customButtonText"
                                     *ngIf='enableEdit'>Editar</a>
                                 <button [disabled]="cashRegister.default === true" type="button"

@@ -262,7 +262,7 @@ export class TableListComponent implements OnInit {
 	}
 
 	isSettingsActive() {
-		return this._router.isActive('/settings/section/tables/' + this._route.snapshot.params['id'], true);
+		return this._router.isActive('/settings/tables-section/tables/' + this._route.snapshot.params['id'], true);
 	}
 
 	isOrdersActive() {

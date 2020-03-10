@@ -45,7 +45,7 @@ export class SectionEditComponent implements OnInit {
     this._route.data.subscribe(
       data => {
         this.section = data['section'];
-        this.onProductRetrieved(this.section);
+        this.onSectionRetrieved(this.section);
       }
     )    
   }
@@ -85,7 +85,7 @@ export class SectionEditComponent implements OnInit {
     this.closeModal();
   }
 
-  onProductRetrieved(section: Section): void {
+  onSectionRetrieved(section: Section): void {
     this.section = section;
     this.sectionNameModified = this.section.name;
     this.sectionForm.patchValue({
@@ -94,7 +94,7 @@ export class SectionEditComponent implements OnInit {
   }
 
   onBack() {
-    this._router.navigate(['/settings/general/sections', { outlets: { edit: ['selectItem'] } }]);
+    this._router.navigate(['/settings/general-settings/sections', { outlets: { edit: ['selectItem'] } }]);
   }
 
 }

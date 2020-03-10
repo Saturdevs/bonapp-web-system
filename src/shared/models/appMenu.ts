@@ -3,7 +3,6 @@ export class AppMenu {
   readonly order: number;
   readonly active: Boolean;
   readonly parent: string; 
-  readonly routerLink: string;
-  readonly imgSrc: string;
+  readonly imgsrc: string;
   readonly show: Boolean; 
 }

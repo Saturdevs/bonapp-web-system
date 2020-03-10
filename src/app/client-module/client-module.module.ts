@@ -65,7 +65,7 @@ import { AuthGuard } from '../../shared';
             canActivate: [AuthGuard]
           },
           {
-            path: 'accountTransactions',
+            path: 'current-accounts',
             component: TransactionListComponent,
             resolve: {
               transactions: TransactionResolverService,

@@ -86,7 +86,7 @@ export class SizeNewComponent implements OnInit {
   }
 
   onBack() {
-    this._router.navigate(['/settings/general/sizes', { outlets: { edit: ['selectItem'] } }]);
+    this._router.navigate(['/settings/general-settings/size', { outlets: { edit: ['selectItem'] } }]);
   }
 
 }

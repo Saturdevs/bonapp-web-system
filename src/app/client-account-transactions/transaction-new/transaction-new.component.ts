@@ -113,7 +113,7 @@ export class TransactionNewComponent implements OnInit {
   }
 
   onBack(): void {
-    this._router.navigate(['/clients-module/accountTransactions', { outlets: { edit: ['selectItem'] } }]);
+    this._router.navigate(['/clients-module/current-accounts', { outlets: { edit: ['selectItem'] } }]);
   }
 
   validateCashRegister(value) {   

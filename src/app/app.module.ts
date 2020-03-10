@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CategoryModule } from './category/category.module';
@@ -37,6 +39,10 @@ import { JwtInterceptor } from '../shared/helpers/jwt.interceptor';
 import { ErrorInterceptor } from '../shared/helpers/error.interceptor';
 import { LoginModule } from './login/login.module';
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +51,7 @@ import { LoginModule } from './login/login.module';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,    
+    HttpClientModule,
     CategoryModule,
     DeliveryModule,
     MenuModule,
@@ -72,13 +78,21 @@ import { LoginModule } from './login/login.module';
     SharedModule,
     FileInputModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-    LoginModule
+    LoginModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]        
+      },
+      defaultLanguage: 'es'      
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
-  schemas: [ NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA ],
-  bootstrap: [ AppComponent ]
+  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

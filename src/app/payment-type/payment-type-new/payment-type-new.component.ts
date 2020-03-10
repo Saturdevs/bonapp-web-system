@@ -87,6 +87,6 @@ export class PaymentTypeNewComponent implements OnInit {
   }
 
   onBack() {
-    this._router.navigate(['/settings/general/paymentTypes', { outlets: { edit: ['selectItem'] } }]);
+    this._router.navigate(['/settings/general-settings/payment-types', { outlets: { edit: ['selectItem'] } }]);
   }
 }

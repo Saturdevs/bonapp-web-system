@@ -18,7 +18,7 @@
                 </header>
             </div>
             <div class="float-right">
-                <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['newSize'] } }]"
+                <a [routerLink]="['/settings/general-settings/size', { outlets: { edit: ['newSize'] } }]"
                     class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
                     *ngIf='enableNew'> + Nuevo Tamaño
                 </a>
@@ -49,7 +49,7 @@
                                 <td>{{ size.name }}</td>
                                 <td>{{ size.availableDescription }}</td>
                                 <td class="align-middle" *ngIf='enableActionButtons'>
-                                    <a [routerLink]="['/settings/general/sizes', { outlets: { edit: ['editSize', size._id] } }]"
+                                    <a [routerLink]="['/settings/general-settings/size', { outlets: { edit: ['editSize', size._id] } }]"
                                         class="btn btn-yellow btn-sm customButtonText"
                                         *ngIf='enableEdit'>Editar</a>
                                     <a (click)="showModalDelete(deleteTemplate, size._id)"

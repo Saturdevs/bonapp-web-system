@@ -2,13 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { SwPush } from '@angular/service-worker';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   AuthenticationService,
   NotificationService,
   SocketIoService,
-  User
+  User,
+  AppMenu,
+  UtilFunctions
 } from '../shared/index';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +25,7 @@ export class AppComponent implements OnInit {
   subtitle: string = 'by Los Pibes';
   myDate: Date;
   currentUser: User;
+  appMenus: Array<AppMenu> = [];
 
   constructor(
     private _socketService: SocketIoService,
@@ -28,16 +33,26 @@ export class AppComponent implements OnInit {
     private swPush: SwPush,
     private _notificationService: NotificationService,
     private _authenticationService: AuthenticationService,
-    private _router: Router
-  ) { }
+    private _router: Router,
+    private translate: TranslateService
+  ) {
+    // this language will be used as a fallback when a translation isn't found in the current language
+    this.translate.setDefaultLang('es');
+
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    this.translate.use('es');
+  }
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
       x => {
         this.currentUser = x;
+        if (!isNullOrUndefined(this.currentUser)) {
+          this.appMenus = UtilFunctions.getChildAPpMenus(this.currentUser, null);
+        }
       }
     );
-    
+
     this.getTime();
 
     this._socketService.waiterCall() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter

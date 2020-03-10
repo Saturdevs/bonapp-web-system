@@ -43,14 +43,14 @@ import { AuthGuard } from '../../shared';
         component: SettingsComponent,
         children: [
           {
-            path: '', redirectTo: 'general', pathMatch: 'full'
+            path: '', redirectTo: 'general-settings', pathMatch: 'full'
           },
           {
-            path: 'general',
+            path: 'general-settings',
             component: GeneralSettingsComponent,
             children: [
               {
-                path: 'sizes',
+                path: 'size',
                 component: SizeListComponent,
                 resolve: { sizes: SizeResolverService },
                 children: [
@@ -79,7 +79,7 @@ import { AuthGuard } from '../../shared';
                 canActivate: [AuthGuard]
               },
               {
-                path: 'paymentTypes',
+                path: 'payment-types',
                 component: PaymentTypeListComponent,
                 resolve: { paymentTypes: PaymentTypeResolverService },
                 children: [
@@ -108,7 +108,7 @@ import { AuthGuard } from '../../shared';
                 canActivate: [AuthGuard]
               },
               {
-                path: 'cashRegisters',
+                path: 'cash-register',
                 component: CashRegisterListComponent,
                 resolve: { cashRegisters: CashRegisterResolverService },
                 children: [
@@ -170,7 +170,7 @@ import { AuthGuard } from '../../shared';
             canActivate: [AuthGuard]
           },
           {
-            path: 'section',
+            path: 'tables-section',
             component: SectionListComponent,
             canDeactivate: [SectionListGuardService],
             children: [

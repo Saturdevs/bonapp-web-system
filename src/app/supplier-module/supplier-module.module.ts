@@ -53,11 +53,11 @@ import { AuthGuard } from '../../shared';
                 outlet: 'edit'
               }
             ],
-            data: { menu: 'supplier-list' },
+            data: { menu: 'suppliers' },
             canActivate: [AuthGuard]
           }
         ],
-        data: { menu: 'suppliers' },
+        data: { menu: 'suppliers-module' },
         canActivate: [AuthGuard]
       }
     ]),

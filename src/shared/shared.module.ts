@@ -10,6 +10,7 @@ import { DeleteTemplateComponent } from '../shared/components/delete-template/de
 import { CancelTemplateComponent } from './components/cancel-template/cancel-template.component';
 import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
 import { OrderListSearchPipe } from './pipes/order-list-search.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { OrderListSearchPipe } from './pipes/order-list-search.pipe';
     ErrorTemplateComponent,
     DeleteTemplateComponent,
     CancelTemplateComponent,
-    OrderPreComponent
+    OrderPreComponent,
+    TranslateModule
   ],
   entryComponents: [
     ErrorTemplateComponent

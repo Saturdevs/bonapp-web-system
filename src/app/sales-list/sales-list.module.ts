@@ -35,7 +35,7 @@ import { AuthGuard } from '../../shared';
         component: SalesListComponent,
         children: [
           {
-            path: '', redirectTo: 'sales-list', pathMatch: 'full'
+            path: '', redirectTo: '/sales/sales-list/(edit:selectItem)', pathMatch: 'full'
           },
           {
             path: 'sales-list',
@@ -56,6 +56,11 @@ import { AuthGuard } from '../../shared';
                 outlet: 'edit',
                 data: { menu: 'order-detail' },
                 canActivate: [AuthGuard]
+              },
+              {
+                path: 'selectItem',
+                component: SelectItemComponent,
+                outlet: 'edit'
               }
             ],
             data: { menu: 'sales-list' },

@@ -16,7 +16,7 @@
                 <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
             <a class="customFloatedButton"
-                [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['newTransaction'] } }]"
+                [routerLink]="['/clients-module/current-accounts', { outlets: { edit: ['newTransaction'] } }]"
                 class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
                 *ngIf='enableNew'> + Nueva Transacción</a>
         </div>
@@ -63,7 +63,7 @@
                                     currency:'USD':code:'2.2-2' }}</td>
                                 <td class="align-middle"
                                     *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
-                                    <a [routerLink]="['/clients-module/accountTransactions', { outlets: { edit: ['editTransaction', transaction._id] } }]"
+                                    <a [routerLink]="['/clients-module/current-accounts', { outlets: { edit: ['editTransaction', transaction._id] } }]"
                                         class="btn btn-yellow btn-sm customButtonText"
                                         *ngIf='enableDetail'>Detalle</a>
                                     <a (click)="showModalDelete(deleteTemplate, transaction._id)"

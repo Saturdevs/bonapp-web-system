@@ -18,7 +18,7 @@
                 </header>
             </div>
             <div class="float-right">
-                <a [routerLink]="['/settings/general/sections', { outlets: { edit: ['newSection'] } }]"
+                <a [routerLink]="['/settings/general-settings/sections', { outlets: { edit: ['newSection'] } }]"
                     class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
                     *ngIf='enableNew'> + Nueva Sala
                 </a>
@@ -46,7 +46,7 @@
                         <tr *ngFor='let section of filteredSections '>
                             <td>{{ section.name }}</td>
                             <td class="align-middle" *ngIf='enableActionButtons'>
-                                <a [routerLink]="['/settings/general/sections', { outlets: { edit: ['editSection', section._id] } }]"
+                                <a [routerLink]="['/settings/general-settings/sections', { outlets: { edit: ['editSection', section._id] } }]"
                                     class="btn btn-yellow btn-sm customButtonText"
                                     *ngIf='enableEdit'>Editar</a>
                                 <a (click)="showModalDelete(deleteTemplate, section._id)"

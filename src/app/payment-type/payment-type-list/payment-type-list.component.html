@@ -18,7 +18,7 @@
                 </header>
             </div>
             <div class="float-right">
-                <a [routerLink]="['/settings/general/paymentTypes', { outlets: { edit: ['newPaymentType'] } }]"
+                <a [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['newPaymentType'] } }]"
                     class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
                     *ngIf='enableNew'> + Nueva Forma de Pago</a>
             </div>
@@ -56,7 +56,7 @@
                             <td>{{ paymentType.name }}</td>
                             <td>{{ paymentType.availableDescription }}</td>
                             <td class="align-middle" *ngIf='enableActionButtons'>
-                                <a [routerLink]="['/settings/general/paymentTypes', { outlets: { edit: ['editPaymentType', paymentType._id] } }]"
+                                <a [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['editPaymentType', paymentType._id] } }]"
                                     class="btn btn-yellow btn-sm customButtonText"
                                     *ngIf='enableEdit'>Editar</a>
                                 <button [disabled]="paymentType.default === true" type="button"
