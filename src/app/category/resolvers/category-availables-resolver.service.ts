@@ -4,19 +4,18 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs/Observable';
 
 import {
-  Product,
+  Category,
   CategoryService
 } from '../../../shared/index';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryHasproductResolverService implements Resolve<Product> {
+export class CategoryAvailablesResolverService implements Resolve<Category[]> {
 
   constructor(private _categoryService: CategoryService) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Product> {
-    let id = route.params['id'];
-    return this._categoryService.hasAtLeastOneProduct(id);
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Category[]>{
+    return this._categoryService.getAllAvailables();
   }
 }

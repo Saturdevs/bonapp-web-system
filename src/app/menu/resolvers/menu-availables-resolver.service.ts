@@ -4,19 +4,18 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs/Observable';
 
 import {
-  Category,
+  Menu, 
   MenuService
-} from '../../../shared/index';
+} from '../../../shared';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MenuHascategoryResolverService implements Resolve<Category> {
+export class MenuAvailablesResolverService implements Resolve<Menu[]> {
 
   constructor(private _menuService: MenuService) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Category> {
-    let id = route.params['id'];
-    return this._menuService.hasAtLeastOneCategory(id);
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Menu[]>{
+    return this._menuService.getAllAvailables();
   }
 }

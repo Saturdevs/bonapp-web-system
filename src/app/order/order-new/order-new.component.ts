@@ -149,6 +149,21 @@ export class OrderNewComponent implements OnInit {
         });
   }
 
+  /**Devuelve las categorías disponibles para el menu pasado como parámetro almacenadas en el sistema
+   * @param menuId id del menu para el que se quieren obtener las categorías disponibles
+   */
+  getCategoriesAvailables(menuId){
+    this.categories = [];
+    this.products = this.filteredProducts = [];
+    this.categoryService.getCategoriesAvailablesByMenu(menuId)
+      .subscribe(categories => {
+        this.categories = categories;
+      },
+      error => { 
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      });
+  }
+
   /**
    * Actualiza el pedido actual
    * @param order pedido a actualizar en la base de datos

@@ -40,6 +40,7 @@ export class CategoryNewComponent implements OnInit {
   validPicture: string = '';
   private newCategoryPictureData: string;
   menuSelectedId: string;
+  checkboxAvailableText: String = 'Disponible';
 
   constructor(private _router: Router,
     private _route: ActivatedRoute,
@@ -49,6 +50,7 @@ export class CategoryNewComponent implements OnInit {
   ngOnInit() {
     this.newCategory = new Category();
     this.newCategory.menu = new MenuCategory();
+    this.newCategory.available = true;
     this.menuSelectedId = "default";
     this.menus = this._route.snapshot.data['menus'];
   }

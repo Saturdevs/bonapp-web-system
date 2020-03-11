@@ -70,7 +70,7 @@ overflow: auto; overflow-x: hidden;">
           <
         </button>
         <div style="margin-left:8%;" *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
-          <a (click)="getCategories(menu._id); applyClassMenu(menu._id)" [ngClass]="{'activeItem': activeMenu == menu._id}" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
+          <a (click)="getCategoriesAvailables(menu._id); applyClassMenu(menu._id)" [ngClass]="{'activeItem': activeMenu == menu._id}" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
         </div>
         <div style="margin-left:8%;" *ngIf="dailyMenus.length > 0" class="d-flex align-items-center menuButtonContainer">
           <a [ngClass]="{'activeItem': activeDailyMenu}" (click)="applyClassDailyMenu();" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{ dailyMenusLabel }}</span></a>

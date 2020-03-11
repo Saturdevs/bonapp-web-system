@@ -34,12 +34,14 @@
             <thead class="primary-color customTableText">
                 <tr>
                     <th>Nombre</th>
+                    <th>Disponible</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody class="table-wrapper"  *ngIf='menus && menus.length'>
                 <tr *ngFor='let menu of filteredMenus' >
-                    <td class="align-middle">{{ menu.name }}</td>                    
+                    <td class="align-middle">{{ menu.name }}</td> 
+                    <td class="align-middle customShortTh">{{ menu.availableDescription }}</td>                   
                     <td class="align-middle">
                         <a [routerLink]="['edit', menu._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
                         <a (click) = "showModalDelete(deleteTemplate, noDelete, menu._id)" class="btn btn-red btn-sm">Eliminar</a>

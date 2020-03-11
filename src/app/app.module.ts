@@ -33,6 +33,8 @@ import { CounterComponent } from './counter/counter.component';
 import { SelectItemComponent } from './select-item/select-item.component';
 import { DailyMenuModule } from './daily-menu/daily-menu.module';
 import { StockControlModule } from './stock-control/stock-control.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,8 @@ import { StockControlModule } from './stock-control/stock-control.module';
     SupplierModule,
     AppRoutingModule,
     SharedModule,
-    FileInputModule
+    FileInputModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   schemas: [ NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA ],
   bootstrap: [ AppComponent ]

@@ -82,12 +82,6 @@ export class OrderService {
           .catch(this.handleError);
   }
 
-  unSetTable(tableNumber) {
-    return this.apiService.put(`/order/unsettable/${tableNumber}`)
-            .map(data =>data.table)
-            .catch(this.handleError);
-  }
-
   private handleError(err: HttpErrorResponse){
     console.log(err.message);
     return Observable.throw(err);

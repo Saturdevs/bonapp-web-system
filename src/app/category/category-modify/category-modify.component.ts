@@ -9,12 +9,12 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
   Category,
   Menu,
-  CategoryService,
-  Product
+  CategoryService  
 } from '../../../shared/index';
 
 import { FileInputComponent } from '../../file-input/file-input.component';
-import { isNullOrUndefined } from 'util';
+
+import { CONFLICT } from 'http-status-codes';
 
 @Component({
   selector: 'app-category-modify',
@@ -27,13 +27,17 @@ export class CategoryModifyComponent implements OnInit {
   private fileInputComponent: FileInputComponent;
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+
+  @ViewChild('confirmDisableCategoryAndProductsTemplate') confirmDisableCategoryAndProductsTemplate:TemplateRef<any>;
+
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalCancelTitle: string;
   private modalCancelMessage: string;
-  private noModifyMessage = "Esta categoría no puede ser modificada porque tiene productos asociados.";
+  private cancelTitle = "Cancelar Cambios";
+  private cancelMessage = "¿Está seguro que desea cancelar los cambios?";
   pageTitle: string = 'Category Modify';
   category: Category;
   menus: Menu[];
@@ -47,10 +51,9 @@ export class CategoryModifyComponent implements OnInit {
   pictureTouched: boolean;
   validPicture: string;
   menuTouched: boolean = false;
-  path: string = '../../../assets/img/categories/';
-  product: Product;
-  canEdit: Boolean = true;
+  path: string = '../../../assets/img/categories/';  
   private categoryPictureData: string;
+  checkboxAvailableText: String = 'Disponible';
 
   constructor(private _route: ActivatedRoute,
     private _router: Router,
@@ -64,24 +67,32 @@ export class CategoryModifyComponent implements OnInit {
     this.categoryMenuModified = this.category.menu.name;
     this.CategoryPicModified = this.category.picture;
     this.menus = this._route.snapshot.data['menus'];
-    this.product = this._route.snapshot.data['product'];
     this.categoryPictureData = this.category.picture;
-    
-    if (!isNullOrUndefined(this.product)) {
-      this.canEdit = false;    
-    }    
   }
 
   updateCategory(category: Category) {
     this._categoryService.updateCategory(category).subscribe(
       category => {
-      this.category = category,
-        this.onBack()
+        this.category = category,
+          this.onBack()
       },
       error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      });
+        if (error.status === CONFLICT) {
+          let modalTitle = 'Inhabilitar Categoria';
+          this.showModalCancel(this.confirmDisableCategoryAndProductsTemplate, error.error.message, modalTitle);
+        }
+        else {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      }
+    )
   }
+
+  showModalCancel(template: TemplateRef<any>, modalMessage: string, modalTitle: string){    
+    this.modalRef = this.modalService.show(template, {backdrop: true});
+    this.modalCancelTitle = modalTitle;
+    this.modalCancelMessage = modalMessage;
+	}
 
   onNotified(validator: Array<string>) {
     validator[0] != '' ? this.validPicture = validator[0] : this.validPicture = '';
@@ -100,12 +111,6 @@ export class CategoryModifyComponent implements OnInit {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
     this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
-  }
-
-  showModalCancel(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, { backdrop: true });
-    this.modalCancelTitle = "Cancelar Cambios";
-    this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";
   }
 
   closeModal() {
@@ -127,6 +132,17 @@ export class CategoryModifyComponent implements OnInit {
     } else {
       this.hasCategory = false;
     }
+  }
+
+  disableCategoryAndProducts(categoryId) {
+    this._categoryService.disableCategoryAndProducts(categoryId).subscribe(
+      success => {
+        this.cancel()
+      },
+      error => {
+        this.showModalError(this.serviceErrorTitle, error.error.message);
+      }
+    );
   }
 
   cancel() {
