@@ -25,3 +25,7 @@ export * from './cashRegisterMin';
 export * from './sizeInProduct';
 export * from './optionInProduct';
 export * from './productStock';
+export * from './right';
+export * from './userRole';
+export * from './appMenu';
+export * from './rightForUser';

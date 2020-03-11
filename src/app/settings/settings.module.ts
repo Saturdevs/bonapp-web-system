@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -32,6 +32,7 @@ import { PaymentTypeEditResolverService } from '../payment-type/payment-type-edi
 import { CashRegisterResolverService } from '../cash-register/cash-register-list/cash-register-resolver.service';
 import { CashRegisterEditResolverService } from '../cash-register/cash-register-edit/cash-register-edit-resolver.service';
 import { SectionListGuardService } from '../section/section-list/section-list-guard.service';
+import { AuthGuard } from '../../shared';
 
 
 @NgModule({
@@ -42,37 +43,43 @@ import { SectionListGuardService } from '../section/section-list/section-list-gu
         component: SettingsComponent,
         children: [
           {
-            path: '', redirectTo: 'general', pathMatch: 'full'
+            path: '', redirectTo: 'general-settings', pathMatch: 'full'
           },
           {
-            path: 'general',
+            path: 'general-settings',
             component: GeneralSettingsComponent,
             children: [
               {
-                path: 'sizes',
+                path: 'size',
                 component: SizeListComponent,
                 resolve: { sizes: SizeResolverService },
-                children: [                  
+                children: [
                   {
                     path: 'editSize/:id',
                     component: SizeEditComponent,
                     resolve: { size: SizeEditResolverService },
-                    outlet: 'edit'
-                  }, 
+                    outlet: 'edit',
+                    data: { menu: 'size-edit' },
+                    canActivate: [AuthGuard]
+                  },
                   {
                     path: 'newSize',
                     component: SizeNewComponent,
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'size-new' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'selectItem',
                     component: SelectItemComponent,
                     outlet: 'edit'
-                  } 
-                ]                                  
-              },              
+                  }
+                ],
+                data: { menu: 'size' },
+                canActivate: [AuthGuard]
+              },
               {
-                path: 'paymentTypes',                
+                path: 'payment-types',
                 component: PaymentTypeListComponent,
                 resolve: { paymentTypes: PaymentTypeResolverService },
                 children: [
@@ -80,22 +87,28 @@ import { SectionListGuardService } from '../section/section-list/section-list-gu
                     path: 'editPaymentType/:id',
                     component: PaymentTypeEditComponent,
                     resolve: { paymentType: PaymentTypeEditResolverService },
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'payment-types-edit' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'newPaymentType',
                     component: PaymentTypeNewComponent,
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'payment-types-new' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'selectItem',
                     component: SelectItemComponent,
                     outlet: 'edit'
-                  } 
-                ]                                                 
+                  }
+                ],
+                data: { menu: 'payment-types' },
+                canActivate: [AuthGuard]
               },
               {
-                path: 'cashRegisters',                
+                path: 'cash-register',
                 component: CashRegisterListComponent,
                 resolve: { cashRegisters: CashRegisterResolverService },
                 children: [
@@ -103,22 +116,28 @@ import { SectionListGuardService } from '../section/section-list/section-list-gu
                     path: 'editCashRegister/:id',
                     component: CashRegisterEditComponent,
                     resolve: { cashRegister: CashRegisterEditResolverService },
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'cash-register-edit' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'newCashRegister',
                     component: CashRegisterNewComponent,
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'cash-register-new' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'selectItem',
                     component: SelectItemComponent,
                     outlet: 'edit'
-                  } 
-                ]                                                 
+                  }
+                ],
+                data: { menu: 'cash-register' },
+                canActivate: [AuthGuard]
               },
               {
-                path: 'sections',                
+                path: 'sections',
                 component: SectionListConfigComponent,
                 resolve: { sections: SectionListResolverService },
                 children: [
@@ -126,41 +145,49 @@ import { SectionListGuardService } from '../section/section-list/section-list-gu
                     path: 'editSection/:id',
                     component: SectionEditComponent,
                     resolve: { section: SectionEditResolverService },
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'sections-edit' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'newSection',
                     component: SectionNewComponent,
-                    outlet: 'edit'
+                    outlet: 'edit',
+                    data: { menu: 'sections-new' },
+                    canActivate: [AuthGuard]
                   },
                   {
                     path: 'selectItem',
                     component: SelectItemComponent,
                     outlet: 'edit'
-                  } 
-                ]                                                 
-              }              
-            ]
+                  }
+                ],
+                data: { menu: 'sections' },
+                canActivate: [AuthGuard]
+              }
+            ],
+            data: { menu: 'general-settings' },
+            canActivate: [AuthGuard]
           },
           {
-            path: 'section',
-            component: SectionListComponent, 
+            path: 'tables-section',
+            component: SectionListComponent,
             canDeactivate: [SectionListGuardService],
             children: [
               {
                 path: 'tables/:id',
                 component: TableListComponent,
-                resolve: { tables: TableListResolverService, totalTables: TableAllResolverService }                                
-              },
-              {
-                path: 'newSection',
-                component: SectionNewComponent
+                resolve: { tables: TableListResolverService, totalTables: TableAllResolverService }
               }
             ],
-            resolve: { sections: SectionListResolverService }         
+            resolve: { sections: SectionListResolverService },
+            data: { menu: 'tables-section' },
+            canActivate: [AuthGuard]
           }
-        ]
-      }     
+        ],
+        data: { menu: 'settings' },
+        canActivate: [AuthGuard]
+      }
     ]),
     SharedModule
   ],
@@ -169,4 +196,3 @@ import { SectionListGuardService } from '../section/section-list/section-list-gu
   ]
 })
 export class SettingsModule { }
- 

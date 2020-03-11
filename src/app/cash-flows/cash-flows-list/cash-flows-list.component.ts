@@ -8,8 +8,11 @@ import {
   CashFlow,
   CashRegister,
   CashFlowService,
-  CashRegisterService,
-  CashFlowTypes
+  CashFlowTypes,
+  RightsFunctions,
+  AuthenticationService,
+  Rights,
+  User
 } from '../../../shared/index';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -43,17 +46,29 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
   endDate: Date;
   typesArray: Array<string> = new Array(CashFlowTypes.INGRESO, CashFlowTypes.EGRESO);
   previous: any;
+  currentUser: User;
+  enableDelete: Boolean;
+  enableDetail: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private cashFlowService: CashFlowService,
-    private cashRegisterService: CashRegisterService,
     private route: ActivatedRoute,
     private modalService: BsModalService,
-    private cdRef: ChangeDetectorRef) { }
+    private cdRef: ChangeDetectorRef,
+    private _authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+
     this.route.data.subscribe(
       data => {
         this.cashFlows = data['cashFlows'];
@@ -90,6 +105,18 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
     this.cdRef.detectChanges();
   }
 
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_CASH_FLOW);
+    this.enableDetail = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DETAIL_CASH_FLOW);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_CASH_FLOW);
+
+    this.enableActionButtons = this.enableDelete || this.enableDetail;
+  }
+
   getCashFlows(): void {
     this.cashFlowService.getAll()
       .subscribe(cashFlows => {
@@ -123,10 +150,7 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
 
   deleteCashFlow() {
     if (this.closeModal()) {
-      let cashFlow = this.cashFlows.find(cashFlow => cashFlow._id === this.idCashFlowsDelete);
-      cashFlow.deleted = true;
-      cashFlow.deletedBy = "5d38ebfcf361ae0cabe45a8e";
-      this.cashFlowService.updateCashFlow(cashFlow).subscribe(success => {
+      this.cashFlowService.logicalDeleteCashFlow(this.idCashFlowsDelete).subscribe(success => {
         this.getCashFlows();
       },
         error => {

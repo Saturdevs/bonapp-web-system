@@ -36,7 +36,7 @@ export class TransactionDetailComponent implements OnInit {
   }
 
   onBack(): void {
-    this._router.navigate(['/clients-module/accountTransactions', { outlets: { edit: null } }]);
+    this._router.navigate(['/clients-module/current-accounts', { outlets: { edit: null } }]);
   }
   
   showModalError(errorTittleReceived: string, errorMessageReceived: string) { 

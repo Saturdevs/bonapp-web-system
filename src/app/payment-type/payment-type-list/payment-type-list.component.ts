@@ -8,7 +8,11 @@ import { CONFLICT } from 'http-status-codes';
 
 import {
   PaymentTypeService,
-  PaymentType
+  PaymentType,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../../shared';
 
 @Component({
@@ -31,7 +35,11 @@ export class PaymentTypeListComponent implements OnInit {
   paymentTypes: PaymentType[];
   filteredPaymentTypes: PaymentType[];
   _listFilter: string;
-  idPaymentTypeDelete: any;
+  idPaymentTypeDelete: any; currentUser: User;
+  enableDelete: Boolean;
+  enableEdit: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;
 
   get listFilter(): string {
     return this._listFilter;
@@ -43,10 +51,18 @@ export class PaymentTypeListComponent implements OnInit {
 
   constructor(private paymentTypeService: PaymentTypeService,
     private route: ActivatedRoute,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private _authenticationService: AuthenticationService
   ) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+    
     this.route.data.subscribe(
       data => {
         this.paymentTypes = data['paymentTypes'];
@@ -54,6 +70,18 @@ export class PaymentTypeListComponent implements OnInit {
     )
 
     this.filteredPaymentTypes = this.paymentTypes;
+  }
+
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_PAYMENT_TYPE);
+    this.enableEdit = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.EDIT_PAYMENT_TYPE);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_PAYMENT_TYPE);
+
+    this.enableActionButtons = this.enableDelete || this.enableEdit;
   }
 
   performFilter(filterBy: string): PaymentType[] {

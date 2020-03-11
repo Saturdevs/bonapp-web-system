@@ -1,7 +1,13 @@
+import { AppMenu } from "./appMenu";
+import { RightForUser } from "./rightForUser";
+
 export class User {
-  _id: string;
+  readonly _id: string;
+  readonly username: string;
+  roleId: string;
   name: string;
   lastName: string;
-  username: string;
-  phone: string;
+  token?: string;  
+  readonly menus: Array<AppMenu> = [];
+  readonly rights: Array<RightForUser> = [];
 }

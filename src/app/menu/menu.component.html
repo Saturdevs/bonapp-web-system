@@ -12,11 +12,12 @@
 <div class="pageTitle">
     <div style="float: left">
         <header class="major">
-                <h5>{{pageTitle}}</h5>
+            <h5>{{pageTitle}}</h5>
         </header>
     </div>
     <div style="float: right">
-        <a [routerLink]="['newMenu']" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius> + Nueva Carta</a>
+        <a [routerLink]="['newMenu']" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+            *ngIf='enableNew'> + Nueva Carta</a>
     </div>
 </div>
 <div class="ml-5 mr-5 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
@@ -24,9 +25,10 @@
         <form #form="ngForm" novalidate class="form-inline">
             <h6 class="pt-2">Filtrar:</h6>
             <div class="md-form form-group mr-0 ml-0 col-md-10 col-lg-10">
-                <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
+                <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+                    id="query">
             </div>
-        </form>    
+        </form>
     </div>
 
     <div class="row">
@@ -35,16 +37,20 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Disponible</th>
-                    <th>Acciones</th>
+                    <th *ngIf='enableActionButtons'>Acciones</th>
                 </tr>
             </thead>
-            <tbody class="table-wrapper"  *ngIf='menus && menus.length'>
-                <tr *ngFor='let menu of filteredMenus' >
-                    <td class="align-middle">{{ menu.name }}</td> 
-                    <td class="align-middle customShortTh">{{ menu.availableDescription }}</td>                   
-                    <td class="align-middle">
-                        <a [routerLink]="['edit', menu._id]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
-                        <a (click) = "showModalDelete(deleteTemplate, noDelete, menu._id)" class="btn btn-red btn-sm">Eliminar</a>
+            <tbody class="table-wrapper" *ngIf='menus && menus.length'>
+                <tr *ngFor='let menu of filteredMenus'>
+                    <td class="align-middle">{{ menu.name }}</td>
+                    <td class="align-middle customShortTh">{{ menu.availableDescription }}</td>
+                    <td class="align-middle" *ngIf='enableActionButtons'>
+                        <a [routerLink]="['edit', menu._id]" 
+                        class="btn btn-yellow btn-sm customButtonText"
+                        *ngIf='enableEdit'>Editar</a>
+                        <a (click)="showModalDelete(deleteTemplate, noDelete, menu._id)"
+                        class="btn btn-red btn-sm"
+                        *ngIf='enableDelete'>Eliminar</a>
                     </td>
                 </tr>
             </tbody>

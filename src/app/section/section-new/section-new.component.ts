@@ -59,7 +59,7 @@ export class SectionNewComponent implements OnInit {
   }
 
   onBack(): void {
-    this._router.navigate(['/settings/general/sections', { outlets: { edit: ['selectItem'] } }]);
+    this._router.navigate(['/settings/general-settings/sections', { outlets: { edit: ['selectItem'] } }]);
   }
 
   showModalError(errorTittleReceived: string, errorMessageReceived: string) {

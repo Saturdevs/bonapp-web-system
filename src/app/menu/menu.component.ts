@@ -7,7 +7,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 import {
   Menu,
   MenuService,
-  Category
+  Category,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../shared';
 
 @Component({
@@ -16,7 +20,7 @@ import {
 })
 export class MenuComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   public modalRef: BsModalRef;
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = 'Cartas';
@@ -29,70 +33,95 @@ export class MenuComponent implements OnInit {
   _listFilter: string;
   idMenuDelete: any;
   categories: Category[];
-  
+  currentUser: User;
+  enableDelete: Boolean;
+  enableEdit: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;
+
   get listFilter(): string {
-      return this._listFilter;
+    return this._listFilter;
   }
   set listFilter(value: string) {
-      this._listFilter = value;
-      this.filteredMenus = this.listFilter ? this.performFilter(this.listFilter) : this.menus;
+    this._listFilter = value;
+    this.filteredMenus = this.listFilter ? this.performFilter(this.listFilter) : this.menus;
   }
 
   constructor(private _menuService: MenuService,
-              private modalService: BsModalService,
-              private route: ActivatedRoute) { 
+    private modalService: BsModalService,
+    private route: ActivatedRoute,
+    private _authenticationService: AuthenticationService) {
 
-    }
+  }
 
   ngOnInit(): void {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+
     this.menus = this.route.snapshot.data['menus'];
     this.filteredMenus = this.menus;
   }
 
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_MENU);
+    this.enableEdit = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.EDIT_MENU);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_MENU);
+
+    this.enableActionButtons = this.enableDelete || this.enableEdit;
+  }
+
   performFilter(filterBy: string): Menu[] {
-        filterBy = filterBy.toLocaleLowerCase();
-        return this.menus.filter((menu: Menu) =>
-              menu.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.menus.filter((menu: Menu) =>
+      menu.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 
   getMenus(): void {
     this._menuService.getAll()
-        .subscribe(menus => { 
-          this.menus = menus;
-          this.filteredMenus = this.menus
-        },
+      .subscribe(menus => {
+        this.menus = menus;
+        this.filteredMenus = this.menus
+      },
         error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);
-        });        
+        });
   }
 
-  async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idMenu: any){
-    this.idMenuDelete = idMenu;       
-      this.modalDeleteTitle = "Eliminar Carta";
-      this.modalDeleteMessage = "¿Seguro desea eliminar esta Carta?";
-      this.modalRef = this.modalService.show(templateDelete, {backdrop: true});                                  
+  async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idMenu: any) {
+    this.idMenuDelete = idMenu;
+    this.modalDeleteTitle = "Eliminar Carta";
+    this.modalDeleteMessage = "¿Seguro desea eliminar esta Carta?";
+    this.modalRef = this.modalService.show(templateDelete, { backdrop: true });
   }
 
-  deleteMenu(){
-    if (this.closeModal()){
-      this._menuService.deleteMenu(this.idMenuDelete).subscribe( success=> {
+  deleteMenu() {
+    if (this.closeModal()) {
+      this._menuService.deleteMenu(this.idMenuDelete).subscribe(success => {
         this.getMenus();
       },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      });
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        });
     }
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;
     this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  closeModal(){
+  closeModal() {
     this.modalRef.hide();
     this.modalRef = null;
-    return true;        
+    return true;
   }
 }

@@ -1,13 +1,15 @@
 <!-- Nav tabs -->
 <ul class="nav classic-tabs tabs-primary customLinksColor">
-  <li class="nav-item customFirstLi">
-    <a class="waves-effect"
-    [routerLink]="['suppliers', { outlets: { edit: ['selectItem'] } }]" routerLinkActive="active">
-        Proveedores
-    </a>
-  </li>
- </ul>
- <!-- Tab panels -->
- <div class="tab-content customContentCard">
-    <router-outlet></router-outlet>
- </div>
+  <div *ngFor='let appMenu of appMenus'>
+    <li *ngIf='appMenu.show' class="nav-item">
+      <a class="waves-effect" [routerLink]="[appMenu._id, { outlets: { edit: ['selectItem'] } }]"
+        routerLinkActive="active">
+        {{ 'AppMenus.' + appMenu._id | translate }}
+      </a>
+    </li>
+  </div>
+</ul>
+<!-- Tab panels -->
+<div class="tab-content customContentCard">
+  <router-outlet></router-outlet>
+</div>

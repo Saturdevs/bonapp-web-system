@@ -76,7 +76,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   }
 
   isSettingsActive() {
-    return this._router.isActive('/settings/section', true);
+    return this._router.isActive('/settings/tables-section', true);
   }
 
   isOrdersActive() {

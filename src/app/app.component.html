@@ -1,32 +1,20 @@
 <!-- Wrapper -->
 <div id="wrapper">
-	<div class="containter-fluid customMB">
+	<div class="containter-fluid customMB" *ngIf="currentUser">
 	<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navBarColor pr-0" [containerInside]="false">
 		<logo>
 			<a class="logo navbar-brand pl-4" href="#"><img src="assets/img/logo-blanco.png" height="40px" width="auto"></a>
 		</logo>
 		<links>
+			<!-- App Menus -->
 			<ul class="navbar-nav mr-auto">
-				<!--<a [routerLink]="['/order']" class="btn btn-primary">Nuevo Pedido</a>-->
-				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Pedidos" placement="bottom" mdbRippleRadius>
-					<a [routerLink]="['orders']" class="nav-link"><img src="assets/img/taza.png" height="50px" width="auto"><span class="sr-only">(current)</span></a>
-				</li>
-				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Ventas" placement="bottom" mdbRippleRadius>
-					<a [routerLink]="['sales']" class="nav-link"><img src="assets/img/moneda.png" height="50px" width="auto"></a>
-				</li>
-				<li class="nav-item waves-light customLi"  [routerLinkActive]="['customActive']" mdbTooltip="Restaurant" placement="bottom" mdbRippleRadius>
-					<a [routerLink]="['restaurant']" class="nav-link"><img src="assets/img/cubiertos.png" height="50px" width="auto"></a>
-				</li>
-				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Clientes" placement="bottom" mdbRippleRadius>
-					<a [routerLink]="['clients-module']" class="nav-link"><img src="assets/img/perfilredondo.png" height="50px" width="auto"></a>
-				</li>
-				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Proveedores" placement="bottom" mdbRippleRadius>
-					<a [routerLink]="['suppliers-module']" class="nav-link"><img src="assets/img/camion.png" height="50px" width="auto"></a>
-				</li>
-				<li class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="Configuracion" placement="bottom" mdbRippleRadius>
-					<a [routerLink]="['settings']" class="nav-link"><img src="assets/img/engranaje.png" height="50px" width="auto"></a>
-				</li>
+				<div *ngFor='let appMenu of appMenus'>
+					<li *ngIf='appMenu.show' class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="{{ 'AppMenus.' + appMenu._id | translate }}" placement="bottom" mdbRippleRadius>
+							<a [routerLink]="appMenu._id" class="nav-link"><img [src]="appMenu.imgsrc" height="50px" width="auto"></a>
+					</li>
+				</div>
 			</ul>
+			
 			<ul class="navbar-nav nav-flex-icons">
 				<li class="pt-0 pr-2 text-center" mdbRippleRadius>
 					<p class="mb-0 customDate">{{ myDate | date:'EEEE'}}</p>
@@ -41,7 +29,7 @@
 				
 					<div *dropdownMenu class="dropdown-menu dropdown-primary dropdown" role="menu">
 						<a class="dropdown-item waves-light" href="#" mdbRippleRadius>Cuenta</a>
-						<a class="dropdown-item waves-light" href="#" mdbRippleRadius>Salir</a>
+						<a class="dropdown-item waves-light" (click)="logout()" mdbRippleRadius>Salir</a>
 					</div>
 				</li>
 			</ul>

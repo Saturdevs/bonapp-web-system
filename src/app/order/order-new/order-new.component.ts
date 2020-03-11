@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
-import { Observable, Subject, of } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ModalDirective, MdbAutoCompleterComponent, localDataFactory, MdbOptionComponent } from 'ng-uikit-pro-standard';
+import { ModalDirective, MdbAutoCompleterComponent } from 'ng-uikit-pro-standard';
 import {
   Menu,
   CategoryService,
@@ -16,10 +15,13 @@ import {
   Product,
   OrderService,
   Order,
-  OrderDiscount,
   CashRegister,
   PaymentType,
-  UserRoles
+  UserRoles,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -42,19 +44,21 @@ export class OrderNewComponent implements OnInit {
   @ViewChild('optionsAndSizesTemplate') optionsAndSizesTemplate: TemplateRef<any>;
   @ViewChild(MdbAutoCompleterComponent) completer: MdbAutoCompleterComponent;
 
-  constructor(private _router: Router,
-    private _route: ActivatedRoute,
+  constructor(private _route: ActivatedRoute,
     private productService: ProductService,
     private orderService: OrderService,
     private modalService: BsModalService,
     private categoryService: CategoryService,
-    private dailyMenuService: DailyMenuService) { }
+    private dailyMenuService: DailyMenuService,
+    private _authenticationService: AuthenticationService) { }
 
   pageTitle: String = 'Nuevo Pedido';
   noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
   noProductsAvailablesText: string = 'No hay productos disponibles para la categoria seleccionada.';
   prodObservation: string = 'Agregue una observación aquí...';
   sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños';
+  private rightErrorTitle = 'Error de Permisos';
+  private rightErrorMessage = 'Usted no posee los permisos requeridos para realizar la acción deseada. Pongase en contacto con el administrador del sistema.';
   categorySelected: boolean = false;
   /*Para mostrar un mensaje diferente si no selecciono categoria o si no hay productos disponibles. */
   menus: Menu[];
@@ -113,8 +117,19 @@ export class OrderNewComponent implements OnInit {
   dailyMenusLabel = "Menu del Dia";
   /** Variable para verificar si se esta en dailyMenu*/
   activeDailyMenu = false;
+  currentUser: User;
+  enableAddProducts: Boolean;
+  enableDeleteProducts: Boolean;
+  enableCloseOrder: Boolean;
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+
     this.order = this._route.snapshot.data['order'];
     console.log(this.order)
     this.products = [];
@@ -127,6 +142,16 @@ export class OrderNewComponent implements OnInit {
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.getProducts();
+  }
+
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableAddProducts = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.ADD_PRODUCTS_ORDER);
+    this.enableDeleteProducts = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_PRODUCTS_ORDER);
+    this.enableCloseOrder = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.CLOSE_ORDER);
   }
 
   filter(value: string): Product[] {
@@ -152,16 +177,16 @@ export class OrderNewComponent implements OnInit {
   /**Devuelve las categorías disponibles para el menu pasado como parámetro almacenadas en el sistema
    * @param menuId id del menu para el que se quieren obtener las categorías disponibles
    */
-  getCategoriesAvailables(menuId){
+  getCategoriesAvailables(menuId) {
     this.categories = [];
     this.products = this.filteredProducts = [];
     this.categoryService.getCategoriesAvailablesByMenu(menuId)
       .subscribe(categories => {
         this.categories = categories;
       },
-      error => { 
-        this.showModalError(this.serviceErrorTitle, error.error.message);
-      });
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        });
   }
 
   /**
@@ -243,13 +268,17 @@ export class OrderNewComponent implements OnInit {
    * @param quantity cantidad del producto seleccionado.
    */
   validateSizesAndOptions(product: Product, quantity: number) {
-    if (product.sizes.length > 0 || product.options.length > 0) {
-      this.showOptionsAndSizes(product)
-    }
-    else {
-      let selectedSize = null;
-      let selectedOptions = null;
-      this.addProductToPreOrder(product, quantity, selectedSize, selectedOptions);
+    if (this.enableAddProducts) {
+      if (product.sizes.length > 0 || product.options.length > 0) {
+        this.showOptionsAndSizes(product)
+      }
+      else {
+        let selectedSize = null;
+        let selectedOptions = null;
+        this.addProductToPreOrder(product, quantity, selectedSize, selectedOptions);
+      }
+    } else {
+      this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
     }
   }
 

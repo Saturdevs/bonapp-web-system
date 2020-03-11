@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -19,6 +19,7 @@ import { TransactionDetailResolverService } from '../client-account-transactions
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { ClientCurrentAccountResolverService } from '../client/resolvers/client-current-account-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
+import { AuthGuard } from '../../shared';
 
 @NgModule({
   imports: [
@@ -32,10 +33,10 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
           },
           {
             path: 'clients',
-            component: ClientListComponent,   
+            component: ClientListComponent,
             resolve: {
               clients: ClientResolverService
-            },        
+            },
             children: [
               {
                 path: 'editClient/:id',
@@ -43,27 +44,33 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
                 resolve: {
                   client: ClientEditResolverService
                 },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'clients-edit' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newClient',
                 component: ClientNewComponent,
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'clients-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'selectItem',
                 component: SelectItemComponent,
                 outlet: 'edit'
-              }                            
-            ]
+              }
+            ],
+            data: { menu: 'clients' },
+            canActivate: [AuthGuard]
           },
           {
-            path: 'accountTransactions',
-            component: TransactionListComponent,   
+            path: 'current-accounts',
+            component: TransactionListComponent,
             resolve: {
               transactions: TransactionResolverService,
               clientsWithTransactionsEnabled: ClientCurrentAccountResolverService
-            },        
+            },
             children: [
               {
                 path: 'editTransaction/:idTransaction',
@@ -71,26 +78,34 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
                 resolve: {
                   transaction: TransactionDetailResolverService
                 },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'current-accounts-transaction-detail' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newTransaction',
                 component: TransactionNewComponent,
                 resolve: {
-                  cashRegisters: CashRegisterAvailablesResolverService, 
+                  cashRegisters: CashRegisterAvailablesResolverService,
                   paymentTypes: PaymentTypeAvailableResolverService,
                   clients: ClientCurrentAccountResolverService
                 },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'current-accounts-transaction-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'selectItem',
                 component: SelectItemComponent,
                 outlet: 'edit'
-              }                               
-            ]
+              }
+            ],
+            data: { menu: 'current-accounts' },
+            canActivate: [AuthGuard]
           }
-        ]
+        ],
+        data: { menu: 'clients-module' },
+        canActivate: [AuthGuard]
       }
     ]),
     SharedModule

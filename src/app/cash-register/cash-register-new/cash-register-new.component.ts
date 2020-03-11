@@ -78,7 +78,7 @@ export class CashRegisterNewComponent implements OnInit {
   }
 
   onBack() {
-    this._router.navigate(['/settings/general/cashRegisters', { outlets: { edit: ['selectItem'] } }])
+    this._router.navigate(['/settings/general-settings/cash-register', { outlets: { edit: ['selectItem'] } }])
   }
 
   cancel(){

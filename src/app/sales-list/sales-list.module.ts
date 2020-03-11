@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
@@ -25,6 +25,7 @@ import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/p
 import { OrderResolverService } from '../order/order-list/order-resolver.service';
 import { OrderDetailService } from '../order/order-detail/order-detail.service';
 import { TableAllResolverService } from '../table/table-list/table-all-resolver.service';
+import { AuthGuard } from '../../shared';
 
 @NgModule({
   imports: [
@@ -34,14 +35,14 @@ import { TableAllResolverService } from '../table/table-list/table-all-resolver.
         component: SalesListComponent,
         children: [
           {
-            path: '', redirectTo: 'sales-list', pathMatch: 'full'
+            path: '', redirectTo: '/sales/sales-list/(edit:selectItem)', pathMatch: 'full'
           },
           {
             path: 'sales-list',
             component: OrderListComponent,
             resolve: {
               orders: OrderResolverService,
-              cashRegisters: CashRegisterAvailablesResolverService, 
+              cashRegisters: CashRegisterAvailablesResolverService,
               paymentTypes: PaymentTypeAvailableResolverService,
               tables: TableAllResolverService
             },
@@ -49,53 +50,66 @@ import { TableAllResolverService } from '../table/table-list/table-all-resolver.
               {
                 path: 'orderDetail/:id',
                 component: OrderDetailComponent,
-                resolve: { 
+                resolve: {
                   order: OrderDetailService
                 },
-                outlet: 'edit'                
-              }
-            ]              
-          },
-          {
-            path: 'cash-flows',
-            component: CashFlowsListComponent,
-            resolve: { 
-                      cashFlows: CashFlowResolverService, 
-                      cashRegisters: CashRegisterResolverService
-                     },
-            children: [
-              {
-                path: 'editCashFlow/:id',
-                component: CashFlowsEditComponent,
-                resolve: { 
-                          cashFlow: CashFlowEditResolverService, 
-                          cashRegisters: CashRegisterAvailablesResolverService, 
-                          paymentTypes: PaymentTypeResolverService 
-                        },
-                outlet: 'edit'
-              },
-              {
-                path: 'newCashFlow',
-                component: CashFlowsNewComponent,
-                resolve: { 
-                          cashRegisters: CashRegisterAvailablesResolverService, 
-                          paymentTypes: PaymentTypeAvailableResolverService 
-                         },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'order-detail' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'selectItem',
                 component: SelectItemComponent,
                 outlet: 'edit'
-              }              
-            ]
+              }
+            ],
+            data: { menu: 'sales-list' },
+            canActivate: [AuthGuard]
+          },
+          {
+            path: 'cash-flows',
+            component: CashFlowsListComponent,
+            resolve: {
+              cashFlows: CashFlowResolverService,
+              cashRegisters: CashRegisterResolverService
+            },
+            children: [
+              {
+                path: 'editCashFlow/:id',
+                component: CashFlowsEditComponent,
+                resolve: {
+                  cashFlow: CashFlowEditResolverService
+                },
+                outlet: 'edit',
+                data: { menu: 'cash-flows-detail' },
+                canActivate: [AuthGuard]
+              },
+              {
+                path: 'newCashFlow',
+                component: CashFlowsNewComponent,
+                resolve: {
+                  cashRegisters: CashRegisterAvailablesResolverService,
+                  paymentTypes: PaymentTypeAvailableResolverService
+                },
+                outlet: 'edit',
+                data: { menu: 'cash-flows-new' },
+                canActivate: [AuthGuard]
+              },
+              {
+                path: 'selectItem',
+                component: SelectItemComponent,
+                outlet: 'edit'
+              }
+            ],
+            data: { menu: 'cash-flows' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'cash-counts',
             component: ArqueoCajaListComponent,
             resolve: {
-                      arqueos: ArqueoCajaResolverService,
-                      cashRegisters: CashRegisterResolverService
+              arqueos: ArqueoCajaResolverService,
+              cashRegisters: CashRegisterResolverService
             },
             children: [
               {
@@ -103,10 +117,12 @@ import { TableAllResolverService } from '../table/table-list/table-all-resolver.
                 component: ArqueoCajaEditComponent,
                 resolve: {
                   arqueo: ArqueoCajaEditResolverService,
-                  cashRegisters: CashRegisterAvailablesResolverService, 
-                  paymentTypes: PaymentTypeResolverService 
+                  cashRegisters: CashRegisterAvailablesResolverService,
+                  paymentTypes: PaymentTypeResolverService
                 },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'cash-counts-edit' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newCashCount',
@@ -114,16 +130,22 @@ import { TableAllResolverService } from '../table/table-list/table-all-resolver.
                 resolve: {
                   cashRegisters: CashRegisterAvailablesResolverService
                 },
-                outlet: 'edit'
+                outlet: 'edit',
+                data: { menu: 'cash-counts-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'selectItem',
                 component: SelectItemComponent,
                 outlet: 'edit'
-              }               
-            ]
+              }
+            ],
+            data: { menu: 'cash-counts' },
+            canActivate: [AuthGuard]
           }
-        ]
+        ],
+        data: { menu: 'sales' },
+        canActivate: [AuthGuard]
       }
     ]),
     SharedModule

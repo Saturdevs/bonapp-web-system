@@ -1,8 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketIoService } from '../shared/services/socket-io.service';
+import { Router } from '@angular/router';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { SwPush } from '@angular/service-worker';
-import { NotificationService } from '../shared/services/notification.service';
+import { TranslateService } from '@ngx-translate/core';
+
+import {
+  AuthenticationService,
+  NotificationService,
+  SocketIoService,
+  User,
+  AppMenu,
+  UtilFunctions
+} from '../shared/index';
+import { isNullOrUndefined } from 'util';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,13 +24,35 @@ export class AppComponent implements OnInit {
   title: string = 'Web Bar';
   subtitle: string = 'by Los Pibes';
   myDate: Date;
+  currentUser: User;
+  appMenus: Array<AppMenu> = [];
 
-  constructor(private _socketService: SocketIoService,
+  constructor(
+    private _socketService: SocketIoService,
     private toast: ToastService,
     private swPush: SwPush,
-    private newsletterService: NotificationService) { }
+    private _notificationService: NotificationService,
+    private _authenticationService: AuthenticationService,
+    private _router: Router,
+    private translate: TranslateService
+  ) {
+    // this language will be used as a fallback when a translation isn't found in the current language
+    this.translate.setDefaultLang('es');
+
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    this.translate.use('es');
+  }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        if (!isNullOrUndefined(this.currentUser)) {
+          this.appMenus = UtilFunctions.getChildAPpMenus(this.currentUser, null);
+        }
+      }
+    );
+
     this.getTime();
     //this.subscribeToNotifications(); only with http-server
     this._socketService.waiterCall() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
@@ -45,7 +78,12 @@ export class AppComponent implements OnInit {
     this.swPush.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY
     })
-      .then(sub => this.newsletterService.addPushSubscriber(sub).subscribe())
+      .then(sub => this._notificationService.addPushSubscriber(sub).subscribe())
       .catch(err => console.error("Could not subscribe to notifications", err));
+  }
+
+  logout() {
+    this._authenticationService.logout();
+    this._router.navigate(['/login']);
   }
 }

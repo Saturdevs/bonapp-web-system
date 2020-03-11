@@ -1,0 +1,28 @@
+{
+  "AppMenus": {
+    "orders": "Pedidos",
+    "sales": "Ventas",
+    "restaurant": "Restaurant",
+    "clients-module": "Clientes",
+    "suppliers-module": "Proveedores",
+    "settings": "Configuración",
+    "section": "Mesas",
+    "sales-list": "Ventas",
+    "cash-flows": "Movimientos de Caja",
+    "cash-counts": "Arqueos de Caja",
+    "menu": "Cartas",
+    "category": "Categorías",
+    "product": "Productos",
+    "clients": "Clientes",
+    "current-accounts": "Cuentas Corrientes",
+    "suppliers": "Proveedores",
+    "cash-register": "Cajas",
+    "size": "Tamaños",
+    "payment-types": "Formas de Pago",
+    "users": "Usuarios",
+    "roles-users": "Roles de Usuarios",
+    "sections": "Salas",
+    "general-settings": "Configuración General",
+    "tables-section": "Salas y Mesas"
+  }
+}

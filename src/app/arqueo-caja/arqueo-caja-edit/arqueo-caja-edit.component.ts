@@ -11,7 +11,7 @@ import {
   ArqueoCajaService
 } from '../../../shared/index';
 
-import { StringsFunctions } from '../../../shared/functions/stringsFunctions';
+import { UtilFunctions } from '../../../shared/functions/utilFunctions';
 
 @Component({
   selector: 'app-arqueo-caja-edit',
@@ -154,11 +154,11 @@ export class ArqueoCajaEditComponent implements OnInit {
     })
 
     this.totalsIngresosPaymentTypes.sort((a, b) => {
-      return StringsFunctions.compareStrings(a.paymentTypeName, b.paymentTypeName);
+      return UtilFunctions.compareStrings(a.paymentTypeName, b.paymentTypeName);
     })
 
     this.totalsEgresosPaymentTypes.sort((a, b) => {
-      return StringsFunctions.compareStrings(a.paymentTypeName, b.paymentTypeName);
+      return UtilFunctions.compareStrings(a.paymentTypeName, b.paymentTypeName);
     })
   }
 

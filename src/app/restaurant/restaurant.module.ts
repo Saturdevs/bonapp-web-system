@@ -32,6 +32,7 @@ import { StockControlComponent } from '../stock-control/stock-control.component'
 import { StockControlModifyComponent } from '../stock-control/stock-control-modify/stock-control-modify.component';
 import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
 import { CategoryAvailablesResolverService } from '../category/resolvers/category-availables-resolver.service';
+import { AuthGuard } from '../../shared';
 
 @NgModule({
   imports: [
@@ -49,20 +50,28 @@ import { CategoryAvailablesResolverService } from '../category/resolvers/categor
               {
                 path: '',
                 component: MenuComponent,
-                resolve: { menus: MenuResolverService }
+                resolve: { menus: MenuResolverService },
+                data: { menu: 'menu-list' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newMenu',
-                component: MenuNewComponent
+                component: MenuNewComponent,
+                data: { menu: 'menu-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'edit/:id',
                 component: MenuModifyComponent,
                 resolve: {
-                  menu: MenuModifyResolverService                  
-                }
+                  menu: MenuModifyResolverService
+                },
+                data: { menu: 'menu-new' },
+                canActivate: [AuthGuard]
               }
-            ]
+            ],
+            data: { menu: 'menu' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'category',
@@ -70,14 +79,18 @@ import { CategoryAvailablesResolverService } from '../category/resolvers/categor
               {
                 path: '',
                 component: CategoryComponent,
-                resolve: { categories: CategoryResolverService, menus: MenuResolverService }
+                resolve: { categories: CategoryResolverService, menus: MenuResolverService },
+                data: { menu: 'category-list' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newCategory',
                 component: CategoryNewComponent,
                 resolve: {
                   menus: MenuAvailablesResolverService
-                }
+                },
+                data: { menu: 'category-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'edit/:id',
@@ -85,9 +98,13 @@ import { CategoryAvailablesResolverService } from '../category/resolvers/categor
                 resolve: {
                   category: CategoryModifyResolverService,
                   menus: MenuResolverService
-                }
+                },
+                data: { menu: 'category-edit' },
+                canActivate: [AuthGuard]
               }
-            ]
+            ],
+            data: { menu: 'category' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'product',
@@ -95,31 +112,39 @@ import { CategoryAvailablesResolverService } from '../category/resolvers/categor
               {
                 path: '',
                 component: ProductListComponent,
-                resolve: { 
-                  products: ProductResolverService, 
-                  categories: CategoryResolverService 
-                }
+                resolve: {
+                  products: ProductResolverService,
+                  categories: CategoryResolverService
+                },
+                data: { menu: 'product-list' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'newProduct',
                 canDeactivate: [ProductNewGuardService],
                 component: ProductNewComponent,
-                resolve: { 
-                  sizes: SizeResolverService, 
-                  categories: CategoryAvailablesResolverService 
-                }
+                resolve: {
+                  sizes: SizeResolverService,
+                  categories: CategoryAvailablesResolverService
+                },
+                data: { menu: 'product-new' },
+                canActivate: [AuthGuard]
               },
               {
                 path: 'edit/:id',
                 canDeactivate: [ProductEditGuardService],
                 component: ProductModifyComponent,
-                resolve: { 
-                  product: ProductModifyResolverService, 
-                  sizes: SizeResolverService, 
+                resolve: {
+                  product: ProductModifyResolverService,
+                  sizes: SizeResolverService,
                   categories: CategoryResolverService
-                }
+                },
+                data: { menu: 'product-edit' },
+                canActivate: [AuthGuard]
               }
-            ]
+            ],
+            data: { menu: 'product' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'dailyMenu',
@@ -127,31 +152,33 @@ import { CategoryAvailablesResolverService } from '../category/resolvers/categor
               {
                 path: '',
                 component: DailyMenuListComponent,
-                resolve: { 
-                  dailyMenus: DailyMenuResolverService 
+                resolve: {
+                  dailyMenus: DailyMenuResolverService
                 }
               },
               {
                 path: 'newDailyMenu',
                 component: DailyMenuNewComponent,
-                resolve: { 
-                  products: ProductResolverService 
+                resolve: {
+                  products: ProductResolverService
                 }
               },
               {
                 path: 'edit/:id',
                 component: DailyMenuModifyComponent,
-                resolve: { 
+                resolve: {
                   products: ProductResolverService,
                   dailyMenu: DailyMenuModifyResolverService
                 }
               }
-            ]
+            ],
+            data: { menu: 'dailyMenu' },
+            canActivate: [AuthGuard]
           },
           {
             path: 'stockControl',
             component: StockControlComponent,
-            resolve: { 
+            resolve: {
               products: ProductResolverService,
             },
             children: [
@@ -163,9 +190,13 @@ import { CategoryAvailablesResolverService } from '../category/resolvers/categor
                 },
                 outlet: 'edit'
               }
-            ]
+            ],
+            data: { menu: 'stockControl' },
+            canActivate: [AuthGuard]
           }
-        ]
+        ],
+        data: { menu: 'restaurant' },
+        canActivate: [AuthGuard]
       },
     ]),
     SharedModule

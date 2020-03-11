@@ -6,7 +6,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
 
 import {
   Supplier,
-  SupplierService
+  SupplierService,
+  AuthenticationService,
+  User,
+  Rights,
+  RightsFunctions
 } from '../../../shared';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -32,6 +36,11 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
   checkboxText: string = "Mostrar proveedores inactivos";
   showInactiveSuppliers: Boolean = false;
   previous: any;
+  currentUser: User;
+  enableDelete: Boolean;
+  enableEdit: Boolean;
+  enableNew: Boolean;
+  enableActionButtons: Boolean;
 
   @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
@@ -39,9 +48,17 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
   constructor(private _supplierService: SupplierService,
     private route: ActivatedRoute,
     private modalService: BsModalService,
-    private cdRef: ChangeDetectorRef) { }
+    private cdRef: ChangeDetectorRef,
+    private _authenticationService: AuthenticationService) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableActions();
+      }
+    );
+    
     this.route.data.subscribe(
       data => {
         this.suppliers = data['suppliers'];
@@ -61,6 +78,18 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
     this.mdbTablePagination.calculateFirstItemIndex();
     this.mdbTablePagination.calculateLastItemIndex();
     this.cdRef.detectChanges();
+  }
+
+  /**
+   * Habilita/Deshabilita las opciones de editar, nuevo y eliminar según los permisos que tiene
+   * el usuario.
+   */
+  enableActions(): void {
+    this.enableDelete = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.DELETE_SUPPLIER);
+    this.enableEdit = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.EDIT_SUPPLIER);
+    this.enableNew = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_SUPPLIER);
+
+    this.enableActionButtons = this.enableDelete || this.enableEdit;
   }
 
   getSuppliers(): void {

@@ -29,12 +29,6 @@ export class CashFlowService {
       .map(data => data.cashFlow);
   }
 
-  updateCashFlow(cashFlow) {
-    return this.apiService.put(`/cashFlow/${cashFlow._id}`, cashFlow)
-      .map(data => data.cashFlow)
-      .catch(this.handleError);
-  }
-
   deleteCashFlow(idCashFlow) {
     return this.apiService.delete(`/cashFlow/${idCashFlow}`)
       .map(data => data.cashFlow)
@@ -44,6 +38,12 @@ export class CashFlowService {
   saveCashFlow(cashFlow) {
     return this.apiService.post('/cashFlow', cashFlow)
       .map(data => data.cashFlow)
+      .catch(this.handleError);
+  }
+
+  logicalDeleteCashFlow(idCashFlow) {
+    return this.apiService.put(`/cashFlow/logicalDelete/${idCashFlow}`)
+      .map(data => data.message)
       .catch(this.handleError);
   }
 

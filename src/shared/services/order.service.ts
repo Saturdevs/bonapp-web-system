@@ -70,12 +70,6 @@ export class OrderService {
       .catch(this.handleError);
   }
 
-  deleteOrder(idOrder){
-    return this.apiService.delete(`/order/${idOrder}`)
-           .map(data =>data.order)
-           .catch(this.handleError);
-  }
-
   saveOrder(order){
     return this.apiService.post('/order', order)
           .map(data => data.order)
