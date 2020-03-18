@@ -29,3 +29,7 @@ export * from './right';
 export * from './userRole';
 export * from './appMenu';
 export * from './rightForUser';
+export * from './notificationType';
+export * from './notification';
+export * from './userTo';
+export * from './notificationReadBy';

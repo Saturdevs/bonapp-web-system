@@ -16,4 +16,8 @@ export class NotificationService {
   send(notification) {
     return this.apiService.post('/notification/send', notification);
   }
+
+  getAllTypes() {
+    return this.apiService.get('/notification/types');
+  }
 }
