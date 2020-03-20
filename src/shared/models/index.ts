@@ -33,3 +33,4 @@ export * from './notificationType';
 export * from './notification';
 export * from './userTo';
 export * from './notificationReadBy';
+export * from './notificationType';
