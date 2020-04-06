@@ -1,0 +1,101 @@
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+    (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='user' class="col-12 pl-0 pr-0 formNewEditSettings">
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{pageTitle + ': ' + userNameModified}}
+    </h5>
+  </div>
+
+  <form class="pt-4 pr-3 pl-3" method="post" novalidate [formGroup]="userForm">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Nombre:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input mdbActive formControlName="name" type="text" class="form-control"
+            [class.is-invalid]="userForm.get('name').invalid && (userForm.get('name').dirty || userForm.get('name').touched)"
+            id="name">
+        </div>
+      </div>
+      <div
+        *ngIf="userForm.get('name').invalid && (userForm.get('name').dirty || userForm.get('name').touched)"
+        class="alert alert-danger">
+        El nombre del usuario es requerido.
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Apellido:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input mdbActive formControlName="lastname" type="text" class="form-control"
+            [class.is-invalid]="userForm.get('lastname').invalid && (userForm.get('lastname').dirty || userForm.get('lastname').touched)"
+            id="lastname">
+        </div>
+      </div>
+      <div
+        *ngIf="userForm.get('lastname').invalid && (userForm.get('lastname').dirty || userForm.get('lastname').touched)"
+        class="alert alert-danger">
+        El apellido del usuario es requerido.
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Nombre de Usuario:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input mdbActive formControlName="username" type="text" class="form-control"
+            [class.is-invalid]="userForm.get('username').invalid && (userForm.get('username').dirty || userForm.get('username').touched)"
+            id="username">
+        </div>
+      </div>
+      <div
+        *ngIf="userForm.get('username').invalid && (userForm.get('username').dirty || userForm.get('username').touched)"
+        class="alert alert-danger">
+        El nombre de usuario es requerido.
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Rol de usuario:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <mdb-select #roleId formControlName="roleId" (selected)="selectUserRole(roleId.value)" [options]="userRolesSelect" placeholder="Choose your option" [class.is-invalid]="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
+          id="roleId"></mdb-select>          
+        </div>
+      </div>
+      <div
+        *ngIf="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
+        class="alert alert-danger">
+        Debe seleccionar un rol de usuario
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="col-12">
+  <div class="col-7 offset-5">
+    <button type="button" class="btn btn-sm customButtonCancel waves-light"
+      (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="userForm.invalid"
+      (click)="updateUser()">{{saveButton}}</button>
+  </div>
+</div>

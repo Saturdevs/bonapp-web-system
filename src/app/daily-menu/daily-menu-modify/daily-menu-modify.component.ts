@@ -80,7 +80,6 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
       }
     )
 
-    console.log(this.dailyMenu);
     
     this.filteredProductArray = this.productArray;
 
@@ -150,7 +149,6 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
       let p = Object.assign({}, this.productForm.value);
       this._dailyMenuService.save(p)
         .subscribe(dailyMenu => {
-          console.log(dailyMenu);
           this.onBack();
         })
     } else if (!this.productForm.dirty) {

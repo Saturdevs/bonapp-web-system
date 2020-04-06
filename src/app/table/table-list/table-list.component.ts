@@ -14,7 +14,9 @@ import {
 	AuthenticationService,
 	User,
 	Rights,
-	RightsFunctions
+	RightsFunctions,
+	SectionService,
+	Section
 } from '../../../shared/index';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
@@ -48,6 +50,15 @@ export class TableListComponent implements OnInit {
 	private boxes: Array<Box> = [];
 	private rgb: string = '#efefef';
 	private curNum;
+	private tableToEdit: Table;
+    private sections: Array<Section>;
+    private tableNewNumber: number;
+    private tableNewSection: any;
+    private editModalTitle = "Editar Mesa"
+    private editTableNumberText = "Nro. Mesa";
+    private editTableSectionText = "Seccion"
+    private cancelButtonText = "Cancelar";
+    private saveButtonText = "Guardar"
 	private gridConfig: NgGridConfig = <NgGridConfig>{
 		'margins': [1],
 		'draggable': false,
@@ -100,6 +111,7 @@ export class TableListComponent implements OnInit {
 		private _route: ActivatedRoute,
 		private modalService: BsModalService,
 		private toast: ToastService,
+		private _sectionService: SectionService,
 		private _authenticationService: AuthenticationService) { }
 
 	ngOnInit() {
@@ -233,8 +245,8 @@ export class TableListComponent implements OnInit {
 				this._tableService.updatedTables[index] = table;
 			}
 		}
-		console.log("Index: " + table)
-		console.log("onResizeStop: " + box.id)
+		// console.log("Index: " + table)
+		// console.log("onResizeStop: " + box.id)
 	}
 
 	private _generateDefaultItemConfig(): NgGridItemConfig {
@@ -388,6 +400,43 @@ export class TableListComponent implements OnInit {
 		this.modalErrorTittle = errorTittleReceived;
 		this.modalErrorMessage = errorMessageReceived;
 		this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
+	}
+
+	showEditModal(deleteTemplate: TemplateRef<any>, tableNumber: number){
+		if (this.settingsActive === true) {
+			this._tableService.getTableByNumber(tableNumber)
+				.subscribe(
+					table => {
+						// console.log(table);
+						this.tableToEdit = table;
+						this.tableNewNumber = this.tableToEdit.number;
+						this.tableNewSection = this.tableToEdit.section;
+						this._sectionService.getAll()
+							.subscribe(
+								sections => {
+									this.sections = sections;
+								}
+							)
+					}
+				)
+			this.modalRef = this.modalService.show(deleteTemplate, {backdrop: true});
+		}   
+	}
+	 
+	saveEditedTable(){
+		this.tableToEdit.number = this.tableNewNumber;
+		this.tableToEdit.section = this.tableNewSection;
+	 
+		this._tableService.updateTable(this.tableToEdit)
+			.subscribe(resp => {
+				console.log("Se actualizo la mesa"+ this.tableToEdit.number);
+				this.showSuccessToast()
+				this.closeModal();
+			},
+			error => {
+				this.closeModal();
+				this.showModalError(this.serviceErrorTitle, error.error.message);
+			});
 	}
 
 	closeModal() {

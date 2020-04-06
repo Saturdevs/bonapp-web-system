@@ -28,7 +28,6 @@ export class FileInputComponent implements OnInit {
   @Output() validator = new EventEmitter<Array<string>>();
 
   ngOnInit() {
-    console.log(this.disabled)
     this.newFile = new File();
     this.files = [];
     this.uploadInput = new EventEmitter<UploadInput>();

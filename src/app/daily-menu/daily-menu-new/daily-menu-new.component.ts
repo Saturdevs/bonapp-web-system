@@ -132,7 +132,6 @@ export class DailyMenuNewComponent implements OnInit, AfterViewInit {
       let p = Object.assign({}, this.productForm.value);
       this._dailyMenuService.save(p)
         .subscribe(dailyMenu => {
-          console.log(dailyMenu);
           this.onBack();
         })
     } else if (!this.productForm.dirty) {

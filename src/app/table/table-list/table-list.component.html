@@ -19,6 +19,38 @@
   </app-cancel-template>
 </ng-template>
 
+<ng-template #editTemplate>
+  <div class="container col-md-12">
+    <div class="row pageTitle primary-color">
+      <div class="col-md-12">
+        <h4 class="text-white text-center mb-0">{{editModalTitle + ' ' + tableToEdit.number}}</h4>
+      </div>
+    </div>
+    <div class="modalContent modalContentDelete">
+      <div class="row">
+        <label for="editNumber">{{editTableNumberText}}</label>
+        <input type="number" name="editNumber" id="editNumber" class="form-control" [(ngModel)]="tableNewNumber">
+      </div>
+      <div class="row">
+        <label for="editSection">{{editTableSectionText}}</label>
+        <select type="text" class="form-control browser-default" name="editSection" id="editSection"
+          [(ngModel)]="tableNewSection">
+          <option [value]="section._id" *ngFor='let section of sections'>{{ section.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row customFooterModal">
+      <div class="footerButtons">
+        <button type="button" class="btn btn-sm customButtonCancel waves-light"
+          (click)="closeModal()">{{cancelButtonText}}</button>
+        <button type="button" class="btn btn-primary btn-sm waves-light okButton"
+          (click)="saveEditedTable()">{{saveButtonText}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <!-- Grid Tables -->
 
 <div class="row">
@@ -33,6 +65,11 @@
           <div class="text-right customCloseCursor" style="position: static;" *ngIf="settingsActive === true"
             (click)="showDeleteModal(deleteTemplate, box)">
             <span aria-hidden="true" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1">&times;</span>
+          </div>
+          <div class="text-right customCloseCursor" style="position: static;" *ngIf="settingsActive === true"
+            (click)="showEditModal(editTemplate, box.id)">
+            <span aria-hidden="true" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1"><i
+                class="fa fa-cog fa-sm"></i></span>
           </div>
           <div class="card-body child">
             <p class="white-text mb-0">{{box.id}}</p>

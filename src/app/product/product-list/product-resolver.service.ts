@@ -12,7 +12,6 @@ export class ProductResolverService implements Resolve<Product[]> {
   constructor(private _productService: ProductService) { }
 
   resolve(route: ActivatedRouteSnapshot, satate: RouterStateSnapshot): Observable<Product[]> {
-    console.log('asd');
     
     return this._productService.getAll();
   }

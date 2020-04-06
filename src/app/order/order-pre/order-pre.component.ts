@@ -35,7 +35,6 @@ export class OrderPreComponent implements OnInit {
 		private _router: Router) { }
 
 	ngOnInit() {
-		console.log(this.selectedTable);
 	}
 
 	newOrder() {

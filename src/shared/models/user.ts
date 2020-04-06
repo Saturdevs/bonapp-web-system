@@ -3,10 +3,11 @@ import { RightForUser } from "./rightForUser";
 
 export class User {
   readonly _id: string;
-  readonly username: string;
+  username: string;
   roleId: string;
   name: string;
-  lastName: string;
+  lastname: string;
+  password: string;
   token?: string;  
   readonly menus: Array<AppMenu> = [];
   readonly rights: Array<RightForUser> = [];

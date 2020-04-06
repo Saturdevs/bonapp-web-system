@@ -35,7 +35,6 @@ export class StockControlComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.products = this.route.snapshot.data['products'];
-    console.log(this.products);
 
     this.filteredProducts = this.products;
 

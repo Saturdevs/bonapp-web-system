@@ -5,7 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Subject, of } from 'rxjs';
 
 import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ModalDirective, MdbAutoCompleterComponent } from 'ng-uikit-pro-standard';
+import { ModalDirective, MdbAutoCompleterComponent, ToastService } from 'ng-uikit-pro-standard';
 import {
   Menu,
   CategoryService,
@@ -21,7 +21,10 @@ import {
   AuthenticationService,
   User,
   Rights,
-  RightsFunctions
+  RightsFunctions,
+  TableService,
+  UsersInOrder,
+  Table
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -50,7 +53,9 @@ export class OrderNewComponent implements OnInit {
     private modalService: BsModalService,
     private categoryService: CategoryService,
     private dailyMenuService: DailyMenuService,
-    private _authenticationService: AuthenticationService) { }
+    private _authenticationService: AuthenticationService,
+    private tableService: TableService,
+    private toast: ToastService) { }
 
   pageTitle: String = 'Nuevo Pedido';
   noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
@@ -59,6 +64,10 @@ export class OrderNewComponent implements OnInit {
   sizesAndOptionsModalTitle: string = 'Seleccionar Adicionales y Tamaños';
   private rightErrorTitle = 'Error de Permisos';
   private rightErrorMessage = 'Usted no posee los permisos requeridos para realizar la acción deseada. Pongase en contacto con el administrador del sistema.';
+  editModalTitle: string = 'Editar pedido';
+  editOrderTableText: string = 'Nro. de Mesa';
+  cancelButtonText: string = 'Cancelar';
+  saveButtonText: string = 'Guardar';
   categorySelected: boolean = false;
   /*Para mostrar un mensaje diferente si no selecciono categoria o si no hay productos disponibles. */
   menus: Menu[];
@@ -121,6 +130,17 @@ export class OrderNewComponent implements OnInit {
   enableAddProducts: Boolean;
   enableDeleteProducts: Boolean;
   enableCloseOrder: Boolean;
+  /** Variables para cambiar numero de mesa en pedido */
+  private orderToEdit: Order;
+  private orderNewTable: number;
+  /** Variables para dividir mesa */
+  private productsInOrderToSlice: ProductsInUserOrder[];
+  private orderToSlice: Order;
+  private productsToSlice: ProductsInUserOrder[] = [];
+  private sliceToTable: number;
+  private newOrderIsCreated: boolean;
+  private tableToSlice: Table;
+
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
@@ -131,7 +151,6 @@ export class OrderNewComponent implements OnInit {
     );
 
     this.order = this._route.snapshot.data['order'];
-    console.log(this.order)
     this.products = [];
     this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
@@ -196,7 +215,6 @@ export class OrderNewComponent implements OnInit {
   updateProductsOrder(data: any): void {
     this.orderService.updateProductsOrder(data).subscribe(
       orderReturned => {
-        console.log(orderReturned);
         this.order = orderReturned;
         this.totalToConfirm = 0;
         this.preOrderProducts = [];
@@ -323,7 +341,6 @@ export class OrderNewComponent implements OnInit {
               product.stock.current--;
               this.productService.updateProduct(product)
                 .subscribe(resp => {
-                  console.log(resp);
                 });
             }
           });
@@ -400,7 +417,6 @@ export class OrderNewComponent implements OnInit {
 
         this.productService.updateProduct(product)
           .subscribe(resp => {
-            console.log(resp);
           });
       }
 
@@ -466,7 +482,6 @@ export class OrderNewComponent implements OnInit {
 
         this.productService.updateProduct(productToUpdateStock)
           .subscribe(resp => {
-            console.log(resp);
           });
       }
     }
@@ -479,7 +494,6 @@ export class OrderNewComponent implements OnInit {
               product.stock.current += productToRemove.quantity;
               this.productService.updateProduct(product)
                 .subscribe(resp => {
-                  console.log(resp);
                 });
             }
           });
@@ -615,6 +629,178 @@ export class OrderNewComponent implements OnInit {
     this.activeCategory = categoryId;
     this.activeDailyMenu = false;
   }
+
+  showSliceModal(sliceTemplate: TemplateRef<any>, orderId: number) {
+    this.orderService.getOrder(orderId)
+      .subscribe(
+        order => {
+          this.orderToSlice = order;
+          this.productsInOrderToSlice = this.orderToSlice.users[0].products;
+
+        }
+      )
+    this.modalRef = this.modalService.show(sliceTemplate, { backdrop: true });
+  }
+
+
+  addProductToSlice(productToAdd : ProductsInUserOrder) {
+    let productOrDailyMenuToSlice = new ProductsInUserOrder();
+    if(productToAdd.dailyMenuId){
+      this.dailyMenuService.getDailyMenu(productToAdd.dailyMenuId)
+        .subscribe(dailyMenu => {
+          productOrDailyMenuToSlice.dailyMenuId = dailyMenu._id;
+          productOrDailyMenuToSlice.name = dailyMenu.name;  
+        });
+    }else if(productToAdd.product){
+      this.productService.getProduct(productToAdd.product)
+        .subscribe(product => {
+          productOrDailyMenuToSlice.product = product._id;
+          productOrDailyMenuToSlice.name = product.name;
+        });
+      }
+      productOrDailyMenuToSlice._id = productToAdd._id;
+      productOrDailyMenuToSlice.observations = '';
+      productOrDailyMenuToSlice.options = productToAdd.options;
+      productOrDailyMenuToSlice.price = productToAdd.price;
+      productOrDailyMenuToSlice.quantity = productToAdd.quantity;
+      productOrDailyMenuToSlice.size = productToAdd.size;
+      productOrDailyMenuToSlice.deleted = false;
+    if (this.productsToSlice.indexOf(productOrDailyMenuToSlice) != -1) {
+      this.productsToSlice.splice(this.productsToSlice.indexOf(productOrDailyMenuToSlice), 1);
+    }
+    else {
+      this.productsToSlice.push(productOrDailyMenuToSlice);
+    }
+  }
+
+  saveSlicedOrder() {
+    this.newOrder(this.sliceToTable, this.productsToSlice);
+  }
+
+  showEditModal(editTemplate: TemplateRef<any>, orderId: number) {
+    this.orderService.getOrder(orderId)
+      .subscribe(
+        order => {
+          this.orderToEdit = order;
+          this.orderNewTable = this.orderToEdit.table;
+        }
+      )
+    this.modalRef = this.modalService.show(editTemplate, { backdrop: true });
+  }
+
+  saveEditedOrder() {
+    let oldTableNumer = this.orderToEdit.table;
+    this.orderToEdit.table = this.orderNewTable;
+    this.orderService.updateOrder(this.orderToEdit)
+      .subscribe(resp => {
+        console.log("Se actualizo el pedido" + this.orderToEdit._id);
+        this.tableService.getTableByNumber(oldTableNumer)
+          .subscribe(
+            table => {
+              let tableToUpdate = table;
+              // tableToUpdate.status = "Libre";
+              this.tableService.updateTable(tableToUpdate)
+                .subscribe(
+                  result => {
+                    console.log("Se actualizo la mesa" + tableToUpdate.number);
+                  },
+                  error => {
+                    this.showModalError(this.serviceErrorTitle, error.error.message);
+                  }
+                );
+            },
+            error => {
+              this.showModalError(this.serviceErrorTitle, error.error.message);
+            }
+          );
+        this.showSuccessToast()
+        this.closeModal();
+      },
+        error => {
+          this.closeModal();
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        });
+  }
+
+  showSuccessToast() {
+    let options = { timeOut: 2500 };
+    this.toast.success('Se ha guardado correctamente', 'AppBares Dice:', options);
+  }
+
+  newOrder(tableNumber, products: Array<ProductsInUserOrder>) {
+    this.tableService.getTableByNumber(tableNumber)
+      .subscribe(
+        table => {
+          this.tableToSlice = table;
+          let order = new Order();
+          this.tableToSlice.status = "Ocupada";
+
+          order.type = "Restaurant";
+          order.table = this.tableToSlice.number;
+          order.status = "Open";
+          order.users = new Array<UsersInOrder>();
+          order.users[0] = new UsersInOrder();
+          //aca hay que setear el id del usuario admin. todavia no esta creado.
+          order.users[0].username = "admin";
+          order.users[0].owner = true;
+          order.users[0].products = new Array<ProductsInUserOrder>();
+          order.users[0].products = [];
+          order.app = false;
+          this.orderService.saveOrder(order).subscribe(newCreatedOrder => {
+            this.tableService.updateTable(this.tableToSlice).subscribe(
+              table => {
+                this.tableToSlice = table;
+                let totalToConfirm = 0;
+                products.forEach(product => {
+                  totalToConfirm += product.price;
+                });
+                let data = { products: products, total: totalToConfirm, username: UserRoles.ADMIN, order: newCreatedOrder };
+                this.updateProductsOrder(data)
+                let productToDelete = new ProductsInUserOrder();
+                this.productsToSlice.forEach(product => {
+                  
+                  if(product.dailyMenuId){
+                    this.dailyMenuService.getDailyMenu(product.dailyMenuId)
+                      .subscribe(dailyMenu => {
+                        productToDelete.dailyMenuId = dailyMenu._id;
+                        productToDelete.name = dailyMenu.name;  
+                      });
+                  }else if(product.product){
+                    this.productService.getProduct(product.product)
+                      .subscribe(product => {
+                        productToDelete.product = product._id;
+                        productToDelete.name = product.name;
+                      });
+                  }
+                  productToDelete.observations = '';
+                  productToDelete.options = product.options;
+                  productToDelete.price = product.price;
+                  productToDelete.quantity = product.quantity;
+                  productToDelete.size = product.size;
+                  productToDelete._id = product._id
+
+                  this.productToRemoveFromOrder = productToDelete;
+                  this.deletedReason = "Mesa dividida.";
+                  this.deleteProductFromOrder();
+                });
+              },
+              error => {
+                this.showModalError(this.serviceErrorTitle, error.error.message);
+                return false;
+              });
+          },
+            error => {
+              this.showModalError(this.serviceErrorTitle, error.error.message);
+              return false;
+            }
+          )
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+          return false;
+        });
+  }
+
 
   /**Metodo para filtrar los productos para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
   searchEntries(term: string) {

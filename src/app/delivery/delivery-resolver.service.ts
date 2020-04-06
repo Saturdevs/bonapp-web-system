@@ -12,7 +12,6 @@ export class DeliveryResolverService implements Resolve<Client[]> {
   constructor(private _clientService: ClientService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Client[]> {
-    console.log(this._clientService.getAll());
     return this._clientService.getAll();
   }
 

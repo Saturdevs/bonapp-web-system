@@ -61,6 +61,62 @@
   </div>
 </ng-template>
 
+<ng-template #editTemplate>
+  <div class="container col-md-12">
+    <div class="row pageTitle primary-color">
+      <div class="col-md-12">
+        <h4 class="text-white text-center mb-0">{{editModalTitle}}</h4>   
+      </div>
+    </div>
+ 
+    <div class="modalContent modalContentDelete">
+      <div class="row">
+        <label for="editTable">{{editOrderTableText}}</label>
+        <input type="number" name="editTable" id="editTable" class="form-control" [(ngModel)]="orderNewTable">
+      </div>
+    </div>
+   
+    <div class="row customFooterModal">
+      <div class="footerButtons">
+        <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeModal()">{{cancelButtonText}}</button>
+        <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="saveEditedOrder()">{{saveButtonText}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sliceTemplate>
+    <div class="container col-md-12">
+      <div class="row pageTitle primary-color">
+        <div class="col-md-12">
+          <h4 class="text-white text-center mb-0">{{editModalTitle}}</h4>   
+        </div>
+      </div>
+   
+      <div class="modalContent modalContentDelete">
+        <div class="row" *ngFor="let product of productsInOrderToSlice">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" (change)="addProductToSlice(product)">
+            <span class="custom-control-indicator"></span>
+            <span *ngIf="product.product" class="custom-control-description">{{product.product}}</span>
+            <span *ngIf="product.dailyMenuId" class="custom-control-description">{{product.dailyMenuId}}</span>
+          </label>
+        </div>
+        <div class="row">
+          <label for="editTable">{{editOrderTableText}}</label>
+          <input type="number" name="sliceToTable" id="sliceToTable" class="form-control" [(ngModel)]="sliceToTable">
+        </div>
+      </div>
+     
+      <div class="row customFooterModal">
+        <div class="footerButtons">
+          <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeModal()">{{cancelButtonText}}</button>
+          <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="saveSlicedOrder()">{{saveButtonText}}</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
 <div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0" style="height: calc(100vh - 5.4rem);
 overflow: auto; overflow-x: hidden;">
   <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8 pr-0" style="height: 100%">
@@ -115,13 +171,15 @@ overflow: auto; overflow-x: hidden;">
       <div class="row col-lg-12 col-md-12 col-sm-12">
         <h5>{{'Mesa ' + order.table | uppercase}}</h5>
       </div>
+
     </div>
     <div class="row">
       <div class="row col-lg-12 col-md-12 col-sm-12 customSubtittle">
           {{ order.created_at | date:'dd/MM/yy HH:mm' }}
       </div>
     </div>
-
+    <i class="fa fa-cog float-right pr-4" (click)="showEditModal(editTemplate, order._id)"></i>
+    <i class="fa fa-cog float-right pr-4" (click)="showSliceModal(sliceTemplate, order._id)"></i>
     <div class="row" *ngIf='enableAddProducts'>
       <div class="col-lg-12 col-md-12 col-sm-12 customAddProductsTitle"><span class="align-middle">{{ 'Adicionar' | uppercase }}</span></div>
       <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 customAddProductsSection">
