@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '.';
+import { ApiService } from './api.service';
 import { Observable } from 'rxjs';
-import { User } from '..';
+import { User } from '../models/user';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({

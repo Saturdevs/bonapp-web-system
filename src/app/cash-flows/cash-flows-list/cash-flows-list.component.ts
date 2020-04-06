@@ -123,6 +123,10 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
         this.cashFlows = cashFlows;
 
         this.filteredCashFlows = this.cashFlows;
+
+        this.mdbTable.setDataSource(this.filteredCashFlows);
+        this.filteredCashFlows = this.mdbTable.getDataSource();
+        this.previous = this.mdbTable.getDataSource();
       },
         error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);
