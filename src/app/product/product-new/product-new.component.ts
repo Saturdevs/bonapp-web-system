@@ -71,10 +71,10 @@ export class ProductNewComponent implements OnInit {
       }
     )
     this.productForm = this.formBuilder.group({
-      cod: ['', Validators.required],
+      code: ['', Validators.required],
       name: ['', Validators.required],
       category: ['', ComboValidators.hasValue],
-      picture: ['', Validators.required],
+      pictures: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
       sizes: this.formBuilder.array([]),
@@ -210,7 +210,7 @@ export class ProductNewComponent implements OnInit {
     validator[1] != '' ? this.newProductPictureData = validator[1] : this.newProductPictureData = '';
     this.pictureTouched = true;
     if (this.validPicture != '') {
-      this.productForm.controls.picture.setValue(this.newProductPictureData);
+      this.productForm.controls.pictures.setValue(this.newProductPictureData);
     }
   }
 

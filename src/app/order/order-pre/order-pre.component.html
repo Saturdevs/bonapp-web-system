@@ -16,6 +16,12 @@
         <mdb-completer (selected)="selectWaiter()" [label]="'Seleccionar Mozo'" name="autocomplete" [(ngModel)]="selectedWaiter" [datasource]="waitersList" [minSearchLength]="0"></mdb-completer> 
       </div>  
     </div>
+    <div class="row" id="secondRow">
+      <div class="col-md-12 col-lg-12 col-sm-12">
+          <mdb-select #client name="client" id="client" [options]="clientSelect"  
+          [(ngModel)]="clientSelected" (selected)="selectClient(client.value)" placeholder="Seleccionar Cliente" class="colorful-select dropdown-primary"></mdb-select>
+      </div>  
+    </div>
   </div>
   <div class="row customFooterModal">
     <div class="customOrderButtons">

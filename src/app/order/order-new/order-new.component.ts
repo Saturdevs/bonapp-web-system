@@ -24,7 +24,10 @@ import {
   RightsFunctions,
   TableService,
   UsersInOrder,
-  Table
+  Table,
+  TableStatus,
+  ClientService,
+  Client
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -55,7 +58,8 @@ export class OrderNewComponent implements OnInit {
     private dailyMenuService: DailyMenuService,
     private _authenticationService: AuthenticationService,
     private tableService: TableService,
-    private toast: ToastService) { }
+    private toast: ToastService,
+    private clientService: ClientService) { }
 
   pageTitle: String = 'Nuevo Pedido';
   noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
@@ -140,6 +144,7 @@ export class OrderNewComponent implements OnInit {
   private sliceToTable: number;
   private newOrderIsCreated: boolean;
   private tableToSlice: Table;
+  private client: Client;
 
 
   ngOnInit() {
@@ -161,6 +166,9 @@ export class OrderNewComponent implements OnInit {
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.getProducts();
+    if(!isNullOrUndefined(this.order.users[0].clientId)){
+      this.getClient(this.order.users[0].clientId);
+    }
   }
 
   /**
@@ -733,7 +741,7 @@ export class OrderNewComponent implements OnInit {
         table => {
           this.tableToSlice = table;
           let order = new Order();
-          this.tableToSlice.status = "Ocupada";
+          this.tableToSlice.status = TableStatus.OCUPADA;
 
           order.type = "Restaurant";
           order.table = this.tableToSlice.number;
@@ -854,6 +862,13 @@ export class OrderNewComponent implements OnInit {
   setProductOptionsAndSize(product) {
     this.addProductToPreOrder(product, 1, this.sizeSelectedValue, this.selectedOptions)
     this.closeModalOptionsAndSizes();
+  }
+
+  getClient(clientId){
+    this.clientService.getClient(clientId)
+      .subscribe(client => {
+        this.client = client;
+      })
   }
 
   closeModalOptionsAndSizes() {

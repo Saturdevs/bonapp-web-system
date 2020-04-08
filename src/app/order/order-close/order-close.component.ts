@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from '@angular/core';
-import { 
+import {
   Order,
   PaymentType,
   CashRegister,
@@ -10,7 +10,14 @@ import {
   Table,
   TableService,
   OrderService,
-  ArqueoCajaService
+  ArqueoCajaService,
+  TableStatus,
+  ClientService,
+  Client,
+  TransactionService,
+  Transaction,
+  CashRegisterMin,
+  PaymentTypeMin
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -26,15 +33,18 @@ export class OrderCloseComponent implements OnInit {
   @Input() order: Order;
   @Input() cashRegisters: Array<CashRegister> = [];
   @Input() paymentTypes: Array<PaymentType> = [];
+  @Input() client: Client;
   @Output() close = new EventEmitter<string>();
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
 
   constructor(private _router: Router,
-              private modalService: BsModalService,
-              private tableService: TableService,
-              private orderService: OrderService,
-              private arqueoCajaService: ArqueoCajaService
-            ) { }
+    private modalService: BsModalService,
+    private tableService: TableService,
+    private orderService: OrderService,
+    private arqueoCajaService: ArqueoCajaService,
+    private clientService: ClientService,
+    private transactionService: TransactionService
+  ) { }
 
   private title: String = "Cerrar Mesa ";
   private aditionsTitle: String = "ADICIONES";
@@ -48,6 +58,7 @@ export class OrderCloseComponent implements OnInit {
   private closeOrderWithoutAditions: String = "La mesa no contiene adiciones.";
   private confirmButtonLabel: String = "Confirmar";
   private cancelButtonLabel: String = "Cancelar";
+  private payWithAccountError: String = "El monto a abonar con Cuenta Corriente sumado al saldo pendiente, supera el limite de gastos para esta cuenta."
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
@@ -75,110 +86,125 @@ export class OrderCloseComponent implements OnInit {
   totalPrice: number;
   /**Productos del pedido */
   productsInOrder: Array<ProductsInUserOrder> = [];
+  canPayWithAccount: boolean = true;
 
   ngOnInit() {
     this.payments = [];
     this.productsInOrder = [];
     this.discount = null;
     this.totalPrice = this.order.totalPrice;
-    
+
     for (let cashRegister of this.cashRegisters) {
       if (cashRegister.available === true) {
-        this.cashRegistersSelect.push({value: cashRegister._id, label: cashRegister.name})
+        this.cashRegistersSelect.push({ value: cashRegister._id, label: cashRegister.name })
       }
     };
     this.selectedCashRegister = this.cashRegisters.find(cr => cr.default === true)._id;
 
-    for (let paymentType of this.paymentTypes) {
-      if (paymentType.available === true) {
-        this.paymentTypesSelect.push({value: paymentType._id, label: paymentType.name, default: paymentType.default})
-      }
-    };   
-    
+
+
+    if (!isNullOrUndefined(this.client)) {
+      for (let paymentType of this.paymentTypes) {
+        if (paymentType.available === true) {
+          if (paymentType.currentAccount && this.client.enabledTransactions) {
+            this.paymentTypesSelect.push({ value: paymentType._id, label: paymentType.name, default: paymentType.default })
+          } else if (!paymentType.currentAccount) {
+            this.paymentTypesSelect.push({ value: paymentType._id, label: paymentType.name, default: paymentType.default })
+          }
+        }
+      };
+    }
+    else {
+      for (let paymentType of this.paymentTypes) {
+        if (paymentType.available === true) {
+          this.paymentTypesSelect.push({ value: paymentType._id, label: paymentType.name, default: paymentType.default })
+        }
+      };
+    }
+
     this.order.users.forEach(usr => {
       usr.products.forEach(prod => {
         this.productsInOrder.push(prod);
       })
     });
 
-    if (this.productsInOrder.length > 0)
-    {
+    if (this.productsInOrder.length > 0) {
       this.calculatePartialPaidAmount();
-      this.addPayment(); 
+      this.addPayment();
     }
-    
-    this.showDiscount = false;  
-    this.calculateChangeAmount();    
+
+    this.showDiscount = false;
+    this.calculateChangeAmount();
   }
 
-  closeForm(): void {    
-    this.close.emit('');    
+  closeForm(): void {
+    this.close.emit('');
   }
 
   /**Agrega un tipo de pago al array de pagos */
   addPayment(): void {
-    let payment = new PaymentInUserOrder(); 
+    let payment = new PaymentInUserOrder();
     let amount: number;
-    this.calculateTotalSum();   
+    this.calculateTotalSum();
     payment.methodId = this.paymentTypes.find(pt => pt.default === true)._id;
     amount = this.order.totalPrice - (this.totalSum + this.partialPaidAmount);
     payment.amount = amount >= 0 ? amount : 0;
     //Si se realiza el pago de un pedido que se hizo por la app se asigna todo el pago al usuario owner
     this.payments.push(payment);
     this.calculateChangeAmount();
+    this.checkAccount();
   }
 
   /**Elimina el pago dado como parámetro del array de pagos
    * @param paymentToRemove parámetro a eliminar del array de pagos.
    */
-  removePayment(paymentToRemove:PaymentInUserOrder):void {
-    if (this.payments.length === 1)
-    {
+  removePayment(paymentToRemove: PaymentInUserOrder): void {
+    if (this.payments.length === 1) {
       this.payments = [];
     }
-    else
-    {
+    else {
       let indexOfPayment = this.payments.indexOf(paymentToRemove);
       this.payments.splice(indexOfPayment, 1);
     }
 
     this.calculateChangeAmount();
+    this.checkAccount();
   }
 
   /**Muestra o esconde la sección de descuento
    * @param show si es true se muestra la sección para ingresar un descuento. si es false no se muestra
    */
-  showDiscountSection(show: boolean):void {
+  showDiscountSection(show: boolean): void {
     this.showDiscount = show;
 
     if (show === true) {
       this.discountAmount = 0;
-      this.discountRate = 0;        
+      this.discountRate = 0;
     }
   }
 
   /**Calcula el porcentaje de descuento según el monto de descuento ingresado */
-  calculateRate():void {
-    this.discountRate = (this.discountAmount * 100) / this.order.totalPrice; 
+  calculateRate(): void {
+    this.discountRate = (this.discountAmount * 100) / this.order.totalPrice;
   }
 
   /**Calcula el monto de descuento según el porcentaje de descuento ingresado */
-  calculateAmount():void {
+  calculateAmount(): void {
     this.discountAmount = (this.discountRate / 100) * this.order.totalPrice;
   }
 
   /**Crea el descuento que se va a dar al pedido */
-  addDiscount():void {
-    this.showDiscountSection(false);  
-    if (isNullOrUndefined(this.discount))
-    {
+  addDiscount(): void {
+    this.showDiscountSection(false);
+    if (isNullOrUndefined(this.discount)) {
       this.discount = new OrderDiscount();
-      this.discount.discountAmount = this.discountAmount;  
+      this.discount.discountAmount = this.discountAmount;
       this.discount.discountRate = this.discountRate;
       this.discount.subtotal = this.totalPrice;
-      this.totalPrice = this.discount.subtotal - this.discount.discountAmount; 
-      
+      this.totalPrice = this.discount.subtotal - this.discount.discountAmount;
+
       this.calculateChangeAmount();
+      this.checkAccount()
     }
   }
 
@@ -191,7 +217,7 @@ export class OrderCloseComponent implements OnInit {
   }
 
   /**Calcula el monto parcial pagado por los usuarios hasta el momento */
-  calculatePartialPaidAmount():void {
+  calculatePartialPaidAmount(): void {
     this.partialPaidAmount = 0;
     this.order.users.forEach(user => {
       user.payments.forEach(payment => {
@@ -201,12 +227,12 @@ export class OrderCloseComponent implements OnInit {
   }
 
   /**Calcula el monto del vuelto teniendo en cuenta lo pagado hasta el momento mas los pagos a realizar ingresados en el sistema */
-  calculateChangeAmount():void {
+  calculateChangeAmount(): void {
     this.calculateTotalSum();
     this.changeAmount = this.totalSum + this.partialPaidAmount - this.totalPrice;
   }
 
-  selectText(component):void {
+  selectText(component): void {
     component.select();
   }
 
@@ -215,10 +241,12 @@ export class OrderCloseComponent implements OnInit {
     this.totalPrice = this.discount.subtotal;
     this.discount = null;
     this.calculateChangeAmount();
+    this.checkAccount()
   }
 
   changeAmountDiscount(): void {
     this.calculateChangeAmount();
+    this.checkAccount()
   }
 
   /**Cierra la mesa y el pedido actual */
@@ -226,7 +254,7 @@ export class OrderCloseComponent implements OnInit {
     let usrOwner = new UsersInOrder();
     let table = new Table();
     table.number = this.order.table;
-    table.status = "Libre";
+    table.status = TableStatus.LIBRE;
 
     this.order.cashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
     this.order.status = "Closed";
@@ -236,21 +264,20 @@ export class OrderCloseComponent implements OnInit {
 
     usrOwner = this.order.users.find(usr => usr.owner === true);
 
-    if (!isNullOrUndefined(this.payments) && this.payments.length > 0)
-    {
+    if (!isNullOrUndefined(this.payments) && this.payments.length > 0) {
       this.payments.forEach(payment => {
         usrOwner.payments.push(payment);
-      })    
+      })
     }
 
     this.tableService.updateTableByNumber(table).subscribe(
       tableReturned => {
-        if (tableReturned.status === "Libre")
-        {
+        if (tableReturned.status === TableStatus.LIBRE) {
           this.orderService.closeOrder(this.order).subscribe(
             orderReturned => {
               let order = orderReturned;
               this.addOrderToArqueo(orderReturned);
+              this.addAccountMovements(orderReturned);
               this.closeForm();
               this._router.navigate(['./orders']);
             },
@@ -269,11 +296,11 @@ export class OrderCloseComponent implements OnInit {
   /**Agrega el pedido enviado como parámetro al arqueo abierto para la caja registradora donde se realiza el pago
    * @param order pedido para agregar al arqueo
    */
-  addOrderToArqueo(order: Order): void{
+  addOrderToArqueo(order: Order): void {
     this.arqueoCajaService.getArqueoOpenByCashRegister(order.cashRegister._id).subscribe(
       cashCount => {
-        if(!isNullOrUndefined(cashCount)) {
-          if(isNullOrUndefined(cashCount.ingresos)) {
+        if (!isNullOrUndefined(cashCount)) {
+          if (isNullOrUndefined(cashCount.ingresos)) {
             cashCount.ingresos = new Array();
           }
 
@@ -288,13 +315,13 @@ export class OrderCloseComponent implements OnInit {
 
             for (let i = 0; i < order.users.length; i++) {
               for (let j = 0; j < order.users[i].payments.length; j++) {
-                let payment = order.users[i].payments[j];                
+                let payment = order.users[i].payments[j];
 
                 /*Si es el último pago insertado en el array de pagos del último usuario el monto del arqueo es igual
                   a la diferencia entre el monto total del pedido y la suma de pagos de los demas usuarios realizadas 
                   hasta el momento. No es el monto del pago porque la suma puede ser mayo al monto total del pedido
                   y habría que dar vuelto */
-                if (i === order.users.length-1 && j === order.users[i].payments.length-1) {
+                if (i === order.users.length - 1 && j === order.users[i].payments.length - 1) {
                   cashCount.ingresos.push({ paymentType: payment.methodId, desc: "Ventas", amount: order.totalPrice - paymentsSum })
                 }
                 else {
@@ -303,29 +330,83 @@ export class OrderCloseComponent implements OnInit {
                 }
               }
             }
-          } 
-          
+          }
+
           this.arqueoCajaService.updateArqueo(cashCount).subscribe(
-            cashCount => {},
+            cashCount => { },
             error => {
               this.showModalError(this.serviceErrorTitle, error.error.message);
             }
           )
-        }                
+        }
       },
-      error => { 
+      error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
       }
     )
   }
 
-  showModalError(errorTittleReceived: string, errorMessageReceived: string) { 
-    this.modalErrorTittle = errorTittleReceived;
-    this.modalErrorMessage = errorMessageReceived;
-    this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
+  /**Agrega las transacciones de los pagos con cuenta corriente */
+  addAccountMovements(order: Order){
+    let currentCashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
+    let minCashRegister = new CashRegisterMin();
+    minCashRegister._id = currentCashRegister._id;
+    minCashRegister.name = currentCashRegister.name;
+    order.users.forEach(user => {
+      user.payments.forEach(payment => {
+        let currentPayment = this.paymentTypes.find(x => x._id == payment.methodId);
+        if(currentPayment.currentAccount){
+          let minPayment = new PaymentTypeMin()
+          minPayment._id = currentPayment._id;
+          minPayment.name = currentPayment.name.toString();
+
+
+          let transaction = new Transaction();
+          transaction.amount = (payment.amount * -1);
+          transaction.cashRegister = minCashRegister;
+          transaction.client = this.client;
+          transaction.comment = "New Order" + new Date().toDateString();
+          transaction.date = new Date();
+          transaction.deleted = false;
+          transaction.paymentMethod = minPayment
+          transaction.paymentType = currentPayment._id;
+
+          this.transactionService.saveTransaction(transaction)
+            .subscribe(result =>{
+              console.log(result);
+            });
+        }
+      })
+    })
   }
 
-  closeModal(){
+  /**Verifica si el metodo de pago es CuentaCorriente y el saldo disponible */
+  checkAccount() {
+    for (let payment of this.payments) {
+      let currentPayment = this.paymentTypes.find(x => x._id === payment.methodId);
+      if (currentPayment.currentAccount && this.client.enabledTransactions) {
+        this.canPayWithAccount = this.client.balance - payment.amount >= (this.client.limitCtaCte * -1);
+        if (this.canPayWithAccount) {
+          continue;
+        }
+        else {
+          return;
+        }
+      }
+      else{
+        this.canPayWithAccount = true;
+        continue;
+      }
+    }
+  }
+
+  showModalError(errorTittleReceived: string, errorMessageReceived: string) {
+    this.modalErrorTittle = errorTittleReceived;
+    this.modalErrorMessage = errorMessageReceived;
+    this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
+  }
+
+  closeModal() {
     this.modalRef.hide();
     this.modalRef = null;
   }

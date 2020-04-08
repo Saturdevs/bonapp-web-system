@@ -9,7 +9,9 @@ import {
 	OrderService,
 	UsersInOrder,
 	ProductsInUserOrder,
-	TableService
+	TableService,
+	TableStatus,
+	Client
 } from '../../../shared/index';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 
@@ -21,6 +23,7 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class OrderPreComponent implements OnInit {
 
 	@Input() selectedTable: Table;
+	@Input() clients: Array<Client>;
 	@Output() close = new EventEmitter<string>();
 	private serviceErrorTitle = 'Error de Servicio';
 	public modalRef: BsModalRef;
@@ -28,6 +31,8 @@ export class OrderPreComponent implements OnInit {
 	private tableNumber: string = 'Numero de mesa';
 	private cancelButton: string = 'Cancelar';
 	private confirmButton: string = 'Aceptar';
+	clientSelect: Array<any> = [];
+	clientSelected: any;
 
 	constructor(private _orderService: OrderService,
 		private _tableService: TableService,
@@ -35,12 +40,16 @@ export class OrderPreComponent implements OnInit {
 		private _router: Router) { }
 
 	ngOnInit() {
+	    for (let client of this.clients) {
+			this.clientSelect.push({ value: client._id, label: client.name, selected: false })
+		  };
+		  this.clientSelected = 'default';
 	}
 
 	newOrder() {
 		let order = new Order();
 		this.closeModal();
-		this.selectedTable.status = "Ocupada";
+		this.selectedTable.status = TableStatus.OCUPADA;
 		order.type = "Restaurant";
 		order.table = this.selectedTable.number;
 		order.status = "Open";
@@ -50,6 +59,7 @@ export class OrderPreComponent implements OnInit {
 		order.users[0].owner = true;
 		order.users[0].products = new Array<ProductsInUserOrder>();
 		order.users[0].products = [];
+		order.users[0].clientId = this.clientSelected;
 		order.app = false;
 		this._orderService.saveOrder(order).subscribe(() => {
 			this._tableService.updateTable(this.selectedTable).subscribe(
@@ -76,5 +86,9 @@ export class OrderPreComponent implements OnInit {
 	closeModal() {
 		this.close.emit('');
 		return true;
+	}
+
+	selectClient(value){
+		this.clientSelected = value;
 	}
 }

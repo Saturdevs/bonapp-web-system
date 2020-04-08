@@ -16,7 +16,9 @@ import {
 	Rights,
 	RightsFunctions,
 	SectionService,
-	Section
+	Section,
+	ClientService,
+	Client
 } from '../../../shared/index';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
@@ -104,6 +106,7 @@ export class TableListComponent implements OnInit {
 	enableEdit: Boolean;
 	enableNew: Boolean;
 	enableActionButtons: Boolean;
+	clients: Array<Client> = [];
 
 	constructor(private _router: Router,
 		private _tableService: TableService,
@@ -112,7 +115,8 @@ export class TableListComponent implements OnInit {
 		private modalService: BsModalService,
 		private toast: ToastService,
 		private _sectionService: SectionService,
-		private _authenticationService: AuthenticationService) { }
+		private _authenticationService: AuthenticationService,
+		private _clientService: ClientService) { }
 
 	ngOnInit() {
 		this._authenticationService.currentUser.subscribe(
@@ -298,27 +302,31 @@ export class TableListComponent implements OnInit {
 			this._tableService.getTableByNumber(tableNumber).subscribe(
 				table => {
 					this.selectedTable = table;
-
-					this._orderService.getOrderOpenByTable(this.selectedTable.number).subscribe(
-						order => {
-							//Verifico que el pedido para la mesa no sea nulo o undefined por si se creo el pedido
-							//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
-							//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
-							if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
-								if (RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_ORDER)) {
-									this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
-								} else {
-									this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
-								}								
-							}
-							else {
-								this._router.navigate(['./orders/orderNew', tableNumber]);
-							}
-						},
-						error => {
-							this.showModalError(this.serviceErrorTitle, error.error.message);
-						}
-					)
+					this._clientService.getAll()
+						.subscribe(clients => {
+							this.clients = clients;
+							
+							this._orderService.getOrderOpenByTable(this.selectedTable.number).subscribe(
+								order => {
+									//Verifico que el pedido para la mesa no sea nulo o undefined por si se creo el pedido
+									//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
+									//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
+									if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
+										if (RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_ORDER)) {
+											this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
+										} else {
+											this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
+										}								
+									}
+									else {
+										this._router.navigate(['./orders/orderNew', tableNumber]);
+									}
+								},
+								error => {
+									this.showModalError(this.serviceErrorTitle, error.error.message);
+								}
+							)
+						});
 				},
 				error => {
 					this.showModalError(this.serviceErrorTitle, error.error.message);

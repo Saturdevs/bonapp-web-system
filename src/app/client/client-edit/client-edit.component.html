@@ -66,6 +66,18 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Email:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input #clientEmail="ngModel" type="email" class="form-control" name="clientEmail" id="clientEmail"
+            [(ngModel)]="client.email" placeholder="Email">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <mdb-checkbox [(ngModel)]="client.enabledTransactions" name="checkEnabledTransactions"> {{ checkboxText }}</mdb-checkbox>
         </div>

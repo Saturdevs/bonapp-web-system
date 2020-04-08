@@ -8,6 +8,7 @@ export class Transaction {
   readonly _id: String;
   amount: number;
   paymentMethod: PaymentTypeMin;
+  paymentType: string;
   cashRegister: CashRegisterMin;
   date: Date;  
   comment: String;

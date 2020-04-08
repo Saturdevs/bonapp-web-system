@@ -24,7 +24,7 @@
 </ng-template>
 
 <ng-template #closeOrderTemplate>
-  <app-order-close [order]="order" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
+  <app-order-close [order]="order" [client]="client" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
 </ng-template>
 
 <ng-template #optionsAndSizesTemplate>

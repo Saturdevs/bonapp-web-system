@@ -6,6 +6,7 @@ export class Client {
   addressNumber: String;
   addressDpto: String;
   enabledTransactions: Boolean;
+  email: String;
   balance: number;
   limitCtaCte: number;
 }

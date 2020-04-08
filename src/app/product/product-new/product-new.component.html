@@ -29,12 +29,12 @@
         <div class="row">
           <div class="col-md-4 col-lg-4">
             <div class="md-form">
-              <input mdbActive formControlName="cod" type="text" class="form-control" [class.is-invalid]="productForm.get('cod').invalid && (productForm.get('cod').dirty 
-                    || productForm.get('cod').touched)" id="cod">
-              <label for="cod" class="">Código:</label>
+              <input mdbActive formControlName="code" type="text" class="form-control" [class.is-invalid]="productForm.get('code').invalid && (productForm.get('code').dirty 
+                    || productForm.get('code').touched)" id="code">
+              <label for="code" class="">Código:</label>
             </div>
             <div
-              *ngIf="productForm.get('cod').invalid && (productForm.get('cod').dirty || productForm.get('cod').touched)"
+              *ngIf="productForm.get('code').invalid && (productForm.get('code').dirty || productForm.get('code').touched)"
               class="alert alert-danger">
               El código del Producto es requerido.
             </div>

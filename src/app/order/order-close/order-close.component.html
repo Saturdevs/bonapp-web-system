@@ -112,11 +112,11 @@
         <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5 pr-0">
             <mdb-select [(ngModel)]="payment.methodId" 
-              [options]="paymentTypesSelect" placeholder="Choose your option" class="mdbSelectClass">
+              [options]="paymentTypesSelect" (selected)="checkAccount()" placeholder="Choose your option" class="mdbSelectClass">
             </mdb-select>   
           </div>
           <div class="col-lg-5 col-md-5 col-sm-5">
-            <input type="number" class="form-control pt-0" [(ngModel)]="payment.amount" id="amount" (input)="calculateChangeAmount()" mdbActive>
+            <input type="number" class="form-control pt-0" [(ngModel)]="payment.amount" id="amount" (input)="calculateChangeAmount(); checkAccount()" mdbActive>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2">
             <label (click)="removePayment(payment)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left removePayment">
@@ -181,6 +181,11 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="row" *ngIf="!canPayWithAccount">
+      <div class="col-12">
+        <span class="text-red">{{ payWithAccountError }}</span>
+      </div>
     </div>   
   </div>
   <div class="row" *ngIf="productsInOrder === null || productsInOrder === undefined || productsInOrder.length === 0">
@@ -190,7 +195,7 @@
   <div class="row grey lighten-3">
     <div class="col-7 offset-5 closeOrderButton">
       <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeForm()">{{cancelButton}}</button>
-      <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="changeAmount < 0" (click)="closeTable()">{{closeTableButton + order.table}}</button>
+      <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="changeAmount < 0 || !canPayWithAccount" (click)="closeTable()">{{closeTableButton + order.table}}</button>
     </div>
   </div>
 </div>
