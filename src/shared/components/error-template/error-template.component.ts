@@ -1,5 +1,6 @@
 import { Component, OnInit, DoCheck, Input, Output, EventEmitter } from '@angular/core';
 import { isNullOrUndefined } from 'util';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-error-template',
@@ -11,12 +12,19 @@ export class ErrorTemplateComponent implements OnInit, DoCheck {
   @Input() errorTitle: string;
   @Input() errorMessage: string;  
   @Output() close = new EventEmitter<string>();  
-  errorMessageDefault: string = 'Ocurrió un problema con la conexión a la base de datos. \n\rIntenté de nuevo, si el problema persiste comuniquese con Soporte de BonAPP.'
-  buttonOk: string = 'Ok';  
+  errorMessageDefault: string;
+  buttonOk: string;  
 
-  constructor() { }
+  constructor(
+    private _transalateService: TranslateService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this._transalateService.stream(['Commons.Buttons.ok', 'Commons.errorMessageDefault']).subscribe((translations) => {    
+      this.buttonOk = translations['Commons.Buttons.ok'];
+      this.errorMessageDefault = translations['Commons.errorMessageDefault'];
+    })
+  }
 
   ngDoCheck() {
     if (isNullOrUndefined(this.errorMessage)) {      

@@ -38,6 +38,7 @@ import { environment } from '../environments/environment';
 import { JwtInterceptor } from '../shared/helpers/jwt.interceptor';
 import { ErrorInterceptor } from '../shared/helpers/error.interceptor';
 import { LoginModule } from './login/login.module';
+import { UserRolesModule } from './user-roles/user-roles.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -79,6 +80,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FileInputModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     LoginModule,
+    UserRolesModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

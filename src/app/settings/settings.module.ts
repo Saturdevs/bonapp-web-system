@@ -20,6 +20,9 @@ import { CashRegisterListComponent } from '../cash-register/cash-register-list/c
 import { CashRegisterNewComponent } from '../cash-register/cash-register-new/cash-register-new.component';
 import { CashRegisterEditComponent } from '../cash-register/cash-register-edit/cash-register-edit.component';
 import { SelectItemComponent } from '../select-item/select-item.component';
+import { UserRolesListComponent } from '../user-roles/user-roles-list/user-roles-list.component';
+import { UserRolesEditComponent } from '../user-roles/user-roles-edit/user-roles-edit.component';
+import { UserRolesNewComponent } from '../user-roles/user-roles-new/user-roles-new.component';
 
 import { TableListResolverService } from '../table/table-list/table-list-resolver.service';
 import { TableAllResolverService } from '../table/table-list/table-all-resolver.service';
@@ -33,6 +36,8 @@ import { CashRegisterResolverService } from '../cash-register/cash-register-list
 import { CashRegisterEditResolverService } from '../cash-register/cash-register-edit/cash-register-edit-resolver.service';
 import { SectionListGuardService } from '../section/section-list/section-list-guard.service';
 import { AuthGuard } from '../../shared';
+import { UserRolesResolverService } from '../user-roles/user-roles-list/user-roles-resolver.service';
+import { UserRolesEditResolverService } from '../user-roles/user-roles-edit/user-roles-edit-resolver.service';
 
 
 @NgModule({
@@ -134,6 +139,35 @@ import { AuthGuard } from '../../shared';
                   }
                 ],
                 data: { menu: 'cash-register' },
+                canActivate: [AuthGuard]
+              },
+              {
+                path: 'roles-users',
+                component: UserRolesListComponent,
+                resolve: { userRoles: UserRolesResolverService },
+                children: [
+                  {
+                    path: 'editUserRole/:id',
+                    component: UserRolesEditComponent,
+                    resolve: { userRole: UserRolesEditResolverService },
+                    outlet: 'edit',
+                    data: { menu: 'roles-users-edit' },
+                    canActivate: [AuthGuard]
+                  },
+                  {
+                    path: 'newUserRole',
+                    component: UserRolesNewComponent,
+                    outlet: 'edit',
+                    data: { menu: 'roles-users-new' },
+                    canActivate: [AuthGuard]
+                  },
+                  {
+                    path: 'selectItem',
+                    component: SelectItemComponent,
+                    outlet: 'edit'
+                  }
+                ],
+                data: { menu: 'roles-users' },
                 canActivate: [AuthGuard]
               },
               {

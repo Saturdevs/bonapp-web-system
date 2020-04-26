@@ -28,3 +28,4 @@ export * from './right';
 export * from './userRole';
 export * from './appMenu';
 export * from './rightForUser';
+export * from './Interfaces';
