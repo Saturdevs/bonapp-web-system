@@ -108,6 +108,9 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
       .subscribe(arqueos => {
         this.arqueos = arqueos;
         this.filteredArqueos = this.arqueos;
+        this.mdbTable.setDataSource(this.filteredArqueos);
+        this.filteredArqueos = this.mdbTable.getDataSource();
+        this.previous = this.mdbTable.getDataSource();
       },
         error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);

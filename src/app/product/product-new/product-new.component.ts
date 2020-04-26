@@ -43,6 +43,7 @@ export class ProductNewComponent implements OnInit {
   nameIsAvailable: boolean = false;
   defaultSize: Number = -1;
   checkboxAvailableText: String = 'Disponible';
+  stockControlText = "Controla Stock";
 
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
@@ -70,15 +71,20 @@ export class ProductNewComponent implements OnInit {
       }
     )
     this.productForm = this.formBuilder.group({
-      cod: ['', Validators.required],
+      code: ['', Validators.required],
       name: ['', Validators.required],
       category: ['', ComboValidators.hasValue],
-      picture: ['', Validators.required],
+      pictures: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', Validators.required],
       sizes: this.formBuilder.array([]),
       options: this.formBuilder.array([]),
-      available: true
+      available: true,
+      stockControl: false,
+      stock: this.formBuilder.group({
+        min: ['0'],
+        current: ['0']
+      })
     });
 
     this.productForm.patchValue({
@@ -204,7 +210,7 @@ export class ProductNewComponent implements OnInit {
     validator[1] != '' ? this.newProductPictureData = validator[1] : this.newProductPictureData = '';
     this.pictureTouched = true;
     if (this.validPicture != '') {
-      this.productForm.controls.picture.setValue(this.newProductPictureData);
+      this.productForm.controls.pictures.setValue(this.newProductPictureData);
     }
   }
 

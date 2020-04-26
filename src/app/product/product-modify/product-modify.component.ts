@@ -49,6 +49,7 @@ export class ProductModifyComponent implements OnInit {
   defaultSize: Number = -1;
   defaultPrice: Number = 0;
   sizesArray: Size[];
+  stockControlText = "Controla Stock";
 
   @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
   @ViewChild(FileInputComponent)
@@ -83,7 +84,12 @@ export class ProductModifyComponent implements OnInit {
       price: ['', Validators.required],
       sizes: this.formBuilder.array([]),
       options: this.formBuilder.array([]),
-      available: ''
+      available: '',
+      stockControl: false,
+      stock: this.formBuilder.group({
+        min: ['0'],
+        current: ['0']
+      })
     });
 
     this.onProductRetrieved(this._route.snapshot.data['product']);
@@ -132,6 +138,10 @@ export class ProductModifyComponent implements OnInit {
     this.product = product;
     this.productPictureData = this.product.pictures;
     this.productNameModified = this.product.name;
+    const stockValues = this.formBuilder.group({
+      min: this.product.stock.min,
+      current: this.product.stock.current
+    });
     this.productForm.patchValue({
       code: this.product.code,
       name: this.product.name,
@@ -139,8 +149,14 @@ export class ProductModifyComponent implements OnInit {
       price: this.product.price,
       pictures: this.product.pictures,
       category: this.product.category,
-      available: this.product.available
+      available: this.product.available,
+      stockControl: this.product.stockControl
     });
+    // @ts-ignore no borrar. Anda
+    this.productForm.controls['stock'].controls['min'].value = this.product.stock.min;
+    // @ts-ignore no borrar. Anda
+    this.productForm.controls['stock'].controls['current'].value = this.product.stock.current;
+
     const prodOpt = this.product.options.map(options => this.formBuilder.group({
       name: [{ value: options.name, disabled: true }, Validators.required],
       price: [options.price, Validators.required]

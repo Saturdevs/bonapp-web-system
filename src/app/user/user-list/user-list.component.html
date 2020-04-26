@@ -1,0 +1,70 @@
+<ng-template #deleteTemplate>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage"
+      (delete)="deleteUser()" (close)="closeModal()">
+  </app-delete-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0">
+      <div class="settingsTitle">
+          <div class="float-left">
+              <header class="major">
+                  <h5 class="customTitle">{{ pageTitle }}</h5>
+              </header>
+          </div>
+          <div class="float-right">
+              <a [routerLink]="['/settings/general-settings/users', { outlets: { edit: ['newUser'] } }]"
+                  class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+                  *ngIf='enableNew'> + Nuevo usuario</a>
+          </div>
+      </div>
+
+      <div class="row mb-2 mt-2 ml-2" *ngIf="validationMessage !== 'undefined' && validationMessage !== null">
+          <span class="errorMessage">{{ validationMessage }}</span>
+      </div>
+
+      <div class="ml-5 mr-5 pl-5 pr-5  pt-1 pb-2 mt-2 text-center">
+          <div class="row mb-2 customBox">
+              <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+                  <h6 class="pt-2">Filtrar:</h6>
+                  <div class="md-form form-group mr-0 ml-0 col-md-6 col-lg-6">
+                      <input type="text" class="input-alternate" placeholder="Nombre" name="query"
+                          [(ngModel)]='listFilter' id="query">
+                  </div>
+              </form>
+          </div>
+          <div class="row">
+              <table class="table table-bordered table-hover customTable">
+                  <thead class="primary-color customTableText">
+                      <tr>
+                          <th>Nombre</th>
+                          <th *ngIf='enableActionButtons'>Acciones</th>
+                      </tr>
+                  </thead>
+                  <tbody class="table-wrapper" *ngIf='users && users.length'>
+                      <tr *ngFor='let user of filteredUsers '>
+                          <td>{{ user.name }}</td>
+                          <td class="align-middle" *ngIf='enableActionButtons'>
+                              <a [routerLink]="['/settings/general-settings/users', { outlets: { edit: ['editUser', user._id] } }]"
+                                  class="btn btn-yellow btn-sm customButtonText"
+                                  *ngIf='enableEdit'>Editar</a>
+                              <button type="button"
+                                  class="btn btn-red btn-sm"
+                                  (click)="showModalDelete(deleteTemplate, user._id)"
+                                  *ngIf='enableDelete'>Eliminar</button>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+      <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+  </div>
+</div>

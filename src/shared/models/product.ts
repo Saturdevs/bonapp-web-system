@@ -1,7 +1,8 @@
 import { 
   SizeInProduct,
   OptionInProduct,
-  Category
+  Category,
+  ProductStock
 } from '../index';
 
 export class Product {
@@ -17,4 +18,6 @@ export class Product {
   tags: Array<string> = []
   available: Boolean;
   readonly availableDescription: string;
+  stockControl: Boolean;
+  stock: ProductStock;
 }

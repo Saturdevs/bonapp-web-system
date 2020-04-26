@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -10,8 +10,8 @@
 </ng-template>
 
 <ng-template #priceNotMatch>
-  <app-cancel-template [modalTitle]="modalPriceNotMatchTitle" [modalMessage]="modalPriceNotMatchMessage" (handleOkButton)="closeModalAndContinue()"
-      (handleCancelButton)="closeModal()">
+  <app-cancel-template [modalTitle]="modalPriceNotMatchTitle" [modalMessage]="modalPriceNotMatchMessage"
+    (handleOkButton)="closeModalAndContinue()" (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -22,163 +22,220 @@
     </header>
   </div>
 </div>
-<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 col-xl-12 pt-3 pb-3 pl-1 pr-1">  
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 col-xl-12 pt-3 pb-3 pl-1 pr-1">
   <form method="post" novalidate [formGroup]="productForm">
-      <div class="row mr-0 ml-0">
-        <div class="col-md-6">
-          <div class="row">
-            <div class="col-md-4 col-lg-4">
-              <div class="md-form">
-                  <input mdbActive  formControlName="cod" type="text" class="form-control"
-                    [class.is-invalid]="productForm.get('cod').invalid && (productForm.get('cod').dirty 
-                    || productForm.get('cod').touched)" id="cod">
-                  <label for="cod" class="">Código:</label>
-              </div>
-              <div *ngIf="productForm.get('cod').invalid && (productForm.get('cod').dirty || productForm.get('cod').touched)" class="alert alert-danger">
-                  El código del Producto es requerido.
-              </div>
+    <div class="row mr-0 ml-0">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-4 col-lg-4">
+            <div class="md-form">
+              <input mdbActive formControlName="code" type="text" class="form-control" [class.is-invalid]="productForm.get('code').invalid && (productForm.get('code').dirty 
+                    || productForm.get('code').touched)" id="code">
+              <label for="code" class="">Código:</label>
             </div>
-            <div class="col-md-7 col-lg-7">
-              <div class="md-form">
-                  <input mdbActive formControlName="name" type="text" class="form-control" [class.is-invalid]="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)" 
-                  id="name" length="25" mdbCharCounter>
-                  <label for="name" class="">Nombre</label>  
-              </div>
-              <div *ngIf="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)" class="alert alert-danger">
-                  El nombre del Producto es requerido.
-              </div>
+            <div
+              *ngIf="productForm.get('code').invalid && (productForm.get('code').dirty || productForm.get('code').touched)"
+              class="alert alert-danger">
+              El código del Producto es requerido.
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-4 col-lg-4">    
-              <div class="form-group">
-                  <label>Categoría:</label>
-                  <div class="select-wrapper">
-                    <select formControlName="category" type="text" class="form-control browser-default" [class.is-invalid]="productForm.get('category').invalid && (productForm.get('category').dirty || productForm.get('category').touched)"
-                      id="category">
-                      <option value="default" default>Seleccione la categoría...</option>
-                      <option [value]="category._id" *ngFor = 'let category of categories'>{{category.name}}</option>
-                    </select>
-                  </div>
-              </div>              
-              <div *ngIf="productForm.get('category').invalid && (productForm.get('category').dirty || productForm.get('category').touched)" class="alert alert-danger">
-                La Categoría del producto es requerida.
-              </div>           
+          <div class="col-md-7 col-lg-7">
+            <div class="md-form">
+              <input mdbActive formControlName="name" type="text" class="form-control"
+                [class.is-invalid]="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
+                id="name" length="25" mdbCharCounter>
+              <label for="name" class="">Nombre</label>
             </div>
-            <div class="col-md-4 col-lg-4">    
-                <div class="md-form">
-                    <input mdbActive formControlName="price" type="number" class="form-control" [class.is-invalid]="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)" 
-                    id="price">
-                    <label for="name" class="">Precio ($):</label>
-                </div>
-                <div *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)" class="alert alert-danger">
-                  El precio del Producto es requerido.
-                </div>     
-            </div>
-            <div class="col-md-2 col-lg-2">
-              <mdb-checkbox formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
+            <div
+              *ngIf="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
+              class="alert alert-danger">
+              El nombre del Producto es requerido.
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-11 col-lg-11">
-              <div class="md-form">
-                  <textarea mdbActive formControlName="description" class="md-textarea" [class.is-invalid]="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)" 
-                  id="description"></textarea>
-                  <label for="description">Descripción</label>
-              </div>
-    
-              <div *ngIf="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)" class="alert alert-danger">
-                La descripción del producto es requerida.
-              </div>        
-            </div> 
-          </div>
-          <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
-          <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
-            La imagen del producto es requerida.
-          </div>       
-        </div> 
-        <div class="col-md-6 pr-0 pl-0">
-            <img [src]="newProductPictureData" onerror="this.src='../../../assets/img/no-image.png'"/>               
-        </div>  
-      </div>
-      <div class="row col-md-12 col-lg-12 col-sm-12 mr-0">
-        <div class="col-md-6">
-          
-          <label>Tamaños:</label>
-          <div formArrayName="sizes" *ngFor="let productSize of sizes.controls; let i=index">
-            <div [formGroupName]="i" class="form-group">              
-              <div class="row">
-                <div class="select-wrapper col-md-5">
-                  <select formControlName="sizeId" class="form-control  browser-default" [class.is-invalid]="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)"
-                    id="{{ 'productSize' + i }}">
-                    <option value="default" default>Seleccione el tamaño...</option>
-                    <option [value]="size._id" *ngFor = 'let size of sizesArray'>{{size.name}}</option>
-                  </select>
-                  <div *ngIf="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)" class="alert alert-danger">
-                    El tamaño es requerido.
-                  </div> 
-                </div>
-                <div class="col-md-3 col-md-offset-1">
-                  <input formControlName="price" type="number" placeholder="Precio($)" class="form-control" [class.is-invalid]="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)"
-                    id="{{ 'productSizePrice' + i }}">
-
-                  <div *ngIf="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)" class="alert alert-danger">
-                    El precio es requerido
-                  </div>
-                </div>
-                <div class="col-md-3 col-md-offset-1">
-                  <div class="form-check">
-                    <input formControlName="default" type="radio" class="form-check-input form-control" (change)="setDefaultSize(i)" name="default"  id="{{ 'default' + i }}" [value]="true">
-                    <label class="form-check-label" for="{{ 'default' + i }}">Default</label>
-                  </div>
-                </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-lg-4">
+            <div class="form-group">
+              <label>Categoría:</label>
+              <div class="select-wrapper">
+                <select formControlName="category" type="text" class="form-control browser-default"
+                  [class.is-invalid]="productForm.get('category').invalid && (productForm.get('category').dirty || productForm.get('category').touched)"
+                  id="category">
+                  <option value="default" default>Seleccione la categoría...</option>
+                  <option [value]="category._id" *ngFor='let category of categories'>{{category.name}}</option>
+                </select>
               </div>
             </div>
-            <button class="col-md-1" no-margin color="danger" (click)="removeSize(i)">-</button>
+            <div
+              *ngIf="productForm.get('category').invalid && (productForm.get('category').dirty || productForm.get('category').touched)"
+              class="alert alert-danger">
+              La Categoría del producto es requerida.
+            </div>
           </div>
-          <br>
-          <button class="special small" (click)="addProductSize()" [disabled]="!sizes.valid">
-            Agregar Tamaño
-          </button>
-
+          <div class="col-md-4 col-lg-4">
+            <div class="md-form">
+              <input mdbActive formControlName="price" type="number" class="form-control"
+                [class.is-invalid]="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
+                id="price">
+              <label for="name" class="">Precio ($):</label>
+            </div>
+            <div
+              *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
+              class="alert alert-danger">
+              El precio del Producto es requerido.
+            </div>
+          </div>
+          <div class="col-md-2 col-lg-2">
+            <mdb-checkbox formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
+          </div>
         </div>
 
-        <div class="col-md-6 pl-0">
+        <div class="row">
+          <div class="col-md-11 col-lg-11">
+            <div class="md-form">
+              <textarea mdbActive formControlName="description" class="md-textarea"
+                [class.is-invalid]="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
+                id="description"></textarea>
+              <label for="description">Descripción</label>
+            </div>
 
-          <label>Opciones:</label>
-          <div formArrayName="options" *ngFor="let productOption of options.controls; let i=index">
-            <div [formGroupName]="i" class="form-group">              
-              <div class="row">
-                <div class="col-md-5">
-                  <input formControlName="name" type="text" placeholder="Opción" class="form-control" 
-                    id="{{ 'productOption' + i }}">
+            <div
+              *ngIf="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
+              class="alert alert-danger">
+              La descripción del producto es requerida.
+            </div>
+          </div>
+        </div>
+        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
+        <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+          La imagen del producto es requerida.
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-lg-4">
+            <div class="md-form">
+              <mdb-checkbox formControlName="stockControl"> {{ stockControlText }}</mdb-checkbox>
+            </div>
+          </div>
+          <div class="row col-md-8 col-lg-8" [formGroup]="productForm.controls.stock" *ngIf="productForm.get('stockControl').value">
+            <div class="col-md-6 col-lg-6">
+              <div class="md-form">
+                <input mdbActive formControlName="min" type="number" class="form-control" id="min">
+                <label for="min" class="">Minimo:</label>
+              </div>
+              <div
+                *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.min.dirty) && productForm.controls.stock.controls.min.touched)"
+                class="alert alert-danger">
+                El stock minimo es requerido`
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+              <div class="md-form">
+                <input mdbActive formControlName="current" type="number" class="form-control" id="current">
+                <label for="current" class="">Actual:</label>
+              </div>
+              <div
+                *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.current.dirty) && productForm.controls.stock.controls.current.touched)"
+                class="alert alert-danger">
+                El stock actual es requerido.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 pr-0 pl-0">
+        <img [src]="newProductPictureData" onerror="this.src='../../../assets/img/no-image.png'"
+          style="width: 300px; height: 316px;" />
+      </div>
+    </div>
+    <div class="row col-md-12 col-lg-12 col-sm-12 mr-0">
+      <div class="col-md-6">
 
-                  <div *ngIf="productForm.get('options').controls[i].controls.name.invalid && (productForm.get('options').controls[i].controls.name.dirty || productForm.get('options').controls[i].controls.name.touched)" class="alert alert-danger">
-                    La opción es requerida.
-                  </div> 
+        <label>Tamaños:</label>
+        <div formArrayName="sizes" *ngFor="let productSize of sizes.controls; let i=index">
+          <div [formGroupName]="i" class="form-group">
+            <div class="row">
+              <div class="select-wrapper col-md-5">
+                <select formControlName="sizeId" class="form-control  browser-default"
+                  [class.is-invalid]="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)"
+                  id="{{ 'productSize' + i }}">
+                  <option value="default" default>Seleccione el tamaño...</option>
+                  <option [value]="size._id" *ngFor='let size of sizesArray'>{{size.name}}</option>
+                </select>
+                <div
+                  *ngIf="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)"
+                  class="alert alert-danger">
+                  El tamaño es requerido.
                 </div>
-                <div class="col-md-3 col-md-offset-1">
-                  <input formControlName="price" type="number" placeholder="Precio($)" class="form-control"
-                    id="{{ 'productOptionPrice' + i }}">
+              </div>
+              <div class="col-md-3 col-md-offset-1">
+                <input formControlName="price" type="number" placeholder="Precio($)" class="form-control"
+                  [class.is-invalid]="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)"
+                  id="{{ 'productSizePrice' + i }}">
 
-                  <div *ngIf="productForm.get('options').controls[i].controls.price.invalid && (productForm.get('options').controls[i].controls.price.dirty || productForm.get('options').controls[i].controls.price.touched)" class="alert alert-danger">
-                    El precio es requerido
-                  </div>
+                <div
+                  *ngIf="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)"
+                  class="alert alert-danger">
+                  El precio es requerido
+                </div>
+              </div>
+              <div class="col-md-3 col-md-offset-1">
+                <div class="form-check">
+                  <input formControlName="default" type="radio" class="form-check-input form-control"
+                    (change)="setDefaultSize(i)" name="default" id="{{ 'default' + i }}" [value]="true">
+                  <label class="form-check-label" for="{{ 'default' + i }}">Default</label>
                 </div>
               </div>
             </div>
-            <button class="btn btn-md btn-danger" (click)="removeOption(i)">-</button>
           </div>
-          <br>
-          <button class="btn btn-md btn-success" (click)="addProductOption()">
-            Agregar Opción
-          </button>
+          <button class="col-md-1" no-margin color="danger" (click)="removeSize(i)">-</button>
         </div>
+        <br>
+        <button class="special small" (click)="addProductSize()" [disabled]="!sizes.valid">
+          Agregar Tamaño
+        </button>
+
       </div>
-      <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
-        <button class="btn btn-md btn-primary" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button> 
-        <button class="btn btn-md btn-primary" [disabled]="productForm.invalid" type="submit" (click)="validateSizes()">Guardar</button>
-      </div>    
-    </form>
-</div>      
+
+      <div class="col-md-6 pl-0">
+
+        <label>Opciones:</label>
+        <div formArrayName="options" *ngFor="let productOption of options.controls; let i=index">
+          <div [formGroupName]="i" class="form-group">
+            <div class="row">
+              <div class="col-md-5">
+                <input formControlName="name" type="text" placeholder="Opción" class="form-control"
+                  id="{{ 'productOption' + i }}">
+
+                <div
+                  *ngIf="productForm.get('options').controls[i].controls.name.invalid && (productForm.get('options').controls[i].controls.name.dirty || productForm.get('options').controls[i].controls.name.touched)"
+                  class="alert alert-danger">
+                  La opción es requerida.
+                </div>
+              </div>
+              <div class="col-md-3 col-md-offset-1">
+                <input formControlName="price" type="number" placeholder="Precio($)" class="form-control"
+                  id="{{ 'productOptionPrice' + i }}">
+
+                <div
+                  *ngIf="productForm.get('options').controls[i].controls.price.invalid && (productForm.get('options').controls[i].controls.price.dirty || productForm.get('options').controls[i].controls.price.touched)"
+                  class="alert alert-danger">
+                  El precio es requerido
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-md btn-danger" (click)="removeOption(i)">-</button>
+        </div>
+        <br>
+        <button class="btn btn-md btn-success" (click)="addProductOption()">
+          Agregar Opción
+        </button>
+      </div>
+    </div>
+    <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
+      <button class="btn btn-md btn-primary" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
+      <button class="btn btn-md btn-primary" [disabled]="productForm.invalid || (productForm.get('stockControl').value && productForm.controls.stock.controls.min.value == 0) || (productForm.get('stockControl').value && productForm.controls.stock.controls.current.value == 0)" type="submit"
+        (click)="validateSizes()">Guardar</button>
+    </div>
+  </form>
+</div>

@@ -109,6 +109,39 @@
             <mdb-checkbox formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
           </div>
 
+          <div class="row">
+            <div class="col-md-4 col-lg-4">
+              <div class="md-form">
+                <mdb-checkbox formControlName="stockControl"> {{ stockControlText }}</mdb-checkbox>
+              </div>
+            </div>
+            <div class="row col-md-8 col-lg-8" [formGroup]="productForm.controls.stock"
+              *ngIf="productForm.get('stockControl').value">
+              <div class="col-md-6 col-lg-6">
+                <div class="md-form">
+                  <input mdbActive formControlName="min" type="number" class="form-control" id="min">
+                  <label for="min" class="">Minimo:</label>
+                </div>
+                <div
+                  *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.min.dirty) && productForm.controls.stock.controls.min.touched)"
+                  class="alert alert-danger">
+                  El stock minimo es requerido`
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-6">
+                <div class="md-form">
+                  <input mdbActive formControlName="current" type="number" class="form-control" id="current">
+                  <label for="current" class="">Actual:</label>
+                </div>
+                <div
+                  *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.current.dirty) && productForm.controls.stock.controls.current.touched)"
+                  class="alert alert-danger">
+                  El stock actual es requerido.
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 

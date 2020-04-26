@@ -38,6 +38,12 @@ import { SectionListGuardService } from '../section/section-list/section-list-gu
 import { AuthGuard } from '../../shared';
 import { UserRolesResolverService } from '../user-roles/user-roles-list/user-roles-resolver.service';
 import { UserRolesEditResolverService } from '../user-roles/user-roles-edit/user-roles-edit-resolver.service';
+import { UserListComponent } from '../user/user-list/user-list.component';
+import { UserEditComponent } from '../user/user-edit/user-edit.component';
+import { UserNewComponent } from '../user/user-new/user-new.component';
+import { UsersResolverService } from '../user/user-list/users-resolver-service';
+import { UsersNewResolverService } from '../user/user-new/user-new-resolver.service';
+import { UserEditResolverService } from '../user/user-edit/user-edit-resolver.service';
 
 
 @NgModule({
@@ -110,6 +116,37 @@ import { UserRolesEditResolverService } from '../user-roles/user-roles-edit/user
                   }
                 ],
                 data: { menu: 'payment-types' },
+                canActivate: [AuthGuard]
+              },
+              {
+                path: 'users',
+                component: UserListComponent,
+                resolve: { users: UsersResolverService },
+                children: [
+                  {
+                    path: 'editUser/:id',
+                    component: UserEditComponent,
+                    resolve: { userRoles: UsersNewResolverService,
+                               user: UserEditResolverService },                    
+                    outlet: 'edit',
+                    data: { menu: 'users-edit' },
+                    canActivate: [AuthGuard]
+                  },
+                  {
+                    path: 'newUser',
+                    component: UserNewComponent,
+                    resolve: { userRoles: UsersNewResolverService },
+                    outlet: 'edit',
+                    data: { menu: 'users-new' },
+                    canActivate: [AuthGuard]
+                  },
+                  {
+                    path: 'selectItem',
+                    component: SelectItemComponent,
+                    outlet: 'edit'
+                  }
+                ],
+                data: { menu: 'users' },
                 canActivate: [AuthGuard]
               },
               {

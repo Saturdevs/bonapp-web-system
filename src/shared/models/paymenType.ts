@@ -4,4 +4,5 @@ export class PaymentType {
     available: Boolean;
     readonly availableDescription: string;
     default: Boolean;
+    currentAccount: Boolean;
   }

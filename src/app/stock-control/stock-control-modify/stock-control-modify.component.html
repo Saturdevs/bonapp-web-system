@@ -1,0 +1,70 @@
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+    (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf="product" class="col-12 pl-0 pr-0">
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{pageTitle + productNameModified}}
+    </h5>
+  </div>
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>Nombre Producto</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input required type="text" disabled class="form-control"
+            id="productName" [(ngModel)]="product.name">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4">
+          <div class="md-form">
+            <mdb-checkbox [(ngModel)]="stockControl" name="checkStockCOntrol"> {{ stockControlText }}</mdb-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row col-md-8 col-lg-8">
+      <div class="col-md-6 col-lg-6">
+        <div class="md-form">
+          <input mdbActive type="number" [(ngModel)]="minStock" class="form-control" id="min">
+          <label for="min" class="">Minimo:</label>
+        </div>
+        <div *ngIf="stockControl && !minStock" class="alert alert-danger">
+          El stock minimo es requerido`
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-6">
+        <div class="md-form">
+          <input mdbActive type="number" [(ngModel)]="currentStock" class="form-control" id="current">
+          <label for="current" class="">Actual:</label>
+        </div>
+        <div *ngIf="stockControl && !currentStock" class="alert alert-danger">
+          El stock actual es requerido.
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="col-7 offset-5">
+        <button type="button" class="btn btn-sm customButtonCancel waves-light"
+          (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+        <button type="button" class="btn btn-primary btn-sm waves-light" 
+          (click)="updateStock()">{{saveButton}}</button>
+      </div>
+    </div>
+</div>

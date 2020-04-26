@@ -21,7 +21,6 @@ export class DatePickerComponent implements OnInit {
       month: this.currentDate.getMonth(),
       day: this.currentDate.getDay()
     }
-    console.log(this.currentDate);
     this.model = this.currentDate;
   }
 
@@ -29,7 +28,7 @@ export class DatePickerComponent implements OnInit {
     this.onValueChanged.emit(newValue);
   }
 
-  public myDatePickerOptions: IMyOptions = { 
+  public myDatePickerOptions: IMyOptions = {
     // Strings and translations
     dayLabels: {su: 'Dom', mo: 'Lun', tu: 'Mar', we: 'Mie', th: 'Jue', fr: 'Vie', sa: 'Sab'},
     dayLabelsFull: {su: "Domingo", mo: "Lunes", tu: "Martes", we: "Miércoles", th: "Jueves", fr: "Viernes", sa: "Sábado"},
@@ -49,7 +48,7 @@ export class DatePickerComponent implements OnInit {
 
     // Disable dates
     // disableUntil: undefined,
-    //disableSince: this.disabledSince, 
+    //disableSince: this.disabledSince,
     // { year: this.currentDate.getFullYear(), month: this.currentDate.getMonth(), day: this.currentDate.getDay() },
     // disableDays: undefined,
     // disableDateRanges: undefined,
@@ -59,7 +58,7 @@ export class DatePickerComponent implements OnInit {
     // enableDays: undefined,
 
   //   // Year limits
-  //   minYear: 1000, 
+  //   minYear: 1000,
   //   maxYear: 9999,
 
   //   // Show Today button
@@ -76,6 +75,6 @@ export class DatePickerComponent implements OnInit {
   //   height: '100px',
   //   width: '50%',
   //   selectionTxtFontSize: '15px'
-  }; 
+  };
 
 }

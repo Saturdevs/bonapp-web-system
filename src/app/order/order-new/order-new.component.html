@@ -11,6 +11,9 @@
         <textarea (click)="selectText(obs)" #obs placeholder="Comentario..." 
         [(ngModel)]="deletedReason"></textarea>
       </div>
+      <div class="row">
+          <mdb-checkbox (change)="returnStock()" name="productOption">Devolver a stock</mdb-checkbox>            
+      </div>
     </div>
   </div>
   <div class="modal-footer">
@@ -21,7 +24,7 @@
 </ng-template>
 
 <ng-template #closeOrderTemplate>
-  <app-order-close [order]="order" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
+  <app-order-close [order]="order" [client]="client" [cashRegisters]=cashRegisters [paymentTypes]=paymentTypes (close)="closeModal()"></app-order-close>
 </ng-template>
 
 <ng-template #optionsAndSizesTemplate>
@@ -58,6 +61,62 @@
   </div>
 </ng-template>
 
+<ng-template #editTemplate>
+  <div class="container col-md-12">
+    <div class="row pageTitle primary-color">
+      <div class="col-md-12">
+        <h4 class="text-white text-center mb-0">{{editModalTitle}}</h4>   
+      </div>
+    </div>
+ 
+    <div class="modalContent modalContentDelete">
+      <div class="row">
+        <label for="editTable">{{editOrderTableText}}</label>
+        <input type="number" name="editTable" id="editTable" class="form-control" [(ngModel)]="orderNewTable">
+      </div>
+    </div>
+   
+    <div class="row customFooterModal">
+      <div class="footerButtons">
+        <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeModal()">{{cancelButtonText}}</button>
+        <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="saveEditedOrder()">{{saveButtonText}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sliceTemplate>
+    <div class="container col-md-12">
+      <div class="row pageTitle primary-color">
+        <div class="col-md-12">
+          <h4 class="text-white text-center mb-0">{{editModalTitle}}</h4>   
+        </div>
+      </div>
+   
+      <div class="modalContent modalContentDelete">
+        <div class="row" *ngFor="let product of productsInOrderToSlice">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" (change)="addProductToSlice(product)">
+            <span class="custom-control-indicator"></span>
+            <span *ngIf="product.product" class="custom-control-description">{{product.product}}</span>
+            <span *ngIf="product.dailyMenuId" class="custom-control-description">{{product.dailyMenuId}}</span>
+          </label>
+        </div>
+        <div class="row">
+          <label for="editTable">{{editOrderTableText}}</label>
+          <input type="number" name="sliceToTable" id="sliceToTable" class="form-control" [(ngModel)]="sliceToTable">
+        </div>
+      </div>
+     
+      <div class="row customFooterModal">
+        <div class="footerButtons">
+          <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeModal()">{{cancelButtonText}}</button>
+          <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="saveSlicedOrder()">{{saveButtonText}}</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
 <div class="row col-md-12 col-lg-12 col-sm-12 pr-0 pl-0 mr-0 ml-0" style="height: calc(100vh - 5.4rem);
 overflow: auto; overflow-x: hidden;">
   <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8 pr-0" style="height: 100%">
@@ -69,6 +128,9 @@ overflow: auto; overflow-x: hidden;">
         <div style="margin-left:8%;" *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
           <a (click)="getCategoriesAvailables(menu._id); applyClassMenu(menu._id)" [ngClass]="{'activeItem': activeMenu == menu._id}" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{menu.name}}</span></a>
         </div>
+        <div style="margin-left:8%;" *ngIf="dailyMenus.length > 0" class="d-flex align-items-center menuButtonContainer">
+          <a [ngClass]="{'activeItem': activeDailyMenu}" (click)="applyClassDailyMenu();" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light menuButton mt-0 mb-0" mdbRippleRadius><span>{{ dailyMenusLabel }}</span></a>
+        </div>
         <button class="right-paddle paddle btn customPaddle waves-light" mdbRippleRadius>
           >
         </button>
@@ -76,14 +138,25 @@ overflow: auto; overflow-x: hidden;">
     </div>
     <div class="row col-12 pr-0 pl-0 categoriesAndProductsContainer">
       <div class="col-3 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
-        <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
-          <a (click)="getProductsAvailablesByCategory(category._id); applyClassCategory(category._id); categorySelected = true" [ngClass]="{'activeItem': activeCategory == category._id}"  class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
-        </div>
+        <ng-container *ngIf="activeDailyMenu == false">
+          <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer" *ngFor="let category of categories">
+            <a (click)="getProductsAvailablesByCategory(category._id); applyClassCategory(category._id); categorySelected = true;" [ngClass]="{'activeItem': activeCategory == category._id}"  class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light categoryButton" mdbRippleRadius><span>{{category.name}}</span></a>
+          </div>
+        </ng-container>
       </div>
       <div *ngIf="products && products.length > 0" class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
-        <div class="productsButtonContainer" *ngFor="let product of products">
-          <a (click)="validateSizesAndOptions(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
-        </div>
+        <ng-container *ngIf="activeDailyMenu == false">
+          <div class="productsButtonContainer" *ngFor="let product of products">
+            <a (click)="validateSizesAndOptions(product, 1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{product.name}}</span></a>
+          </div>
+        </ng-container>
+      </div>
+      <div class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
+        <ng-container *ngIf="dailyMenus && dailyMenus.length > 0 && activeDailyMenu == true">
+          <div class="productsButtonContainer" *ngFor="let dailyMenu of dailyMenus">
+            <a (click)="addDailyMenuToPreOrder(dailyMenu,1)" class="d-flex align-items-center justify-content-center btn btn-primary btn-md waves-light productButton" mdbRippleRadius><span>{{dailyMenu.name}}</span></a>
+          </div>
+        </ng-container>
       </div>
       <div *ngIf="products.length == 0 && categorySelected == false" class="col-9 d-flex justify-content-center col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-5 mr-0 ml-0 mt-0 mb-0">
           <h3>{{ noCategoriesText }}</h3>
@@ -98,13 +171,21 @@ overflow: auto; overflow-x: hidden;">
       <div class="row col-lg-12 col-md-12 col-sm-12">
         <h5>{{'Mesa ' + order.table | uppercase}}</h5>
       </div>
+
     </div>
     <div class="row">
-      <div class="row col-lg-12 col-md-12 col-sm-12 customSubtittle">
+      <div class="row col-lg-8 col-md-8 col-sm-8 customSubtittle">
           {{ order.created_at | date:'dd/MM/yy HH:mm' }}
       </div>
+      <div class="d-flex justify-content-end row col-lg-4 col-md-4 col-sm-4 pr-0">
+        <div class="float-right pt-2">
+          <i class="fa fa-cog float-right pr-4" (click)="showEditModal(editTemplate, order._id)"></i>
+        </div>
+        <div class="float-right pt-2">
+          <i class="fa fa-cog float-right pr-0" (click)="showSliceModal(sliceTemplate, order._id)"></i>
+        </div>
+      </div>
     </div>
-
     <div class="row" *ngIf='enableAddProducts'>
       <div class="col-lg-12 col-md-12 col-sm-12 customAddProductsTitle"><span class="align-middle">{{ 'Adicionar' | uppercase }}</span></div>
       <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 customAddProductsSection">

@@ -36,7 +36,6 @@ export class ArqueoCajaService {
   }
 
   updateArqueo(arqueo) {
-    console.log(arqueo)
     return this.apiService.put(`/arqueo/${arqueo._id}`, arqueo)
       .map(data => data.arqueo)
       .catch(this.handleError);
@@ -61,7 +60,6 @@ export class ArqueoCajaService {
   }
 
   private handleError(err: HttpErrorResponse) {
-    console.log(err.message);
     return Observable.throw(err);
   }
 

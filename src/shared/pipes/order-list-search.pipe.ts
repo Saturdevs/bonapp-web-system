@@ -11,7 +11,6 @@ export class OrderListSearchPipe implements PipeTransform {
   transform(orderItems: Array<any>, orderStatus: string, waiterId: string, paymentType: string, cashRegister: string, tableNumber: string, startDateSearch: Date, endDateSearch: Date){
     if (orderItems && orderItems.length){
         return orderItems.filter(orderItem =>{
-            console.log(orderItem);
             if (cashRegister && cashRegister !== 'default' && !isNullOrUndefined(orderItem.cashRegister)){
                 if(orderItem.cashRegister.toLowerCase() !== cashRegister.toLowerCase()) return false;
             }

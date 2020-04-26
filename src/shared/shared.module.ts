@@ -24,7 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ErrorTemplateComponent,
     DeleteTemplateComponent,
     CancelTemplateComponent,
-    OrderPreComponent
+    OrderPreComponent,
   ],
   providers: [ 
     ApiService,

@@ -16,8 +16,12 @@ import { DeliveryResolverService } from "../delivery/delivery-resolver.service";
 import { OrderNewResolverService } from '../order/order-new/order-new-resolver.service';
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
+import { DailyMenuResolverService } from '../daily-menu/daily-menu-list/daily-menu-resolver.service';
 import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
 import { AuthGuard } from '../../shared';
+import { ProductResolverService } from '../product/product-list/product-resolver.service';
+import { CategoryResolverService } from '../category/category-list/category-resolver.service';
+import { MenuResolverService } from '../menu/menu-resolver.service';
 
 @NgModule({
   imports: [
@@ -49,9 +53,12 @@ import { AuthGuard } from '../../shared';
             component: OrderNewComponent,
             resolve: {
               order: OrderNewResolverService,
-              menus: MenuAvailablesResolverService,
+              products: ProductResolverService,
+              categories: CategoryResolverService,
+              menus: MenuResolverService,
               cashRegisters: CashRegisterAvailablesResolverService,
-              paymentTypes: PaymentTypeAvailableResolverService
+              paymentTypes: PaymentTypeAvailableResolverService,
+              dailyMenus: DailyMenuResolverService
             },
             data: { menu: 'public' },
             canActivate: [AuthGuard]

@@ -151,6 +151,9 @@ export class ClientListComponent implements OnInit, AfterViewInit {
 
   reloadItems(event) {
     this.getClients();
+    this.mdbTable.setDataSource(this.filteredClients);
+    this.filteredClients = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
   }
 
 }

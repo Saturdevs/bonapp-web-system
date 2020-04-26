@@ -33,11 +33,17 @@ import { FileInputModule } from './file-input/file-input.module';
 import { AppComponent } from './app.component';
 import { CounterComponent } from './counter/counter.component';
 import { SelectItemComponent } from './select-item/select-item.component';
+import { DailyMenuModule } from './daily-menu/daily-menu.module';
+import { StockControlModule } from './stock-control/stock-control.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { JwtInterceptor } from '../shared/helpers/jwt.interceptor';
 import { ErrorInterceptor } from '../shared/helpers/error.interceptor';
 import { LoginModule } from './login/login.module';
+import { UserListComponent } from './user/user-list/user-list.component';
+import { UserNewComponent } from './user/user-new/user-new.component';
+import { UserEditComponent } from './user/user-edit/user-edit.component';
+import { UserModule } from './user/user.module';
 import { UserRolesModule } from './user-roles/user-roles.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -72,12 +78,15 @@ export function HttpLoaderFactory(http: HttpClient) {
     ArqueoCajaModule,
     ClientModuleModule,
     ClientModule,
+    DailyMenuModule,
+    StockControlModule,
     ClientAccountTransactionsModule,
     SupplierModuleModule,
     SupplierModule,
     AppRoutingModule,
     SharedModule,
     FileInputModule,
+    UserModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     LoginModule,
     UserRolesModule,

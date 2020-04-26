@@ -77,7 +77,6 @@ export class OrderListComponent implements OnInit {
     this.cashRegisters = this.route.snapshot.data['cashRegisters'];
     this.paymentTypes = this.route.snapshot.data['paymentTypes'];
     this.tables = this.route.snapshot.data['tables'];
-    console.log(this.tables);
 
     this.filteredOrders = this.orders;
 

@@ -14,7 +14,11 @@ import {
 	AuthenticationService,
 	User,
 	Rights,
-	RightsFunctions
+	RightsFunctions,
+	SectionService,
+	Section,
+	ClientService,
+	Client
 } from '../../../shared/index';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
@@ -48,6 +52,15 @@ export class TableListComponent implements OnInit {
 	private boxes: Array<Box> = [];
 	private rgb: string = '#efefef';
 	private curNum;
+	private tableToEdit: Table;
+    private sections: Array<Section>;
+    private tableNewNumber: number;
+    private tableNewSection: any;
+    private editModalTitle = "Editar Mesa"
+    private editTableNumberText = "Nro. Mesa";
+    private editTableSectionText = "Seccion"
+    private cancelButtonText = "Cancelar";
+    private saveButtonText = "Guardar"
 	private gridConfig: NgGridConfig = <NgGridConfig>{
 		'margins': [1],
 		'draggable': false,
@@ -93,6 +106,7 @@ export class TableListComponent implements OnInit {
 	enableEdit: Boolean;
 	enableNew: Boolean;
 	enableActionButtons: Boolean;
+	clients: Array<Client> = [];
 
 	constructor(private _router: Router,
 		private _tableService: TableService,
@@ -100,7 +114,9 @@ export class TableListComponent implements OnInit {
 		private _route: ActivatedRoute,
 		private modalService: BsModalService,
 		private toast: ToastService,
-		private _authenticationService: AuthenticationService) { }
+		private _sectionService: SectionService,
+		private _authenticationService: AuthenticationService,
+		private _clientService: ClientService) { }
 
 	ngOnInit() {
 		this._authenticationService.currentUser.subscribe(
@@ -233,8 +249,8 @@ export class TableListComponent implements OnInit {
 				this._tableService.updatedTables[index] = table;
 			}
 		}
-		console.log("Index: " + table)
-		console.log("onResizeStop: " + box.id)
+		// console.log("Index: " + table)
+		// console.log("onResizeStop: " + box.id)
 	}
 
 	private _generateDefaultItemConfig(): NgGridItemConfig {
@@ -286,27 +302,31 @@ export class TableListComponent implements OnInit {
 			this._tableService.getTableByNumber(tableNumber).subscribe(
 				table => {
 					this.selectedTable = table;
-
-					this._orderService.getOrderOpenByTable(this.selectedTable.number).subscribe(
-						order => {
-							//Verifico que el pedido para la mesa no sea nulo o undefined por si se creo el pedido
-							//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
-							//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
-							if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
-								if (RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_ORDER)) {
-									this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
-								} else {
-									this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
-								}								
-							}
-							else {
-								this._router.navigate(['./orders/orderNew', tableNumber]);
-							}
-						},
-						error => {
-							this.showModalError(this.serviceErrorTitle, error.error.message);
-						}
-					)
+					this._clientService.getAll()
+						.subscribe(clients => {
+							this.clients = clients;
+							
+							this._orderService.getOrderOpenByTable(this.selectedTable.number).subscribe(
+								order => {
+									//Verifico que el pedido para la mesa no sea nulo o undefined por si se creo el pedido
+									//pero no se actualizó el estado de la mesa y verifico que el estado de la mesa sea Libre
+									//porque desde la app cuando se lee el código qr la mesa pasa a Ocupada pero no se crea el pedido					
+									if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
+										if (RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_ORDER)) {
+											this.modalRef = this.modalService.show(openNewOrderTemplate, Object.assign({}, this.config, { class: 'customNewOrder' }));
+										} else {
+											this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
+										}								
+									}
+									else {
+										this._router.navigate(['./orders/orderNew', tableNumber]);
+									}
+								},
+								error => {
+									this.showModalError(this.serviceErrorTitle, error.error.message);
+								}
+							)
+						});
 				},
 				error => {
 					this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -388,6 +408,43 @@ export class TableListComponent implements OnInit {
 		this.modalErrorTittle = errorTittleReceived;
 		this.modalErrorMessage = errorMessageReceived;
 		this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
+	}
+
+	showEditModal(deleteTemplate: TemplateRef<any>, tableNumber: number){
+		if (this.settingsActive === true) {
+			this._tableService.getTableByNumber(tableNumber)
+				.subscribe(
+					table => {
+						// console.log(table);
+						this.tableToEdit = table;
+						this.tableNewNumber = this.tableToEdit.number;
+						this.tableNewSection = this.tableToEdit.section;
+						this._sectionService.getAll()
+							.subscribe(
+								sections => {
+									this.sections = sections;
+								}
+							)
+					}
+				)
+			this.modalRef = this.modalService.show(deleteTemplate, {backdrop: true});
+		}   
+	}
+	 
+	saveEditedTable(){
+		this.tableToEdit.number = this.tableNewNumber;
+		this.tableToEdit.section = this.tableNewSection;
+	 
+		this._tableService.updateTable(this.tableToEdit)
+			.subscribe(resp => {
+				console.log("Se actualizo la mesa"+ this.tableToEdit.number);
+				this.showSuccessToast()
+				this.closeModal();
+			},
+			error => {
+				this.closeModal();
+				this.showModalError(this.serviceErrorTitle, error.error.message);
+			});
 	}
 
 	closeModal() {
