@@ -102,7 +102,7 @@ export class UserListComponent implements OnInit {
     return true;
   }
 
-  deletePaymentType() {
+  deleteUser() {    
     if (this.closeModal()) {
       this.usersService.deleteUser(this.idUserDelete).subscribe(success => {
         this.getUsers();

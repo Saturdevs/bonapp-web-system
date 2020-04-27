@@ -40,8 +40,6 @@ export class UserEditComponent implements OnInit {
       name: ['', Validators.required],
       lastname: ['', Validators.required],
       username: ['', Validators.required],
-      password: ['', Validators.required],
-      passwordConfirm: ['', Validators.required],
       roleId: ['', Validators.required]
     });
 
