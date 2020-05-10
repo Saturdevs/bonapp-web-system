@@ -1,0 +1,79 @@
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+    (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<!-- Form -->
+<div *ngIf='userRole' class="col-12 pl-0 pr-0 formNewEditSettings">
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{ 'UserRoles.editPageTitle' | translate }}{{': ' + userRoleNameModified}}
+    </h5>
+  </div>
+  <form method="post" novalidate [formGroup]="userRoleForm">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-0 pr-3 pl-3 mb-1">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>{{ 'UserRoles.roleName' | translate }}:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input formControlName="name" type="text" class="form-control"
+            [class.is-invalid]="userRoleForm.get('name').invalid && (userRoleForm.get('name').dirty || userRoleForm.get('name').touched)"
+            id="name">
+        </div>
+      </div>
+      <div
+        *ngIf="userRoleForm.get('name').invalid && (userRoleForm.get('name').dirty || userRoleForm.get('name').touched)"
+        class="alert alert-danger">
+        {{ 'UserRoles.errorRequiredName' | translate }}
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-0 pb-0 pr-3 pl-3 mt-2">
+      <div class="row pl-2">
+        <mdb-checkbox formControlName="isWaiter">{{ 'UserRoles.isWaiter' | translate }}</mdb-checkbox>
+      </div>
+    </div>
+
+    <div class="col-12 pr-0 pt-2 subTitle1">
+      <h5>
+        {{ 'UserRoles.rightsTitle' | translate | uppercase }}
+      </h5>
+    </div>
+    <div>
+      <ul class="nonStyleList" formArrayName="rightsByMenu">
+        <li *ngFor='let menu of rightsByMenuArray.controls' [formGroup]="menu">          
+          {{ 'AppMenus.' + menu.get('name').value | translate }}
+          <ul class="nonStyleList" formArrayName="rights">
+            <li *ngFor="let right of menu.get('rights').controls" [formGroup]="right">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch-{{right.get('_id').value}}"
+                [formControl]="right.get('active')" (change)="changeRight(right)">
+                <label class="custom-control-label"
+                  for="customSwitch-{{right.get('_id').value}}">{{ 'Rights.' + right.get('_id').value | translate }}</label>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="errorUserRole === true" class="alert alert-danger">
+      {{ errorMsg }}
+    </div>
+  </form>
+</div>
+<div class="col-12">
+  <div class="col-7 offset-5">
+    <button type="button" class="btn btn-sm customButtonCancel waves-light"
+      (click)="showModalCancel(cancelTemplate)">{{ 'Commons.Buttons.cancel' | translate }}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="userRoleForm.invalid"
+      (click)="updateUserRole()">{{ 'Commons.Buttons.save' | translate }}</button>
+  </div>
+</div>

@@ -16,7 +16,7 @@
     "clients": "Clientes",
     "current-accounts": "Cuentas Corrientes",
     "suppliers": "Proveedores",
-    "cash-register": "Cajas",
+    "cash-register": "Cajas Registradoras",
     "size": "Tamaños",
     "payment-types": "Formas de Pago",
     "users": "Usuarios",
@@ -25,5 +25,93 @@
     "general-settings": "Configuración General",
     "tables-section": "Salas y Mesas",
     "generate-qr": "Generar QR"
+  },
+
+  "Commons": {
+    "Grid": {
+      "Header": {
+        "actions": "Acciones"
+      },
+      "Buttons": {
+        "edit": "EDitar",
+        "delete": "Eliminar"
+      }
+    },
+
+    "Buttons": {
+      "ok": "Ok",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+
+    "serviceErrorTitle": "Error de Servicio",
+    "errorMessageDefault": "Ocurrió un problema con la conexión a la base de datos. \n\rIntenté de nuevo, si el problema persiste comuniquese con Soporte de BonAPP.",
+    "selectItem": "Seleccione un item de la lista",
+    "modalCancelTitle": "Cancelar Cambios",
+    "modalCancelMessage": "¿Está seguro que desea cancelar los cambios?"
+  },
+
+  "UserRoles": {
+    "listPageTitle": "Roles de Usuario",
+    "newRole": "Nuevo Rol",
+    "rolNameHeaderColumn": "Rol",
+    "usersHeaderColumn": "Usuarios",
+    "cantDeleteRole": "El rol de usuario Admin y los roles que tengan algún usuario no puede ser eliminados.",
+    "modalDeleteTitle": "Eliminar Rol de Usuario",
+    "modalDeleteMessage": "¿Seguro desea eliminar el rol de usuario?",
+    "newRoleTitle": "Nuevo Rol de Usuario",
+    "roleName": "Nombre",
+    "errorRequiredName": "El nombre del Rol de Usuario es requerido.",
+    "isWaiter": "Es mozo?",
+    "editPageTitle": "Editando Rol de Usuario",
+    "rightsTitle": "Permisos"
+  },
+
+  "Rights": {
+    "closeOrder": "Cerrar pedido",
+    "addProducts": "Adicionar productos",
+    "deleteProducts": "Eliminar productos de un pedido",
+    "orderNew": "Nuevo pedido",
+    "ordersList": "Listar",
+    "orderDelete": "Eliminar",
+    "orderDetail": "Ver detalle",
+    "cashFlowList": "Listar",
+    "cashFlowDelete": "Eliminar",
+    "cashFlowDetail": "Ver detalle",
+    "cashFlowNew": "Nuevo",
+    "cashCountList": "Listar",
+    "cashCountDelete": "Eliminar",
+    "cashCountEdit": "Editar",
+    "cashCountNew": "Nuevo",
+    "menuList": "Listar",
+    "menuDelete": "Eliminar",
+    "menuEdit": "Editar",
+    "menuNew": "Nuevo",
+    "categoryList": "Listar",
+    "categoryDelete": "Eliminar",
+    "categoryEdit": "Editar",
+    "categoryNew": "Nuevo",
+    "productList": "Listar",
+    "productDelete": "Eliminar",
+    "productEdit": "Editar",
+    "productNew": "Nuevo",
+    "clientList": "Listar",
+    "clientDelete": "Eliminar",
+    "clientEdit": "Editar",
+    "clientNew": "Nuevo",
+    "transactionList": "Listar",
+    "transactionDelete": "Eliminar",
+    "transactionDetail": "Ver detalle",
+    "transactionNew": "Nuevo",
+    "supplierList": "Listar",
+    "supplierDelete": "Eliminar",
+    "supplierEdit": "Editar",
+    "supplierNew": "Nuevo",
+    "group-size": "Administrar tamaños",
+    "group-paymentType": "Administrar medios de pago",
+    "group-cashRegister": "Administrar cajas registradoras",
+    "group-section": "Administrar salas",
+    "group-userRole": "Administrar roles de usuario"
   }
+  
 }

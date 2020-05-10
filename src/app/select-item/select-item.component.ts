@@ -7,8 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectItemComponent implements OnInit {
 
-  text: string = 'Seleccione un item de la lista';
-
   constructor() { }
 
   ngOnInit() {

@@ -1,0 +1,48 @@
+<ng-template #cancelTemplate>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+    (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<!-- Form -->
+<div class="col-12 pl-0 pr-0 formNewEditSettings" *ngIf='userRole'>
+  <div class="col-12 pr-0 outletTitle">
+    <h5>
+      {{ 'UserRoles.newRoleTitle' | translate }}
+    </h5>
+  </div>
+  <form class="pt-4 pr-3 pl-3" method="post" novalidate [formGroup]="userRoleForm">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+          <label>{{ 'UserRoles.roleName' | translate }}:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <input formControlName="name" type="text" class="form-control" [class.is-invalid]="userRoleForm.get('name').invalid && (userRoleForm.get('name').dirty || userRoleForm.get('name').touched)"
+            id="name">
+        </div>
+      </div>
+      <div *ngIf="userRoleForm.get('name').invalid && (userRoleForm.get('name').dirty || userRoleForm.get('name').touched)"
+        class="alert alert-danger">
+        {{ 'UserRoles.errorRequiredName' | translate }}
+      </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <mdb-checkbox formControlName="isWaiter">{{ 'UserRoles.isWaiter' | translate }}</mdb-checkbox>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="col-12">
+  <div class="col-7 offset-5">
+    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{ 'Commons.Buttons.cancel' | translate }}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="userRoleForm.invalid" (click)="saveUserRole()">{{ 'Commons.Buttons.save' | translate }}</button>
+  </div>
+</div>
