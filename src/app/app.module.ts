@@ -44,6 +44,7 @@ import { UserListComponent } from './user/user-list/user-list.component';
 import { UserNewComponent } from './user/user-new/user-new.component';
 import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { UserModule } from './user/user.module';
+import { QrGeneratorComponent } from './qrGenerator/qr-generator.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -53,7 +54,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     CounterComponent,
-    SelectItemComponent
+    SelectItemComponent,
+    QrGeneratorComponent
   ],
   imports: [
     BrowserModule,

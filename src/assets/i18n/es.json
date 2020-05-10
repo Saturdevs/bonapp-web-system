@@ -23,6 +23,7 @@
     "roles-users": "Roles de Usuarios",
     "sections": "Salas",
     "general-settings": "Configuración General",
-    "tables-section": "Salas y Mesas"
+    "tables-section": "Salas y Mesas",
+    "generate-qr": "Generar QR"
   }
 }

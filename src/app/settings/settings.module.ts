@@ -39,6 +39,7 @@ import { UserNewComponent } from '../user/user-new/user-new.component';
 import { UsersResolverService } from '../user/user-list/users-resolver-service';
 import { UsersNewResolverService } from '../user/user-new/user-new-resolver.service';
 import { UserEditResolverService } from '../user/user-edit/user-edit-resolver.service';
+import { QrGeneratorComponent } from '../qrGenerator/qr-generator.component';
 
 
 @NgModule({
@@ -200,6 +201,20 @@ import { UserEditResolverService } from '../user/user-edit/user-edit-resolver.se
                   }
                 ],
                 data: { menu: 'sections' },
+                canActivate: [AuthGuard]
+              },
+              {
+                path: 'generate-qr',
+                component: QrGeneratorComponent,
+                resolve: { tables: TableAllResolverService},
+                children: [
+                  {
+                    path: 'selectItem',
+                    component: SelectItemComponent,
+                    outlet: 'edit'
+                  }
+                ],
+                data: { menu: 'generate-qr' },
                 canActivate: [AuthGuard]
               }
             ],
