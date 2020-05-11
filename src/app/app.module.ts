@@ -44,6 +44,7 @@ import { UserListComponent } from './user/user-list/user-list.component';
 import { UserNewComponent } from './user/user-new/user-new.component';
 import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { UserModule } from './user/user.module';
+import { QrGeneratorComponent } from './qrGenerator/qr-generator.component';
 import { UserRolesModule } from './user-roles/user-roles.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -54,7 +55,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     CounterComponent,
-    SelectItemComponent
+    SelectItemComponent,
+    QrGeneratorComponent
   ],
   imports: [
     BrowserModule,
