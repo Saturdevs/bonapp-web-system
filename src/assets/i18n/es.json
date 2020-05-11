@@ -111,6 +111,27 @@
     "group-cashRegister": "Administrar cajas registradoras",
     "group-section": "Administrar salas",
     "group-userRole": "Administrar roles de usuario"
-  }
+  },
   
+  "Users": {
+    "editPageTitle": "Editando Usuario",
+    "newUserPageTitle": "Nuevo Usuario",
+    "isGeneral": "Usuario general?",
+    "name": "Nombre",
+    "errorRequiredName": "El nombre del usuario es requerido.",
+    "lastName": "Apellido",
+    "errorRequiredLastName": "El apellido del usuario es requerido.",
+    "userName": "Nombre de Usuario",
+    "errorRequiredUserName": "El nombre de usuario es requerido.",
+    "userRole": "Rol de usuario",
+    "errorRequiredUserRole": "Debe seleccionar un rol de usuario",
+    "userPin": "PIN",
+    "errorRequiredUserPin": "Debe ingresar el PIN del usuario",
+    "confirmUserPin": "Confirmar PIN",
+    "userPinDoesntMatch": "El PIN no coincide",
+    "password": "Contraseña",
+    "errorRequiredUserPassword": "La contrasena es requerida.",
+    "confirmPassword": "Confirmar contraseña",
+    "userPasswordDoesntMatch": "Las contrasenas no coinciden"
+  }
 }

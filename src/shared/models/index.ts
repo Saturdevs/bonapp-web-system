@@ -34,4 +34,5 @@ export * from './notification';
 export * from './userTo';
 export * from './notificationReadBy';
 export * from './notificationType';
+export * from './param';
 export * from './Interfaces';
