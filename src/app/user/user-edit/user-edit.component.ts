@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { User, UserService, UserRole, ParamService, Params, Constants } from '../../../shared';
+import { User, UserService, UserRole } from '../../../shared';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isNullOrUndefined } from 'util';
 import { TranslateService } from '@ngx-translate/core';
+import { UserEditPinComponent } from '../user-edit-pin/user-edit-pin.component';
 
 @Component({
   selector: 'app-user-edit',
@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class UserEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('editPin') editPin: UserEditPinComponent;
   private serviceErrorTitle: string;
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
@@ -26,19 +27,19 @@ export class UserEditComponent implements OnInit {
   userRoles: UserRole[];
   userRolesSelect: Array<any> = [];
   selectedValue: string;
-  pinNotMatch: Boolean = false;
+  pinNotMatch: Boolean;
   showPinControls: Boolean = false;
 
   constructor(private _route: ActivatedRoute,
     private _router: Router,
     private _userService: UserService,
-    private _paramService: ParamService,
     private _transalateService: TranslateService,
     private modalService: BsModalService,
     private formBuilder: FormBuilder) { }
 
 
   ngOnInit() {
+    this.pinNotMatch = false;
     this._transalateService.get('Commons.serviceErrorTitle').subscribe((translation: string) => {
       this.serviceErrorTitle = translation;
     })
@@ -55,13 +56,16 @@ export class UserEditComponent implements OnInit {
       data => {
         this.userRoles = data['userRoles'];
         this.user = data['user'];
-        this.onUserRetrieved(this.user);
+        this.onUserRetrieved(this.user);        
       }
     );
-    this.buildUserRolesArray();
+    this.buildUserRolesArray();    
   }
 
   updateUser() {
+    if (this.user.isGeneral) {
+      this.user.pin = null;
+    }    
     let userUpdate = Object.assign({}, this.user, this.userForm.value);
     this._userService.updateUser(userUpdate).subscribe(
       user => {
@@ -70,7 +74,8 @@ export class UserEditComponent implements OnInit {
       },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message)
-      });
+      }
+    );
   }
 
   onUserRetrieved(user: User): void {
@@ -82,33 +87,7 @@ export class UserEditComponent implements OnInit {
       username: this.user.username,
       roleId: this.user.roleId,
       isGeneral: this.user.isGeneral
-    });
-
-    if (!this.user.isGeneral) {
-      this.addPinControls();
-    }
-  }
-
-  addPinControls() {
-    if (!isNullOrUndefined(this._paramService.params) && this._paramService.params.length > 0) {
-      const askPinParam = this._paramService.params.find(param => param._id === Params.ASK_FOR_USER_PIN);
-      if (!isNullOrUndefined(askPinParam) && askPinParam.value) {
-        this.showPinControls = true;
-        const pin = isNullOrUndefined(this.user.pin) ? '' : this.user.pin;
-        this.userForm.addControl(Constants.PIN, this.formBuilder.control(
-          '', [Validators.required]
-        ))
-
-        this.userForm.addControl(Constants.PIN_CONFIRM, this.formBuilder.control(
-          '', [Validators.required]
-        ))
-
-        this.userForm.patchValue({
-          pin: pin,
-          pinConfirm: pin
-        })
-      }
-    }
+    });    
   }
 
   showModalError(errorTittleReceived: string, errorMessageReceived: string) {
@@ -153,20 +132,11 @@ export class UserEditComponent implements OnInit {
   }
 
   clickIsGeneral() {
-    this.user.isGeneral = this.userForm.get('isGeneral').value;
-    if (this.user.isGeneral) {
-      this.showPinControls = false;
-      this.user.pin = null;
-      this.pinNotMatch = false;
-      this.userForm.removeControl(Constants.PIN);
-      this.userForm.removeControl(Constants.PIN_CONFIRM);
-    } else {
-      this.addPinControls();
-    }
+    this.user.isGeneral = this.userForm.get('isGeneral').value;    
+    this.editPin.addPinControls(this.user.isGeneral);    
   }
 
-  userPinNotMatch(): Boolean {
-    this.pinNotMatch = this.userForm.controls.pin.value !== this.userForm.controls.pinConfirm.value;
-    return this.pinNotMatch;
+  handlePinMatch(event) {
+    this.pinNotMatch = !event;
   }
 }

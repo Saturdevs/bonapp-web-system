@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { User, UserService, UserRole, ParamService, Constants, Params } from '../../../shared';
+import { User, UserService, UserRole, ParamService } from '../../../shared';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { isNullOrUndefined } from 'util';
+import { UserEditPinComponent } from '../user-edit-pin/user-edit-pin.component';
 
 @Component({
   selector: 'app-user-new',
@@ -14,30 +14,30 @@ import { isNullOrUndefined } from 'util';
 export class UserNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-
+  @ViewChild('editPin') editPin: UserEditPinComponent;
   private serviceErrorTitle: string;
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalCancelTitle: String;
   private modalCancelMessage: String;
-  user: User = new User();
+  user: User;
   userForm: FormGroup;
   userRolesSelect: Array<any> = [];
   userRoles: Array<UserRole>;
   selectedValue: string;
-  pinNotMatch: Boolean = false;
+  pinNotMatch: Boolean;
   showPinControls: Boolean = false;
 
   constructor(private _router: Router,
     private _userService: UserService,
-    private _paramService: ParamService,
     private _transalateService: TranslateService,
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.user = new User();
     this._transalateService.get('Commons.serviceErrorTitle').subscribe((translation: string) => {
       this.serviceErrorTitle = translation;
     })
@@ -52,8 +52,6 @@ export class UserNewComponent implements OnInit {
       isGeneral: [false]
     });
 
-    this.addPinControls();
-
     this.userRoles = this.route.snapshot.data['userRoles'];
     this.buildUserRolesArray();
 
@@ -61,7 +59,10 @@ export class UserNewComponent implements OnInit {
 
   saveUser() {
     if (this.userForm.dirty && this.userForm.valid) {
-      let user = Object.assign({}, this.userForm.value);
+      let user = Object.assign({}, this.user, this.userForm.value);
+      if (this.user.isGeneral) {
+        this.user.pin = null;
+      } 
       this._userService.saveUser(user)
         .subscribe(
           user => {
@@ -120,38 +121,11 @@ export class UserNewComponent implements OnInit {
   }
 
   clickIsGeneral() {
-    this.userForm.get('isGeneral').value;
-    if (this.userForm.get('isGeneral').value) {
-      this.showPinControls = false;      
-      this.pinNotMatch = false;
-      this.userForm.removeControl(Constants.PIN);
-      this.userForm.removeControl(Constants.PIN_CONFIRM);
-      this.userForm.patchValue({
-        pin: null
-      })
-    } else {
-      this.addPinControls();
-    }
+    this.user.isGeneral = this.userForm.get('isGeneral').value;    
+    this.editPin.addPinControls(this.user.isGeneral);  
   }
 
-  userPinNotMatch(): Boolean {
-    this.pinNotMatch = this.userForm.controls.pin.value !== this.userForm.controls.pinConfirm.value;
-    return this.pinNotMatch;
-  }
-
-  addPinControls() {
-    if (!isNullOrUndefined(this._paramService.params) && this._paramService.params.length > 0) {
-      const askPinParam = this._paramService.params.find(param => param._id === Params.ASK_FOR_USER_PIN);
-      if (!isNullOrUndefined(askPinParam) && askPinParam.value) {
-        this.showPinControls = true;
-        this.userForm.addControl(Constants.PIN, this.formBuilder.control(
-          '', [Validators.required]
-        ))
-
-        this.userForm.addControl(Constants.PIN_CONFIRM, this.formBuilder.control(
-          '', [Validators.required]
-        ))        
-      }
-    }
+  handlePinMatch(event) {
+    this.pinNotMatch = !event;
   }
 }

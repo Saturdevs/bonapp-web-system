@@ -105,40 +105,7 @@
       </div>
     </div>
 
-    <div *ngIf='showPinControls'>
-      <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
-        <div class="row pl-2">
-          <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-            <label>{{ 'Users.userPin' | translate }}:</label>
-          </div>
-          <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-            <input mdbActive formControlName="pin" type="password" class="form-control" maxlength="4"
-              [class.is-invalid]="userForm.get('pin').invalid && (userForm.get('pin').dirty || userForm.get('pin').touched)"
-              id="pin">
-          </div>
-        </div>
-        <div *ngIf="userForm.get('pin').invalid && (userForm.get('pin').dirty || userForm.get('pin').touched)"
-          class="alert alert-danger">
-          {{ 'Users.errorRequiredUserPin' | translate }}
-        </div>
-      </div>
-
-      <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
-        <div class="row pl-2">
-          <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-            <label>{{ 'Users.confirmUserPin' | translate }}:</label>
-          </div>
-          <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-            <input mdbActive formControlName="pinConfirm" type="password" class="form-control" maxlength="4"
-              [class.is-invalid]="userForm.get('pinConfirm').invalid && (userForm.get('pinConfirm').dirty || userForm.get('pinConfirm').touched)"
-              id="pinConfirm">
-          </div>
-        </div>
-        <div *ngIf="userPinNotMatch()" class="alert alert-danger">
-          {{ 'Users.userPinDoesntMatch' | translate }}
-        </div>
-      </div>
-    </div>
+    <app-user-edit-pin #editPin [user]="user" (handlePinMatch)="handlePinMatch($event)"></app-user-edit-pin>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
