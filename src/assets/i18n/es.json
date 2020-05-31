@@ -25,7 +25,8 @@
     "general-settings": "Configuración General",
     "tables-section": "Salas y Mesas",
     "generate-qr": "Generar QR",
-    "dailyMenu": "Menu del dia"
+    "dailyMenu": "Menu del dia",
+    "stockControl": "Control de Stock"
   },
 
   "Commons": {
@@ -113,7 +114,8 @@
     "group-cashRegister": "Administrar cajas registradoras",
     "group-section": "Administrar salas",
     "group-userRole": "Administrar roles de usuario",
-    "dailyMenu": "Menu del dia"
+    "dailyMenu": "Menu del dia",
+    "stockControl": "Control de Stock"
   },
   
   "Users": {

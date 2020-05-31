@@ -6,7 +6,11 @@ import {
   Product,
   Category,
   Size,
-  ProductService
+  ProductService,
+  RightsFunctions,
+  Rights,
+  AuthenticationService,
+  User
 } from '../../../shared';
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
@@ -44,11 +48,13 @@ export class ProductNewComponent implements OnInit {
   defaultSize: Number = -1;
   checkboxAvailableText: String = 'Disponible';
   stockControlText = "Controla Stock";
+  currentUser: User;
 
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
   @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
+  enableStock: any;
   get sizes(): FormArray {
     return <FormArray>this.productForm.get('sizes');
   }
@@ -61,7 +67,8 @@ export class ProductNewComponent implements OnInit {
     private _route: ActivatedRoute,
     private _productService: ProductService,
     private modalService: BsModalService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private _authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this._route.data.subscribe(
@@ -86,6 +93,14 @@ export class ProductNewComponent implements OnInit {
         current: ['0']
       })
     });
+
+
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableStockControl();
+      }
+    );
 
     this.productForm.patchValue({
       category: "default"
@@ -213,6 +228,14 @@ export class ProductNewComponent implements OnInit {
       this.productForm.controls.pictures.setValue(this.newProductPictureData);
     }
   }
+
+   /**
+   * Habilita/Deshabilita las opciones stock
+   */
+  enableStockControl(): void {
+    this.enableStock = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.STOCK_CONTROL);
+  }
+
 
   showModalError(errorTittleReceived: string, errorMessageReceived: string) {
     this.modalErrorTittle = errorTittleReceived;

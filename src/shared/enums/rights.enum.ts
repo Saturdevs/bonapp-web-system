@@ -43,5 +43,6 @@ export enum Rights {
   DETAIL_ORDER = 'orderDetail',
   DELETE_USER_ROLE = 'userRolesDelete',
   EDIT_USER_ROLE = 'userRolesEdit',
-  NEW_USER_ROLE = 'userRolesNew'
+  NEW_USER_ROLE = 'userRolesNew',
+  STOCK_CONTROL = 'stockControl'
 }

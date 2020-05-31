@@ -110,7 +110,7 @@
         <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
           La imagen del producto es requerida.
         </div>
-        <div class="row">
+        <div class="row" *ngIf="enableStock">
           <div class="col-md-4 col-lg-4">
             <div class="md-form">
               <mdb-checkbox formControlName="stockControl"> {{ stockControlText }}</mdb-checkbox>
