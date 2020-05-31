@@ -8,7 +8,11 @@ import {
   Product,
   Category,
   ProductService,  
-  Size
+  Size,
+  RightsFunctions,
+  User,
+  AuthenticationService,
+  Rights
 } from '../../../shared';
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
@@ -48,12 +52,14 @@ export class ProductModifyComponent implements OnInit {
   duplicatedSizesArray: string[] = [];
   defaultSize: Number = -1;
   defaultPrice: Number = 0;
+  currentUser: User;
   sizesArray: Size[];
   stockControlText = "Controla Stock";
 
   @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
+  enableStock: Boolean = false;
 
   get sizes(): FormArray {
     return <FormArray>this.productForm.get('sizes');
@@ -71,7 +77,8 @@ export class ProductModifyComponent implements OnInit {
     private _router: Router,
     private _productService: ProductService,
     private formBuilder: FormBuilder,
-    private modalService: BsModalService) { }
+    private modalService: BsModalService,
+    private _authenticationService: AuthenticationService) { }
 
   ngOnInit() {    
     this.sizesArray = this._route.snapshot.data['sizes'];
@@ -91,6 +98,13 @@ export class ProductModifyComponent implements OnInit {
         current: ['0']
       })
     });
+
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.enableStockControl();
+      }
+    );
 
     this.onProductRetrieved(this._route.snapshot.data['product']);
     this.categories = this._route.snapshot.data['categories'];
@@ -262,6 +276,13 @@ export class ProductModifyComponent implements OnInit {
     this.productForm.controls.price.setValue(this.defaultPrice);
     this.closeModal();
     this.updateProduct();
+  }
+
+    /**
+   * Habilita/Deshabilita las opciones stock
+   */
+  enableStockControl(): void {
+    this.enableStock = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.STOCK_CONTROL);
   }
 
   closeModalAndGoBack() {

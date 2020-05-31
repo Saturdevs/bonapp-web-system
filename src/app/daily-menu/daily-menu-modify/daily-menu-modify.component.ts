@@ -15,6 +15,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { MdbTablePaginationComponent, MdbTableDirective } from 'ng-uikit-pro-standard';
 import { DailyMenu } from '../../../shared/models/dailyMenu';
 import { DailyMenuService } from '../../../shared/services/daily-menu.service';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-daily-menu-modify',
@@ -145,9 +146,21 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
   }
 
   saveDailyMenu() {
+    let dailyMenuUpdate = new DailyMenu();
+    dailyMenuUpdate._id = this.dailyMenu._id;
+    dailyMenuUpdate.descripcion = this.productForm.controls.description.value;
+    dailyMenuUpdate.name = this.productForm.controls.name.value;
+    dailyMenuUpdate.price = this.productForm.controls.price.value;
+    if(!isNullOrUndefined(this.productForm.controls.pictures.value) && this.productForm.controls.pictures.value != ''){
+      dailyMenuUpdate.pictures = this.productForm.controls.pictures.value;
+    };
+    dailyMenuUpdate.products = this.productForm.controls.products.value;
+
+
+
     if (this.productForm.dirty && this.productForm.valid) {
-      let p = Object.assign({}, this.productForm.value);
-      this._dailyMenuService.save(p)
+      // let p = Object.assign({}, this.productForm.value);
+      this._dailyMenuService.update(dailyMenuUpdate)
         .subscribe(dailyMenu => {
           this.onBack();
         })

@@ -23,6 +23,12 @@ export class DailyMenuService {
       .catch(this.handleError)
   }
 
+  update(dailyMenu : DailyMenu):Observable<DailyMenu>{
+    return this.apiService.put(`/dailyMenu/${dailyMenu._id}`, dailyMenu)
+      .map(data => data.dailyMenu)
+      .catch(this.handleError)
+  }
+
   getDailyMenu(id): Observable<DailyMenu>{
     return this.apiService.get(`/dailyMenu/${id}`)
     .map(data => data.dailyMenu)
