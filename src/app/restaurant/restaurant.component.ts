@@ -24,7 +24,9 @@ export class RestaurantComponent implements OnInit {
       x => {
         this.currentUser = x;
         if (!isNullOrUndefined(this.currentUser)) {
+          
           this.appMenus = UtilFunctions.getChildAPpMenus(this.currentUser, menuName);
+  
         }
       }
     );

@@ -24,7 +24,8 @@
     "sections": "Salas",
     "general-settings": "Configuración General",
     "tables-section": "Salas y Mesas",
-    "generate-qr": "Generar QR"
+    "generate-qr": "Generar QR",
+    "dailyMenu": "Menu del dia"
   },
 
   "Commons": {
@@ -111,7 +112,8 @@
     "group-paymentType": "Administrar medios de pago",
     "group-cashRegister": "Administrar cajas registradoras",
     "group-section": "Administrar salas",
-    "group-userRole": "Administrar roles de usuario"
+    "group-userRole": "Administrar roles de usuario",
+    "dailyMenu": "Menu del dia"
   }
   
 }

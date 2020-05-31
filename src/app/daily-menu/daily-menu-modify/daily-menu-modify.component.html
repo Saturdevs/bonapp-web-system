@@ -37,7 +37,7 @@
               <div
                 *ngIf="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
                 class="alert alert-danger">
-                El nombre del Producto es requerido.
+                El nombre del Menu del Dia es requerido.
               </div>
             </div>
             <div class="col-md-5 col-lg-5">
@@ -50,7 +50,7 @@
               <div
                 *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
                 class="alert alert-danger">
-                El precio del Producto es requerido.
+                El precio del Menu del Dia es requerido.
               </div>
             </div>
           </div>
@@ -67,13 +67,13 @@
               <div
                 *ngIf="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
                 class="alert alert-danger">
-                La descripción del producto es requerida.
+                La descripción del Menu del Dia es requerida.
               </div>
             </div>
             <div class="col-6">
               <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
               <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
-                La imagen del producto es requerida.
+                La imagen del Menu del Dia es requerida.
               </div>
             </div>
           </div>
