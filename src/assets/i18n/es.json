@@ -115,6 +115,10 @@
     "group-section": "Administrar salas",
     "group-userRole": "Administrar roles de usuario",
     "dailyMenu": "Menu del dia",
+    "dailyMenuList": "Listar",
+    "dailyMenuNew": "Nuevo",
+    "dailyMenuEdit": "Editar",
+    "dailyMenuDelete": "Eliminar",
     "stockControl": "Control de Stock"
   },
   
