@@ -12,14 +12,14 @@
 <div class="col-12 pl-0 pr-0 formNewEditSettings">
   <div class="col-12 pr-0 outletTitle">
     <h5>
-      {{pageTitle}}
+      {{ 'Users.editPageTitle' | translate }}
     </h5>
   </div>
   <form class="pt-4 pr-3 pl-3" method="post" novalidate [formGroup]="userForm">
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-          <label>Nombre:</label>
+          <label>{{ 'Users.name' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <input mdbActive formControlName="name" type="text" class="form-control"
@@ -27,17 +27,16 @@
             id="name">
         </div>
       </div>
-      <div
-        *ngIf="userForm.get('name').invalid && (userForm.get('name').dirty || userForm.get('name').touched)"
+      <div *ngIf="userForm.get('name').invalid && (userForm.get('name').dirty || userForm.get('name').touched)"
         class="alert alert-danger">
-        El nombre del usuario es requerido.
+        {{ 'Users.errorRequiredName' | translate }}
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-          <label>Apellido:</label>
+          <label>{{ 'Users.lastName' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <input mdbActive formControlName="lastname" type="text" class="form-control"
@@ -48,14 +47,14 @@
       <div
         *ngIf="userForm.get('lastname').invalid && (userForm.get('lastname').dirty || userForm.get('lastname').touched)"
         class="alert alert-danger">
-        El apellido del usuario es requerido.
+        {{ 'Users.errorRequiredLastName' | translate }}
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-          <label>Nombre de Usuario:</label>
+          <label>{{ 'Users.userName' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <input mdbActive formControlName="username" type="text" class="form-control"
@@ -66,14 +65,14 @@
       <div
         *ngIf="userForm.get('username').invalid && (userForm.get('username').dirty || userForm.get('username').touched)"
         class="alert alert-danger">
-        El nombre de usuario es requerido.
+        {{ 'Users.errorRequiredUserName' | translate }}
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-          <label>Contrasena:</label>
+          <label>{{ 'Users.password' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <input mdbActive formControlName="password" type="password" class="form-control"
@@ -84,14 +83,14 @@
       <div
         *ngIf="userForm.get('password').invalid && (userForm.get('password').dirty || userForm.get('password').touched)"
         class="alert alert-danger">
-        La contrasena es requerida.
+        {{ 'Users.errorRequiredUserPassword' | translate }}
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-          <label>Confirma contrasena:</label>
+          <label>{{ 'Users.confirmPassword' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <input mdbActive formControlName="passwordConfirm" type="password" class="form-control"
@@ -102,34 +101,46 @@
       <div
         *ngIf="(passwordNotMatch() && userForm.get('passwordConfirm').dirty) || userForm.get('passwordConfirm').invalid && (userForm.get('passwordConfirm').dirty || userForm.get('passwordConfirm').touched)"
         class="alert alert-danger">
-        Las contrasenas no coinciden
+        {{ 'Users.userPasswordDoesntMatch' | translate }}
       </div>
     </div>
+
+    <app-user-edit-pin #editPin [user]="user" (handlePinMatch)="handlePinMatch($event)"></app-user-edit-pin>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
-          <label>Rol de usuario:</label>
+          <label>{{ 'Users.userRole' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <mdb-select #roleId formControlName="roleId" (selected)="selectUserRole(roleId.value)" [options]="userRolesSelect" placeholder="Choose your option" [class.is-invalid]="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
-          id="roleId"></mdb-select>          
+          <mdb-select #roleId formControlName="roleId" (selected)="selectUserRole(roleId.value)"
+            [options]="userRolesSelect" placeholder="Choose your option"
+            [class.is-invalid]="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
+            id="roleId"></mdb-select>
         </div>
       </div>
-      <div
-        *ngIf="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
+      <div *ngIf="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
         class="alert alert-danger">
-        Debe seleccionar un rol de usuario
+        {{ 'Users.errorRequiredUserRole' | translate }}
       </div>
     </div>
 
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-0 pb-3 pr-3 pl-3">
+      <div class="row pl-2">
+        <mdb-checkbox formControlName="isGeneral" (change)="clickIsGeneral()">{{ 'Users.isGeneral' | translate }}
+        </mdb-checkbox>
+      </div>
+    </div>
   </form>
 </div>
+<br>
+<br>
+<br>
 <div class="col-12">
   <div class="col-7 offset-5">
     <button type="button" class="btn btn-sm customButtonCancel waves-light"
-      (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="userForm.invalid || passwordNotMatch()"
-      (click)="saveUser()">{{saveButton}}</button>
+      (click)="showModalCancel(cancelTemplate)">{{ 'Commons.Buttons.cancel' | translate }}</button>
+    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="userForm.invalid || passwordNotMatch() || pinNotMatch"
+      (click)="saveUser()">{{ 'Commons.Buttons.save' | translate }}</button>
   </div>
 </div>

@@ -1,0 +1,59 @@
+<div *ngIf='showPinControls'>
+  <div *ngIf='!enterPin'>
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+      <div class="row pl-2">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
+          <label>{{ 'Users.userPin' | translate }}:</label>
+        </div>
+        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+          <div *ngIf='user.pin !== null && user.pin !== undefined'>
+            <button mdbBtn type="button" flat="true" size="sm" (click)="enterPinControls()" mdbWavesEffect>
+              Modificar
+            </button>
+          </div>
+          <div *ngIf='user.pin === null || user.pin === undefined'>
+            <button mdbBtn type="button" flat="true" size="sm" (click)="enterPinControls()" mdbWavesEffect>
+              Establecer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf='enterPin'>
+    <form method="post" novalidate [formGroup]="pinForm">
+      <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+        <div class="row pl-2">
+          <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+            <label>{{ 'Users.userPin' | translate }}:</label>
+          </div>
+          <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+            <input mdbActive formControlName="pin" type="password" class="form-control" maxlength="4"
+              [class.is-invalid]="pinForm.get('pin').invalid && (pinForm.get('pin').dirty || pinForm.get('pin').touched)"
+              (ngModelChange)="checkPinMatch()" id="pin">
+          </div>
+        </div>
+        <div *ngIf="pinForm.get('pin').invalid && (pinForm.get('pin').dirty || pinForm.get('pin').touched)"
+          class="alert alert-danger">
+          {{ 'Users.errorRequiredUserPin' | translate }}
+        </div>
+      </div>
+
+      <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+        <div class="row pl-2">
+          <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+            <label>{{ 'Users.confirmUserPin' | translate }}:</label>
+          </div>
+          <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+            <input mdbActive formControlName="pinConfirm" type="password" class="form-control" maxlength="4"
+              [class.is-invalid]="pinForm.get('pinConfirm').invalid && (pinForm.get('pinConfirm').dirty || pinForm.get('pinConfirm').touched)"
+              (ngModelChange)="checkPinMatch()" id="pinConfirm">
+          </div>
+        </div>
+        <div *ngIf="pinNotMatch" class="alert alert-danger">
+          {{ 'Users.userPinDoesntMatch' | translate }}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

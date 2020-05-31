@@ -10,6 +10,7 @@ import { UserRoleService } from '../../shared/services/user-role.service';
 import { UsersResolverService } from './user-list/users-resolver-service';
 import { UsersNewResolverService } from './user-new/user-new-resolver.service';
 import { UserEditResolverService } from './user-edit/user-edit-resolver.service';
+import { UserEditPinComponent } from './user-edit-pin/user-edit-pin.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { UserEditResolverService } from './user-edit/user-edit-resolver.service'
   declarations: [
     UserListComponent,
     UserNewComponent,
-    UserEditComponent],
+    UserEditComponent,
+    UserEditPinComponent],
   providers: [
       UserService,
       UserRoleService,

@@ -11,4 +11,6 @@ export class User {
   token?: string;  
   readonly menus: Array<AppMenu> = [];
   readonly rights: Array<RightForUser> = [];
+  isGeneral: Boolean;
+  pin: String;
 }

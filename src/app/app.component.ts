@@ -10,7 +10,8 @@ import {
   SocketIoService,
   User,
   AppMenu,
-  UtilFunctions
+  UtilFunctions,  
+  ParamService
 } from '../shared/index';
 import { isNullOrUndefined } from 'util';
 
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit {
     private _notificationService: NotificationService,
     private _authenticationService: AuthenticationService,
     private _router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _parameterService: ParamService
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('es');
@@ -64,6 +66,16 @@ export class AppComponent implements OnInit {
         };
         this.toast.success('Se requiere un mozo en la mesa ' + waiterCall.tableNumber, 'ATENCION:', options);
       });
+
+    this.getParams();
+  }
+
+  getParams() {
+    this._parameterService.getAll().subscribe(
+      params => {
+        this._parameterService.params = params;
+      }
+    )
   }
 
   getTime(): void {
