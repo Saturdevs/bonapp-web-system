@@ -5,3 +5,5 @@ export * from './tableStatus.enum';
 export * from './rights.enum';
 export * from './params.enum';
 export * from './constants.enum';
+export * from './orderTypes.enum';
+export * from './orderStatus.enum';

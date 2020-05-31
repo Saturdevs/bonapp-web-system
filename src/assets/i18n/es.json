@@ -33,7 +33,7 @@
         "actions": "Acciones"
       },
       "Buttons": {
-        "edit": "EDitar",
+        "edit": "Editar",
         "delete": "Eliminar"
       }
     },
@@ -48,7 +48,10 @@
     "errorMessageDefault": "Ocurrió un problema con la conexión a la base de datos. \n\rIntenté de nuevo, si el problema persiste comuniquese con Soporte de BonAPP.",
     "selectItem": "Seleccione un item de la lista",
     "modalCancelTitle": "Cancelar Cambios",
-    "modalCancelMessage": "¿Está seguro que desea cancelar los cambios?"
+    "modalCancelMessage": "¿Está seguro que desea cancelar los cambios?",
+    "rightErrorTitle": "Error de Permisos",
+    "rightErrorMessage": "Usted no posee los permisos requeridos para realizar la acción deseada. Pongase en contacto con el administrador del sistema.",
+    "errorEmptyPin": "Debe ingresar un PIN."
   },
 
   "UserRoles": {
@@ -133,6 +136,7 @@
     "password": "Contraseña",
     "errorRequiredUserPassword": "La contrasena es requerida.",
     "confirmPassword": "Confirmar contraseña",
-    "userPasswordDoesntMatch": "Las contrasenas no coinciden"
+    "userPasswordDoesntMatch": "Las contrasenas no coinciden",
+    "enterPin": "Ingrese el PIN"
   }
 }

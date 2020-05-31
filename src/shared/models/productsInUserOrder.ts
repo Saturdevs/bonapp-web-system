@@ -1,5 +1,7 @@
 export class ProductsInUserOrder {
   _id: String;
+  employeeWhoAdded: string;
+  employee: string;
   /**Id del producto */
   dailyMenuId?: String;
   product: string;

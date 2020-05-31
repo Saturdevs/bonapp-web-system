@@ -33,29 +33,26 @@ export class UserEditPinComponent implements OnInit {
 
   addPinControls(isGeneral) {
     this.showPinControls = false;
-    if (!isNullOrUndefined(this._paramService.params) && this._paramService.params.length > 0) {
-      const askPinParam = this._paramService.params.find(param => param._id === Params.ASK_FOR_USER_PIN);
-      if (!isNullOrUndefined(askPinParam) && askPinParam.value) {
-        if (isGeneral) {
-          this.enterPin = false;
-          this.pinForm.removeControl(Constants.PIN);
-          this.pinForm.removeControl(Constants.PIN_CONFIRM);
+    if (this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {
+      if (isGeneral) {
+        this.enterPin = false;
+        this.pinForm.removeControl(Constants.PIN);
+        this.pinForm.removeControl(Constants.PIN_CONFIRM);
+        this.handlePinMatch.emit(true);
+      } else {
+        this.showPinControls = true;
+        if (this.user.pin !== null && this.user.pin !== undefined) {
           this.handlePinMatch.emit(true);
         } else {
-          this.showPinControls = true;
-          if (this.user.pin !== null && this.user.pin !== undefined) {
-            this.handlePinMatch.emit(true);
-          } else {
-            this.handlePinMatch.emit(false);
-          }        
-          this.pinForm.addControl(Constants.PIN, this.formBuilder.control(
-            '', [Validators.required]
-          ))
-
-          this.pinForm.addControl(Constants.PIN_CONFIRM, this.formBuilder.control(
-            '', [Validators.required]
-          ))
+          this.handlePinMatch.emit(false);
         }
+        this.pinForm.addControl(Constants.PIN, this.formBuilder.control(
+          '', [Validators.required]
+        ))
+
+        this.pinForm.addControl(Constants.PIN_CONFIRM, this.formBuilder.control(
+          '', [Validators.required]
+        ))
       }
     }
   }

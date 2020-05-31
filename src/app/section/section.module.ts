@@ -12,13 +12,15 @@ import { SectionListResolverService } from './section-list/section-list-resolver
 import { SectionEditResolverService } from './section-edit/section-edit-resolver.service';
 import { SectionService } from '../../shared/services/section.service';
 import { SectionListGuardService } from './section-list/section-list-guard.service';
+import { PinAuthenticateModule } from '../pin-authenticate/pin-authenticate.module';
 
 @NgModule({
   imports: [
     SharedModule,
     RouterModule.forChild([
       
-    ])
+    ]),
+    PinAuthenticateModule
   ],
   declarations: [
     SectionNewComponent, 

@@ -10,10 +10,18 @@ import {
   Section,
   OrderService,
   Table,
-  TableStatus
+  TableStatus,
+  RightsFunctions,
+  Rights,
+  AuthenticationService,
+  User,
+  ParamService,
+  OrderTypes,
+  Params
 } from '../../../shared';
 
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-section-list',
@@ -23,11 +31,13 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 export class SectionListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(SectionNewComponent)
-  @ViewChild('openNewOrderTemplate') openNewOrderTemplate: TemplateRef<any>;
+  @ViewChild('askPinTemplate') askPinTemplate: TemplateRef<any>;
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  private serviceErrorTitle = 'Error de Servicio';
+  private serviceErrorTitle: string;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
+  private rightErrorTitle: string;
+  private rightErrorMessage: string;
   private newSection: SectionNewComponent;
   private sections: Array<Section>;
   public modalRef: BsModalRef;
@@ -42,15 +52,31 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   configNewOrderTemplate = {
     backdrop: true,
   }
+  currentUser: User;
 
   constructor(private _sectionService: SectionService,
+    private _authenticationService: AuthenticationService,
+    private _transalateService: TranslateService,
     private _tableService: TableService,
     private _orderService: OrderService,
+    private _paramService: ParamService,
     private _route: ActivatedRoute,
     private modalService: BsModalService,
     private _router: Router) { }
 
   ngOnInit() {
+    this._authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+      }
+    );
+
+    this._transalateService.stream(['Commons.serviceErrorTitle', 'Commons.rightErrorTitle', 'Commons.rightErrorMessage']).subscribe((translations) => {
+      this.serviceErrorTitle = translations['Commons.serviceErrorTitle'];
+      this.rightErrorTitle = translations['Commons.rightErrorTitle'];
+      this.rightErrorMessage = translations['Commons.rightErrorMessage'];
+    })
+
     this.tableNumber = null;
     this._route.data.subscribe(
       data => {
@@ -102,10 +128,30 @@ export class SectionListComponent implements OnInit, AfterViewInit {
           this._orderService.getOrderOpenByTable(table.number).subscribe(
             order => {
               if (isNullOrUndefined(order) && table.status === this.statusLibre) {
-                this.modalRef = this.modalService.show(this.openNewOrderTemplate, Object.assign({}, this.configNewOrderTemplate, { class: 'customNewOrder' }));
+                if (RightsFunctions.isRightActiveForUser(this.currentUser, Rights.NEW_ORDER)) {
+                  if (this.currentUser.isGeneral) {
+                    if (this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {
+                      this.modalRef = this.modalService.show(this.askPinTemplate, Object.assign({}, this.configNewOrderTemplate, { class: 'customNewOrder' }));
+                    } else {
+                      this.openNewOrder(this.tableNumber);
+                    }
+                  } else {
+                    this.openNewOrder(this.tableNumber);
+                  }
+                } else {
+                  this.showModalError(this.rightErrorTitle, this.rightErrorMessage);
+                }
               }
               else {
-                this._router.navigate(['./orders/orderNew', this.tableNumber]);
+                if (this.currentUser.isGeneral) {
+                  if (this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {
+                    this.modalRef = this.modalService.show(this.askPinTemplate, Object.assign({}, this.configNewOrderTemplate, { class: 'customNewOrder' }));
+                  } else {
+                    this.openExistingOrder(this.tableNumber);
+                  }
+                } else {
+                  this.openExistingOrder(this.tableNumber);
+                }
               }
             },
             error => {
@@ -117,8 +163,22 @@ export class SectionListComponent implements OnInit, AfterViewInit {
           this.tableNumber = null;
           this.showModalError(this.serviceErrorTitle, error.error.message);
         }
-      )    
+      )
     }
+  }
+
+  openNewOrder(tableNumber: number) {
+    const order = this._orderService.createOrder(tableNumber, OrderTypes.RESTAURANT);
+    this._orderService.saveOrder(order).subscribe(
+      () => {
+        this.openExistingOrder(tableNumber);
+      }
+    )
+  }
+
+  openExistingOrder(tableNumber: number) {
+    this._orderService.employeeWhoAddedId = this.currentUser._id;
+    this._router.navigate(['./orders/orderNew', tableNumber]);
   }
 
   showModalError(errorTittleReceived: string, errorMessageReceived: string) {

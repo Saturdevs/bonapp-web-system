@@ -1,5 +1,5 @@
-<ng-template #openNewOrderTemplate>
-  <app-order-pre [selectedTable]="selectedTable" [clients]="clients" (close)="closeModal()" class="clasedeprueba"></app-order-pre>
+<ng-template #askPinTemplate>
+  <app-pin-authenticate [tableNumber]="tableNumber" (close)="closeModal()"></app-pin-authenticate>
 </ng-template>
 
 <ng-template #deleteTemplate>
@@ -59,7 +59,7 @@
       <div *ngFor="let box of boxes; let i = index" [(ngGridItem)]="box.config"
         (onChangeStop)="onChangeStop(box, $event)">
         <div class="handle z-depth-3 card accent-4 text-center hoverable"
-          (click)="showOpenOrderModal(openNewOrderTemplate, box.id)" [class.green]="box.status === 'Libre'"
+          (click)="showOpenOrderModal(box.id)" [class.green]="box.status === 'Libre'"
           [class.red]="box.status === 'Ocupada'" [class.yellow]="box.status === 'Comandada'"
           [class.blue]="box.status === 'Reservada'">
           <div class="text-right customCloseCursor" style="position: static;" *ngIf="settingsActive === true"

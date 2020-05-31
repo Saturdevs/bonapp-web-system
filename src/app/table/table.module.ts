@@ -13,6 +13,7 @@ import { TableListResolverService } from './table-list/table-list-resolver.servi
 import { TableAllResolverService } from './table-list/table-all-resolver.service';
 
 import { OrderModule } from '../order/order.module';
+import { PinAuthenticateModule } from '../pin-authenticate/pin-authenticate.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { OrderModule } from '../order/order.module';
     ]),
     SharedModule,
     NgGridModule,
-    OrderModule
+    OrderModule,
+    PinAuthenticateModule
   ],
   exports: [
     RouterModule

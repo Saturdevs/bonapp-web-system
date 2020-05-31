@@ -9,6 +9,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiService } from './api.service';
 import { Param } from '../models/param';
+import { isNullOrUndefined } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,19 @@ export class ParamService {
     return this.apiService.get('/param/')
       .map(data => data.params)
       .catch(this.handleError);
+  }
+
+  getBooleanParameter(paramName: String): Boolean {
+    if (!isNullOrUndefined(this.params) && this.params.length > 0) {
+      const param = this.params.find(param => param._id === paramName);
+      if (!isNullOrUndefined(param)) {        
+        return param.value;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }    
   }
 
   private handleError(err: HttpErrorResponse) {    

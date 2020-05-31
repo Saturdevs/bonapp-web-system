@@ -1,0 +1,40 @@
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<div class="container col-md-12">
+  <div class="row pageTitle primary-color">
+    <div class="col-md-12">
+      <h4 class="text-white text-center mb-0">{{ 'Users.enterPin' | translate }}</h4>
+    </div>
+  </div>
+  <div class="customModalContent">
+    <div class="col-12">
+      <div *ngIf="errorPin === true" class="row mb-2 mt-2 ml-2">
+        <span class="red-label">{{ errorMsg }}</span>
+      </div>
+    </div>
+    <form #form="ngForm" method="post" (submit)="userPinAuthenticate()" novalidate>
+      <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
+        <div class="row pl-2">
+          <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
+            <label>{{ 'Users.userPin' | translate }}:</label>
+          </div>
+          <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+            <input #inputPin [(ngModel)]="userPin" type="password" class="form-control" maxlength="4" id="userPin"
+              name="userPin">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row customFooterModal">
+    <div class="customFooterButtons">
+      <button type="button" class="btn btn-sm customButtonCancel waves-light"
+        (click)="closeModal()">{{ 'Commons.Buttons.cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary btn-sm waves-light"
+        (click)="userPinAuthenticate()">{{ 'Commons.Buttons.ok' | translate }}</button>
+    </div>
+  </div>
+</div>

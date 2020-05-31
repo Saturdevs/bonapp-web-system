@@ -42,6 +42,12 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  authenticateByPin(pin: String): Observable<User> {
+    return this.apiService.get(`/user/pinauthentication/${pin}`)
+      .map(data => data.user)
+      .catch(this.handleError);
+  }
+
   private handleError(err: HttpErrorResponse) {
     return Observable.throw(err);
   }
