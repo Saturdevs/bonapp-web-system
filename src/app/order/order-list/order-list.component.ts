@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
-import { MdbTableDirective, MdbTablePaginationComponent, localDataFactory } from 'ng-uikit-pro-standard';
+import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 import {

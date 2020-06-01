@@ -3,9 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-
+ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+ 
 import {
   Category,
   Menu,

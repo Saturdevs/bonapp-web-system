@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { Subject, of } from 'rxjs';
 
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-import { ModalDirective, MdbAutoCompleterComponent, ToastService } from 'ng-uikit-pro-standard';
+ import { ModalDirective, MdbAutoCompleterComponent, ToastService } from 'ng-uikit-pro-standard';
 import {
   Menu,
   CategoryService,

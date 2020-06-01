@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import {
@@ -8,8 +8,7 @@ import {
   SectionService
 } from '../../../shared';
 
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-
+ 
 @Component({
   selector: 'app-section-new',
   templateUrl: './section-new.component.html',

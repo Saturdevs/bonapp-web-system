@@ -3,9 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 import { CONFLICT } from 'http-status-codes';
 
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-
+ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+ 
 import {
   Table,
   TableService,

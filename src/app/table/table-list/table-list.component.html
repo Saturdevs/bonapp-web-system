@@ -84,15 +84,14 @@
 <div class="fixed-action-btn" style="bottom: 45px; right: 24px;" *ngIf="settingsActive === true"
   (mouseleave)="fixed.toggle()">
 
-  <a class="btn-floating btn-large blue waves-light" mdbRippleRadius (mouseenter)="fixed.toggle()">
-    <i class="fa fa-cog"></i>
+  <a mdbBtn class="waves-light" floating="true"  mdbWavesEffect color="blue" size="lg" (mouseenter)="fixed.toggle()">
+    <!-- <i class="fa fa-cog"></i> -->
+    <mdb-icon fas icon="cog"></mdb-icon>
   </a>
 
   <div class="fixed_collapse" mdbCollapse="isCollapsed" #fixed="bs-collapse">
-    <a class="btn-floating yellow darken-1 waves-light" (click)="addBox()" mdbRippleRadius><i
-        class="fa fa-plus"></i></a>
-    <a class="btn-floating green darken-1 waves-light" (click)="saveChanges()" mdbRippleRadius><i
-        class="fa fa-save"></i></a>
+    <a mdbBtn floating="true" color="yellow" class="waves-light" mdbWavesEffect (click)="addBox()"><mdb-icon fas icon="plus"  (click)="fixed.toggle($event)"></mdb-icon></a>
+    <a mdbBtn floating="true" color="green" class="waves-light" mdbWavesEffect (click)="saveChanges()" ><mdb-icon fas icon="save"  (click)="fixed.toggle($event)"></mdb-icon></a>
   </div>
 
 </div>

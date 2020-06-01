@@ -2,9 +2,8 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
-
+ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+ 
 import {
   Size,
   SizeService

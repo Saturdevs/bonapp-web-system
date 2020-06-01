@@ -17,8 +17,7 @@ import {
 
 import { ComboValidators } from '../../../shared/functions/combo.validator';
 import { FileInputComponent } from '../../file-input/file-input.component';
-import { BsModalService } from 'ngx-bootstrap/modal/bs-modal.service';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-product-modify',
