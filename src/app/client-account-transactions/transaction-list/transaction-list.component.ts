@@ -23,7 +23,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class TransactionListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = "Cuentas Corrientes";
   private modalErrorTittle: string;
@@ -47,8 +47,8 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
   enableNew: Boolean;
   enableActionButtons: Boolean;
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
 
   constructor(private _transactionService: TransactionService,
     private route: ActivatedRoute,

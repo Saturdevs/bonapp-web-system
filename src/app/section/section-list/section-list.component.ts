@@ -30,9 +30,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SectionListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(SectionNewComponent)
+  @ViewChild(SectionNewComponent, {static: false})
   @ViewChild('askPinTemplate') askPinTemplate: TemplateRef<any>;
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private serviceErrorTitle: string;
   private modalErrorTittle: string;
   private modalErrorMessage: string;

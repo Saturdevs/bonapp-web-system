@@ -45,10 +45,10 @@ export class OrderNewComponent implements OnInit {
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  @ViewChild('fluid') public fluid: ModalDirective;
-  @ViewChild('optionsAndSizesTemplate') optionsAndSizesTemplate: TemplateRef<any>;
-  @ViewChild(MdbAutoCompleterComponent) completer: MdbAutoCompleterComponent;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('fluid', {static: false}) public fluid: ModalDirective;
+  @ViewChild('optionsAndSizesTemplate', {static: false}) optionsAndSizesTemplate: TemplateRef<any>;
+  @ViewChild(MdbAutoCompleterComponent, {static: false}) completer: MdbAutoCompleterComponent;
 
   constructor(private _route: ActivatedRoute,
     private productService: ProductService,

@@ -20,7 +20,7 @@ import {
 })
 export class ArqueoCajaNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>; 
   public modalRef: BsModalRef;
   cashRegisters: CashRegister[];
   newArqueo: ArqueoCaja;

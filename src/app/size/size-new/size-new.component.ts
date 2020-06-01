@@ -18,8 +18,8 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 })
 export class SizeNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  @ViewChild('nameInvalid') nameInvalidTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('nameInvalid', {static: false}) nameInvalidTemplate: TemplateRef<any>;
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;

@@ -24,7 +24,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class CategoryComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private pageTitle: string = 'Categorías';
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -49,8 +49,8 @@ export class CategoryComponent implements OnInit, AfterViewInit {
   enableNew: Boolean;
   enableActionButtons: Boolean;
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
 
   get listFilter(): string {
     return this._listFilter;

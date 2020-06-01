@@ -24,7 +24,7 @@ import { isNullOrUndefined } from 'util';
 })
 export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
@@ -47,13 +47,13 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
   _listFilter: string;
   productInMenu = [];
 
-  @ViewChild(FileInputComponent)
+  @ViewChild(FileInputComponent, {static: false})
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
 
-  @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
+  @ViewChild('priceNotMatch', {static: false}) priceNotMatchTemplate: TemplateRef<any>;
   filteredProductArray: any;
   previous: any;
 

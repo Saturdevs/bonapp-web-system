@@ -39,8 +39,8 @@ interface Box {
 })
 export class TableListComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  @ViewChild('cancelTemplate') cancelTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('cancelTemplate', {static: false}) cancelTemplate: TemplateRef<any>;
   private serviceErrorTitle: string;
   private rightErrorTitle: string;
   private rightErrorMessage: string;
@@ -87,7 +87,7 @@ export class TableListComponent implements OnInit {
     'limit_to_screen': true
   };
   public tableNumber: number;
-  @ViewChild('askPinTemplate') askPinTemplate: TemplateRef<any>;
+  @ViewChild('askPinTemplate', {static: false}) askPinTemplate: TemplateRef<any>;
 
   private itemPositions: Array<any> = [];
   tablesNow: Array<Table> = [];

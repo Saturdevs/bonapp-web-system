@@ -31,8 +31,8 @@ export class QrGeneratorComponent implements OnInit {
   private modalDeleteMessage: string;
   private validationMessage: string;
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('confirmationTemplate', {static: false}) confirmationTemplate: TemplateRef<any>;
 
   ngOnInit() {
     this.route.data.subscribe(

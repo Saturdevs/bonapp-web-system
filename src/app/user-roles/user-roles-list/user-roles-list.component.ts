@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UserRolesListComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private serviceErrorTitle: string;
   private modalErrorTittle: string;
   private modalErrorMessage: string;

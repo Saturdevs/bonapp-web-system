@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UserRolesEditComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private serviceErrorTitle: string;
   public modalRef: BsModalRef;
   private modalCancelTitle: String;

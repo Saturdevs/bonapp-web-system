@@ -17,7 +17,7 @@ import {
 })
 export class SectionEditComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   private pageTitle: String = 'Editando';
   private cancelButton: String = 'Cancelar';

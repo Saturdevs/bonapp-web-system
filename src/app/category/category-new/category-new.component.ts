@@ -20,11 +20,11 @@ import { FileInputComponent } from '../../file-input/file-input.component';
 })
 export class CategoryNewComponent implements OnInit {
 
-  @ViewChild(FileInputComponent)
+  @ViewChild(FileInputComponent, {static: false})
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  @ViewChild('nameInvalid') nameInvalidTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('nameInvalid', {static: false}) nameInvalidTemplate: TemplateRef<any>;
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;

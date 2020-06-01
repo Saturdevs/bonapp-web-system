@@ -18,7 +18,7 @@ import {
 })
 export class TransactionNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;   
+  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>;   
   private serviceErrorTitle = 'Error de Servicio';
   private cancelButton: String = 'Cancelar';
   private saveButton: String = 'Guardar';

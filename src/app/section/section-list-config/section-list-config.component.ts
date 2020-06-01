@@ -20,8 +20,8 @@ import {
 })
 export class SectionListConfigComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  @ViewChild('deleteTemplate') deleteTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('deleteTemplate', {static: false}) deleteTemplate: TemplateRef<any>;
   pageTitle: string = "Salas";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;

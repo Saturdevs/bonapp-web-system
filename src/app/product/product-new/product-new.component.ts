@@ -24,7 +24,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ProductNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
@@ -50,10 +50,10 @@ export class ProductNewComponent implements OnInit {
   stockControlText = "Controla Stock";
   currentUser: User;
 
-  @ViewChild(FileInputComponent)
+  @ViewChild(FileInputComponent, {static: false})
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
+  @ViewChild('priceNotMatch', {static: false}) priceNotMatchTemplate: TemplateRef<any>;
   enableStock: any;
   get sizes(): FormArray {
     return <FormArray>this.productForm.get('sizes');

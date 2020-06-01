@@ -35,7 +35,7 @@ export class OrderCloseComponent implements OnInit {
   @Input() paymentTypes: Array<PaymentType> = [];
   @Input() client: Client;
   @Output() close = new EventEmitter<string>();
-  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
 
   constructor(private _router: Router,
     private modalService: BsModalService,

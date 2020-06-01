@@ -2,7 +2,7 @@ import { Inject, Component, OnInit, ElementRef, NgModule, NgZone, ViewChild } fr
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from "@angular/common";
 //import {} from '@types/googlemaps';
 
 import { Client } from '../../shared/models/client';
