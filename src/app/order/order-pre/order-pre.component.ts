@@ -25,7 +25,7 @@ export class OrderPreComponent implements OnInit, AfterViewInit {
   @Input() selectedTable: Table;
   @Input() clients: Array<Client>;
   @Output() close = new EventEmitter<string>();
-  @ViewChild('okButton', {static: false}) okButtonElement: ElementRef;
+  @ViewChild('okButton') okButtonElement: ElementRef;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private title: string = 'Nuevo Pedido';

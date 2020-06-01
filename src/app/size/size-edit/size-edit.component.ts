@@ -17,7 +17,7 @@ import {
 })
 export class SizeEditComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   private pageTitle: String = 'Editando';
   private cancelButton: String = 'Cancelar';

@@ -22,10 +22,10 @@ import { ErrorTemplateComponent } from '../../../shared/components/error-templat
 export class MenuNewComponent implements OnInit {
   
 
-  @ViewChild(FileInputComponent, {static: false})
+  @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent; 
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;

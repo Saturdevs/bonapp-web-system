@@ -30,7 +30,7 @@ export class OrderListComponent implements OnInit {
   private modalErrorTittle: string;
   private modalErrorMessage: string;
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   public modalRef: BsModalRef;
   orders: Order[];
   filteredOrders: Order[];
@@ -54,8 +54,8 @@ export class OrderListComponent implements OnInit {
   enableEdit: Boolean;
   enableActionButtons: Boolean;  
 
-  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
 
   constructor(private orderService: OrderService,

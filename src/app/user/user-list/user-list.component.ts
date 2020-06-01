@@ -11,7 +11,7 @@ import { CONFLICT } from 'http-status-codes';
 })
 export class UserListComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Usuarios";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;

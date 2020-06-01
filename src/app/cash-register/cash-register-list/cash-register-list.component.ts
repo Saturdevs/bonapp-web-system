@@ -24,7 +24,7 @@ import { isNullOrUndefined } from 'util';
 })
 export class CashRegisterListComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Cajas";
   private serviceErrorTitle = 'Error de Servicio';
   private cantDeleteDefaultLabel = 'La caja por defecto no puede ser eliminada.'

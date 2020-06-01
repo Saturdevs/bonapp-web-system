@@ -28,7 +28,7 @@ export class SectionNewComponent implements OnInit {
   public modalRef: BsModalRef;
   section: Section = new Section();
   sectionForm: FormGroup;
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
 
 
   constructor(private _router: Router,

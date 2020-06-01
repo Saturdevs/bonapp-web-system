@@ -23,12 +23,12 @@ import { CONFLICT } from 'http-status-codes';
 })
 export class CategoryModifyComponent implements OnInit {
 
-  @ViewChild(FileInputComponent, {static: false})
+  @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
 
-  @ViewChild('confirmDisableCategoryAndProductsTemplate', {static: false}) confirmDisableCategoryAndProductsTemplate:TemplateRef<any>;
+  @ViewChild('confirmDisableCategoryAndProductsTemplate') confirmDisableCategoryAndProductsTemplate:TemplateRef<any>;
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;

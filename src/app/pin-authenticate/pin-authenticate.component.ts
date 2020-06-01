@@ -13,8 +13,8 @@ import { isNullOrUndefined } from 'util';
 })
 export class PinAuthenticateComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('inputPin', {static: false}) inputPinElement: ElementRef;
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('inputPin') inputPinElement: ElementRef;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   @Output() close = new EventEmitter<string>();
   @Input() tableNumber: number;
   private serviceErrorTitle: string;

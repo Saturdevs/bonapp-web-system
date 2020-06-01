@@ -20,7 +20,7 @@ import {
 })
 export class SizeListComponent implements OnInit, OnChanges {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Tamaños";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;

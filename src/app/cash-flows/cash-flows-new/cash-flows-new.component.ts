@@ -23,7 +23,7 @@ import { isNullOrUndefined } from 'util';
 })
 export class CashFlowsNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>;   
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;   
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalCancelTitle: String;

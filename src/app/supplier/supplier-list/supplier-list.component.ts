@@ -22,7 +22,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class SupplierListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Proveedores";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -42,8 +42,8 @@ export class SupplierListComponent implements OnInit, AfterViewInit {
   enableNew: Boolean;
   enableActionButtons: Boolean;
 
-  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private _supplierService: SupplierService,
     private route: ActivatedRoute,

@@ -22,13 +22,13 @@ import { CONFLICT } from 'http-status-codes';
 
 export class MenuModifyComponent implements OnInit {
 
-  @ViewChild(FileInputComponent, {static: false})
+  @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
 
-  @ViewChild('confirmDisableMenuAndCategoriesAndProductsTemplate', {static: false}) confirmDisableMenuAndCategoriesAndProductsTemplate: TemplateRef<any>;
+  @ViewChild('confirmDisableMenuAndCategoriesAndProductsTemplate') confirmDisableMenuAndCategoriesAndProductsTemplate: TemplateRef<any>;
 
   public modalRef: BsModalRef;
   private modalErrorTittle: string;

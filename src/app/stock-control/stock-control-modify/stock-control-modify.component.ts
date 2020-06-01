@@ -19,7 +19,7 @@ export class StockControlModifyComponent implements OnInit {
   minStock: number = 0;
   currentStock: number = 0;
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
 
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;

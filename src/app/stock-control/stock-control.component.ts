@@ -16,9 +16,9 @@ export class StockControlComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef) { }
 
-  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
-  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>; 
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
   filteredProducts: Product[] = [];
   pageTitle: string = "Control de Stock";

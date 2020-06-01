@@ -24,7 +24,7 @@ import { DailyMenuService } from '../../../shared/services/daily-menu.service';
 })
 export class DailyMenuNewComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
@@ -46,13 +46,13 @@ export class DailyMenuNewComponent implements OnInit, AfterViewInit {
   defaultPrice: Number = 0;
   _listFilter: string;
 
-  @ViewChild(FileInputComponent, {static: false})
+  @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
-  @ViewChild('priceNotMatch', {static: false}) priceNotMatchTemplate: TemplateRef<any>;
+  @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
   filteredProductArray: any;
   previous: any;
 

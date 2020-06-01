@@ -20,7 +20,7 @@ import {
 })
 export class MenuComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   public modalRef: BsModalRef;
   private serviceErrorTitle = 'Error de Servicio';
   pageTitle: string = 'Cartas';

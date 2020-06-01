@@ -23,7 +23,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 })
 export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Arqueos de Caja";
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -48,8 +48,8 @@ export class ArqueoCajaListComponent implements OnInit, AfterViewInit {
   enableNew: Boolean;
   enableActionButtons: Boolean;  
 
-  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   constructor(private arqueoService: ArqueoCajaService,
     private route: ActivatedRoute,

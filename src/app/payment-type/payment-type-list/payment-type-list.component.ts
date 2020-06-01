@@ -22,7 +22,7 @@ import {
 })
 export class PaymentTypeListComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Formas de Pago";
   private cantDeleteDefaultPaymentTypeLabel = 'El tipo de pago por defecto no puede ser eliminado.';
   private serviceErrorTitle = 'Error de Servicio';

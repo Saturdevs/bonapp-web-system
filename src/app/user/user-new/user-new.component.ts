@@ -13,8 +13,8 @@ import { UserEditPinComponent } from '../user-edit-pin/user-edit-pin.component';
 })
 export class UserNewComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
-  @ViewChild('editPin', {static: false}) editPin: UserEditPinComponent;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
+  @ViewChild('editPin') editPin: UserEditPinComponent;
   private serviceErrorTitle: string;
   public modalRef: BsModalRef;
   private modalErrorTittle: string;

@@ -13,7 +13,7 @@ import { DailyMenuService } from '../../../shared/services/daily-menu.service';
 })
 export class DailyMenuListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate:TemplateRef<any>; 
+  @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
   pageTitle: string = 'Menu del dia';
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
@@ -33,8 +33,8 @@ export class DailyMenuListComponent implements OnInit, AfterViewInit {
   today = new Date();
 
 
-  @ViewChild(MdbTablePaginationComponent, {static: false}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective, {static: false}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
 
   get listFilter(): string {
       return this._listFilter;

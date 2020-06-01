@@ -27,7 +27,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class ProductModifyComponent implements OnInit {
 
-  @ViewChild('errorTemplate', {static: false}) errorTemplate: TemplateRef<any>;
+  @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
@@ -56,8 +56,8 @@ export class ProductModifyComponent implements OnInit {
   sizesArray: Size[];
   stockControlText = "Controla Stock";
 
-  @ViewChild('priceNotMatch', {static: false}) priceNotMatchTemplate: TemplateRef<any>;
-  @ViewChild(FileInputComponent, {static: false})
+  @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
+  @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
   enableStock: Boolean = false;
 
