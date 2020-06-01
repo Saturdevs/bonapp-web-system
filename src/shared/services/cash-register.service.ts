@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment'
-import { URLSearchParams } from '@angular/http';
+import { environment } from '../../environments/environment';
 import { HttpClientModule, HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
