@@ -6,7 +6,7 @@ describe('MenuAvailablesResolverService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: MenuAvailablesResolverService = TestBed.get(MenuAvailablesResolverService);
+    const service: MenuAvailablesResolverService = TestBed.inject(MenuAvailablesResolverService);
     expect(service).toBeTruthy();
   });
 });

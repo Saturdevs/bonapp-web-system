@@ -6,7 +6,7 @@ describe('UserRolesEditResolverService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: UserRolesEditResolverService = TestBed.get(UserRolesEditResolverService);
+    const service: UserRolesEditResolverService = TestBed.inject(UserRolesEditResolverService);
     expect(service).toBeTruthy();
   });
 });

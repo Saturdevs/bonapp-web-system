@@ -6,7 +6,7 @@ describe('SectionListGuardService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SectionListGuardService = TestBed.get(SectionListGuardService);
+    const service: SectionListGuardService = TestBed.inject(SectionListGuardService);
     expect(service).toBeTruthy();
   });
 });

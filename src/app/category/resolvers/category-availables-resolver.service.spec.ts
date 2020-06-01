@@ -6,7 +6,7 @@ describe('CategoryAvailablesResolverService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CategoryAvailablesResolverService = TestBed.get(CategoryAvailablesResolverService);
+    const service: CategoryAvailablesResolverService = TestBed.inject(CategoryAvailablesResolverService);
     expect(service).toBeTruthy();
   });
 });
