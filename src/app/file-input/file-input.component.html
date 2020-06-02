@@ -1,6 +1,6 @@
 <form>
   <div class="file-field md-form">
-    <div mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect>
+    <div mdbBtn [class.btn-primary-custom]="true" size="sm" class="waves-light" mdbWavesEffect>
       <span>Choose file</span>
       <input type="file" [disabled]="disabled" (change)="onFileChange($event)" mdbFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" accept="{{allowedTypes}}">
     </div>

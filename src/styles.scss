@@ -1,6 +1,9 @@
 @import './node_modules/ng-uikit-pro-standard/assets/scss/core/_colors';
 
 $primary-color: #718239 !important;
+.primary-color{
+  background-color: $primary-color!important;
+}
 
 $alternative-color:  #f56a6a !default;
 .alternative-color {
@@ -411,13 +414,14 @@ button.btn-primary:disabled {
 }
 
 body{
-background-color:#fff0db;
-font-family: 'Spinnaker', sans-serif;
+    background-color:#fff0db;
+    font-family: 'Spinnaker', sans-serif;
 }
 
-.btn-primary{
-background-color:#718239 !important;
-border-radius:20px;
+.btn-primary-custom{
+    color: white!important;
+    background-color:#718239 !important;
+    border-radius:20px;
 }
 
 .nonStyleList {

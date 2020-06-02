@@ -19,7 +19,7 @@
             </div>
             <div class="float-right">
                 <a [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['newPaymentType'] } }]"
-                    class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+                    mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
                     *ngIf='enableNew'> + Nueva Forma de Pago</a>
             </div>
         </div>
@@ -57,12 +57,10 @@
                             <td>{{ paymentType.availableDescription }}</td>
                             <td class="align-middle" *ngIf='enableActionButtons'>
                                 <a [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['editPaymentType', paymentType._id] } }]"
-                                    class="btn btn-yellow btn-sm customButtonText"
-                                    *ngIf='enableEdit'>Editar</a>
-                                <button [disabled]="paymentType.default === true" type="button"
-                                    class="btn btn-red btn-sm"
+                                    *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
+                                <a [disabled]="paymentType.default === true" 
                                     (click)="showModalDelete(deleteTemplate, paymentType._id)"
-                                    *ngIf='enableDelete'>Eliminar</button>
+                                    *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
                             </td>
                         </tr>
                     </tbody>

@@ -16,7 +16,7 @@
         </header>
     </div>
     <div style="float: right">
-        <a [routerLink]="['newMenu']" class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+        <a [routerLink]="['newMenu']" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
             *ngIf='enableNew'> + Nueva Carta</a>
     </div>
 </div>
@@ -46,11 +46,12 @@
                     <td class="align-middle customShortTh">{{ menu.availableDescription }}</td>
                     <td class="align-middle" *ngIf='enableActionButtons'>
                         <a [routerLink]="['edit', menu._id]" 
-                        class="btn btn-yellow btn-sm customButtonText"
-                        *ngIf='enableEdit'>Editar</a>
+                        *ngIf='enableEdit'>
+                        <a class="pl-4"><img src="assets/img/editar.png" height="40px" width="auto"></a>
+                        </a>
                         <a (click)="showModalDelete(deleteTemplate, noDelete, menu._id)"
-                        class="btn btn-red btn-sm"
-                        *ngIf='enableDelete'>Eliminar</a>
+                        *ngIf='enableDelete'>
+                        <a class="pl-4"><img src="assets/img/eliminar.png" height="40px" width="auto"></a></a>
                     </td>
                 </tr>
             </tbody>

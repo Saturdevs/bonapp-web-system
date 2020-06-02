@@ -31,9 +31,9 @@
   </div>
   <div class="row customFooterModal">
     <div class="customFooterButtons">
-      <button type="button" class="btn btn-sm customButtonCancel waves-light"
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
         (click)="closeModal()">{{ 'Commons.Buttons.cancel' | translate }}</button>
-      <button type="button" class="btn btn-primary btn-sm waves-light"
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true"
         (click)="userPinAuthenticate()">{{ 'Commons.Buttons.ok' | translate }}</button>
     </div>
   </div>

@@ -42,9 +42,9 @@
 
     <div class="row customFooterModal">
       <div class="footerButtons">
-        <button type="button" class="btn btn-sm customButtonCancel waves-light"
+        <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
           (click)="closeModal()">{{cancelButtonText}}</button>
-        <button type="button" class="btn btn-primary btn-sm waves-light okButton"
+        <button type="button" mdbBtn [class.btn-primary-custom]="true"  rounded="true" size="sm" mdbWavesEffect [class.okButton]="true"
           (click)="saveEditedTable()">{{saveButtonText}}</button>
       </div>
     </div>

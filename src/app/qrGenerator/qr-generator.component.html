@@ -23,7 +23,7 @@
         
         <div class="row customFooterModal">
           <div class="col-3 offset-9">
-            <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="closeModal()">{{ buttonOk }}</button>
+            <button type="button" mdbBtn  rounded="true" [class.btn-primary-custom]="true" size="sm" mdbWavesEffect [class.okButton]="true" (click)="closeModal()">{{ buttonOk }}</button>
           </div>
         </div>
       </div>
@@ -48,8 +48,7 @@
               </div>
           </div>
           <div class="row">
-              <button [disabled]="tablesToGenerateQR.length === 0" type="button"
-              class="btn btn-primary"
+              <button [disabled]="tablesToGenerateQR.length === 0" type="button" mdbBtn [class.btn-primary-custom]="true"
               (click)="generateQR()">Generar!</button>
           </div>
       </div>

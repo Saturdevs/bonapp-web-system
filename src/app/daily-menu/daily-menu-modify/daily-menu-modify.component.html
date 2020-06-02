@@ -126,8 +126,8 @@
         </div>
       </div>
       <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
-        <button class="btn btn-md btn-primary" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
-        <button class="btn btn-md btn-primary" [disabled]="productForm.invalid" type="submit"
+        <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
+        <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="productForm.invalid" type="submit"
           (click)="saveDailyMenu()">Guardar</button>
       </div>
     </form>

@@ -52,7 +52,7 @@
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="cashRegisterForm.invalid" (click)="updateCashRegister()">{{saveButton}}</button>
+    <button type="button"  rounded="true" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button"  rounded="true" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="cashRegisterForm.invalid" (click)="updateCashRegister()">{{saveButton}}</button>
   </div>
 </div>

@@ -11,8 +11,8 @@
   
   <div class="row customFooterModal">
     <div class="footerButtons">
-      <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="handleCancelButtonClick()">{{cancelButton}}</button>
-      <button type="button" class="btn btn-primary btn-sm waves-light okButton" (click)="handleOkButtonClick()">{{ okButton }}</button>
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="handleCancelButtonClick()">{{cancelButton}}</button>
+      <button type="button" mdbBtn  rounded="true" [class.btn-primary-custom]="true" size="sm" mdbWavesEffect [class.okButton]="true" (click)="handleOkButtonClick()">{{ okButton }}</button>
     </div>
   </div>
 </div>

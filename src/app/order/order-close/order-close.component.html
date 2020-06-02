@@ -77,7 +77,7 @@
             {{ paymentsTitle }}
           </div>
           <div class="col-2 addPaymentContainer">
-            <label (click)="addPayment()" class="addPaymentButton z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left mb-0 mt-0">
+            <label (click)="addPayment()"  rounded="true" [class.addPaymentButton]="true" [class.customSizeY]="true" [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0">
               <span class="pb-0 mb-0"><i class="fa fa-plus fa-1x"></i></span>
             </label> 
           </div>
@@ -119,7 +119,7 @@
             <input type="number" class="form-control pt-0" [(ngModel)]="payment.amount" id="amount" (input)="calculateChangeAmount(); checkAccount()" mdbActive>
           </div>
           <div class="col-lg-2 col-md-2 col-sm-2">
-            <label (click)="removePayment(payment)" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left removePayment">
+            <label (click)="removePayment(payment)" rounded="true" [class.customSizeY]="true" [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0" [class.removePayment]="true">
               <span class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></span>
             </label>  
           </div>
@@ -129,7 +129,7 @@
         <div class="row">
           <!-- Ingresar descuento -->
           <div class="float-left col 2">
-            <button [disabled]="productsInOrder.length === 0" type="button" class="z-depth-0 btn customSizeY btn-tb btn-primary waves-effect waves-light float-left" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
+            <button [disabled]="productsInOrder.length === 0" rounded="true"  type="button" [class.customSizeY]="true" [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0" [class.removePayment]="true" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
           </div>   
         </div>         
       </div>
@@ -165,7 +165,7 @@
       <div class="col-12 cashRegisterSelectSection" *ngIf='showDiscount===true'>
         <div class="col-6 offset-6 buttonsRow pl-4 pr-0">
           <button type="button" class="btn customButtonCancel btn-sm waves-light" (click)='showDiscountSection(false)'>{{ cancelButtonLabel }}</button>
-          <button [disabled]="formDiscount.invalid" type="button" class="btn btn-sm btn-primary waves-light" (click)="addDiscount()">{{ confirmButtonLabel }}</button>
+          <button [disabled]="formDiscount.invalid"  rounded="true" type="button" mdbBtn size="sm" [class.btn-primary-custom]="true" mdbWavesEffect (click)="addDiscount()">{{ confirmButtonLabel }}</button>
         </div>
       </div>
 
@@ -194,8 +194,8 @@
   <!-- Botones -->
   <div class="row grey lighten-3">
     <div class="col-7 offset-5 closeOrderButton">
-      <button type="button" class="btn btn-sm customButtonCancel waves-light" (click)="closeForm()">{{cancelButton}}</button>
-      <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="changeAmount < 0 || !canPayWithAccount" (click)="closeTable()">{{closeTableButton + order.table}}</button>
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="closeForm()">{{cancelButton}}</button>
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="changeAmount < 0 || !canPayWithAccount" (click)="closeTable()">{{closeTableButton + order.table}}</button>
     </div>
   </div>
 </div>

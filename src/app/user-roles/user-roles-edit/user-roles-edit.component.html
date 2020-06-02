@@ -71,9 +71,9 @@
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" class="btn btn-sm customButtonCancel waves-light"
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
       (click)="showModalCancel(cancelTemplate)">{{ 'Commons.Buttons.cancel' | translate }}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="userRoleForm.invalid"
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="userRoleForm.invalid"
       (click)="updateUserRole()">{{ 'Commons.Buttons.save' | translate }}</button>
   </div>
 </div>

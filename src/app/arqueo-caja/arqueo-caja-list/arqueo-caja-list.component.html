@@ -17,7 +17,7 @@
             </header>
             <a class="customFloatedButton"
                 [routerLink]="['/sales/cash-counts', { outlets: { edit: ['newCashCount'] } }]"
-                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius
+                mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
                 *ngIf='enableNew'> + Nuevo Arqueo</a>
         </div>
         <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
@@ -64,11 +64,9 @@
                                 <td class="align-middle"
                                     *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
                                     <a [routerLink]="['/sales/cash-counts', { outlets: { edit: ['editCashCount', arqueo._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText"
-                                        *ngIf='enableEdit'>Editar</a>
+                                        *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
                                     <a (click)="showModalDelete(deleteTemplate, arqueo._id)"
-                                        class="btn btn-red btn-sm"
-                                        *ngIf='enableDelete'>Eliminar</a>
+                                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
                                 </td>
                             </tr>
                         </tbody>

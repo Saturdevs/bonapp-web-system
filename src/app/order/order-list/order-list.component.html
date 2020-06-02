@@ -112,8 +112,7 @@
                   <a [routerLink]="['/sales/sales-list', { outlets: { edit: ['orderDetail', order._id] } }]"
                     class="btn btn-yellow btn-sm customButtonText"
                     *ngIf='enableEdit'>Detalle</a>
-                  <a *ngIf="order.status !== 'Deleted' && enableDelete" (click)="showModalDelete(deleteTemplate, order._id)"
-                    class="btn btn-red btn-sm">Eliminar</a>
+                  <a *ngIf="order.status !== 'Deleted' && enableDelete" (click)="showModalDelete(deleteTemplate, order._id)"><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
                 </td>
               </tr>
             </tbody>

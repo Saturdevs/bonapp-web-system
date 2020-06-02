@@ -52,9 +52,9 @@
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" class="btn btn-sm customButtonCancel waves-light"
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
       (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" class="btn btn-primary btn-sm waves-light" [disabled]="paymentTypeForm.invalid"
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="paymentTypeForm.invalid"
       (click)="updatePaymentType()">{{saveButton}}</button>
   </div>
 </div>

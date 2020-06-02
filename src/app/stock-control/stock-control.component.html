@@ -40,7 +40,7 @@
                                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ product.stock?.min }}</td>
                                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ product.stock?.current }}</td>
                                     <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle">
-                                        <a [routerLink]="['/restaurant/stockControl/', { outlets: { edit: ['edit', product._id] } }]" class="btn btn-yellow btn-sm customButtonText">Editar</a>
+                                        <a [routerLink]="['/restaurant/stockControl/', { outlets: { edit: ['edit', product._id] } }]" ><img src="assets/img/editar.png" height="40px" width="auto"></a>
                                     </td>
                             </tr>
                         </tbody>

@@ -16,7 +16,7 @@
                 <h5 class="customTitle">{{ pageTitle }}</h5>
             </header>
             <a class="customFloatedButton" [routerLink]="['/sales/cash-flows', { outlets: { edit: ['newCashFlow'] } }]"
-                class="btn btn-primary btn-sm waves-light customButton" mdbRippleRadius 
+                mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius 
                 *ngIf='enableNew'> + Nuevo Movimiento</a>
         </div>
         <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
@@ -89,8 +89,7 @@
                                         class="btn btn-yellow btn-sm customButtonText"
                                         *ngIf='enableDetail'>Detalle</a>
                                     <a (click)="showModalDelete(deleteTemplate, cashFlow._id)"
-                                        class="btn btn-red btn-sm"
-                                        *ngIf='enableDelete'>Eliminar</a>
+                                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
                                 </td>
                             </tr>
                         </tbody>
