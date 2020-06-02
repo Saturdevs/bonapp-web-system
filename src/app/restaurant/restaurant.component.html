@@ -2,7 +2,7 @@
 <ul class="nav classic-tabs tabs-primary customLinksColor">
   <div *ngFor='let appMenu of appMenus'>
     <li *ngIf='appMenu.show' class="nav-item">
-      <a class="waves-effect" [routerLink]="appMenu._id" routerLinkActive="active">
+      <a mdbWavesEffect [class.appMenusLinks]="true" [routerLink]="appMenu._id" routerLinkActive="active">
         {{ 'AppMenus.' + appMenu._id | translate }}
       </a>
     </li>

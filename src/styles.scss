@@ -268,6 +268,10 @@ width: 550px!important;
     height: 2rem;
 }
 
+.badgeTextWhite{
+    color: white!important;
+}
+
 .customDivHeight{
     height: 15rem;
     overflow-y: scroll;
@@ -424,6 +428,11 @@ body{
     border-radius:20px;
 }
 
+.checkbox-primary-custom div input[type=checkbox]:checked+label:before{
+    border-right:2px solid #c24c4c!important;
+    border-bottom:2px solid #c24c4c!important;
+}
+
 .nonStyleList {
   list-style: none;
 }
@@ -434,4 +443,9 @@ body{
 
 .navbar-collapse {
   height: 0px!important;
+}
+
+
+.appMenusLinks{
+    display: inline-flex!important;
 }

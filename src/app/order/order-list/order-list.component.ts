@@ -54,8 +54,8 @@ export class OrderListComponent implements OnInit {
   enableEdit: Boolean;
   enableActionButtons: Boolean;  
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
 
 
   constructor(private orderService: OrderService,

@@ -93,7 +93,7 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-0 pb-3 pr-3 pl-3">
       <div class="row pl-2">
-        <mdb-checkbox formControlName="isGeneral" (change)="clickIsGeneral()">{{ 'Users.isGeneral' | translate }}
+        <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="isGeneral" (change)="clickIsGeneral()">{{ 'Users.isGeneral' | translate }}
         </mdb-checkbox>
       </div>
     </div>

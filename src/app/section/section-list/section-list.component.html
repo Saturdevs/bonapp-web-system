@@ -24,9 +24,9 @@
 </div>
 <div class="col-md-12 col-lg-12 col-sm-12 row stylish-color customLinksColor mr-0 ml-0 pr-0 pl-0">
   <div class="col-md-7 col-lg-7 col-sm-7 mr-0 ml-0 pr-0 pl-0">
-    <ul class="nav classic-tabs stylish-color customLinksColor" *ngIf='sections.length !== 0'>
+    <ul class="nav classic-tabs stylish-color customLinksColor sectionNames" *ngIf='sections.length !== 0'>
       <li *ngFor='let section of sections; let i=index' class="nav-item customFirstLi">
-        <a class="waves-effect" id="{{ 'tab' + i }}" [routerLink]="['tables', section._id]" routerLinkActive="active">
+        <a mdbWavesEffect id="{{ 'tab' + i }}" [routerLink]="['tables', section._id]" routerLinkActive="active">
           {{section.name}}
         </a>
       </li>
@@ -34,9 +34,9 @@
   </div>
   <div class="col-md-4 col-lg-4 col-sm-4 center-pills mr-0 ml-0 pr-4 pl-0">
     <div class="float-right">
-      <span class="badge badge-pill green">{{ statusLibre }}</span>
-      <span class="badge badge-pill red ">{{ statusOcupada }}</span>
-      <span class="badge badge-pill blue">{{ statusReservada }}</span>
+      <span class="badge badge-pill green" [class.badgeTextWhite]="true">{{ statusLibre }}</span>
+      <span class="badge badge-pill red" [class.badgeTextWhite]="true">{{ statusOcupada }}</span>
+      <span class="badge badge-pill blue" [class.badgeTextWhite]="true">{{ statusReservada }}</span>
     </div>
   </div>
 </div>

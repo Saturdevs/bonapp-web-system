@@ -12,7 +12,7 @@
         [(ngModel)]="deletedReason"></textarea>
       </div>
       <div class="row">
-          <mdb-checkbox (change)="returnStock()" name="productOption">Devolver a stock</mdb-checkbox>            
+          <mdb-checkbox [class.checkbox-primary-custom]="true"  (change)="returnStock()" name="productOption">Devolver a stock</mdb-checkbox>            
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
         <div class="row" *ngIf="productToFindSizesAndOptions.options && productToFindSizesAndOptions.options.length > 0">
           <h6 class="selectSizeAndOptionsLabel">Opciones:</h6>
           <div class="md-form form-group mr-2 col-md-6 col-lg-6 text-left" *ngFor="let option of productToFindSizesAndOptions.options; let i = index">
-            <mdb-checkbox (change)="onOptionSelectedChange(option)" value="option" name="productOption"> {{ option.name }}</mdb-checkbox>            
+            <mdb-checkbox [class.checkbox-primary-custom]="true"  (change)="onOptionSelectedChange(option)" value="option" name="productOption"> {{ option.name }}</mdb-checkbox>            
           </div>
         </div>
       </div>

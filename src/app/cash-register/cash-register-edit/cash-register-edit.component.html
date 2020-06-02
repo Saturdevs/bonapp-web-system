@@ -35,13 +35,13 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
-        <mdb-checkbox formControlName="available" (change)="clickAvailable()">{{ checkboxAvailableText }}</mdb-checkbox>
+        <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="available"  (change)="clickAvailable()">{{ checkboxAvailableText }}</mdb-checkbox>
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
-        <mdb-checkbox formControlName="default">{{ checkboxDefaultText }}</mdb-checkbox>
+        <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="default">{{ checkboxDefaultText }}</mdb-checkbox>
       </div>
     </div>
 

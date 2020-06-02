@@ -46,8 +46,8 @@ export class TransactionListComponent implements OnInit, AfterViewInit {
   enableNew: Boolean;
   enableActionButtons: Boolean;
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
 
   constructor(private _transactionService: TransactionService,
     private route: ActivatedRoute,

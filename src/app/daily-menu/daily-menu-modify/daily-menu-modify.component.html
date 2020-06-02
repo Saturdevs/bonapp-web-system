@@ -103,7 +103,7 @@
                         class="align-middle customLongTh">{{ product.name }}</td>
                       <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
                         class="customThTd align-middle">
-                        <mdb-checkbox formControlName="{{'available' + i}}" (change)="clickAvailable(product._id)"></mdb-checkbox>
+                        <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="{{'available' + i}}" (change)="clickAvailable(product._id)"></mdb-checkbox>
                       </td>
                     </tr>
                   </tbody>

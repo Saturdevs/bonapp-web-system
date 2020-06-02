@@ -49,8 +49,8 @@ export class DailyMenuNewComponent implements OnInit, AfterViewInit {
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
 
   @ViewChild('priceNotMatch') priceNotMatchTemplate: TemplateRef<any>;
   filteredProductArray: any;

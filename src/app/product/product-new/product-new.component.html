@@ -86,7 +86,7 @@
             </div>
           </div>
           <div class="col-md-2 col-lg-2">
-            <mdb-checkbox formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
+            <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
           </div>
         </div>
 
@@ -113,7 +113,7 @@
         <div class="row" *ngIf="enableStock">
           <div class="col-md-4 col-lg-4">
             <div class="md-form">
-              <mdb-checkbox formControlName="stockControl"> {{ stockControlText }}</mdb-checkbox>
+              <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="stockControl"> {{ stockControlText }}</mdb-checkbox>
             </div>
           </div>
           <div class="row col-md-8 col-lg-8" [formGroup]="productForm.controls.stock" *ngIf="productForm.get('stockControl').value">

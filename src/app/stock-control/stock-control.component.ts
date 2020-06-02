@@ -16,8 +16,8 @@ export class StockControlComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef) { }
 
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>; 
 
   filteredProducts: Product[] = [];

@@ -47,8 +47,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   enableNew: Boolean;
   enableActionButtons: Boolean;
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
 
   get listFilter(): string {
     return this._listFilter;

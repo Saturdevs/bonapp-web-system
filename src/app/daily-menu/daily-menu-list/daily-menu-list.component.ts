@@ -33,8 +33,8 @@ export class DailyMenuListComponent implements OnInit, AfterViewInit {
   today = new Date();
 
 
-  @ViewChild(MdbTablePaginationComponent) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
 
   get listFilter(): string {
       return this._listFilter;
