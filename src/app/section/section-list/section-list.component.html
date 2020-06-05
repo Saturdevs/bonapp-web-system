@@ -1,5 +1,5 @@
 <ng-template #askPinTemplate>
-  <app-pin-authenticate (close)="closeModal()"></app-pin-authenticate>
+  <app-pin-authenticate [tableNumber]="tableNumber" (close)="closeModal()"></app-pin-authenticate>
 </ng-template>
 
 <ng-template #errorTemplate>

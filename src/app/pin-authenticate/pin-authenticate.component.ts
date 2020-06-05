@@ -60,7 +60,10 @@ export class PinAuthenticateComponent implements OnInit, AfterViewInit {
           this.closeModal();
           this._tableService.getTableByNumber(this.tableNumber).subscribe(
             table => {
-              this.selectedTable = table;
+              this.selectedTable = table;              
+              //Si no volvemos a setear el tableNumber rompe, no se porque. Si hacemos un console.log antes de esta
+              //linea el tableNumber es null.
+              this.tableNumber = table.number;
               this._orderService.getOrderOpenByTable(this.tableNumber).subscribe(
                 order => {
                   if (isNullOrUndefined(order) && this.selectedTable.status === TableStatus.LIBRE) {
