@@ -194,13 +194,14 @@ overflow: auto; overflow-x: hidden;">
             <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
           </div>
           <div class="md-form col-9">
-            <input type="text" class="completer-input form-control mdb-autocomplete"
-                   [(ngModel)]="searchStr"
-                   (input)="getFilteredData()" (ngModelChange)="onChange()"
+            <input type="text" 
+                   class="completer-input form-control mdb-autocomplete"
+                   [ngModel]="searchStr | async"
+                   (ngModelChange)="searchStr.next($event)"
                    [mdbAutoCompleter]="auto"
                    placeholder="Buscar Producto">
             <mdb-auto-completer #auto="mdbAutoCompleter" textNoResults="No se encontraron resultados" (select)="addProductToPreOrderFromList()">
-              <mdb-option *ngFor="let option of results" [value]="option.name">
+              <mdb-option *ngFor="let option of results | async" [value]="option.name">
                 {{option.name}}
               </mdb-option>
             </mdb-auto-completer>

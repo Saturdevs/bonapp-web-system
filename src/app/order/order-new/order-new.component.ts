@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
  import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
-import { Subject, of } from 'rxjs';
+import { Subject, of, Observable } from 'rxjs';
 
  import { ModalDirective, MdbAutoCompleterComponent, ToastService } from 'ng-uikit-pro-standard';
 import {
@@ -33,6 +33,7 @@ import { OrderCloseComponent } from '../order-close/order-close.component';
 import { ErrorTemplateComponent } from '../../../shared/components/error-template/error-template.component';
 import { DailyMenu } from '../../../shared/models/dailyMenu';
 import { DailyMenuService } from '../../../shared/services/daily-menu.service';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-order-new',
@@ -98,7 +99,7 @@ export class OrderNewComponent implements OnInit {
   /**Booleano que indica si el pedido tiene algun descuento. */
   thereIsDiscount: Boolean;
   /**String de búsqueda mdb-completer. */
-  searchStr: string;
+  searchStr = new Subject();
   /**Producto a eliminar del array de productos del pedido. */
   productToRemoveFromOrder: ProductsInUserOrder;
   /**Producto para mostrar las opciones y los tamanos. */
@@ -119,7 +120,7 @@ export class OrderNewComponent implements OnInit {
   };
   /**Variable para controlar si se devuelve el stock de un producto al eliminarlo de una orden */
   returnStockValue: Boolean = false;
-  results: Product[];
+  results: Observable<any>;
   searchText = new Subject();
   /** Variables para setear la clase de los menues dinamicamente segun el que esta seleccionado*/
   private activeMenu: string = '';
@@ -144,6 +145,8 @@ export class OrderNewComponent implements OnInit {
   private newOrderIsCreated: boolean;
   private tableToSlice: Table;
   private client: Client;
+  private productsToFilter = [];
+
 
 
   ngOnInit() {
@@ -156,7 +159,8 @@ export class OrderNewComponent implements OnInit {
 
     this.order = this._route.snapshot.data['order'];
     this.products = [];
-    this.filteredProducts = this.products;
+    this.productsToFilter = this._route.snapshot.data['products'];
+    this.filteredProducts = this.productsToFilter;
     this.menus = this._route.snapshot.data['menus'];
     this.dailyMenus = this._route.snapshot.data['dailyMenus'];
     this.categories = [];
@@ -165,6 +169,7 @@ export class OrderNewComponent implements OnInit {
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.getProducts();
+    this.getFilteredData();
     if(!isNullOrUndefined(this.order.users[0].clientId)){
       this.getClient(this.order.users[0].clientId);
     }
@@ -180,9 +185,12 @@ export class OrderNewComponent implements OnInit {
     this.enableCloseOrder = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.CLOSE_ORDER);
   }
 
-  filter(value: string): Product[] {
+  filter(value: string): Product[] | undefined {
+    // this.filteredProducts = this.products;
     const filterValue = value.toLowerCase();
-    return this.filteredProducts.filter((item: Product) => item.name.toLowerCase().includes(filterValue));
+    if(this.filteredProducts){
+      return this.filteredProducts.filter((item: Product) => item.name.toLowerCase().includes(filterValue));
+    }
   }
 
   /**Devuelve las categorías para el menu pasado como parámetro almacenadas en el sistema
@@ -810,19 +818,23 @@ export class OrderNewComponent implements OnInit {
 
 
   /**Metodo para filtrar los productos para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
-  searchEntries(term: string) {
+  searchEntries(term: any) {
     return this.allProducts.filter((data: Product) => data.name.toLowerCase().includes(term.toLowerCase()));
   }
 
   /** Retorna los produtctos filtrados para la nueva version del MDB COMPLETER - Nacho - 19/10/19 */
   getFilteredData() {
-    this.results = this.searchEntries(this.searchStr);
+    this.results = this.searchStr.pipe(
+      startWith(''),
+      map((value: string) => this.filter(value))
+    );
+    // this.searchEntries(this.searchStr);
   }
 
-  /** Ejecuta la busqueda cada vez que cambia el ngModel del MDB COMPLETER - Nacho - 19/10/19 */
-  onChange() {
-    this.getFilteredData();
-  }
+  // /** Ejecuta la busqueda cada vez que cambia el ngModel del MDB COMPLETER - Nacho - 19/10/19 */
+  // onChange() {
+  //   this.getFilteredData();
+  // }
 
   /** Arma los combos de sizes y options y muestra la modal */
   showOptionsAndSizes(product: Product): void {

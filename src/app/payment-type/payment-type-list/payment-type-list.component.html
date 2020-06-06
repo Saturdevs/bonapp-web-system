@@ -56,11 +56,11 @@
                             <td>{{ paymentType.name }}</td>
                             <td>{{ paymentType.availableDescription }}</td>
                             <td class="align-middle" *ngIf='enableActionButtons'>
-                                <a [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['editPaymentType', paymentType._id] } }]"
-                                    *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                                <a [disabled]="paymentType.default === true" 
+                                <input [class.buttonEdit]='true' type="image" [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['editPaymentType', paymentType._id] } }]"
+                                    *ngIf='enableEdit' src="assets/img/editar.png">
+                                <input [class.buttonEdit]='true' type="image" [disabled]="paymentType.default === true" 
                                     (click)="showModalDelete(deleteTemplate, paymentType._id)"
-                                    *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                                    *ngIf='enableDelete' src="assets/img/eliminar.png" >
                             </td>
                         </tr>
                     </tbody>

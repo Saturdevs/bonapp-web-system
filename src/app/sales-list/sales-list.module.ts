@@ -26,6 +26,7 @@ import { OrderResolverService } from '../order/order-list/order-resolver.service
 import { OrderDetailService } from '../order/order-detail/order-detail.service';
 import { TableAllResolverService } from '../table/table-list/table-all-resolver.service';
 import { AuthGuard } from '../../shared';
+import { ProductResolverService } from '../product/product-list/product-resolver.service';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { AuthGuard } from '../../shared';
               orders: OrderResolverService,
               cashRegisters: CashRegisterAvailablesResolverService,
               paymentTypes: PaymentTypeAvailableResolverService,
-              tables: TableAllResolverService
+              tables: TableAllResolverService,
+              products: ProductResolverService
             },
             children: [
               {

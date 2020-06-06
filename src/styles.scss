@@ -413,6 +413,19 @@ button.btn-primary:disabled {
     height: 82vh;
 }
 
+.buttonEdit{
+            width: auto; 
+            height: 40px; 
+}
+
+.imgEdit{
+    background-image: url(assets/img/editar.png); 
+    background-repeat: no-repeat; 
+    background-position: 50% 50%;
+    height:40px; width:auto;
+    border: none;
+}
+
 .formNewEditSettings {
     height: 78vh;
 }

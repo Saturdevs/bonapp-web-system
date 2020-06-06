@@ -47,11 +47,11 @@
                           <td>{{ userRole.name }}</td>
                           <td>{{ userRole.users }}</td>
                           <td class="align-middle" *ngIf='enableActionButtons'>
-                              <a [routerLink]="['/settings/general-settings/roles-users', { outlets: { edit: ['editUserRole', userRole._id] } }]"
-                                  *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                              <a [disabled]="userRole.delete === false" type="button"
+                              <input [class.buttonEdit]='true' type="image" [routerLink]="['/settings/general-settings/roles-users', { outlets: { edit: ['editUserRole', userRole._id] } }]"
+                                  *ngIf='enableEdit' src="assets/img/editar.png" >
+                              <input [class.buttonEdit]='true' type="image" [disabled]="userRole.delete === false" 
                                   (click)="showModalDelete(deleteTemplate, userRole._id)"
-                                  *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                                  *ngIf='enableDelete' src="assets/img/eliminar.png" >
                           </td>
                       </tr>
                   </tbody>
