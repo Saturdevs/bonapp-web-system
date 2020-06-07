@@ -8,7 +8,6 @@ import { ApiService } from '../shared/services/api.service';
 import { ErrorTemplateComponent } from '../shared/components/error-template/error-template.component';
 import { DeleteTemplateComponent } from '../shared/components/delete-template/delete-template.component';
 import { CancelTemplateComponent } from './components/cancel-template/cancel-template.component';
-import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
 import { OrderListSearchPipe } from './pipes/order-list-search.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -23,8 +22,7 @@ import { TranslateModule } from '@ngx-translate/core';
   declarations: [
     ErrorTemplateComponent,
     DeleteTemplateComponent,
-    CancelTemplateComponent,
-    OrderPreComponent,
+    CancelTemplateComponent
   ],
   providers: [ 
     ApiService,
@@ -39,7 +37,6 @@ import { TranslateModule } from '@ngx-translate/core';
     ErrorTemplateComponent,
     DeleteTemplateComponent,
     CancelTemplateComponent,
-    OrderPreComponent,
     TranslateModule
   ],
   entryComponents: [
