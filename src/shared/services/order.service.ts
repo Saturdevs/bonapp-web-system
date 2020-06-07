@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiService } from './api.service';
 import { Order, UsersInOrder, ProductsInUserOrder } from '../models';
-import { OrderStatus } from '../enums';
+import { OrderStatus, Constants } from '../enums';
 
 @Injectable()
 export class OrderService {
@@ -41,7 +41,7 @@ export class OrderService {
     order.status = OrderStatus.OPEN;
     order.users = new Array<UsersInOrder>();
     order.users[0] = new UsersInOrder();
-    order.users[0].username = "bonapp-web";
+    order.users[0].username = Constants.BONAPP_WEB_USER;
     order.users[0].owner = true;
     order.users[0].products = new Array<ProductsInUserOrder>();
     order.users[0].products = [];

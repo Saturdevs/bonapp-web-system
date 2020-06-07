@@ -16,7 +16,6 @@ import {
   Order,
   CashRegister,
   PaymentType,
-  UserRoles,
   AuthenticationService,
   User,
   Rights,
@@ -26,7 +25,10 @@ import {
   Table,
   TableStatus,
   ClientService,
-  Client
+  Client,
+  Constants,
+  Params,
+  ParamService
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -58,7 +60,8 @@ export class OrderNewComponent implements OnInit {
     private _authenticationService: AuthenticationService,
     private tableService: TableService,
     private toast: ToastService,
-    private clientService: ClientService) { }
+    private clientService: ClientService,
+    private _paramService: ParamService) { }
 
   pageTitle: String = 'Nuevo Pedido';
   noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
@@ -144,7 +147,10 @@ export class OrderNewComponent implements OnInit {
   private newOrderIsCreated: boolean;
   private tableToSlice: Table;
   private client: Client;
-
+  private users: User[] = [];
+  public waiterSelect: Array<any> = [];
+  public waiterSelected: any;
+  public waiterRequired:Boolean = false;
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
@@ -154,19 +160,37 @@ export class OrderNewComponent implements OnInit {
       }
     );
 
+    //get resolvers data
     this.order = this._route.snapshot.data['order'];
-    this.products = [];
-    this.filteredProducts = this.products;
     this.menus = this._route.snapshot.data['menus'];
     this.dailyMenus = this._route.snapshot.data['dailyMenus'];
-    this.categories = [];
     this.cashRegisters = this._route.snapshot.data['cashRegisters'];
     this.paymentTypes = this._route.snapshot.data['paymentTypes'];
+    this.users = this._route.snapshot.data['users'];
+
+    this.products = [];
+    this.filteredProducts = this.products;    
+    this.categories = [];    
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.getProducts();
     if(!isNullOrUndefined(this.order.users[0].clientId)){
       this.getClient(this.order.users[0].clientId);
+    }
+
+    this.setWaiterSelect();
+  }
+
+  setWaiterSelect(): void {
+    this.waiterSelect.push({ value: 'default', label: 'Seleccione Mozo...' });
+    for (let user of this.users) {
+      this.waiterSelect.push({ value: user._id, label: user.lastname + ' ' + user.name, selected: false });
+    };    
+
+    if (this.currentUser.isGeneral && !this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {      
+      this.waiterSelected = 'default';
+    } else {
+      this.waiterSelected = this.orderService.employeeWhoAddedId;
     }
   }
 
@@ -222,6 +246,7 @@ export class OrderNewComponent implements OnInit {
   updateProductsOrder(data: any): void {
     this.orderService.updateProductsOrder(data).subscribe(
       orderReturned => {
+        this.waiterRequired = false;
         this.order = orderReturned;
         this.totalToConfirm = 0;
         this.preOrderProducts = [];
@@ -517,7 +542,7 @@ export class OrderNewComponent implements OnInit {
   }
 
   deleteProductOrder(product: ProductsInUserOrder): void {
-    let data = { productToRemove: product, order: this.order, username: UserRoles.ADMIN };
+    let data = { productToRemove: product, order: this.order, username: Constants.BONAPP_WEB_USER };
     this.orderService.deleteProductOrder(data).subscribe(
       orderReturned => {
         this.order = orderReturned;
@@ -581,14 +606,21 @@ export class OrderNewComponent implements OnInit {
 
   /**Confirmar pre order */
   confirmPreOrder(): void {
-    if (!isNullOrUndefined(this.preOrderProducts) && this.preOrderProducts.length > 0) {
-      this.preOrderProducts.forEach(productInPreOrder => {
-        if (productInPreOrder.observations === this.prodObservation || productInPreOrder.observations === '') {
-          productInPreOrder.observations = null;
-        }
-      })
-      let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: UserRoles.ADMIN, order: this.order };
-      this.updateProductsOrder(data);
+    if (this.waiterSelected !== 'default') {
+      if (!isNullOrUndefined(this.preOrderProducts) && this.preOrderProducts.length > 0) {
+        this.preOrderProducts.forEach(productInPreOrder => {
+          if (productInPreOrder.observations === this.prodObservation || productInPreOrder.observations === '') {
+            productInPreOrder.observations = null;
+          }
+
+          productInPreOrder.employeeWhoAdded = this.orderService.employeeWhoAddedId;
+          productInPreOrder.employee = this.waiterSelected;
+        })
+        let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: Constants.BONAPP_WEB_USER, order: this.order };
+        this.updateProductsOrder(data);
+      }
+    } else {
+      this.waiterRequired = true;
     }
   }
 
@@ -748,7 +780,7 @@ export class OrderNewComponent implements OnInit {
           order.users = new Array<UsersInOrder>();
           order.users[0] = new UsersInOrder();
           //aca hay que setear el id del usuario admin. todavia no esta creado.
-          order.users[0].username = "admin";
+          order.users[0].username = Constants.BONAPP_WEB_USER;
           order.users[0].owner = true;
           order.users[0].products = new Array<ProductsInUserOrder>();
           order.users[0].products = [];
@@ -761,7 +793,7 @@ export class OrderNewComponent implements OnInit {
                 products.forEach(product => {
                   totalToConfirm += product.price;
                 });
-                let data = { products: products, total: totalToConfirm, username: UserRoles.ADMIN, order: newCreatedOrder };
+                let data = { products: products, total: totalToConfirm, username: Constants.BONAPP_WEB_USER, order: newCreatedOrder };
                 this.updateProductsOrder(data)
                 let productToDelete = new ProductsInUserOrder();
                 this.productsToSlice.forEach(product => {
@@ -876,5 +908,9 @@ export class OrderNewComponent implements OnInit {
     this.selectedOptions = [];
     this.modalRef.hide();
     this.modalRef = null;
+  }
+
+  selectWaiter(value) {
+    this.waiterSelected = value;
   }
 }
