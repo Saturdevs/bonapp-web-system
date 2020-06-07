@@ -57,11 +57,11 @@
                             <td>{{ cashRegister.name }}</td>
                             <td>{{ cashRegister.availableDescription }}</td>
                             <td class="align-middle" *ngIf='enableActionButtons'>
-                                <a [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
-                                    *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                                <a [disabled]="cashRegister.default === true" 
+                                <input [class.buttonEdit]="true" type="image" src="assets/img/editar.png" [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
+                                    *ngIf='enableEdit'>
+                                <input type="image" [disabled]="cashRegister.default === true" 
                                     (click)="showModalDelete(deleteTemplate, cashRegister._id)"
-                                    *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                                    *ngIf='enableDelete' src="assets/img/eliminar.png" [class.buttonEdit]="true">
                             </td>
                         </tr>
                     </tbody>
