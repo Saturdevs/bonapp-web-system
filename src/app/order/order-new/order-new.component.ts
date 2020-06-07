@@ -194,7 +194,7 @@ export class OrderNewComponent implements OnInit {
     if (this.currentUser.isGeneral && !this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {      
       this.waiterSelected = 'default';
     } else {
-      this.waiterSelected = this.orderService.employeeWhoAddedId;
+      this.waiterSelected = this.orderService.getEmployeeWhoAddedId();
     }
   }
 
@@ -620,7 +620,7 @@ export class OrderNewComponent implements OnInit {
             productInPreOrder.observations = null;
           }
 
-          productInPreOrder.employeeWhoAdded = this.orderService.employeeWhoAddedId;
+          productInPreOrder.employeeWhoAdded = this.orderService.getEmployeeWhoAddedId();
           productInPreOrder.employee = this.waiterSelected;
         })
         let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: Constants.BONAPP_WEB_USER, order: this.order };

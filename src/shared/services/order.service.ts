@@ -11,27 +11,16 @@ import { OrderStatus, Constants } from '../enums';
 @Injectable()
 export class OrderService {
 
-  private _employeeWhoAddedId: string;
-  private _employeeId: string;
-
   constructor(
     private apiService: ApiService
   ) { }
   
-  public get employeeWhoAddedId(): string {
-    return this._employeeWhoAddedId;
+  public getEmployeeWhoAddedId(): string {
+    return localStorage.getItem('employeeWhoAddedId');
   }
 
-  public set employeeWhoAddedId(value: string) {
-    this._employeeWhoAddedId = value;
-  }
-
-  public get employeeId(): string {
-    return this._employeeId;
-  }
-
-  public set employeeId(value: string) {
-    this._employeeId = value;
+  public setEmployeeWhoAddedId(value: string) {
+    localStorage.setItem('employeeWhoAddedId', value);
   }
 
   public createOrder(tableNumber: number, orderType: string): Order {
