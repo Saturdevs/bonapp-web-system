@@ -1,0 +1,38 @@
+h2{
+font-size:20px;
+padding:20px;
+color:#999;
+}
+
+.customImage{
+height:auto;	
+width:30%;
+}
+
+form{
+margin:50px;
+}
+
+ul li{
+list-style:none;
+display:inline-block;
+margin:10px;
+}
+
+ul li input.special{
+background-color:#718239;
+border-radius:30px;
+border-color:transparent;
+padding:10px;
+color:#fff;
+}
+
+
+ul li input.cancel{
+background-color:transparent;
+border:2px solid;
+border-radius:30px;
+border-color:#bd290c;
+padding:10px;
+color:#bd290c;
+}

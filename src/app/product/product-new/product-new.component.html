@@ -187,7 +187,7 @@
               </div>
             </div>
           </div>
-          <button class="col-md-1" no-margin color="danger" (click)="removeSize(i)">-</button>
+          <button class="botonx" no-margin color="danger" (click)="removeSize(i)">-</button>
         </div>
         <br>
         <button class="special small" (click)="addProductSize()" [disabled]="!sizes.valid">
@@ -224,16 +224,16 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-md btn-danger" (click)="removeOption(i)">-</button>
+          <button class="botonx" (click)="removeOption(i)">-</button>
         </div>
         <br>
-        <button class="btn btn-md btn-success" (click)="addProductOption()">
+        <button class="special small" (click)="addProductOption()">
           Agregar Opción
         </button>
       </div>
     </div>
     <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
-      <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
+      <button id="cancel" mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
       <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="productForm.invalid || (productForm.get('stockControl').value && productForm.controls.stock.controls.min.value == 0) || (productForm.get('stockControl').value && productForm.controls.stock.controls.current.value == 0)" type="submit"
         (click)="validateSizes()">Guardar</button>
     </div>

@@ -17,11 +17,12 @@
 
 <!-- Form -->
 <div *ngIf='product'>
-  <header class="major" align="center">
+ <header class="major" align="center">
     <h2>Editando: {{productNameModified}}</h2>
   </header>
 
   <div>
+   
     <form method="post" novalidate [formGroup]="productForm">
       <div class="row">
         <div class="col-md-6">
@@ -145,7 +146,8 @@
         </div>
       </div>
 
-      <div class="row">
+      <div id="tamaños" class="row">
+	  <div class="recuadro">
         <div class="col-md-6">
 
           <label>Tamaños:</label>
@@ -185,7 +187,9 @@
                 </div>
               </div>
             </div>
-            <button class="col-md-1" no-margin color="danger" (click)="removeSize(i)">X</button>
+				
+					<button class="botonx" no-margin color="danger" (click)="removeSize(i)">X</button>
+				
           </div>
           <br>
           <button class="special small" (click)="addProductSize()" [disabled]="!sizes.valid">
@@ -193,7 +197,9 @@
           </button>
 
         </div>
+		</div>
 
+		<div class="recuadro">
         <div class="col-md-6">
 
           <label>Opciones:</label>
@@ -224,7 +230,7 @@
                 </div>
               </div>
             </div>
-            <button class="col-md-1" no-margin color="danger" (click)="removeOption(i)">-</button>
+            <button class="botonx" no-margin color="danger" (click)="removeOption(i)">-</button>
           </div>
           <br>
           <button class="special small" (click)="addProductOption()" [disabled]="!options.valid">
@@ -232,6 +238,7 @@
           </button>
 
         </div>
+		</div>
 
       </div>
       <br>
@@ -239,9 +246,10 @@
       <div class="row">
         <div class="12u$">
           <ul class="actions" align="right">
-            <li><input [disabled]="productForm.invalid" type="submit" value="Aceptar" class="special"
+            
+			<li><input [disabled]="productForm.invalid" type="submit" value="Aceptar" class="verde"
                 (click)="updateProduct()" /></li>
-            <li><input (click)="showModalCancel(cancelTemplate)" type="button" value="Cancel" /></li>
+            <li><input (click)="showModalCancel(cancelTemplate)" type="button" class="botoncancel" value="Cancel" /></li>
           </ul>
         </div>
       </div>

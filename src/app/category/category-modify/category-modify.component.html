@@ -23,7 +23,7 @@
 
   <div class="posts">
     <article>
-      <a href="#" class="image "><img class="customImage" [src]="categoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
+      <a href="#" class="customImage"><img class="customImage" [src]="categoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
     </article>
     <article>
 
@@ -74,7 +74,7 @@
           <ul class="actions" align="center">
             <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special" 
                 (click)="updateCategory(category)" /></li>
-            <li><input (click)="showModalCancel(cancelTemplate, cancelMessage, cancelTitle)" type="button" value="Cancel" /></li>
+            <li><input (click)="showModalCancel(cancelTemplate, cancelMessage, cancelTitle)" type="button" class="cancel" value="Cancel" /></li>
           </ul>
         </div>
       </form>
