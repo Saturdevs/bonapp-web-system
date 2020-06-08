@@ -177,7 +177,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   }
 
   openExistingOrder(tableNumber: number) {
-    this._orderService.employeeWhoAddedId = this.currentUser._id;
+    this._orderService.setEmployeeWhoAddedId(this.currentUser._id);
     this._router.navigate(['./orders/orderNew', tableNumber]);
   }
 
