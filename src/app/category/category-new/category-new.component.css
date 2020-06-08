@@ -21,19 +21,33 @@ padding:10px;
 }
 
 input{
-border-radius:20px;
+border-radius:30px;
 padding:5px;
 background-color:transparent;
 }
 
 .boton-cancelar{
-border:solid 2px #e43012;
-background-color:#fff;
-color:#e43012;
-border-radius:20px;
+border-color:#bd290c;
+background-color:transparent;
+color:#bd290c;
+border:2px solid;
+border-radius:30px;
 }
 
 .select-wrapper{
 border-radius:20px !important;
+}
+
+input.special{
+border-color:transparent;	
+background-color:#718239;
+color:#fff;
+padding:10px;
+}
+
+#botoncancel{
+border-color:transparent;
+color:#bd290c;
+padding:10px;
 }
 	

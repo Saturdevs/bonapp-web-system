@@ -16,7 +16,8 @@ import { isNullOrUndefined } from 'util';
 import { CONFLICT } from 'http-status-codes';
 
 @Component({
-  templateUrl: './menu-modify.component.html'
+  templateUrl: './menu-modify.component.html',
+  styleUrls: ['./menu-modify.component.css']
 })
 
 export class MenuModifyComponent implements OnInit {

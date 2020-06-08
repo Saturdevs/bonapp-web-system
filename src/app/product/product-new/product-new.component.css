@@ -1,0 +1,28 @@
+button.special.small{
+background-color:#718239;
+color:#fff;
+border-radius:30px;
+padding:5px;
+margin-bottom:10px;
+border-color:transparent;
+}
+
+.botonx{
+background-color:transparent;
+color:#bd290c;
+border-radius:30px;
+padding:10px;
+border:2px solid;
+margin-bottom:10px;
+border-color:#bd290c;
+}
+
+#cancel{
+background-color:transparent;
+color:#bd290c;
+border-radius:30px;
+padding:10px;
+margin-bottom:10px;
+border-color:#bd290c;
+border:2px solid;
+}
