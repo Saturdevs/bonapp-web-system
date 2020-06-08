@@ -216,6 +216,14 @@ overflow: auto; overflow-x: hidden;">
         </div>
       </div>
     </div>
+    <div class="row">
+      <span class="mt-2">Usuario:</span>
+      <div class="col-md-4 col-lg-4 col-sm-4 ml-1">
+        <mdb-select #user name="user" id="user" [options]="userSelect" [(ngModel)]="userSelected"
+          (selected)="selectUser(user.value)" placeholder="Seleccionar Usuario"
+          class="colorful-select dropdown-primary"></mdb-select>
+      </div>
+    </div>
     <div class="row" *ngIf='enableAddProducts'>
       <div class="col-lg-12 col-md-12 col-sm-12 customAddProductsTitle"><span
           class="align-middle">{{ 'Adicionar' | uppercase }}</span></div>
@@ -236,13 +244,10 @@ overflow: auto; overflow-x: hidden;">
             <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
           </div>
           <div class="md-form col-9">
-            <input type="text" 
-                   class="completer-input form-control mdb-autocomplete"
-                   [ngModel]="searchStr | async"
-                   (ngModelChange)="searchStr.next($event)"
-                   [mdbAutoCompleter]="auto"
-                   placeholder="Buscar Producto">
-            <mdb-auto-completer #auto="mdbAutoCompleter" textNoResults="No se encontraron resultados" (select)="addProductToPreOrderFromList()">
+            <input type="text" class="completer-input form-control mdb-autocomplete" [ngModel]="searchStr | async"
+              (ngModelChange)="searchStr.next($event)" [mdbAutoCompleter]="auto" placeholder="Buscar Producto">
+            <mdb-auto-completer #auto="mdbAutoCompleter" textNoResults="No se encontraron resultados"
+              (select)="addProductToPreOrderFromList()">
               <mdb-option *ngFor="let option of results | async" [value]="option.name">
                 {{option.name}}
               </mdb-option>
@@ -295,43 +300,53 @@ overflow: auto; overflow-x: hidden;">
         </div>
       </div>
       <div class="col-md-12 col-lg-12 col-sm-12 pt-2 pb-2 pl-1 totalToConfirm"><span>Total a confirmar:
-          ${{ totalToConfirm }}</span></div>
+          ${{ totalToConfirm }}</span>
+      </div>
       <div class="col-md-12 col-lg-12 col-sm-12 p-0 m-0 infoSection">
-        <div class="float-left col-md-5 col-lg-5 col-sm-5 offset-md-7 pl-0">
+        <div class="warningMsg ml-1">
+          <span *ngIf="userSelected === 'default'">Debe seleccionar un usuario.</span>
+          <span *ngIf="userSelected !== 'default'">Va a adicionar productos para el usuario
+            <i><u>{{ userSelected }}</u></i>.</span>
+        </div>
+        <div class="float-left col-md-6 col-lg-6 col-sm-6 offset-md-6 pl-0">
           <button type="button" class="float-left btn btn-sm customButtonCancel waves-light ml-4 mr-0" mdbRippleRadius
             (click)="cancelPreOrder()">Cancelar</button>
           <button type="button" mdbBtn rounded="true" [class.btn-primary-custom]="true" mdbWavesEffect size="sm"
-            class="float-right" mdbRippleRadius (click)="confirmPreOrder()">Confirmar</button>
+            class="float-right" mdbRippleRadius (click)="confirmPreOrder()"
+            [disabled]="userSelected === 'default'">Confirmar</button>
         </div>
       </div>
     </div>
     <!-- Listado de productos en order -->
-    <div class="row mt-0 productsInOrder" *ngIf='order.users[0].products && order.users[0].products.length'>
-      <div class="col-lg-12 col-md-12 col-sm-12 productLine" *ngFor="let product of order.users[0].products">
-        <div class="row mb-0">
-          <div class="col-2 p-0 pl-3">
-            <span>{{ product.quantity }}</span>
+    <div class="row mt-0 productsInOrder">
+      <div class="col-lg-12 col-md-12 col-sm-12 productLine" *ngFor="let user of usersInOrder">
+        <label *ngIf="userSelected === 'default'">Usuario: {{ user.username }}</label>
+        <div *ngFor="let product of user.products">
+          <div class="row mb-0">
+            <div class="col-2 p-0 pl-3">
+              <span>{{ product.quantity }}</span>
+            </div>
+            <div class="col-6 p-0">
+              <span>{{ product.name }}</span>
+            </div>
+            <div class="pl-4 pr-1 pb-2">
+              <span>$ {{ product.price }} </span>
+            </div>
+            <div class="col-2 p-0" *ngIf='enableDeleteProducts'>
+              <button type="button" [disabled]="product.deleted === true" mdbBtn rounded="true"
+                [class.btn-primary-custom]="true" [class.buttonOrder]="true" mdbWavesEffect
+                class="z-depth-0 btn-tb float-left mt-0" (click)="showModalRemoveProduct(deleteTemplate, product, user)">
+                <i class="fa fa-times fa-1x"></i>
+              </button>
+            </div>
           </div>
-          <div class="col-6 p-0">
-            <span>{{ product.name }}</span>
-          </div>
-          <div class="pl-4 pr-1 pb-2">
-            <span>$ {{ product.price }} </span>
-          </div>
-          <div class="col-2 p-0" *ngIf='enableDeleteProducts'>
-            <button type="button" [disabled]="product.deleted === true" mdbBtn rounded="true"
-              [class.btn-primary-custom]="true" [class.buttonOrder]="true" mdbWavesEffect
-              class="z-depth-0 btn-tb float-left mt-0" (click)="showModalRemoveProduct(deleteTemplate, product)">
-              <i class="fa fa-times fa-1x"></i>
-            </button>
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div *ngIf="product.observations !== undefined && product.observations !== ''">
-            <span>{{ product.observations }}</span>
-          </div>
-          <div class="pl-4" *ngIf="product.deleted === true">
-            <span>- CANCELADO: {{ product.deletedReason }}</span>
+          <div class="row mb-2">
+            <div *ngIf="product.observations !== undefined && product.observations !== ''">
+              <span>{{ product.observations }}</span>
+            </div>
+            <div class="pl-4" *ngIf="product.deleted === true">
+              <span>- CANCELADO: {{ product.deletedReason }}</span>
+            </div>
           </div>
         </div>
       </div>

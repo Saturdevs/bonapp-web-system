@@ -105,6 +105,8 @@ export class OrderNewComponent implements OnInit {
   searchStr = new Subject();
   /**Producto a eliminar del array de productos del pedido. */
   productToRemoveFromOrder: ProductsInUserOrder;
+  /** Nombre de usuario del usuario para el que se quiere eliminar un producto del pedido */
+  usernameProductToRemove: String;
   /**Producto para mostrar las opciones y los tamanos. */
   productToFindSizesAndOptions: Product;
   /**Motivo para eliminar el producto del pedido. */
@@ -112,7 +114,7 @@ export class OrderNewComponent implements OnInit {
   /**Cantidad del producto seleccionado por la lista. */
   qtyProd: number = 1;
   /**Productos ya almacenados en el pedido */
-  productsInOrder: Array<ProductsInUserOrder> = [];
+  usersInOrder: Array<UsersInOrder> = [];
   /**Cajas registradoras registradas en la bd*/
   cashRegisters: Array<CashRegister> = [];
   /**Tipos de pago registrados en la bd*/
@@ -153,6 +155,8 @@ export class OrderNewComponent implements OnInit {
   public waiterSelected: any;
   public waiterRequired:Boolean = false;
   private productsToFilter = [];
+  public userSelect: Array<any> = [];
+  public userSelected: any = null;
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
@@ -183,6 +187,8 @@ export class OrderNewComponent implements OnInit {
     }
 
     this.setWaiterSelect();
+    this.setUserSelect();
+    this.setProductsInOrder();
   }
 
   setWaiterSelect(): void {
@@ -195,6 +201,42 @@ export class OrderNewComponent implements OnInit {
       this.waiterSelected = 'default';
     } else {
       this.waiterSelected = this.orderService.getEmployeeWhoAddedId();
+    }
+  }
+
+  setUserSelect(): void {
+    if (this.order.users.length > 1) {
+      this.order.users.sort((a, b) => a.username.localeCompare(b.username));
+      this.userSelect.push({ value: Constants.DEFAULT, label: 'Todos', selected: true });
+      this.userSelected = Constants.DEFAULT;
+    }
+    const bonappUserIndex = this.order.users.findIndex(usr => usr.username === Constants.BONAPP_WEB_USER);
+    if (bonappUserIndex !== -1) {
+      const bonappUser = this.order.users[bonappUserIndex];
+      if (this.userSelected === null) {
+        this.userSelected = bonappUser.username;
+      }
+    }
+    for (let user of this.order.users) {
+      this.userSelect.push({ value: user.username, label: user.username, selected: false });
+    }
+
+    if (this.userSelected === null) {
+      this.userSelected = this.order.users[0].username;
+    }    
+  }
+
+  setProductsInOrder(): void {
+    this.usersInOrder = [];
+    if (this.userSelected === Constants.DEFAULT) {
+      for (let user of this.order.users) {
+        this.usersInOrder.push(user);
+      }
+    } else {      
+      const user = this.order.users.find(usr => usr.username === this.userSelected);
+      if (!isNullOrUndefined(user)) {
+        this.usersInOrder.push(user);
+      }
     }
   }
 
@@ -257,6 +299,7 @@ export class OrderNewComponent implements OnInit {
         this.order = orderReturned;
         this.totalToConfirm = 0;
         this.preOrderProducts = [];
+        this.setProductsInOrder();
       },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -477,11 +520,13 @@ export class OrderNewComponent implements OnInit {
       product.options = null;
     }
 
-    if (isNullOrUndefined(prodInPreOrder.size)) {
+    if (isNullOrUndefined(prodInPreOrder.size) ||
+        (Object.keys(prodInPreOrder.size).length === 0 && prodInPreOrder.size.constructor === Object)) {
       prodInPreOrder.size = null;
     }
 
-    if (isNullOrUndefined(product.size)) {
+    if (isNullOrUndefined(product.size) || 
+        (Object.keys(product.size).length === 0 && product.size.constructor === Object)) {
       product.size = null;
     }
 
@@ -549,10 +594,11 @@ export class OrderNewComponent implements OnInit {
   }
 
   deleteProductOrder(product: ProductsInUserOrder): void {
-    let data = { productToRemove: product, order: this.order, username: Constants.BONAPP_WEB_USER };
+    let data = { productToRemove: product, order: this.order, username: this.usernameProductToRemove };
     this.orderService.deleteProductOrder(data).subscribe(
       orderReturned => {
         this.order = orderReturned;
+        this.setProductsInOrder();
         if (isNullOrUndefined(product.dailyMenuId)) {
           if (this.products.find(x => x._id === product.product).stockControl) {
             let productToUpdateStock = this.products.find(x => x._id === product.product);
@@ -578,7 +624,7 @@ export class OrderNewComponent implements OnInit {
                 }
               });
           });
-        }
+        }        
       },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -623,7 +669,7 @@ export class OrderNewComponent implements OnInit {
           productInPreOrder.employeeWhoAdded = this.orderService.getEmployeeWhoAddedId();
           productInPreOrder.employee = this.waiterSelected;
         })
-        let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: Constants.BONAPP_WEB_USER, order: this.order };
+        let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: this.userSelected, order: this.order };
         this.updateProductsOrder(data);
       }
     } else {
@@ -640,9 +686,9 @@ export class OrderNewComponent implements OnInit {
     component.select();
   }
 
-  showModalRemoveProduct(template: TemplateRef<any>, product: ProductsInUserOrder): void {
-    this.productToRemoveFromOrder = JSON.parse(JSON.stringify(product)) as ProductsInUserOrder;;
-
+  showModalRemoveProduct(template: TemplateRef<any>, product: ProductsInUserOrder, user: UsersInOrder): void {
+    this.productToRemoveFromOrder = JSON.parse(JSON.stringify(product)) as ProductsInUserOrder;
+    this.usernameProductToRemove = user.username;
     this.modalRef = this.modalService.show(template, { backdrop: true, ignoreBackdropClick: true });
   }
 
@@ -923,5 +969,10 @@ export class OrderNewComponent implements OnInit {
 
   selectWaiter(value) {
     this.waiterSelected = value;
+  }
+
+  selectUser(value) {    
+    this.userSelected = value;
+    this.setProductsInOrder();
   }
 }
