@@ -367,7 +367,7 @@ width: 100%!important;
 
 .outletTitle{
     background-color: rgb(113, 130, 57);
-    height: 50px;
+    height: 20%;
     color: white;
     padding-top: 10px;
     padding-left: .75rem;
@@ -461,4 +461,36 @@ body{
 
 .appMenusLinks{
     display: inline-flex!important;
+}
+
+.modal-content{
+background-color: #fff0db;
+color:#424242;
+}
+
+.modal-footer button{
+color: #646464;
+border:2px solid #fac366;
+border-radius:30px;
+padding:5px;
+}
+
+.modal-header{
+background-color:#e43012;
+color:white;
+}
+
+@media (max-width: 992px) {
+nav ul li{
+width:10%;
+background-color:#e43012;
+}
+nav ul{
+    width:100%;
+    background-color:#e43012;
+    }
+}
+
+.mdb-select-toggle{
+color:red;
 }
