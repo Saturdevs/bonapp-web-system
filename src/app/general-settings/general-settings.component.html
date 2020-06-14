@@ -1,10 +1,3 @@
-<div class="pageTitle">
-    <div style="float: left">
-        <header class="major">
-            <h5>{{pageTitle}}</h5>
-        </header>
-    </div>
-</div>
 <div class="row pr-0 mr-0 pl-0 ml-0">
     <div class="container-fluid col-md-2 col-lg-2 mr-0 ml-0 pr-0 pl-0">
 
@@ -17,11 +10,11 @@
             <li>
                 <ul class="collapsible collapsible-accordion">
                     <mdb-squeezebox [multiple]="false" aria-multiselectable="false">
-                        <div *ngFor='let appMenu of appMenus'>                          
+                        <div *ngFor='let appMenu of appMenus' class="customItem mt-2 mb-2">                          
                             <mdb-item class="no-collase">
-                                <mdb-item-head mdbRippleRadius><a
+                                <mdb-item-head mdbRippleRadius class="mb-1"><a
                                         [routerLink]="[appMenu._id, { outlets: { edit: ['selectItem'] } }]"
-                                        class="nav-link"><i class="fa fa-hand-pointer-o"></i>{{ 'AppMenus.' + appMenu._id | translate }}</a></mdb-item-head>
+                                        class="nav-link customLink"><i class="fa fa-hand-pointer-o"></i>{{ 'AppMenus.' + appMenu._id | translate }}</a></mdb-item-head>
                                 <mdb-item-body></mdb-item-body>
                             </mdb-item>
                         </div>

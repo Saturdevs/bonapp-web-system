@@ -185,9 +185,8 @@ table {
 }
 
 .customBox{
-    border:2px solid rgba(168, 168, 168, 0.699);
-    padding-top:.8rem;
-    padding-bottom:.8rem;
+    border:2px solid #718239;
+    border-radius: 5rem;
     padding-left:.5rem;
     padding-right:.5rem; 
 }
@@ -210,10 +209,10 @@ table {
 }
 
 .customSideNav{
- margin-top:8.05rem!important;
- max-width: 100%!important;
- width:17%!important;
-background-color:#718239!important;
+  margin-top:7.85rem!important;
+  max-width: 100%!important;
+  width:15%!important;
+  background-color:#718239!important;
 }
 
 .customButtonAlternative a{    
