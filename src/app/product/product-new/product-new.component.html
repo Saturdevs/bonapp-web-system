@@ -22,16 +22,16 @@
     </header>
   </div>
 </div>
-<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 col-xl-12 pt-3 pb-3 pl-1 pr-1">
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 col-xl-12 pt-3 pb-3 pl-3 pr-1">
   <form method="post" novalidate [formGroup]="productForm">
     <div class="row mr-0 ml-0">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <div class="row">
-          <div class="col-md-4 col-lg-4">
-            <div class="md-form">
-              <input mdbActive formControlName="code" type="text" class="form-control" [class.is-invalid]="productForm.get('code').invalid && (productForm.get('code').dirty 
-                    || productForm.get('code').touched)" id="code">
-              <label for="code" class="">Código:</label>
+          <div class="col-md-2 col-lg-2">
+            <div class="form-group">
+              <label>Código:</label>
+              <input mdbActive formControlName="code" type="text" class="form-control customInput" [class.is-invalid]="productForm.get('code').invalid && (productForm.get('code').dirty 
+                || productForm.get('code').touched)" id="code">
             </div>
             <div
               *ngIf="productForm.get('code').invalid && (productForm.get('code').dirty || productForm.get('code').touched)"
@@ -39,12 +39,12 @@
               El código del Producto es requerido.
             </div>
           </div>
-          <div class="col-md-7 col-lg-7">
-            <div class="md-form">
-              <input mdbActive formControlName="name" type="text" class="form-control"
+          <div class="col-md-5 col-lg-5">
+            <div class="form-group">
+              <label>Nombre:</label>
+              <input mdbActive formControlName="name" type="text" class="form-control customInput"
                 [class.is-invalid]="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
                 id="name" length="25" mdbCharCounter>
-              <label for="name" class="">Nombre</label>
             </div>
             <div
               *ngIf="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
@@ -54,11 +54,11 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4 col-lg-4">
+          <div class="col-md-3 col-lg-3">
             <div class="form-group">
               <label>Categoría:</label>
               <div class="select-wrapper">
-                <select formControlName="category" type="text" class="form-control browser-default"
+                <select formControlName="category" type="text" class="form-control browser-default customInput"
                   [class.is-invalid]="productForm.get('category').invalid && (productForm.get('category').dirty || productForm.get('category').touched)"
                   id="category">
                   <option value="default" default>Seleccione la categoría...</option>
@@ -72,12 +72,12 @@
               La Categoría del producto es requerida.
             </div>
           </div>
-          <div class="col-md-4 col-lg-4">
-            <div class="md-form">
-              <input mdbActive formControlName="price" type="number" class="form-control"
+          <div class="col-md-2 col-lg-2">
+            <div class="form-group">
+              <label>Precio ($):</label>
+              <input mdbActive formControlName="price" type="number" class="form-control customInput"
                 [class.is-invalid]="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
                 id="price">
-              <label for="name" class="">Precio ($):</label>
             </div>
             <div
               *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
@@ -85,18 +85,23 @@
               El precio del Producto es requerido.
             </div>
           </div>
-          <div class="col-md-2 col-lg-2">
-            <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="available"> {{ checkboxAvailableText }}</mdb-checkbox>
+          <div class="col-md-2 col-lg-2 chkAvailable">
+            <mdb-checkbox [class.checkbox-primary-custom]="true" formControlName="available">
+              {{ checkboxAvailableText }}</mdb-checkbox>
           </div>
         </div>
 
-        <div class="row">
+        <div class="row ml-1">
           <div class="col-md-11 col-lg-11">
-            <div class="md-form">
-              <textarea mdbActive formControlName="description" class="md-textarea"
-                [class.is-invalid]="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
-                id="description"></textarea>
-              <label for="description">Descripción</label>
+            <div class="form-group">
+              <div class="row">
+                <label>Descripción:</label>
+              </div>
+              <div class="row">
+                <textarea mdbActive formControlName="description" class="md-textarea customInput customTextArea"
+                  [class.is-invalid]="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
+                  id="description"></textarea>
+              </div>
             </div>
 
             <div
@@ -106,21 +111,20 @@
             </div>
           </div>
         </div>
-        <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
-        <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
-          La imagen del producto es requerida.
-        </div>
         <div class="row" *ngIf="enableStock">
-          <div class="col-md-4 col-lg-4">
+          <div class="col-md-3 col-lg-3">
             <div class="md-form">
-              <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="stockControl"> {{ stockControlText }}</mdb-checkbox>
+              <mdb-checkbox [class.checkbox-primary-custom]="true" formControlName="stockControl">
+                {{ stockControlText }}</mdb-checkbox>
             </div>
           </div>
-          <div class="row col-md-8 col-lg-8" [formGroup]="productForm.controls.stock" *ngIf="productForm.get('stockControl').value">
-            <div class="col-md-6 col-lg-6">
-              <div class="md-form">
-                <input mdbActive formControlName="min" type="number" class="form-control" id="min">
-                <label for="min" class="">Minimo:</label>
+        </div>
+        <div class="row ml-2">
+          <div class="row" [formGroup]="productForm.controls.stock" *ngIf="productForm.get('stockControl').value">
+            <div class="col-md-3 col-lg-3">
+              <div class="form-group">
+                <label>Minimo:</label>
+                <input mdbActive formControlName="min" type="number" class="form-control customInput" id="min">
               </div>
               <div
                 *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.min.dirty) && productForm.controls.stock.controls.min.touched)"
@@ -128,10 +132,10 @@
                 El stock minimo es requerido`
               </div>
             </div>
-            <div class="col-md-6 col-lg-6">
-              <div class="md-form">
-                <input mdbActive formControlName="current" type="number" class="form-control" id="current">
+            <div class="col-md-3 col-lg-3">
+              <div class="form-group">
                 <label for="current" class="">Actual:</label>
+                <input mdbActive formControlName="current" type="number" class="form-control customInput" id="current">
               </div>
               <div
                 *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.current.dirty) && productForm.controls.stock.controls.current.touched)"
@@ -142,20 +146,26 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 pr-0 pl-0">
-        <img [src]="newProductPictureData" onerror="this.src='../../../assets/img/no-image.png'"
-          style="width: 300px; height: 316px;" />
+      <div class="col-md-4 pr-0 pl-0">
+        <div class="row">
+          <img [src]="newProductPictureData" onerror="this.src='../../../assets/img/no-image.png'" class="customImg" />
+        </div>
+        <div class="row">
+          <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
+          <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+            La imagen del producto es requerida.
+          </div>
+        </div>
       </div>
     </div>
     <div class="row col-md-12 col-lg-12 col-sm-12 mr-0">
       <div class="col-md-6">
-
         <label>Tamaños:</label>
         <div formArrayName="sizes" *ngFor="let productSize of sizes.controls; let i=index">
-          <div [formGroupName]="i" class="form-group">
+          <div [formGroupName]="i" class="form-group col-md-10">
             <div class="row">
               <div class="select-wrapper col-md-5">
-                <select formControlName="sizeId" class="form-control  browser-default"
+                <select formControlName="sizeId" class="form-control customInput browser-default"
                   [class.is-invalid]="productForm.get('sizes').controls[i].controls.sizeId.invalid && (productForm.get('sizes').controls[i].controls.sizeId.dirty || productForm.get('sizes').controls[i].controls.sizeId.touched)"
                   id="{{ 'productSize' + i }}">
                   <option value="default" default>Seleccione el tamaño...</option>
@@ -167,8 +177,8 @@
                   El tamaño es requerido.
                 </div>
               </div>
-              <div class="col-md-3 col-md-offset-1">
-                <input formControlName="price" type="number" placeholder="Precio($)" class="form-control"
+              <div class="col-md-3 ml-2">
+                <input formControlName="price" type="number" placeholder="Precio($)" class="form-control customInput"
                   [class.is-invalid]="productForm.get('sizes').controls[i].controls.price.invalid && (productForm.get('sizes').controls[i].controls.price.dirty || productForm.get('sizes').controls[i].controls.price.touched)"
                   id="{{ 'productSizePrice' + i }}">
 
@@ -178,32 +188,30 @@
                   El precio es requerido
                 </div>
               </div>
-              <div class="col-md-3 col-md-offset-1">
-                <div class="form-check">
+              <div class="col-md-2 ml-2">
+                <div class="form-check mt-1 ml-0 pl-0">
                   <input formControlName="default" type="radio" class="form-check-input form-control"
                     (change)="setDefaultSize(i)" name="default" id="{{ 'default' + i }}" [value]="true">
                   <label class="form-check-label" for="{{ 'default' + i }}">Default</label>
                 </div>
               </div>
+              <button class="botonx col-md-1 ml-3" no-margin color="danger" (click)="removeSize(i)">-</button>
             </div>
           </div>
-          <button class="botonx" no-margin color="danger" (click)="removeSize(i)">-</button>
         </div>
         <br>
         <button class="special small" (click)="addProductSize()" [disabled]="!sizes.valid">
           Agregar Tamaño
         </button>
-
       </div>
 
       <div class="col-md-6 pl-0">
-
         <label>Opciones:</label>
         <div formArrayName="options" *ngFor="let productOption of options.controls; let i=index">
-          <div [formGroupName]="i" class="form-group">
+          <div [formGroupName]="i" class="form-group col-md-10">
             <div class="row">
               <div class="col-md-5">
-                <input formControlName="name" type="text" placeholder="Opción" class="form-control"
+                <input formControlName="name" type="text" placeholder="Opción" class="form-control customInput"
                   id="{{ 'productOption' + i }}">
 
                 <div
@@ -212,8 +220,8 @@
                   La opción es requerida.
                 </div>
               </div>
-              <div class="col-md-3 col-md-offset-1">
-                <input formControlName="price" type="number" placeholder="Precio($)" class="form-control"
+              <div class="col-md-3 ml-2">
+                <input formControlName="price" type="number" placeholder="Precio($)" class="form-control customInput"
                   id="{{ 'productOptionPrice' + i }}">
 
                 <div
@@ -222,9 +230,9 @@
                   El precio es requerido
                 </div>
               </div>
+              <button class="botonx ml-3" (click)="removeOption(i)">-</button>
             </div>
           </div>
-          <button class="botonx" (click)="removeOption(i)">-</button>
         </div>
         <br>
         <button class="special small" (click)="addProductOption()">
@@ -232,10 +240,20 @@
         </button>
       </div>
     </div>
-    <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
-      <button id="cancel" mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
-      <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="productForm.invalid || (productForm.get('stockControl').value && productForm.controls.stock.controls.min.value == 0) || (productForm.get('stockControl').value && productForm.controls.stock.controls.current.value == 0)" type="submit"
-        (click)="validateSizes()">Guardar</button>
+
+    <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2 float-right mt-5">
+      <ul align="center">
+        <li>
+          <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
+            type="button" class="boton-cancelar" (click)="showModalCancel(cancelTemplate)">Cancelar
+          </button>
+        </li>
+        <li>
+          <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
+            [disabled]="productForm.invalid || (productForm.get('stockControl').value && productForm.controls.stock.controls.min.value == 0) || (productForm.get('stockControl').value && productForm.controls.stock.controls.current.value == 0)"
+            type="submit" (click)="validateSizes()">Guardar</button>
+        </li>
+      </ul>
     </div>
   </form>
 </div>

@@ -1,60 +1,60 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteMenu()"
-        (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteMenu()"
+    (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="pageTitle">
-    <div style="float: left">
-        <header class="major">
-            <h5>{{pageTitle}}</h5>
-        </header>
-    </div>
-    <div style="float: right">
-        <a [routerLink]="['newMenu']" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
-            *ngIf='enableNew'> + Nueva Carta</a>
-    </div>
+  <div style="float: left">
+    <header class="major">
+      <h5>{{pageTitle}}</h5>
+    </header>
+  </div>
+  <div style="float: right">
+    <a [routerLink]="['newMenu']" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+      [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius *ngIf='enableNew'> 
+      + Nueva Carta
+    </a>
+  </div>
 </div>
 <div class="ml-5 mr-5 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
-    <div class="row mb-2 customBox">
-        <form #form="ngForm" novalidate class="form-inline">
-            <h6 class="pt-2">Filtrar:</h6>
-            <div class="md-form form-group mr-0 ml-0 col-md-10 col-lg-10">
-                <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
-                    id="query">
-            </div>
-        </form>
-    </div>
+  <div class="row mb-2 customBox">
+    <form #form="ngForm" novalidate class="form-inline">
+      <h6 class="pt-2">Filtrar:</h6>
+      <div class="md-form form-group mr-0 ml-0 col-md-10 col-lg-10">
+        <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+          id="query">
+      </div>
+    </form>
+  </div>
 
-    <div class="row">
-        <table class="table table-bordered table-hover customTable">
-            <thead class="primary-color customTableText">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Disponible</th>
-                    <th *ngIf='enableActionButtons'>Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="table-wrapper" *ngIf='menus && menus.length'>
-                <tr *ngFor='let menu of filteredMenus'>
-                    <td class="align-middle">{{ menu.name }}</td>
-                    <td class="align-middle customShortTh">{{ menu.availableDescription }}</td>
-                    <td class="align-middle" *ngIf='enableActionButtons'>
-                        <a [routerLink]="['edit', menu._id]" 
-                        *ngIf='enableEdit'>
-                        <a class="pl-4"><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                        </a>
-                        <a (click)="showModalDelete(deleteTemplate, noDelete, menu._id)"
-                        *ngIf='enableDelete'>
-                        <a class="pl-4"><img src="assets/img/eliminar.png" height="40px" width="auto"></a></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="row">
+    <table class="table table-bordered table-hover customTable">
+      <thead class="primary-color customTableText">
+        <tr>
+          <th>Nombre</th>
+          <th>Disponible</th>
+          <th *ngIf='enableActionButtons'>Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="table-wrapper" *ngIf='menus && menus.length'>
+        <tr *ngFor='let menu of filteredMenus'>
+          <td class="align-middle">{{ menu.name }}</td>
+          <td class="align-middle customShortTh">{{ menu.availableDescription }}</td>
+          <td class="align-middle" *ngIf='enableActionButtons'>
+            <a [routerLink]="['edit', menu._id]" *ngIf='enableEdit'>
+              <a class="pl-4"><img src="assets/img/editar.png" height="40px" width="auto"></a>
+            </a>
+            <a (click)="showModalDelete(deleteTemplate, noDelete, menu._id)" *ngIf='enableDelete'>
+              <a class="pl-4"><img src="assets/img/eliminar.png" height="40px" width="auto"></a></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

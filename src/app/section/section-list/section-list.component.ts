@@ -84,7 +84,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
       });
 
     if (this.isSettingsActive()) {
-      this.title = "Configuración de secciones y mesas";
+      this.title = "Configuración de salas y mesas";
       this.settingsActive = true;
     }
 

@@ -58,6 +58,7 @@ export class MenuModifyComponent implements OnInit {
     this.menu = this._route.snapshot.data['menu'];
     this.path = this.path + this.menu.picture;
     this.menuPictureData = this.menu.picture;
+    this.menuNameModified = this.menu.name;
   }
 
   updateMenu(menu: Menu) {

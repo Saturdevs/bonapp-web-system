@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -17,21 +17,22 @@
   <div class="row">
     <div class="col-md-6">
       <form #form="ngForm" method="post" novalidate>
-
-        <div class="form-group">
+        <div class="form-group pt-5 pr-5">
           <label>Nombre Carta:</label>
-          <input #menuName="ngModel" required type="text" class="form-control" [class.is-invalid]="menuName.invalid && (menuName.dirty || menuName.touched)" name="menuName" 
-                id="menuName" [(ngModel)]="newMenu.name">
+          <input #menuName="ngModel" required type="text" class="form-control customInput"            
+            [class.is-invalid]="menuName.invalid && (menuName.dirty || menuName.touched)" name="menuName" id="menuName"
+            [(ngModel)]="newMenu.name">
         </div>
 
         <div *ngIf="menuName.invalid && (menuName.dirty || menuName.touched)" class="alert alert-danger">
           El nombre de la carta es requerido.
         </div>
-        
+
         <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
           <div class="row pl-2">
             <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-              <mdb-checkbox [class.checkbox-primary-custom]="true"  name="menuAvailable" [(ngModel)]="newMenu.available"> {{ checkboxAvailableText }}
+              <mdb-checkbox [class.checkbox-primary-custom]="true" name="menuAvailable" [(ngModel)]="newMenu.available">
+                {{ checkboxAvailableText }}
               </mdb-checkbox>
             </div>
           </div>
@@ -40,23 +41,28 @@
         <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'menu'"></app-file-input>
         <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
           La imagen de la carta es requerida.
-        </div>        
+        </div>
 
-        <div class="12u$">
-          <ul class="actions" align="center">
-            <li><input [disabled]="form.invalid || validPicture === ''" type="submit" value="Guardar" class="special" (click)="saveMenu()"/></li>
-			<li>
-			<div class="boton-cancelar">
-			<input type="button" value="Cancelar" (click)="showModalCancel(cancelTemplate)" />
-			</div>
-			</li>
+        <div>
+          <ul align="center">
+            <li>
+              <button id="cancel" mdbBtn role="button" rounded="true" size="md" mdbWavesEffect
+                [class.btn-primary-custom]="true" type="button"
+                class="boton-cancelar"
+                (click)="showModalCancel(cancelTemplate)">Cancelar
+              </button>
+            </li>
+            <li>
+              <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
+                [disabled]="form.invalid || validPicture === ''" type="submit" (click)="saveMenu()">Guardar</button>
+            </li>            
           </ul>
-        </div>    
-
+        </div>
       </form>
     </div>
     <div class="col-md-6">
-      <img [src]="newMenuPictureData"  onerror="this.src='../../../assets/img/no-image.png'" style="width: 300px; height: 316px;"/>
+      <img [src]="newMenuPictureData" onerror="this.src='../../../assets/img/no-image.png'"
+        class="customImg" />
     </div>
   </div>
 </div>
