@@ -11,6 +11,7 @@ import { CancelTemplateComponent } from './components/cancel-template/cancel-tem
 import { OrderPreComponent } from '../app/order/order-pre/order-pre.component';
 import { OrderListSearchPipe } from './pipes/order-list-search.pipe';
 import { TranslateModule } from '@ngx-translate/core';
+import { SettingsService } from './services/settings.service';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   providers: [ 
     ApiService,
-    MDBSpinningPreloader   
+    MDBSpinningPreloader,
+    SettingsService   
   ],
   exports: [
     CommonModule,

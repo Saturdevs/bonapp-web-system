@@ -18,7 +18,8 @@ import {
   Section,
   ParamService,
   Params,
-  OrderTypes
+  OrderTypes,
+  SocketIoService
 } from '../../../shared/index';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { isNullOrUndefined } from 'util';
@@ -118,7 +119,8 @@ export class TableListComponent implements OnInit {
     private _sectionService: SectionService,
     private _authenticationService: AuthenticationService,
     private _transalateService: TranslateService,
-    private _paramService: ParamService) { }
+    private _paramService: ParamService,
+    private _socketService: SocketIoService) { }
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
@@ -175,6 +177,13 @@ export class TableListComponent implements OnInit {
       this.gridConfig.draggable = false;
       this.gridConfig.resizable = false;
       this.selectedTable = new Table();
+    
+      // this._socketService.updateTable() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
+      // .subscribe(updateTables => {
+      //   if(updateTables){
+      //     this.getTables();
+      //   }
+      // });
     }
   }
 

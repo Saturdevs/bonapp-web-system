@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
     );
 
     this.getTime();
-    //this.subscribeToNotifications(); only with http-server
+    // this.subscribeToNotifications(); //only with http-server
     this._socketService.waiterCall() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
       .subscribe(waiterCall => {
         let options = {

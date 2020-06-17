@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
 import { environment } from '../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class SocketIoService {
   private socket;
 
-  constructor() {
+  constructor(private _route: ActivatedRoute) {
     this.socket = io(environment.socket_url);
     this.socketIOConnection();
   }
@@ -28,5 +29,14 @@ export class SocketIoService {
       });
     });
   }
+
+    /** Recibe la orden de actualizar las mesas. Devuelve un observable que avisa a sus suscribers cada vez que el socket recibio el metodo updateTable (es emitido desde la app al backend y del backend al sistema web). */
+    updateTable() { 
+      return Observable.create((observer) => {
+        this.socket.on('updateTable', (updateTable) => {
+          observer.next(true);
+        });
+      });
+    }
 
 }
