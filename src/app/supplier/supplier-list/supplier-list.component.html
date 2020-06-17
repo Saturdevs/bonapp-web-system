@@ -1,80 +1,86 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteSupplier()"
-        (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteSupplier()"
+    (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="row pl-0 pr-0 ml-0 mr-0">
-    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
-        <div class="row pr-0 ml-0 mr-0 pageTitle">
-            <header class="major">
-                <h5 class="customTitle">{{ pageTitle }}</h5>
-            </header>
-            <a class="customFloatedButton"
-                [routerLink]="['/suppliers-module/suppliers', { outlets: { edit: ['newSupplier'] } }]"
-                mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
-                *ngIf='enableNew'> + Nuevo Proveedor</a>
-        </div>
-        <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
-            <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
-                <div class="row">
-                    <mdb-checkbox [class.checkbox-primary-custom]="true"  [(ngModel)]="showInactiveSuppliers" name="inactiveSuppliers">{{ checkboxText }}
-                    </mdb-checkbox>
-                    <br>
-                    <br>
-                    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
-                        <thead class="primary-color customTableText">
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Teléfono</th>
-                                <th>Dirección</th>
-                                <th *ngIf='enableActionButtons'>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-wrapper" *ngIf='filteredSuppliers && filteredSuppliers.length'>
-                            <tr *ngFor='let supplier of filteredSuppliers; let i = index'>
-                                <td
-                                    *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ supplier.name
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+    <div class="pageTitle">
+      <div style="float: left">
+        <header class="major">
+          <h5>{{pageTitle}}</h5>
+        </header>
+      </div>
+      <div style="float: right">
+        <a [routerLink]="['/suppliers-module/suppliers', { outlets: { edit: ['newSupplier'] } }]" mdbBtn role="button"
+          rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true"
+          mdbRippleRadius *ngIf='enableNew'>
+          + Nuevo Proveedor
+        </a>
+      </div>
+    </div>
+    <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
+      <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
+        <div class="row">
+          <mdb-checkbox [class.checkbox-primary-custom]="true" [(ngModel)]="showInactiveSuppliers"
+            name="inactiveSuppliers">{{ checkboxText }}
+          </mdb-checkbox>
+          <br>
+          <br>
+          <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
+            <thead class="primary-color customTableText">
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th *ngIf='enableActionButtons'>Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-wrapper" *ngIf='filteredSuppliers && filteredSuppliers.length'>
+              <tr *ngFor='let supplier of filteredSuppliers; let i = index'>
+                <td
+                  *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ supplier.name
                                     }}</td>
-                                <td
-                                    *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{
+                <td
+                  *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{
                                     supplier.email }}</td>
-                                <td
-                                    *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ supplier.tel
+                <td
+                  *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ supplier.tel
                                     }}</td>
-                                <td
-                                    *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{
+                <td
+                  *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{
                                     supplier.addressStreet || ' '}} {{ supplier.addressNumber || ' '}} {{
                                     supplier.addressDpto || ' ' }}</td>
-                                <td class="align-middle"
-                                    *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
-                                    <a [routerLink]="['/suppliers-module/suppliers', { outlets: { edit: ['editSupplier', supplier._id] } }]"
-                                       *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                                    <a (click)="showModalDelete(deleteTemplate, supplier._id)"
-                                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="grey lighten-5 w-100">
-                            <tr>
-                                <td colspan="5">
-                                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredSuppliers">
-                                    </mdb-table-pagination>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
+                <td class="align-middle"
+                  *ngIf='(supplier.active === true || showInactiveSuppliers === true) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
+                  <a [routerLink]="['/suppliers-module/suppliers', { outlets: { edit: ['editSupplier', supplier._id] } }]"
+                    *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
+                  <a (click)="showModalDelete(deleteTemplate, supplier._id)" *ngIf='enableDelete'><img
+                      src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot class="grey lighten-5 w-100">
+              <tr>
+                <td colspan="5">
+                  <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredSuppliers">
+                  </mdb-table-pagination>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
+      </div>
     </div>
-    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
-        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
-    </div>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+    <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+  </div>
 </div>

@@ -1,0 +1,33 @@
+button.special.small{
+background-color:#718239;
+color:#fff;
+border-radius:30px;
+padding:5px;
+margin-bottom:10px;
+border-color:transparent;
+}
+
+.botonx{
+background-color:transparent;
+color:#bd290c;
+border-radius:30px;
+padding:10px;
+border:2px solid;
+margin-bottom:10px;
+border-color:#bd290c;
+}
+
+.chkAvailable {
+  padding-top: 2.2rem;
+  margin-left: 1.5rem;
+}
+
+.customTextArea {
+  width: 42rem;
+  height: 5rem;
+}
+
+ul li{
+  display:inline-block;
+  padding:10px;
+}

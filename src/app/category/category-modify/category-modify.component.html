@@ -10,28 +10,24 @@
 </ng-template>
 
 <ng-template #confirmDisableCategoryAndProductsTemplate>
-  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" 
-      (handleOkButton)="disableCategoryAndProducts(category._id)" (handleCancelButton)="closeModal()">
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage"
+    (handleOkButton)="disableCategoryAndProducts(category._id)" (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
 <!-- Form -->
-<div *ngIf='category'>
+<div class="container" *ngIf='category'>
   <header class="major" align="center">
     <h2>Editando: {{categoryNameModified}}</h2>
   </header>
 
-  <div class="posts">
-    <article>
-      <a href="#" class="image "><img class="customImage" [src]="categoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'" /></a>
-    </article>
-    <article>
-
+  <div class="row">
+    <div class="col-md-6">
       <form #form="ngForm" method="post" novalidate>
-
-        <div class="form-group">
+        <div class="form-group pt-5 pr-5">
           <label>Nombre Categoría:</label>
-          <input #categoryName="ngModel" required type="text" class="form-control" [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)"
+          <input #categoryName="ngModel" required type="text" class="form-control customInput"
+            [class.is-invalid]="categoryName.invalid && (categoryName.dirty || categoryName.touched)"
             name="categoryName" id="categoryName" [(ngModel)]="category.name">
         </div>
 
@@ -42,7 +38,7 @@
         <div class="form-group">
           <label>Menu:</label>
           <div class="select-wrapper">
-            <select #categoryMenu="ngModel" required type="text" class="form-control browser-default && menuTouched"
+            <select #categoryMenu="ngModel" required type="text" class="form-control customInput browser-default && menuTouched"
               [class.is-invalid]="hasCategory" name="categoryMenu" (blur)="validateCategory(categoryMenu.value)"
               (change)="validateCategory(categoryMenu.value)" id="categoryMenu" [(ngModel)]="category.menuId">
               <option value="default">Seleccione la carta...</option>
@@ -58,7 +54,8 @@
         <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
           <div class="row pl-2">
             <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-              <mdb-checkbox [class.checkbox-primary-custom]="true"  name="categoryAvailable" [(ngModel)]="category.available"> {{ checkboxAvailableText }}
+              <mdb-checkbox [class.checkbox-primary-custom]="true" name="categoryAvailable"
+                [(ngModel)]="category.available"> {{ checkboxAvailableText }}
               </mdb-checkbox>
             </div>
           </div>
@@ -70,14 +67,25 @@
           La imagen de la categoria es requerida.
         </div>
 
-        <div class="12u$">
-          <ul class="actions" align="center">
-            <li><input [disabled]="(form.invalid || hasCategory)" type="submit" value="Aceptar" class="special" 
-                (click)="updateCategory(category)" /></li>
-            <li><input (click)="showModalCancel(cancelTemplate, cancelMessage, cancelTitle)" type="button" value="Cancel" /></li>
+        <div>
+          <ul align="center">
+            <li>
+              <button id="cancel" mdbBtn role="button" rounded="true" size="md" mdbWavesEffect
+                [class.btn-primary-custom]="true" type="button" class="boton-cancelar"
+                (click)="showModalCancel(cancelTemplate, cancelMessage, cancelTitle)">Cancelar
+              </button>
+            </li>
+            <li>
+              <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
+                [disabled]="form.invalid" type="submit" (click)="updateCategory(category)">Guardar</button>
+            </li>
           </ul>
         </div>
       </form>
-    </article>
+    </div>
+    <div class="col-md-6">
+      <img [src]="categoryPictureData" onerror="this.src='../../../assets/img/No_image_available.svg'"
+        class="customImg" />
+    </div>
   </div>
 </div>

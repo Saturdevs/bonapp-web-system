@@ -32,10 +32,6 @@ background-color:#bd290c !important;
 	background-color:#932204;
 }
 
-.classic-tabs li a.active {
-  
-}
-
 .classic-tabs li a {
     display: block;
     padding: 20px 24px;
@@ -95,11 +91,10 @@ background-color:#bd290c !important;
 
 .pageTitle{
     background-color: #c7cbaf;
-    height: 50px;
+    height: 3.2rem;
     padding: 0.2rem;
     padding-left:1rem;
-	padding-top:10px;
-	font-size:15px;
+	  font-size:15px;
     color: #424242;
 }
 
@@ -113,7 +108,7 @@ background-color:#bd290c !important;
 }
 
 .pageTitle h5{
-    padding-top: 0.3rem;
+    padding-top: 0.5rem;
 }
 
 .customContentCard{
@@ -176,20 +171,23 @@ table {
     margin-top: 0px!important;
     margin-bottom: 0px!important;
 }
-.customH6{
-    margin-left: 14rem!important;
-}
 
 .customMdForm{
     margin-right:0px!important;
 }
 
 .customBox{
-    border:2px solid rgba(168, 168, 168, 0.699);
-    padding-top:.8rem;
-    padding-bottom:.8rem;
+    border:2px solid #718239;
+    border-radius: 5rem;
     padding-left:.5rem;
     padding-right:.5rem; 
+}
+
+.customInput {
+  border: 1px solid #718239;
+  border-radius:20px;
+  background-color:transparent;
+  color:#555;
 }
 
 .customDate{
@@ -210,10 +208,10 @@ table {
 }
 
 .customSideNav{
- margin-top:8.05rem!important;
- max-width: 100%!important;
- width:17%!important;
-background-color:#718239!important;
+  margin-top:7.85rem!important;
+  max-width: 100%!important;
+  width:15%!important;
+  background-color:#718239!important;
 }
 
 .customButtonAlternative a{    
@@ -367,7 +365,7 @@ width: 100%!important;
 
 .outletTitle{
     background-color: rgb(113, 130, 57);
-    height: 50px;
+    height: 3.2rem;
     color: white;
     padding-top: 10px;
     padding-left: .75rem;
@@ -461,4 +459,58 @@ body{
 
 .appMenusLinks{
     display: inline-flex!important;
+}
+
+.modal-content{
+background-color: #fff0db;
+color:#424242;
+}
+
+.modal-footer button{
+color: #646464;
+border:2px solid #fac366;
+border-radius:30px;
+padding:5px;
+}
+
+.modal-header{
+background-color:#e43012;
+color:white;
+}
+
+@media (max-width: 992px) {
+nav ul li{
+width:10%;
+background-color:#e43012;
+}
+nav ul{
+    width:100%;
+    background-color:#e43012;
+    }
+}
+
+.mdb-select-toggle{
+color:red;
+}
+
+.boton-cancelar {
+border:2px solid #bd290c!important;
+background-color:transparent!important;
+color:#bd290c!important;
+border:2px solid;
+border-radius:30px;
+}
+
+.container {
+  margin-top: 50px;	
+}
+ 
+.major {
+  text-align:left;
+  color:#424242;
+}
+
+.customImg {
+  width: 400px; 
+  height: 400px;
 }

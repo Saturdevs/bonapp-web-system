@@ -84,7 +84,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
       });
 
     if (this.isSettingsActive()) {
-      this.title = "Configuración de secciones y mesas";
+      this.title = "Configuración de salas y mesas";
       this.settingsActive = true;
     }
 
@@ -177,7 +177,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   }
 
   openExistingOrder(tableNumber: number) {
-    this._orderService.employeeWhoAddedId = this.currentUser._id;
+    this._orderService.setEmployeeWhoAddedId(this.currentUser._id);
     this._router.navigate(['./orders/orderNew', tableNumber]);
   }
 

@@ -1,112 +1,117 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteCashFlow()"
-        (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteCashFlow()"
+    (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="row pl-0 pr-0 ml-0 mr-0">
-    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
-        <div class="row pr-0 ml-0 mr-0 pageTitle">
-            <header class="major">
-                <h5 class="customTitle">{{ pageTitle }}</h5>
-            </header>
-            <a class="customFloatedButton" [routerLink]="['/sales/cash-flows', { outlets: { edit: ['newCashFlow'] } }]"
-                mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius 
-                *ngIf='enableNew'> + Nuevo Movimiento</a>
-        </div>
-        <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
-            <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
-                <div class="row mb-2 customBox">
-                    <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
-                        <div class="row">
-                            <h6 class="pt-2">Tipo:</h6>
-                            <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
-                                <mdb-select #queryType name="queryType" id="queryType" [options]="typesSelect"
-                                    [(ngModel)]="typeSelectedValue" placeholder="Choose your option"
-                                    class="colorful-select dropdown-primary"></mdb-select>
-                            </div>
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+    <div class="pageTitle">
+      <div style="float: left">
+        <header class="major">
+          <h5>{{pageTitle}}</h5>
+        </header>
+      </div>
+      <div style="float: right">
+        <a [routerLink]="['/sales/cash-flows', { outlets: { edit: ['newCashFlow'] } }]" mdbBtn role="button"
+          rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true"
+          mdbRippleRadius *ngIf='enableNew'> 
+          + Nuevo Movimiento
+        </a>
+      </div>
+    </div>
+    <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
+      <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
+        <div class="row mb-2 customBox">
+          <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+            <div class="row">
+              <h6 class="pt-2">Tipo:</h6>
+              <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
+                <mdb-select #queryType name="queryType" id="queryType" [options]="typesSelect"
+                  [(ngModel)]="typeSelectedValue" placeholder="Choose your option"
+                  class="colorful-select dropdown-primary"></mdb-select>
+              </div>
 
-                            <h6 class="pt-2">Caja Registradora:</h6>
-                            <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
-                                <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
-                                    [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue"
-                                    placeholder="Choose your option" class="colorful-select dropdown-primary">
-                                </mdb-select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <app-date-picker name="startDate" (onValueChanged)="onValueChangedStartDate($event)"
-                                [(ngModel)]="startDate" [dpPlaceHolder]="'Fecha de Inicio'" ngDefaultControl>
-                            </app-date-picker>
-                            <app-date-picker name="endDate" (onValueChanged)="onValueChangedEndDate($event)"
-                                [(ngModel)]="endDate" [dpPlaceHolder]="'Fecha de Fin'" ngDefaultControl>
-                            </app-date-picker>
-                        </div>
-                    </form>
-                </div>
-                <div class="row">
-                    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
-                        <thead class="primary-color customTableText">
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Caja</th>
-                                <th>Monto</th>
-                                <th>Tipo</th>
-                                <th>Comentario</th>
-                                <th *ngIf='enableActionButtons'>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-wrapper" *ngIf='filteredCashFlows && filteredCashFlows.length'>
-                            <!-- En el *ngFor se implementa el pipe que se definio en la carpeta shared/pipes -->
-                            <!-- El pipe se agrego en el cash-flows.module -->
-                            <!-- Luego se agregan los ng-model por los que se quiere filtrar (cashSelectedValue y typeSelectedValue) -->
-                            <tr
-                                *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate; let i = index'>
-                                <td
-                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
-                                    {{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
-                                <td
-                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
-                                    {{ cashFlow.cashRegister }}</td>
-                                <td
-                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
-                                    {{ cashFlow.totalAmount | currency:'USD':code:'2.2-2' }}</td>
-                                <td
-                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
-                                    {{ cashFlow.type }}</td>
-                                <td
-                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
-                                    {{ cashFlow.comment }}</td>
-                                <td class="align-middle"
-                                    *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
-                                    <a [routerLink]="['/sales/cash-flows', { outlets: { edit: ['editCashFlow', cashFlow._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText"
-                                        *ngIf='enableDetail'>Detalle</a>
-                                    <a (click)="showModalDelete(deleteTemplate, cashFlow._id)"
-                                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="grey lighten-5 w-100">
-                            <tr>
-                                <td colspan="6">
-                                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCashFlows">
-                                    </mdb-table-pagination>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+              <h6 class="pt-2">Caja Registradora:</h6>
+              <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
+                <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
+                  [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Choose your option"
+                  class="colorful-select dropdown-primary">
+                </mdb-select>
+              </div>
             </div>
+
+            <div class="row">
+              <app-date-picker name="startDate" (onValueChanged)="onValueChangedStartDate($event)"
+                [(ngModel)]="startDate" [dpPlaceHolder]="'Fecha de Inicio'" ngDefaultControl>
+              </app-date-picker>
+              <app-date-picker name="endDate" (onValueChanged)="onValueChangedEndDate($event)" [(ngModel)]="endDate"
+                [dpPlaceHolder]="'Fecha de Fin'" ngDefaultControl>
+              </app-date-picker>
+            </div>
+          </form>
         </div>
+        <div class="row">
+          <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
+            <thead class="primary-color customTableText">
+              <tr>
+                <th>Fecha</th>
+                <th>Caja</th>
+                <th>Monto</th>
+                <th>Tipo</th>
+                <th>Comentario</th>
+                <th *ngIf='enableActionButtons'>Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-wrapper" *ngIf='filteredCashFlows && filteredCashFlows.length'>
+              <!-- En el *ngFor se implementa el pipe que se definio en la carpeta shared/pipes -->
+              <!-- El pipe se agrego en el cash-flows.module -->
+              <!-- Luego se agregan los ng-model por los que se quiere filtrar (cashSelectedValue y typeSelectedValue) -->
+              <tr
+                *ngFor='let cashFlow of filteredCashFlows | cashFlowSearch: cashSelectedValue:typeSelectedValue:startDate:endDate; let i = index'>
+                <td
+                  *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                  {{ cashFlow.date | date:'dd/MM/yy HH:mm' }}</td>
+                <td
+                  *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                  {{ cashFlow.cashRegister }}</td>
+                <td
+                  *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                  {{ cashFlow.totalAmount | currency:'USD':code:'2.2-2' }}</td>
+                <td
+                  *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                  {{ cashFlow.type }}</td>
+                <td
+                  *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                  {{ cashFlow.comment }}</td>
+                <td class="align-middle"
+                  *ngIf='(cashFlow.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
+                  <a [routerLink]="['/sales/cash-flows', { outlets: { edit: ['editCashFlow', cashFlow._id] } }]"
+                    *ngIf='enableDetail'><img src="assets/img/detalle.png" height="40px" width="auto"></a>
+                  <a (click)="showModalDelete(deleteTemplate, cashFlow._id)" *ngIf='enableDelete'><img
+                      src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot class="grey lighten-5 w-100">
+              <tr>
+                <td colspan="6">
+                  <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCashFlows">
+                  </mdb-table-pagination>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </div>
-    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
-        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
-    </div>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+    <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+  </div>
 </div>

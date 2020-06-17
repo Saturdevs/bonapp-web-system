@@ -1,90 +1,94 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage"
-        (delete)="deleteTransaction()" (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage"
+    (delete)="deleteTransaction()" (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="row pl-0 pr-0 ml-0 mr-0">
-    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
-        <div class="row pr-0 ml-0 mr-0 pageTitle">
-            <header class="major">
-                <h5 class="customTitle">{{ pageTitle }}</h5>
-            </header>
-            <a class="customFloatedButton"
-                [routerLink]="['/clients-module/current-accounts', { outlets: { edit: ['newTransaction'] } }]"
-                mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
-                *ngIf='enableNew'> + Nueva Transacción</a>
-        </div>
-        <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
-            <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
-                <div class="row mb-2 customBox">
-                    <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+    <div class="pageTitle">
+      <div style="float: left">
+        <header class="major">
+          <h5>{{pageTitle}}</h5>
+        </header>
+      </div>
+      <div style="float: right">
+        <a [routerLink]="['/clients-module/current-accounts', { outlets: { edit: ['newTransaction'] } }]" mdbBtn
+          role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true"
+          [class.customButton]="true" mdbRippleRadius *ngIf='enableNew'>
+          + Nueva Transacción
+        </a>
+      </div>
+    </div>
+    <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
+      <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-1 pb-2 mt-2 text-center">
+        <div class="row mb-2 customBox">
+          <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
 
-                        <h6 class="pt-2">Cliente:</h6>
-                        <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
-                            <mdb-select #client name="client" (selected)="filterTransactions(client.value)" id="client"
-                                [options]="clientsSelect" [(ngModel)]="selectedValue" placeholder="Choose your option"
-                                class="colorful-select dropdown-primary"></mdb-select>
-                        </div>
-                    </form>
-
-                    <span *ngIf="client.value === 'default'">Todos los clientes</span>
-                    <span *ngIf="client.value !== 'default'">{{ selectedClientName }}</span>
-                    <br>
-                    <span>{{ cantTransactions + " registros" }}</span>
-
-                    <span>{{ "Saldo: " + amount }}</span>
-                </div>
-                <div class="row">
-                    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
-                        <thead class="primary-color customTableText">
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Fecha</th>
-                                <th>Monto</th>
-                                <th *ngIf='enableActionButtons'>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-wrapper" *ngIf='filteredTransactions && filteredTransactions.length'>
-                            <tr *ngFor='let transaction of filteredTransactions; let i = index'>
-                                <td
-                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
-                                    {{ transaction.client.name }}</td>
-                                <td
-                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.date | date:'dd/MM/yy HH:mm'
-                                    }}</td>
-                                <td
-                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.amount |
-                                    currency:'USD':code:'2.2-2' }}</td>
-                                <td class="align-middle"
-                                    *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
-                                    <a [routerLink]="['/clients-module/current-accounts', { outlets: { edit: ['editTransaction', transaction._id] } }]"
-                                        class="btn btn-yellow btn-sm customButtonText"
-                                        *ngIf='enableDetail'>Detalle</a>
-                                    <a (click)="showModalDelete(deleteTemplate, transaction._id)"
-                                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="grey lighten-5 w-100">
-                            <tr>
-                                <td colspan="4">
-                                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredTransactions">
-                                    </mdb-table-pagination>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <h6 class="pt-2">Cliente:</h6>
+            <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
+              <mdb-select #client name="client" (selected)="filterTransactions(client.value)" id="client"
+                [options]="clientsSelect" [(ngModel)]="selectedValue" placeholder="Choose your option"
+                class="colorful-select dropdown-primary"></mdb-select>
             </div>
+          </form>
+
+          <span *ngIf="client.value === 'default'">Todos los clientes</span>
+          <span *ngIf="client.value !== 'default'">{{ selectedClientName }}</span>
+          <br>
+          <span>{{ cantTransactions + " registros" }}</span>
+
+          <span>{{ "Saldo: " + amount }}</span>
         </div>
+        <div class="row">
+          <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
+            <thead class="primary-color customTableText">
+              <tr>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th *ngIf='enableActionButtons'>Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-wrapper" *ngIf='filteredTransactions && filteredTransactions.length'>
+              <tr *ngFor='let transaction of filteredTransactions; let i = index'>
+                <td
+                  *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+                  {{ transaction.client.name }}</td>
+                <td
+                  *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.date | date:'dd/MM/yy HH:mm'
+                                    }}</td>
+                <td
+                  *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ transaction.amount |
+                                    currency:'USD':code:'2.2-2' }}</td>
+                <td class="align-middle"
+                  *ngIf='(transaction.deleted === false) && (i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'>
+                  <a [routerLink]="['/clients-module/current-accounts', { outlets: { edit: ['editTransaction', transaction._id] } }]"
+                    class="btn btn-yellow btn-sm customButtonText" *ngIf='enableDetail'>Detalle</a>
+                  <a (click)="showModalDelete(deleteTemplate, transaction._id)" *ngIf='enableDelete'><img
+                      src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot class="grey lighten-5 w-100">
+              <tr>
+                <td colspan="4">
+                  <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredTransactions">
+                  </mdb-table-pagination>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </div>
-    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
-        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
-    </div>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+    <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+  </div>
 </div>

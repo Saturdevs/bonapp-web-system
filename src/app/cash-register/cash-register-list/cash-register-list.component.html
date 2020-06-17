@@ -1,76 +1,77 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage"
-        (delete)="deleteCashRegister()" (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage"
+    (delete)="deleteCashRegister()" (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
-    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0">
-        <div class="settingsTitle">
-            <div class="float-left">
-                <header class="major">
-                    <h5 class="customTitle">{{ pageTitle }}</h5>
-                </header>
-            </div>
-            <div class="float-right">
-                <a [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['newCashRegister'] } }]"
-                    mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius 
-                    *ngIf='enableNew'> + Nueva Caja</a>
-            </div>
-        </div>
-
-        <div class="row mb-2 mt-2 ml-2">
-            <span class="red-label">{{ cantDeleteDefaultLabel }}</span>
-        </div>
-
-        <div class="row mb-2 mt-2 ml-2" *ngIf="validationMessage !== 'undefined' && validationMessage !== null">
-            <span class="errorMessage">{{ validationMessage }}</span>
-        </div>
-
-        <div class="ml-5 mr-5 pl-5 pr-5  pt-1 pb-2 mt-2 text-center">
-            <div class="row mb-2 customBox">
-                <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
-                    <h6 class="pt-2">Filtrar:</h6>
-                    <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
-                        <input type="text" class="input-alternate" placeholder="Nombre" name="query"
-                            [(ngModel)]='listFilter' id="query">
-                    </div>
-                </form>
-            </div>
-
-            <div class="row">
-                <table class="table table-bordered table-hover customTable">
-                    <thead class="primary-color customTableText">
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Disponible</th>
-                            <th *ngIf='enableActionButtons'>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-wrapper" *ngIf='cashRegisters && cashRegisters.length'>
-                        <tr *ngFor='let cashRegister of filteredCashRegisters '>
-                            <td>{{ cashRegister.name }}</td>
-                            <td>{{ cashRegister.availableDescription }}</td>
-                            <td class="align-middle" *ngIf='enableActionButtons'>
-                                <input [class.buttonEdit]="true" type="image" src="assets/img/editar.png" [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
-                                    *ngIf='enableEdit'>
-                                <input type="image" [disabled]="cashRegister.default === true" 
-                                    (click)="showModalDelete(deleteTemplate, cashRegister._id)"
-                                    *ngIf='enableDelete' src="assets/img/eliminar.png" [class.buttonEdit]="true">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0">
+    <div class="settingsTitle">
+      <div class="float-left">
+        <header class="major">
+          <h5 class="customTitle">{{ pageTitle }}</h5>
+        </header>
+      </div>
+      <div class="float-right">
+        <a [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['newCashRegister'] } }]"
+          mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true"
+          [class.customButton]="true" mdbRippleRadius *ngIf='enableNew'> + Nueva Caja</a>
+      </div>
     </div>
 
-    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
-        <router-outlet name="edit" (deactivate)='reloadItems()'></router-outlet>
+    <div class="row mb-2 mt-2 ml-2">
+      <span class="red-label">{{ cantDeleteDefaultLabel }}</span>
     </div>
+
+    <div class="row mb-2 mt-2 ml-2" *ngIf="validationMessage !== 'undefined' && validationMessage !== null">
+      <span class="errorMessage">{{ validationMessage }}</span>
+    </div>
+
+    <div class="ml-5 mr-5 pl-5 pr-5  pt-1 pb-2 mt-2 text-center">
+      <div class="row mb-2 customBox">
+        <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+          <h6 class="pt-2">Filtrar:</h6>
+          <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
+            <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+              id="query">
+          </div>
+        </form>
+      </div>
+
+      <div class="row">
+        <table class="table table-bordered table-hover customTable">
+          <thead class="primary-color customTableText">
+            <tr>
+              <th>Nombre</th>
+              <th>Disponible</th>
+              <th *ngIf='enableActionButtons'>Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="table-wrapper" *ngIf='cashRegisters && cashRegisters.length'>
+            <tr *ngFor='let cashRegister of filteredCashRegisters '>
+              <td>{{ cashRegister.name }}</td>
+              <td>{{ cashRegister.availableDescription }}</td>
+              <td class="align-middle" *ngIf='enableActionButtons'>
+                <input [class.buttonEdit]="true" type="image" src="assets/img/editar.png"
+                  [routerLink]="['/settings/general-settings/cash-register', { outlets: { edit: ['editCashRegister', cashRegister._id] } }]"
+                  *ngIf='enableEdit'>
+                <input type="image" [disabled]="cashRegister.default === true"
+                  (click)="showModalDelete(deleteTemplate, cashRegister._id)" *ngIf='enableDelete'
+                  src="assets/img/eliminar.png" [class.buttonEdit]="true">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+    <router-outlet name="edit" (deactivate)='reloadItems()'></router-outlet>
+  </div>
 </div>

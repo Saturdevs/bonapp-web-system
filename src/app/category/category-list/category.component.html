@@ -1,7 +1,7 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteCategory()"
-        (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteCategory()"
+    (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
@@ -10,62 +10,70 @@
 </ng-template>
 
 <div class="pageTitle">
-    <div style="float: left">
-        <header class="major">
-                <h5>{{ pageTitle }}</h5>
-        </header>
-    </div>
-    <div style="float: right">
-        <a [routerLink]="['newCategory']" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
-        *ngIf='enableNew'> + Nueva Categoria</a>
-    </div>
+  <div style="float: left">
+    <header class="major">
+      <h5>{{ pageTitle }}</h5>
+    </header>
+  </div>
+  <div style="float: right">
+    <a [routerLink]="['newCategory']" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+      [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius *ngIf='enableNew'> 
+      + Nueva Categoria
+    </a>
+  </div>
 </div>
 <div class="ml-5 mr-5 pl-5 pr-5  pt-1 pb-2 mt-2 text-center">
-    <div class="row mb-2 customBox">
-        <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
-            <h6 class="pt-2">Filtrar:</h6>
-            <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
-                <input type="text" class="input-alternate" placeholder="Nombre"  name="query" [(ngModel)]='listFilter' id="query" >
-            </div>
-            <h6 class="pt-2">Categorias para el menu:</h6>
-            <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
-                <mdb-select #queryMenu name="queryMenu" (selected)="filterMenu(queryMenu.value)" id="queryMenu" [options]="menusSelect"  
-                [(ngModel)]="selectedValue" placeholder="Choose your option" class="colorful-select dropdown-primary"></mdb-select>
-            </div>
-        </form>    
-    </div>
+  <div class="row mb-2 customBox">
+    <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+      <h6 class="pt-2">Filtrar:</h6>
+      <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
+        <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+          id="query">
+      </div>
+      <h6 class="pt-2">Categorias para el menu:</h6>
+      <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left">
+        <mdb-select #queryMenu name="queryMenu" (selected)="filterMenu(queryMenu.value)" id="queryMenu"
+          [options]="menusSelect" [(ngModel)]="selectedValue" placeholder="Choose your option"
+          class="colorful-select dropdown-primary"></mdb-select>
+      </div>
+    </form>
+  </div>
 
-    <div class="row">
-        <table class="table table-bordered table-hover customTable"  mdbTable #tableEl="mdbTable">
-            <thead class="primary-color customTableText">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Menu</th>
-                    <th class="customShortTh">Disponible</th>
-                    <th *ngIf='enableActionButtons'>Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="table-wrapper" *ngIf='categories && categories.length'>
-                <tr *ngFor = 'let category of filteredCategories; let i = index' >
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{category.name}}</td>
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>{{ category.menu.name }}</td>
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)' class="align-middle customShortTh">{{ category.availableDescription }}</td>
-                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons' class="align-middle">
-                        <a [routerLink]="['edit', category._id]" 
-                        *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                        <a (click) = "showModalDelete(deleteTemplate, noDelete, category._id)" 
-                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot class="grey lighten-5 w-100">
-                <tr>
-                    <td colspan="4">
-                    <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCategories"></mdb-table-pagination>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+  <div class="row">
+    <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
+      <thead class="primary-color customTableText">
+        <tr>
+          <th>Nombre</th>
+          <th>Menu</th>
+          <th class="customShortTh">Disponible</th>
+          <th *ngIf='enableActionButtons'>Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="table-wrapper" *ngIf='categories && categories.length'>
+        <tr *ngFor='let category of filteredCategories; let i = index'>
+          <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+            {{category.name}}</td>
+          <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'>
+            {{ category.menu.name }}</td>
+          <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
+            class="align-middle customShortTh">{{ category.availableDescription }}</td>
+          <td
+            *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex) && enableActionButtons'
+            class="align-middle">
+            <a [routerLink]="['edit', category._id]" *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px"
+                width="auto"></a>
+            <a (click)="showModalDelete(deleteTemplate, noDelete, category._id)" *ngIf='enableDelete'><img
+                src="assets/img/eliminar.png" height="40px" width="auto"></a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot class="grey lighten-5 w-100">
+        <tr>
+          <td colspan="4">
+            <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredCategories"></mdb-table-pagination>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 </div>
-                

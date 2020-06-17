@@ -1,67 +1,67 @@
 <ng-template #deleteTemplate>
-    <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteSize()"
-        (close)="closeModal()">
-    </app-delete-template>
+  <app-delete-template [modalTitle]="modalDeleteTitle" [modalMessage]="modalDeleteMessage" (delete)="deleteSize()"
+    (close)="closeModal()">
+  </app-delete-template>
 </ng-template>
 
 <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
 </ng-template>
 
 <div class="row pl-0 pr-0 ml-0 mr-0 pt-0 heightThree">
-    <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
-        <div class="settingsTitle">
-            <div class="float-left">
-                <header class="major">
-                    <h5 class="customTitle">{{ pageTitle }}</h5>
-                </header>
-            </div>
-            <div class="float-right">
-                <a [routerLink]="['/settings/general-settings/size', { outlets: { edit: ['newSize'] } }]"
-                    mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true" mdbRippleRadius
-                    *ngIf='enableNew'> + Nuevo Tamaño
-                </a>
-            </div>
-        </div>
-        <div class="row pl-0 pr-0 ml-0 mr-0">
-            <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
-                <div class="row mb-2 customBox">
-                    <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
-                        <h6 class="pt-2">Filtrar:</h6>
-                        <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
-                            <input type="text" class="input-alternate" placeholder="Nombre" name="query"
-                                [(ngModel)]='listFilter' id="query">
-                        </div>
-                    </form>
-                </div>
-                <div class="row">
-                    <table class="table table-bordered table-hover customTable">
-                        <thead class="primary-color customTableText">
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Disponible</th>
-                                <th *ngIf='enableActionButtons'>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-wrapper" *ngIf='sizes && sizes.length'>
-                            <tr *ngFor='let size of filteredSizes '>
-                                <td>{{ size.name }}</td>
-                                <td>{{ size.availableDescription }}</td>
-                                <td class="align-middle" *ngIf='enableActionButtons'>
-                                    <a [routerLink]="['/settings/general-settings/size', { outlets: { edit: ['editSize', size._id] } }]"
-                                        *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
-                                    <a (click)="showModalDelete(deleteTemplate, size._id)"
-                                        *ngIf='enableDelete'><img src="assets/img/eliminar.png" height="40px" width="auto"></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+  <div class="col-md-8 col-lg-8 col-sm-8 pr-0 pl-0 mr-0 pr-0 customTitleBar">
+    <div class="settingsTitle">
+      <div class="float-left">
+        <header class="major">
+          <h5 class="customTitle">{{ pageTitle }}</h5>
+        </header>
+      </div>
+      <div class="float-right">
+        <a [routerLink]="['/settings/general-settings/size', { outlets: { edit: ['newSize'] } }]" mdbBtn role="button"
+          rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [class.customButton]="true"
+          mdbRippleRadius *ngIf='enableNew'> + Nuevo Tamaño
+        </a>
+      </div>
     </div>
-    <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
-        <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+    <div class="row pl-0 pr-0 ml-0 mr-0">
+      <div class="col-md-12 col-lg-12 col-sm-12 pl-5 pr-5 pt-4 pb-2 mt-2 text-center">
+        <div class="row mb-2 customBox">
+          <form #form="ngForm" novalidate class="form-inline col-md-12 col-lg-12">
+            <h6 class="pt-2">Filtrar:</h6>
+            <div class="md-form form-group mr-0 ml-0 col-md-3 col-lg-3">
+              <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+                id="query">
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <table class="table table-bordered table-hover customTable">
+            <thead class="primary-color customTableText">
+              <tr>
+                <th>Nombre</th>
+                <th>Disponible</th>
+                <th *ngIf='enableActionButtons'>Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="table-wrapper" *ngIf='sizes && sizes.length'>
+              <tr *ngFor='let size of filteredSizes '>
+                <td>{{ size.name }}</td>
+                <td>{{ size.availableDescription }}</td>
+                <td class="align-middle" *ngIf='enableActionButtons'>
+                  <a [routerLink]="['/settings/general-settings/size', { outlets: { edit: ['editSize', size._id] } }]"
+                    *ngIf='enableEdit'><img src="assets/img/editar.png" height="40px" width="auto"></a>
+                  <a (click)="showModalDelete(deleteTemplate, size._id)" *ngIf='enableDelete'><img
+                      src="assets/img/eliminar.png" height="40px" width="auto"></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="col-md-4 col-lg-4 col-sm-4 mr-0 pr-0 pl-0 pb-0 mt-0 pt-0 outletGeneric">
+    <router-outlet name="edit" (deactivate)='reloadItems($event)'></router-outlet>
+  </div>
 </div>

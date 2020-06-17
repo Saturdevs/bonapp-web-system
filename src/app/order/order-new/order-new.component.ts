@@ -16,7 +16,6 @@ import {
   Order,
   CashRegister,
   PaymentType,
-  UserRoles,
   AuthenticationService,
   User,
   Rights,
@@ -26,7 +25,10 @@ import {
   Table,
   TableStatus,
   ClientService,
-  Client
+  Client,
+  Constants,
+  Params,
+  ParamService
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -59,7 +61,8 @@ export class OrderNewComponent implements OnInit {
     private _authenticationService: AuthenticationService,
     private tableService: TableService,
     private toast: ToastService,
-    private clientService: ClientService) { }
+    private clientService: ClientService,
+    private _paramService: ParamService) { }
 
   pageTitle: String = 'Nuevo Pedido';
   noCategoriesText: string = 'Debe seleccionar un menu y una categoria de la lista.';
@@ -102,6 +105,8 @@ export class OrderNewComponent implements OnInit {
   searchStr = new Subject();
   /**Producto a eliminar del array de productos del pedido. */
   productToRemoveFromOrder: ProductsInUserOrder;
+  /** Nombre de usuario del usuario para el que se quiere eliminar un producto del pedido */
+  usernameProductToRemove: String;
   /**Producto para mostrar las opciones y los tamanos. */
   productToFindSizesAndOptions: Product;
   /**Motivo para eliminar el producto del pedido. */
@@ -109,7 +114,7 @@ export class OrderNewComponent implements OnInit {
   /**Cantidad del producto seleccionado por la lista. */
   qtyProd: number = 1;
   /**Productos ya almacenados en el pedido */
-  productsInOrder: Array<ProductsInUserOrder> = [];
+  usersInOrder: Array<UsersInOrder> = [];
   /**Cajas registradoras registradas en la bd*/
   cashRegisters: Array<CashRegister> = [];
   /**Tipos de pago registrados en la bd*/
@@ -145,9 +150,13 @@ export class OrderNewComponent implements OnInit {
   private newOrderIsCreated: boolean;
   private tableToSlice: Table;
   private client: Client;
+  private users: User[] = [];
+  public waiterSelect: Array<any> = [];
+  public waiterSelected: any;
+  public waiterRequired:Boolean = false;
   private productsToFilter = [];
-
-
+  public userSelect: Array<any> = [];
+  public userSelected: any = null;
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
@@ -157,21 +166,77 @@ export class OrderNewComponent implements OnInit {
       }
     );
 
+    //get resolvers data
     this.order = this._route.snapshot.data['order'];
-    this.products = [];
-    this.productsToFilter = this._route.snapshot.data['products'];
-    this.filteredProducts = this.productsToFilter;
     this.menus = this._route.snapshot.data['menus'];
     this.dailyMenus = this._route.snapshot.data['dailyMenus'];
-    this.categories = [];
     this.cashRegisters = this._route.snapshot.data['cashRegisters'];
     this.paymentTypes = this._route.snapshot.data['paymentTypes'];
+    this.users = this._route.snapshot.data['users'];
+    this.productsToFilter = this._route.snapshot.data['products'];
+
+    this.products = [];
+    this.filteredProducts = this.productsToFilter;    
+    this.categories = [];    
     this.totalToConfirm = 0;
     this.order.totalPrice = isNullOrUndefined(this.order.totalPrice) ? 0 : this.order.totalPrice;
     this.getProducts();
     this.getFilteredData();
     if(!isNullOrUndefined(this.order.users[0].clientId)){
       this.getClient(this.order.users[0].clientId);
+    }
+
+    this.setWaiterSelect();
+    this.setUserSelect();
+    this.setProductsInOrder();
+  }
+
+  setWaiterSelect(): void {
+    this.waiterSelect.push({ value: 'default', label: 'Seleccione Mozo...' });
+    for (let user of this.users) {
+      this.waiterSelect.push({ value: user._id, label: user.lastname + ' ' + user.name, selected: false });
+    };    
+
+    if (this.currentUser.isGeneral && !this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {      
+      this.waiterSelected = 'default';
+    } else {
+      this.waiterSelected = this.orderService.getEmployeeWhoAddedId();
+    }
+  }
+
+  setUserSelect(): void {
+    if (this.order.users.length > 1) {
+      this.order.users.sort((a, b) => a.username.localeCompare(b.username));
+      this.userSelect.push({ value: Constants.DEFAULT, label: 'Todos', selected: true });
+      this.userSelected = Constants.DEFAULT;
+    }
+    const bonappUserIndex = this.order.users.findIndex(usr => usr.username === Constants.BONAPP_WEB_USER);
+    if (bonappUserIndex !== -1) {
+      const bonappUser = this.order.users[bonappUserIndex];
+      if (this.userSelected === null) {
+        this.userSelected = bonappUser.username;
+      }
+    }
+    for (let user of this.order.users) {
+      this.userSelect.push({ value: user.username, label: user.username, selected: false });
+    }
+
+    if (this.userSelected === null) {
+      this.userSelected = this.order.users[0].username;
+    }    
+  }
+
+  setProductsInOrder(): void {
+    this.usersInOrder = [];
+    if (this.userSelected === Constants.DEFAULT) {
+      for (let user of this.order.users) {
+        this.usersInOrder.push(user);
+      }
+    } else {      
+      const user = this.order.users.find(usr => usr.username === this.userSelected);
+      if (!isNullOrUndefined(user)) {
+        this.usersInOrder.push(user);
+      }
     }
   }
 
@@ -230,9 +295,11 @@ export class OrderNewComponent implements OnInit {
   updateProductsOrder(data: any): void {
     this.orderService.updateProductsOrder(data).subscribe(
       orderReturned => {
+        this.waiterRequired = false;
         this.order = orderReturned;
         this.totalToConfirm = 0;
         this.preOrderProducts = [];
+        this.setProductsInOrder();
       },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -453,11 +520,13 @@ export class OrderNewComponent implements OnInit {
       product.options = null;
     }
 
-    if (isNullOrUndefined(prodInPreOrder.size)) {
+    if (isNullOrUndefined(prodInPreOrder.size) ||
+        (Object.keys(prodInPreOrder.size).length === 0 && prodInPreOrder.size.constructor === Object)) {
       prodInPreOrder.size = null;
     }
 
-    if (isNullOrUndefined(product.size)) {
+    if (isNullOrUndefined(product.size) || 
+        (Object.keys(product.size).length === 0 && product.size.constructor === Object)) {
       product.size = null;
     }
 
@@ -525,10 +594,11 @@ export class OrderNewComponent implements OnInit {
   }
 
   deleteProductOrder(product: ProductsInUserOrder): void {
-    let data = { productToRemove: product, order: this.order, username: UserRoles.ADMIN };
+    let data = { productToRemove: product, order: this.order, username: this.usernameProductToRemove };
     this.orderService.deleteProductOrder(data).subscribe(
       orderReturned => {
         this.order = orderReturned;
+        this.setProductsInOrder();
         if (isNullOrUndefined(product.dailyMenuId)) {
           if (this.products.find(x => x._id === product.product).stockControl) {
             let productToUpdateStock = this.products.find(x => x._id === product.product);
@@ -554,7 +624,7 @@ export class OrderNewComponent implements OnInit {
                 }
               });
           });
-        }
+        }        
       },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -589,14 +659,21 @@ export class OrderNewComponent implements OnInit {
 
   /**Confirmar pre order */
   confirmPreOrder(): void {
-    if (!isNullOrUndefined(this.preOrderProducts) && this.preOrderProducts.length > 0) {
-      this.preOrderProducts.forEach(productInPreOrder => {
-        if (productInPreOrder.observations === this.prodObservation || productInPreOrder.observations === '') {
-          productInPreOrder.observations = null;
-        }
-      })
-      let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: UserRoles.ADMIN, order: this.order };
-      this.updateProductsOrder(data);
+    if (this.waiterSelected !== 'default') {
+      if (!isNullOrUndefined(this.preOrderProducts) && this.preOrderProducts.length > 0) {
+        this.preOrderProducts.forEach(productInPreOrder => {
+          if (productInPreOrder.observations === this.prodObservation || productInPreOrder.observations === '') {
+            productInPreOrder.observations = null;
+          }
+
+          productInPreOrder.employeeWhoAdded = this.orderService.getEmployeeWhoAddedId();
+          productInPreOrder.employee = this.waiterSelected;
+        })
+        let data = { products: this.preOrderProducts, total: this.totalToConfirm, username: this.userSelected, order: this.order };
+        this.updateProductsOrder(data);
+      }
+    } else {
+      this.waiterRequired = true;
     }
   }
 
@@ -609,9 +686,9 @@ export class OrderNewComponent implements OnInit {
     component.select();
   }
 
-  showModalRemoveProduct(template: TemplateRef<any>, product: ProductsInUserOrder): void {
-    this.productToRemoveFromOrder = JSON.parse(JSON.stringify(product)) as ProductsInUserOrder;;
-
+  showModalRemoveProduct(template: TemplateRef<any>, product: ProductsInUserOrder, user: UsersInOrder): void {
+    this.productToRemoveFromOrder = JSON.parse(JSON.stringify(product)) as ProductsInUserOrder;
+    this.usernameProductToRemove = user.username;
     this.modalRef = this.modalService.show(template, { backdrop: true, ignoreBackdropClick: true });
   }
 
@@ -756,7 +833,7 @@ export class OrderNewComponent implements OnInit {
           order.users = new Array<UsersInOrder>();
           order.users[0] = new UsersInOrder();
           //aca hay que setear el id del usuario admin. todavia no esta creado.
-          order.users[0].username = "admin";
+          order.users[0].username = Constants.BONAPP_WEB_USER;
           order.users[0].owner = true;
           order.users[0].products = new Array<ProductsInUserOrder>();
           order.users[0].products = [];
@@ -769,7 +846,7 @@ export class OrderNewComponent implements OnInit {
                 products.forEach(product => {
                   totalToConfirm += product.price;
                 });
-                let data = { products: products, total: totalToConfirm, username: UserRoles.ADMIN, order: newCreatedOrder };
+                let data = { products: products, total: totalToConfirm, username: Constants.BONAPP_WEB_USER, order: newCreatedOrder };
                 this.updateProductsOrder(data)
                 let productToDelete = new ProductsInUserOrder();
                 this.productsToSlice.forEach(product => {
@@ -888,5 +965,14 @@ export class OrderNewComponent implements OnInit {
     this.selectedOptions = [];
     this.modalRef.hide();
     this.modalRef = null;
+  }
+
+  selectWaiter(value) {
+    this.waiterSelected = value;
+  }
+
+  selectUser(value) {    
+    this.userSelected = value;
+    this.setProductsInOrder();
   }
 }

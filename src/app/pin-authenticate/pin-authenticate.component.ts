@@ -105,7 +105,7 @@ export class PinAuthenticateComponent implements OnInit, AfterViewInit {
   }
 
   openExistingOrder(user: User) {
-    this._orderService.employeeWhoAddedId = user._id;
+    this._orderService.setEmployeeWhoAddedId(user._id);
     this._router.navigate(['./orders/orderNew', this.tableNumber]);
   }
 

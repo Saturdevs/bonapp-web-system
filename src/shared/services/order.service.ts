@@ -6,32 +6,21 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiService } from './api.service';
 import { Order, UsersInOrder, ProductsInUserOrder } from '../models';
-import { OrderStatus } from '../enums';
+import { OrderStatus, Constants } from '../enums';
 
 @Injectable()
 export class OrderService {
-
-  private _employeeWhoAddedId: string;
-  private _employeeId: string;
 
   constructor(
     private apiService: ApiService
   ) { }
   
-  public get employeeWhoAddedId(): string {
-    return this._employeeWhoAddedId;
+  public getEmployeeWhoAddedId(): string {
+    return localStorage.getItem('employeeWhoAddedId');
   }
 
-  public set employeeWhoAddedId(value: string) {
-    this._employeeWhoAddedId = value;
-  }
-
-  public get employeeId(): string {
-    return this._employeeId;
-  }
-
-  public set employeeId(value: string) {
-    this._employeeId = value;
+  public setEmployeeWhoAddedId(value: string) {
+    localStorage.setItem('employeeWhoAddedId', value);
   }
 
   public createOrder(tableNumber: number, orderType: string): Order {
@@ -41,7 +30,7 @@ export class OrderService {
     order.status = OrderStatus.OPEN;
     order.users = new Array<UsersInOrder>();
     order.users[0] = new UsersInOrder();
-    order.users[0].username = "bonapp-web";
+    order.users[0].username = Constants.BONAPP_WEB_USER;
     order.users[0].owner = true;
     order.users[0].products = new Array<ProductsInUserOrder>();
     order.users[0].products = [];

@@ -105,7 +105,7 @@
 }
 
 .customTableNumberTitle{
-    height: 10%;
+    height: 15%;
     padding-left: .5rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -130,20 +130,21 @@
 }
 
 .customAddProductsTitle{
-    background-color: #999999;
-    color: white;
+    background-color: #fac366;
+    color: #424242;
     font-weight: bold;
     padding-top: .75rem;
     padding-bottom: .75rem;
 }
 
 .customAddProductsSection{
-    background-color: #f1f1f1;
+    background-color: #fff0db;
     padding-top: 0.5rem;
 }
 
 .infoSection{
-    background-color: #f6f6f6
+    background-color: #f6f6f6;
+    border-left: solid 4px #999999;
 }
 
 .buttonOrder{
@@ -153,7 +154,7 @@
 .preordeerProduct{
     padding-left: 1.5rem;
     padding-top: .5rem;
-    background-color: #ffdd77;
+    background-color: #fddaa2;
     border-left: solid 4px #fb4;
     border-top: solid 1px #f5c963;  
 }
@@ -177,7 +178,7 @@
 }
 
 .totalOrder{
-    background-color: #4c4c4c;
+    background-color: #718239;
     color: white;
     font-weight: bold;
     padding-top: .75rem;
@@ -190,13 +191,13 @@
 }
 
 .increaseDecreaceIcon{
-    color: #730;
-    opacity: .5;
+    color: #718239;
 }
 
 .increaseDecreaceButton{
-    border: 1px solid #f5c963;
+    border: 2px solid #718239;
     background-color: transparent;
+    border-radius:30px;
 }
 
 .increaseDecreaceButton:active {
@@ -209,7 +210,7 @@
 }
 
 .productQuantityPriceContainer{
-    border: 1px solid #f5c963;
+    border: 1px solid transparent;
 }
 
 .productPrice{
@@ -224,4 +225,8 @@
     padding-right: 1rem;
     padding-bottom: 1rem;
     margin-left:30%;
+}
+
+.warningMsg {
+  color: red;
 }
