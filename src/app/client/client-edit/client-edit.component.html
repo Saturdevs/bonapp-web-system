@@ -19,12 +19,13 @@
   <form class="pt-4 pr-3 pl-3" #form="ngForm" method="post" novalidate>
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #clientName="ngModel" required type="text" class="form-control" [class.is-invalid]="clientName.invalid && (clientName.dirty || clientName.touched)"
-            name="clientName" id="clientName" [(ngModel)]="client.name">
+          <input #clientName="ngModel" required type="text" class="form-control customInput customInputHeight"
+            [class.is-invalid]="clientName.invalid && (clientName.dirty || clientName.touched)" name="clientName"
+            id="clientName" [(ngModel)]="client.name">
         </div>
       </div>
       <div *ngIf="clientName.invalid && (clientName.dirty || clientName.touched)" class="alert alert-danger">
@@ -34,44 +35,45 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Teléfono:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #clientTel="ngModel" type="text" class="form-control" [class.is-invalid]="clientTel.invalid && (clientTel.dirty || clientTel.touched)"
-            name="clientTel" id="clientTel" [(ngModel)]="client.tel">
+          <input #clientTel="ngModel" type="text" class="form-control customInput customInputHeight"
+            [class.is-invalid]="clientTel.invalid && (clientTel.dirty || clientTel.touched)" name="clientTel"
+            id="clientTel" [(ngModel)]="client.tel">
         </div>
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Dirección:</label>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 pl-0">
-          <input #clientAddressStreet="ngModel" type="text" class="form-control" name="clientAddressStreet" id="clientAddressStreet"
-            [(ngModel)]="client.addressStreet" placeholder="Calle">
+          <input #clientAddressStreet="ngModel" type="text" class="form-control customInput customInputHeight"
+            name="clientAddressStreet" id="clientAddressStreet" [(ngModel)]="client.addressStreet" placeholder="Calle">
         </div>
-        <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #clientAddressNumber="ngModel" type="text" class="form-control" name="clientAddressNumber" id="clientAddressNumber"
-            [(ngModel)]="client.addressNumber" placeholder="Número">
+        <div class="col-md-2 col-lg-2 col-sm-2 ml-2">
+          <input #clientAddressNumber="ngModel" type="text" class="form-control customInput customInputHeight"
+            name="clientAddressNumber" id="clientAddressNumber" [(ngModel)]="client.addressNumber" placeholder="Número">
         </div>
-        <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #clientAddressDpto="ngModel" type="text" class="form-control" name="clientAddressDpto" id="clientAddressDpto"
-            [(ngModel)]="client.addressDpto" placeholder="Piso / Dpto">
+        <div class="col-md-3 col-lg-3 col-sm-3 ml-2">
+          <input #clientAddressDpto="ngModel" type="text" class="form-control customInput customInputHeight"
+            name="clientAddressDpto" id="clientAddressDpto" [(ngModel)]="client.addressDpto" placeholder="Piso / Dpto">
         </div>
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Email:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #clientEmail="ngModel" type="email" class="form-control" name="clientEmail" id="clientEmail"
-            [(ngModel)]="client.email" placeholder="Email">
+          <input #clientEmail="ngModel" type="email" class="form-control customInput customInputHeight"
+            name="clientEmail" id="clientEmail" [(ngModel)]="client.email" placeholder="Email">
         </div>
       </div>
     </div>
@@ -79,7 +81,8 @@
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <mdb-checkbox [class.checkbox-primary-custom]="true"  [(ngModel)]="client.enabledTransactions" name="checkEnabledTransactions"> {{ checkboxText }}</mdb-checkbox>
+          <mdb-checkbox [class.checkbox-primary-custom]="true" [(ngModel)]="client.enabledTransactions"
+            name="checkEnabledTransactions"> {{ checkboxText }}</mdb-checkbox>
         </div>
       </div>
     </div>
@@ -87,7 +90,8 @@
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm" *ngIf='client.enabledTransactions'>
       <div class="row pl-2">
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #clientAddressDpto="ngModel" type="number" min='0' step='100' class="form-control" name="clientLimitCtaCte" id="clientLimitCtaCte"
+          <input #clientAddressDpto="ngModel" type="number" min='0' step='100'
+            class="form-control customInput customInputHeight" name="clientLimitCtaCte" id="clientLimitCtaCte"
             [(ngModel)]="client.limitCtaCte" placeholder="Limite Cta Cte.">
         </div>
       </div>
@@ -95,8 +99,11 @@
 
     <div class="col-12">
       <div class="col-7 offset-5">
-        <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-        <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="(form.invalid)" (click)="updateClient(client)">{{saveButton}}</button>
+        <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+          [class.customButtonCancel]="true" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+        <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+          [class.btn-primary-custom]="true" [disabled]="(form.invalid)"
+          (click)="updateClient(client)">{{saveButton}}</button>
       </div>
     </div>
   </form>

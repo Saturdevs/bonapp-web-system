@@ -194,8 +194,8 @@
                     (change)="setDefaultSize(i)" name="default" id="{{ 'default' + i }}" [value]="true">
                   <label class="form-check-label" for="{{ 'default' + i }}">Default</label>
                 </div>
-              </div>
-              <button class="botonx col-md-1 ml-3" no-margin color="danger" (click)="removeSize(i)">-</button>
+              </div>              
+              <a class="ml-4 mt-1" (click)="removeSize(i)"><img src="assets/img/equis.png" height="25px" width="auto"></a>
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@
                   El precio es requerido
                 </div>
               </div>
-              <button class="botonx ml-3" (click)="removeOption(i)">-</button>
+              <a class="ml-4 mt-1" (click)="removeOption(i)"><img src="assets/img/equis.png" height="25px" width="auto"></a>
             </div>
           </div>
         </div>
@@ -241,7 +241,7 @@
       </div>
     </div>
 
-    <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2 float-right mt-5">
+    <div class="row col-md-4 col-lg-4 col-xl-4 col-sm-6 float-right mt-5 ml-0">
       <ul align="center">
         <li>
           <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
