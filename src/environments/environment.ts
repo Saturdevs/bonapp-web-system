@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  api_url: 'http://localhost:3001/api',
-  socket_url: 'http://localhost:3001'
+  api_url: 'https://bonapp.herokuapp.com/api',
+  socket_url: 'https://bonapp.herokuapp.com/'
 };

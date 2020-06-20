@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 import { CONFLICT } from 'http-status-codes';
@@ -120,7 +120,8 @@ export class TableListComponent implements OnInit {
     private _authenticationService: AuthenticationService,
     private _transalateService: TranslateService,
     private _paramService: ParamService,
-    private _socketService: SocketIoService) { }
+    private _socketService: SocketIoService,
+    private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
@@ -178,12 +179,13 @@ export class TableListComponent implements OnInit {
       this.gridConfig.resizable = false;
       this.selectedTable = new Table();
     
-      // this._socketService.updateTable() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
-      // .subscribe(updateTables => {
-      //   if(updateTables){
-      //     this.getTables();
-      //   }
-      // });
+      this._socketService.updateTable() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
+      .subscribe(updateTables => {
+        if(updateTables){
+          this.getTables();
+      this.changeDetector.detectChanges();      
+        }
+      });
     }
   }
 
