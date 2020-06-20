@@ -9,7 +9,7 @@ import { IMyOptions, IMyDate } from 'ng-uikit-pro-standard';
 export class DatePickerComponent implements OnInit {
   private currentDate: Date;
   private disabledSince : IMyDate;
-  private model: Date;
+  model: Date;
   @Input() dpName : string;
   @Input() dpPlaceHolder : string;
   @Output() onValueChanged = new EventEmitter<Date>();

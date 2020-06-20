@@ -33,7 +33,7 @@ export class DailyMenuNewComponent implements OnInit, AfterViewInit {
   private modalCancelMessage: string;
   private modalPriceNotMatchTitle: string;
   private modalPriceNotMatchMessage: string;
-  private newProductPictureData: string;
+  newProductPictureData: string;
   pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();

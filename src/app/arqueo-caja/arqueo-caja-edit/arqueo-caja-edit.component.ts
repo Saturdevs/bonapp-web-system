@@ -20,10 +20,10 @@ import { UtilFunctions } from '../../../shared/functions/utilFunctions';
 export class ArqueoCajaEditComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  private serviceErrorTitle = 'Error de Servicio';
-  private pageTitle: String = 'Editando';
-  private saveButton: String = 'Finalizar Arqueo';
-  private cancelButton: String = 'Cancel';
+  serviceErrorTitle = 'Error de Servicio';
+  pageTitle: String = 'Editando';
+  saveButton: String = 'Finalizar Arqueo';
+  cancelButton: String = 'Cancel';
   cashCountForm: FormGroup;
   public modalRef: BsModalRef;
   private modalErrorTittle: string;

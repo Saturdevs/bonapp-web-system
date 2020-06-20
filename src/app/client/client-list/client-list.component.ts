@@ -24,7 +24,7 @@ export class ClientListComponent implements OnInit, AfterViewInit {
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Clientes";
   private serviceErrorTitle = 'Error de Servicio';
-  private filterLabel = 'Filtrar por Cliente:';
+  filterLabel = 'Filtrar por Cliente:';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string;

@@ -46,18 +46,18 @@ export class OrderCloseComponent implements OnInit {
     private transactionService: TransactionService
   ) { }
 
-  private title: String = "Cerrar Mesa ";
+  title: String = "Cerrar Mesa ";
   private aditionsTitle: String = "ADICIONES";
   private paymentsTitle: String = "PAGOS";
   private cashRegisterLabel: String = "Caja Registradora";
-  private closeTableButton: String = "Cerrar Mesa";
-  private cancelButton: String = "Cancelar";
+  closeTableButton: String = "Cerrar Mesa";
+  cancelButton: String = "Cancelar";
   private changeLabel: String = "Vuelto";
   private discountRateLabel: String = "Descuento";
   private partialPaidAmountLabel: String = "Total pagado hasta el momento:"
   private closeOrderWithoutAditions: String = "La mesa no contiene adiciones.";
   private confirmButtonLabel: String = "Confirmar";
-  private cancelButtonLabel: String = "Cancelar";
+  cancelButtonLabel: String = "Cancelar";
   private payWithAccountError: String = "El monto a abonar con Cuenta Corriente sumado al saldo pendiente, supera el limite de gastos para esta cuenta."
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;

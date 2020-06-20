@@ -118,7 +118,7 @@ export class ArqueoCajaNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
+  showModalCancel(template: TemplateRef<any>){    
     this.modalRef = this.modalService.show(template, {backdrop: true});
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

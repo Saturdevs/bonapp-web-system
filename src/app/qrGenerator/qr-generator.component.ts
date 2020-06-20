@@ -31,7 +31,7 @@ export class QrGeneratorComponent implements OnInit {
   private modalErrorMessage: string;
   private modalDeleteTitle: string;
   private modalDeleteMessage: string;
-  private validationMessage: string;
+  validationMessage: string;
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   @ViewChild('confirmationTemplate') confirmationTemplate: TemplateRef<any>;

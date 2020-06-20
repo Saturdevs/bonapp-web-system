@@ -24,7 +24,7 @@ import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-sta
 export class CategoryComponent implements OnInit, AfterViewInit {
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
-  private pageTitle: string = 'Categorías';
+  pageTitle: string = 'Categorías';
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
   private modalErrorMessage: string;

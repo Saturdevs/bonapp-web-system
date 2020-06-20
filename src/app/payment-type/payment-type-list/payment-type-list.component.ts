@@ -23,13 +23,13 @@ export class PaymentTypeListComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Formas de Pago";
-  private cantDeleteDefaultPaymentTypeLabel = 'El tipo de pago por defecto no puede ser eliminado.';
+  cantDeleteDefaultPaymentTypeLabel = 'El tipo de pago por defecto no puede ser eliminado.';
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Forma de Pago";
   private modalDeleteMessage: string = "¿Estas seguro que desea eliminar la Forma de Pago?";
-  private validationMessage: string;
+  validationMessage: string;
   public modalRef: BsModalRef;
   paymentTypes: PaymentType[];
   filteredPaymentTypes: PaymentType[];

@@ -19,8 +19,8 @@ export class PaymentTypeEditComponent implements OnInit {
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle = 'Error de Servicio';
   private pageTitle: String = 'Editando';
-  private cancelButton: String = 'Cancelar';
-  private saveButton: String = 'Aceptar';
+  cancelButton: String = 'Cancelar';
+  saveButton: String = 'Aceptar';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
@@ -78,7 +78,7 @@ export class PaymentTypeEditComponent implements OnInit {
     return true;
   }
 
-  showModalCancel(template: TemplateRef<any>, idSize: any) {
+  showModalCancel(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea cancelar los cambios?";

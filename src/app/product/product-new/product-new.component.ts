@@ -33,7 +33,7 @@ export class ProductNewComponent implements OnInit {
   private modalCancelMessage: string;
   private modalPriceNotMatchTitle: string;
   private modalPriceNotMatchMessage: string;
-  private newProductPictureData: string;
+  newProductPictureData: string;
   pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();
@@ -49,6 +49,8 @@ export class ProductNewComponent implements OnInit {
   checkboxAvailableText: String = 'Disponible';
   stockControlText = "Controla Stock";
   currentUser: User;
+  stockCurrent: number = 0;
+  stockMin: number = 0;
 
   @ViewChild(FileInputComponent)
   private fileInputComponent: FileInputComponent;

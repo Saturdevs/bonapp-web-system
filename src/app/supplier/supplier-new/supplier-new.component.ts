@@ -23,8 +23,8 @@ export class SupplierNewComponent implements OnInit {
   private modalCancelTitle: string;
   private modalCancelMessage: String;
   pageTitle: String = 'Nuevo Proveedor';
-  private cancelButton: String = 'Cancelar';
-  private saveButton: String = 'Aceptar';
+  cancelButton: String = 'Cancelar';
+  saveButton: String = 'Aceptar';
   newSupplier: Supplier;
   checkboxText = 'Activo';
 
@@ -54,7 +54,7 @@ export class SupplierNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any) {
+  showModalCancel(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

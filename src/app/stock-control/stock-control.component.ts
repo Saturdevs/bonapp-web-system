@@ -23,7 +23,7 @@ export class StockControlComponent implements OnInit, AfterViewInit {
   filteredProducts: Product[] = [];
   pageTitle: string = "Control de Stock";
   private serviceErrorTitle = 'Error de Servicio';
-  private filterLabel = 'Filtrar por Producto:';
+  filterLabel = 'Filtrar por Producto:';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
   private modalDeleteTitle: string;

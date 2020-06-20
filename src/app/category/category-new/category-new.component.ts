@@ -37,7 +37,7 @@ export class CategoryNewComponent implements OnInit {
   menuTouched: boolean = false;
   pictureTouched: boolean;
   validPicture: string = '';
-  private newCategoryPictureData: string;
+  newCategoryPictureData: string;
   menuSelectedId: string;
   checkboxAvailableText: String = 'Disponible';
 
@@ -81,7 +81,7 @@ export class CategoryNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any) {
+  showModalCancel(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

@@ -18,7 +18,7 @@ export class UserListComponent implements OnInit {
   private modalErrorMessage: string;
   private modalDeleteTitle: string = "Eliminar Usuario";
   private modalDeleteMessage: string = "¿Estas seguro que desea eliminar el usuario?";
-  private validationMessage: string;
+  validationMessage: string;
   public modalRef: BsModalRef;
   users: Array<User>;
   filteredUsers: Array<User>;

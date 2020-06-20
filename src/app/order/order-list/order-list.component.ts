@@ -53,6 +53,14 @@ export class OrderListComponent implements OnInit {
   enableDelete: Boolean;
   enableEdit: Boolean;
   enableActionButtons: Boolean;  
+  statusSelectedValue: any;
+  waitersSelect: any;
+  waiterSelectedValue: any;
+  paymentsValue: any;
+  cashSelectedValue: any;
+  tableSelectedValue: any;
+  dateFromSelectedValue: any;
+  dateToSelectedValue: any;
 
   @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective

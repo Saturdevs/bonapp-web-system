@@ -722,7 +722,7 @@ export class OrderNewComponent implements OnInit {
     this.activeDailyMenu = false;
   }
 
-  showSliceModal(sliceTemplate: TemplateRef<any>, orderId: number) {
+  showSliceModal(sliceTemplate: TemplateRef<any>, orderId: any) {
     this.orderService.getOrder(orderId)
       .subscribe(
         order => {
@@ -769,7 +769,7 @@ export class OrderNewComponent implements OnInit {
     this.newOrder(this.sliceToTable, this.productsToSlice);
   }
 
-  showEditModal(editTemplate: TemplateRef<any>, orderId: number) {
+  showEditModal(editTemplate: TemplateRef<any>, orderId: any) {
     this.orderService.getOrder(orderId)
       .subscribe(
         order => {

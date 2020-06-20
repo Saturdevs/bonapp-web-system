@@ -24,8 +24,8 @@ export class ClientEditComponent implements OnInit {
   private modalCancelMessage: String;
   client: Client;
   pageTitle: String = 'Editando cliente: ';
-  private saveButton: String = 'Aceptar';
-  private cancelButton: String = 'Cancelar';
+  saveButton: String = 'Aceptar';
+  cancelButton: String = 'Cancelar';
   clientNameModified: String;
   checkboxText: String = 'Tiene Cta Cte';
 

@@ -19,8 +19,8 @@ export class TransactionNewComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate:TemplateRef<any>;   
   private serviceErrorTitle = 'Error de Servicio';
-  private cancelButton: String = 'Cancelar';
-  private saveButton: String = 'Guardar';
+  cancelButton: String = 'Cancelar';
+  saveButton: String = 'Guardar';
   public modalRef: BsModalRef;
   private modalErrorTittle: string;
   private modalErrorMessage: string;
@@ -105,7 +105,7 @@ export class TransactionNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
+  showModalCancel(template: TemplateRef<any>){    
     this.modalRef = this.modalService.show(template, {backdrop: true});
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

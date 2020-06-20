@@ -51,7 +51,7 @@ export class TableListComponent implements OnInit {
   private modalCancelTitle: string;
   private modalCancelMessage: string;
   public modalRef: BsModalRef;
-  private boxes: Array<Box> = [];
+  boxes: Array<Box> = [];
   private rgb: string = '#efefef';
   private curNum;
   private tableToEdit: Table;
@@ -61,9 +61,9 @@ export class TableListComponent implements OnInit {
   private editModalTitle = "Editar Mesa"
   private editTableNumberText = "Nro. Mesa";
   private editTableSectionText = "Seccion"
-  private cancelButtonText = "Cancelar";
-  private saveButtonText = "Guardar"
-  private gridConfig: NgGridConfig = <NgGridConfig>{
+  cancelButtonText = "Cancelar";
+  saveButtonText = "Guardar"
+  gridConfig: NgGridConfig = <NgGridConfig>{
     'margins': [1],
     'draggable': false,
     'resizable': false,

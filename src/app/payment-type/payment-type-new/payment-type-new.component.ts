@@ -30,8 +30,8 @@ export class PaymentTypeNewComponent implements OnInit {
   paymentType: PaymentType = new PaymentType();
   paymentTypeForm: FormGroup;
   pageTitle: String = 'Nueva Forma de Pago';
-  private saveButton: String = 'Guardar';
-  private cancelButton: String = 'Cancelar';
+  saveButton: String = 'Guardar';
+  cancelButton: String = 'Cancelar';
   checkboxAvailableText: string = 'Disponible';
 
   constructor(private _router: Router,
@@ -74,7 +74,7 @@ export class PaymentTypeNewComponent implements OnInit {
     return true;
   }
 
-  showModalCancel(template: TemplateRef<any>, idSize: any) {
+  showModalCancel(template: TemplateRef<any>){
     this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

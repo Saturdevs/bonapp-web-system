@@ -72,7 +72,7 @@
           </div>
           <div class="col-6">
             <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
-            <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+            <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
               La imagen del producto es requerida.
             </div>
           </div>

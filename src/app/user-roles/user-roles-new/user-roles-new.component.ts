@@ -22,8 +22,8 @@ export class UserRolesNewComponent implements OnInit {
   userRole: UserRole = new UserRole();
   userRoleForm: FormGroup;
   pageTitle: String = 'Nuevo Rol de Usuario';
-  private saveButton: String = 'Guardar';
-  private cancelButton: String = 'Cancelar';
+  saveButton: String = 'Guardar';
+  cancelButton: String = 'Cancelar';
   private checkboxIsWaiterText: String = 'Es mozo?';
 
   constructor(

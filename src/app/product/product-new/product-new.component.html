@@ -124,7 +124,7 @@
             <div class="col-md-3 col-lg-3">
               <div class="form-group">
                 <label>Minimo:</label>
-                <input mdbActive formControlName="min" type="number" class="form-control customInput" id="min">
+                <input mdbActive formControlName="min" type="number" [(ngModel)]="stockMin" class="form-control customInput" id="min">
               </div>
               <div
                 *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.min.dirty) && productForm.controls.stock.controls.min.touched)"
@@ -135,7 +135,7 @@
             <div class="col-md-3 col-lg-3">
               <div class="form-group">
                 <label for="current" class="">Actual:</label>
-                <input mdbActive formControlName="current" type="number" class="form-control customInput" id="current">
+                <input mdbActive formControlName="current" type="number" [(ngModel)]="stockCurrent" class="form-control customInput" id="current">
               </div>
               <div
                 *ngIf="productForm.get('stockControl').value && ((!productForm.controls.stock.controls.current.dirty) && productForm.controls.stock.controls.current.touched)"
@@ -152,7 +152,7 @@
         </div>
         <div class="row">
           <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
-          <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+          <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
             La imagen del producto es requerida.
           </div>
         </div>
@@ -250,7 +250,7 @@
         </li>
         <li>
           <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
-            [disabled]="productForm.invalid || (productForm.get('stockControl').value && productForm.controls.stock.controls.min.value == 0) || (productForm.get('stockControl').value && productForm.controls.stock.controls.current.value == 0)"
+            [disabled]="productForm.invalid || (productForm.get('stockControl').value && stockMin == 0) || (productForm.get('stockControl').value && stockCurrent == 0)"
             type="submit" (click)="validateSizes()">Guardar</button>
         </li>
       </ul>

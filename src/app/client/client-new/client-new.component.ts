@@ -23,8 +23,8 @@ export class ClientNewComponent implements OnInit {
   private modalCancelTitle: String;
   private modalCancelMessage: String;
   pageTitle: String = 'Nuevo Cliente';
-  private saveButton: String = 'Guardar';
-  private cancelButton: String = 'Cancelar';
+  saveButton: String = 'Guardar';
+  cancelButton: String = 'Cancelar';
   newClient: Client;
   checkboxText: String = 'Tiene Cta Cte';
   
@@ -56,7 +56,7 @@ export class ClientNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
+  showModalCancel(template: TemplateRef<any>){    
     this.modalRef = this.modalService.show(template, {backdrop: true});
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

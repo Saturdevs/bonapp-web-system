@@ -31,7 +31,7 @@ export class MenuNewComponent implements OnInit {
   private modalErrorMessage: string;
   private modalCancelTitle: string;
   private modalCancelMessage: String;
-  private newMenuPictureData: string = '';
+  newMenuPictureData: string = '';
   pageTitle: string = 'New Menu'; 
   newMenu: Menu;
   validPicture: string = '';
@@ -76,7 +76,7 @@ export class MenuNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, {backdrop: true});        
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any){    
+  showModalCancel(template: TemplateRef<any>){    
     this.modalRef = this.modalService.show(template, {backdrop: true});
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";

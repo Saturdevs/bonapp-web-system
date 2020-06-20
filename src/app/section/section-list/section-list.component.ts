@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { SectionNewComponent } from '../section-new/section-new.component';
 import { isNullOrUndefined } from 'util';
 
 import {
@@ -30,7 +29,6 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SectionListComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(SectionNewComponent)
   @ViewChild('askPinTemplate') askPinTemplate: TemplateRef<any>;
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   private serviceErrorTitle: string;
@@ -38,8 +36,7 @@ export class SectionListComponent implements OnInit, AfterViewInit {
   private modalErrorMessage: string;
   private rightErrorTitle: string;
   private rightErrorMessage: string;
-  private newSection: SectionNewComponent;
-  private sections: Array<Section>;
+  sections: Array<Section>;
   public modalRef: BsModalRef;
   settingsActive: Boolean;
   ordersActive: Boolean;

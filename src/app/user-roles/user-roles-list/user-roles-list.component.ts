@@ -26,7 +26,7 @@ export class UserRolesListComponent implements OnInit {
   private modalErrorMessage: string;
   private modalDeleteTitle: string;
   private modalDeleteMessage: string;
-  private validationMessage: string;
+  validationMessage: string;
   public modalRef: BsModalRef;
   userRoles: UserRole[];
   idUserRoleDelete: String;

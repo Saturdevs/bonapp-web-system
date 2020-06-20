@@ -21,8 +21,8 @@ export class SectionNewComponent implements OnInit {
   private modalCancelTitle: String;
   private modalCancelMessage: String;
   pageTitle: String = 'Nueva Sala';
-  private saveButton: String = 'Guardar';
-  private cancelButton: String = 'Cancelar';
+  saveButton: String = 'Guardar';
+  cancelButton: String = 'Cancelar';
   newSection: Section;
   public modalRef: BsModalRef;
   section: Section = new Section();
@@ -67,7 +67,7 @@ export class SectionNewComponent implements OnInit {
     this.modalRef = this.modalService.show(this.errorTemplate, { backdrop: true });
   }
 
-  showModalCancel(template: TemplateRef<any>, idCashRegister: any) {
+  showModalCancel(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, { backdrop: true });
     this.modalCancelTitle = "Cancelar Cambios";
     this.modalCancelMessage = "¿Está seguro que desea salir sin guardar los cambios?";
