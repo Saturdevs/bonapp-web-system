@@ -12,7 +12,7 @@ export class StockControlModifyComponent implements OnInit {
   productNameModified: string;
   product: Product;
   stockControlText = "Controla Stock";
-  pageTitle = "Modificando stock para: ";
+  pageTitle = "Modificando stock: ";
   cancelButton = "Cancelar";
   saveButton = "Guardar";
   stockControl: Boolean = false;

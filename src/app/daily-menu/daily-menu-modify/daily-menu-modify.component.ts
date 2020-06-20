@@ -34,13 +34,14 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
   private modalPriceNotMatchTitle: string;
   private modalPriceNotMatchMessage: string;
   private newProductPictureData: string;
+  public productNameModified: string;
   pictureTouched: boolean = false;
   productForm: FormGroup;
   product: Product = new Product();
   dailyMenu: DailyMenu = new DailyMenu();
   clickAceptar: Boolean;
   productArray: Product[];
-  pageTitle: string = "Nuevo Menu del dia";
+  pageTitle: string = "Editando: ";
   validPicture: string = '';
   relatedProducts: Array<string> = [];
   defaultPrice: Number = 0;
@@ -97,7 +98,7 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
     });
 
     this.setDailyMenu();
-
+    this.productNameModified = this.dailyMenu.name;
     this.clickAceptar = false;
   }
 
@@ -111,7 +112,7 @@ export class DailyMenuModifyComponent implements OnInit, AfterViewInit {
 
   setDailyMenu(){
     this.productForm.patchValue(this.dailyMenu);
-    
+    this.newProductPictureData = this.dailyMenu.pictures;
 
     for (let i = 0; i < this.productArray.length; i++) {
       this.productForm.addControl('available'+i,  new FormControl(''));
