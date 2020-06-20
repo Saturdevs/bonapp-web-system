@@ -19,13 +19,14 @@
   <form class="pt-4 pr-3 pl-3" #form="ngForm" method="post" novalidate>
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Cliente:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <select #clientTransaction="ngModel" required type="text" class="form-control browser-default"
-            [class.is-invalid]="showMessageClient" name="clientTransaction" (blur)="validateClient(clientTransaction.value)"
-            (change)="validateClient(clientTransaction.value)" id="clientTransaction" [(ngModel)]="newTransaction.client">
+          <select #clientTransaction="ngModel" required type="text" class="form-control browser-default customInput"
+            [class.is-invalid]="showMessageClient" name="clientTransaction"
+            (blur)="validateClient(clientTransaction.value)" (change)="validateClient(clientTransaction.value)"
+            id="clientTransaction" [(ngModel)]="newTransaction.client">
             <option value="default" default>Seleccione el cliente...</option>
             <option [value]="client._id" *ngFor='let client of clients'>{{ client.name }}</option>
           </select>
@@ -38,28 +39,33 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Monto:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #transactionAmount="ngModel" required type="number" class="form-control" [class.is-invalid]="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)"
+          <input #transactionAmount="ngModel" required type="number"
+            class="form-control customInput customInputNumberAmount"
+            [class.is-invalid]="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)"
             name="transactionAmount" id="transactionAmount" [(ngModel)]="newTransaction.amount">
         </div>
       </div>
-      <div *ngIf="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)" class="alert alert-danger">
+      <div *ngIf="transactionAmount.invalid && (transactionAmount.dirty || transactionAmount.touched)"
+        class="alert alert-danger">
         El monto es un campo es requerido.
       </div>
     </div>
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Medio de Pago:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <select #transactionPaymentType="ngModel" required type="text" class="form-control browser-default"
-            [class.is-invalid]="showMessagePaymentType" name="transactionPaymentType" (blur)="validatePaymentType(transactionPaymentType.value)"
-            (change)="validatePaymentType(transactionPaymentType.value)" id="transactionPaymentType" [(ngModel)]="newTransaction.paymentType">
+          <select #transactionPaymentType="ngModel" required type="text"
+            class="form-control browser-default customInput" [class.is-invalid]="showMessagePaymentType"
+            name="transactionPaymentType" (blur)="validatePaymentType(transactionPaymentType.value)"
+            (change)="validatePaymentType(transactionPaymentType.value)" id="transactionPaymentType"
+            [(ngModel)]="newTransaction.paymentType">
             <option value="default" default>Seleccione el tipo de pago...</option>
             <option [value]="paymentType._id" *ngFor='let paymentType of paymentTypes'>{{ paymentType.name }}</option>
           </select>
@@ -72,15 +78,18 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Caja:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <select #transactionCashRegister="ngModel" required type="text" class="form-control browser-default"
-            [class.is-invalid]="showMessageCashRegister" name="transactionCashRegister" (blur)="validateCashRegister(transactionCashRegister.value)"
-            (change)="validateCashRegister(transactionCashRegister.value)" id="transactionCashRegister" [(ngModel)]="newTransaction.cashRegister">
+          <select #transactionCashRegister="ngModel" required type="text"
+            class="form-control browser-default customInput" [class.is-invalid]="showMessageCashRegister"
+            name="transactionCashRegister" (blur)="validateCashRegister(transactionCashRegister.value)"
+            (change)="validateCashRegister(transactionCashRegister.value)" id="transactionCashRegister"
+            [(ngModel)]="newTransaction.cashRegister">
             <option value="default" default>Seleccione la caja...</option>
-            <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+            <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}
+            </option>
           </select>
         </div>
       </div>
@@ -92,9 +101,17 @@
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
         <div class="col-md-9 col-lg-9 col-sm-9 pr-0">
-          <textarea mdbActive #transactionComment="ngModel" class="md-textarea" id="transactionComment" name="transactionComment"
-            [(ngModel)]="newTransaction.comment"></textarea>
-          <label for="transactionComment">Comentario:</label>
+          <div class="form-group">
+            <div class="row">
+              <label>Comentario:</label>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+              <textarea mdbActive #transactionComment="ngModel" class="md-textarea customInput ml-0" id="transactionComment"
+                name="transactionComment" [(ngModel)]="newTransaction.comment"></textarea>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -102,8 +119,10 @@
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="(form.invalid || hasCashRegister || hasClient || hasPaymentType)"
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
+      (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true"
+      [disabled]="(form.invalid || hasCashRegister || hasClient || hasPaymentType)"
       (click)="saveTransaction()">{{saveButton}}</button>
   </div>
 </div>

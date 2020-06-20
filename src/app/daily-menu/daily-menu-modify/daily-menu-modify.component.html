@@ -1,134 +1,148 @@
 <ng-template #cancelTemplate>
-    <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
-    </app-cancel-template>
-  </ng-template>
-  
-  <ng-template #errorTemplate>
-    <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
-    </app-error-template>
-  </ng-template>
-  
-  <ng-template #priceNotMatch>
-    <app-cancel-template [modalTitle]="modalPriceNotMatchTitle" [modalMessage]="modalPriceNotMatchMessage"
-      (handleOkButton)="closeModalAndContinue()" (handleCancelButton)="closeModal()">
-    </app-cancel-template>
-  </ng-template>
-  
-  <div class="pageTitle">
-    <div class="float-left">
-      <header>
-        <h5>{{ pageTitle }}</h5>
-      </header>
-    </div>
+  <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
+    (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<ng-template #errorTemplate>
+  <app-error-template [errorTitle]="modalErrorTittle" [errorMessage]="modalErrorMessage" (close)="closeModal()">
+  </app-error-template>
+</ng-template>
+
+<ng-template #priceNotMatch>
+  <app-cancel-template [modalTitle]="modalPriceNotMatchTitle" [modalMessage]="modalPriceNotMatchMessage"
+    (handleOkButton)="closeModalAndContinue()" (handleCancelButton)="closeModal()">
+  </app-cancel-template>
+</ng-template>
+
+<div class="pageTitle">
+  <div class="float-left">
+    <header>
+      <h5>{{ pageTitle }} {{ productNameModified }}</h5>
+    </header>
   </div>
-  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 col-xl-12 pt-3 pb-3 pl-1 pr-1">
-    <form method="post" novalidate [formGroup]="productForm">
-      <div class="row mr-0 ml-0">
-        <div class="col-md-6">
-          <div class="row">
-            <div class="col-md-7 col-lg-7">
-              <div class="md-form">
-                <input mdbActive formControlName="name" type="text" class="form-control"
-                  [class.is-invalid]="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
-                  id="name" length="25" mdbCharCounter>
-                <label for="name" class="">Nombre</label>
-              </div>
-              <div
-                *ngIf="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
-                class="alert alert-danger">
-                El nombre del Menu del Dia es requerido.
-              </div>
+</div>
+<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 col-xl-12 pt-3 pb-3 pl-1 pr-1">
+  <form method="post" novalidate [formGroup]="productForm">
+    <div class="row mr-0 ml-0">
+      <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-7 col-lg-6 col-sm-12 col-xl-4">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input mdbActive formControlName="name" type="text" class="form-control customInput"
+                [class.is-invalid]="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
+                id="name" length="25" mdbCharCounter>
             </div>
-            <div class="col-md-5 col-lg-5">
-              <div class="md-form">
-                <input mdbActive formControlName="price" type="number" class="form-control"
-                  [class.is-invalid]="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
-                  id="price">
-                <label for="name" class="">Precio ($):</label>
-              </div>
-              <div
-                *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
-                class="alert alert-danger">
-                El precio del Menu del Dia es requerido.
-              </div>
+            <div
+              *ngIf="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
+              class="alert alert-danger">
+              El nombre del Menu del Dia es requerido.
             </div>
           </div>
-  
-          <div class="row">
-            <div class="col-6">
-              <div class="md-form">
-                <textarea mdbActive formControlName="description" class="md-textarea" style="width: 100%;"
+          <div class="col-md-4 col-lg-3">
+            <div class="form-group">
+              <label>Precio ($):</label>
+              <input mdbActive formControlName="price" type="number" class="form-control customInput"
+                [class.is-invalid]="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
+                id="price">
+            </div>
+            <div
+              *ngIf="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
+              class="alert alert-danger">
+              El precio del Menu del Dia es requerido.
+            </div>
+          </div>
+        </div>
+
+        <div class="row ml-1">
+          <div class="col-6">
+            <div class="form-group">
+              <div class="row">
+                <label>Descripción:</label>
+              </div>
+              <div class="row">
+                <textarea mdbActive formControlName="description" class="md-textarea customInput customTextArea"
+                  style="width: 100%;"
                   [class.is-invalid]="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
                   id="description"></textarea>
-                <label for="description">Descripción</label>
-              </div>
-  
-              <div
-                *ngIf="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
-                class="alert alert-danger">
-                La descripción del Menu del Dia es requerida.
               </div>
             </div>
-            <div class="col-6">
-              <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
-              <div *ngIf="validPicture == '' && pictureTouched == true" class="alert alert-danger">
-                La imagen del Menu del Dia es requerida.
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="ml-2 mr-2 pl-3 pr-3 pt-1 pb-2 mt-2 text-center">
-              <div class="row mb-2 card pl-2 pr-2 pb-1 pt-1">
-                <form #form="ngForm" novalidate class="form-inline">
-                  <h6 class="pt-2">Filtrar:</h6>
-                  <div class="md-form form-group mr-0 ml-0 col-md-2 col-lg-2">
-                    <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
-                      id="query">
-                  </div>
-                </form>
-              </div>
-  
-              <div class="row">
-                <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
-                  <thead class="primary-color customTableText">
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Agregar</th>
-                    </tr>
-                  </thead>
-                  <tbody class="table-wrapper" *ngIf='productArray && productArray.length'>
-                    <tr *ngFor='let product of filteredProductArray; let i = index'>
-                      <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
-                        class="align-middle customLongTh">{{ product.name }}</td>
-                      <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
-                        class="customThTd align-middle">
-                        <mdb-checkbox [class.checkbox-primary-custom]="true"  formControlName="{{'available' + i}}" (change)="clickAvailable(product._id)"></mdb-checkbox>
-                      </td>
-                    </tr>
-                  </tbody>
-                  <tfoot class="grey lighten-5 w-100">
-                    <tr>
-                      <td colspan="2">
-                        <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredProductArray">
-                        </mdb-table-pagination>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
+
+            <div
+              *ngIf="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
+              class="alert alert-danger">
+              La descripción del Menu del Dia es requerida.
             </div>
           </div>
         </div>
-        <div class="col-md-6 pr-0 pl-0">
-          <img [src]="newProductPictureData" onerror="this.src='../../../assets/img/no-image.png'"
-            style="width: 300px; height: 316px;" />
+        <div class="row">
+          <div class="ml-2 mr-2 pl-3 pr-3 pt-1 pb-2 mt-2 text-center">
+            <div class="row mb-2 card pl-2 pr-2 pb-1 pt-1 customBox">
+              <form #form="ngForm" novalidate class="form-inline">
+                <h6 class="pt-2">Filtrar:</h6>
+                <div class="md-form form-group mr-0 ml-0 col-md-2 col-lg-2">
+                  <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+                    id="query">
+                </div>
+              </form>
+            </div>
+
+            <div class="row">
+              <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
+                <thead class="primary-color customTableText">
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Agregar</th>
+                  </tr>
+                </thead>
+                <tbody class="table-wrapper" *ngIf='productArray && productArray.length'>
+                  <tr *ngFor='let product of filteredProductArray; let i = index'>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
+                      class="align-middle customLongTh">{{ product.name }}</td>
+                    <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
+                      class="customThTd align-middle">
+                      <mdb-checkbox [class.checkbox-primary-custom]="true" formControlName="{{'available' + i}}"
+                        (change)="clickAvailable(product._id)"></mdb-checkbox>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="grey lighten-5 w-100">
+                  <tr>
+                    <td colspan="2">
+                      <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredProductArray">
+                      </mdb-table-pagination>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row col-md-2 col-lg-2 col-xl-3 col-sm-2">
-        <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" type="button" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
-        <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="productForm.invalid" type="submit"
-          (click)="saveDailyMenu()">Guardar</button>
+      <div class="col-md-4 offset-md-1 pr-0 pl-0">
+        <div class="row">
+          <img [src]="newProductPictureData" onerror="this.src='../../../assets/img/no-image.png'" class="customImg" />
+        </div>
+        <div class="row">
+          <app-file-input (validator)="onNotified($event)" [type]="'img'" [subtype]="'product'"></app-file-input>
+          <div *ngIf="validPicture == false && pictureTouched == true" class="alert alert-danger">
+            La imagen del Menu del Dia es requerida.
+          </div>
+        </div>
       </div>
-    </form>
-  </div>
+    </div>
+    <div class="row col-md-4 col-lg-4 col-xl-4 col-sm-6 float-right mt-5">
+      <ul>
+        <li>
+          <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
+            type="button" class="boton-cancelar" (click)="showModalCancel(cancelTemplate)">Cancelar</button>
+        </li>
+        <li>
+          <button mdbBtn role="button" rounded="true" size="md" mdbWavesEffect [class.btn-primary-custom]="true"
+            [disabled]="productForm.invalid" type="submit" (click)="saveDailyMenu()">Guardar</button>
+        </li>
+      </ul>
+    </div>
+  </form>
+</div>

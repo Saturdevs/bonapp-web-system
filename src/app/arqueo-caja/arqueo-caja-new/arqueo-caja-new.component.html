@@ -1,6 +1,6 @@
 <ng-template #cancelTemplate>
   <app-cancel-template [modalTitle]="modalCancelTitle" [modalMessage]="modalCancelMessage" (handleOkButton)="cancel()"
-      (handleCancelButton)="closeModal()">
+    (handleCancelButton)="closeModal()">
   </app-cancel-template>
 </ng-template>
 
@@ -16,70 +16,83 @@
       {{pageTitle}}
     </h5>
   </div>
-  <form class="pt-4 pr-3 pl-3" #form="ngForm" method="post" novalidate>  
+  <form class="pt-4 pr-3 pl-3" #form="ngForm" method="post" novalidate>
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Hora de Apertura:</label>
         </div>
-        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #arqueoDateCreatedAt="ngModel" required type="date" class="form-control form-control-sm" [class.is-invalid]="arqueoDateCreatedAt.invalid && (arqueoDateCreatedAt.dirty || arqueoDateCreatedAt.touched)" name="arqueoDateCreatedAt" 
-                id="arqueoDateCreatedAt" [(ngModel)]="dateCreated_at" style="line-height: initial">
+        <div class="col-md-3 col-lg-3 col-sm-4 pl-0">
+          <input #arqueoDateCreatedAt="ngModel" required type="date" class="form-control form-control-sm customInput"
+            [class.is-invalid]="arqueoDateCreatedAt.invalid && (arqueoDateCreatedAt.dirty || arqueoDateCreatedAt.touched)"
+            name="arqueoDateCreatedAt" id="arqueoDateCreatedAt" [(ngModel)]="dateCreated_at" id="createdDate"
+            style="line-height: initial">
         </div>
-        <div class="col-3 pl-0">
-          <input #arqueoHourCreatedAt="ngModel" required type="time" class="form-control form-control-sm" [class.is-invalid]="arqueoHourCreatedAt.invalid && (arqueoHourCreatedAt.dirty || arqueoHourCreatedAt.touched)" name="arqueoHourCreatedAt" 
-                id="arqueoHourCreatedAt" [(ngModel)]="hourCreated_at" style="line-height: initial">                
+        <div class="col-2 pl-2 ml-3">
+          <input #arqueoHourCreatedAt="ngModel" required type="time" class="form-control form-control-sm customInput"
+            [class.is-invalid]="arqueoHourCreatedAt.invalid && (arqueoHourCreatedAt.dirty || arqueoHourCreatedAt.touched)"
+            name="arqueoHourCreatedAt" id="arqueoHourCreatedAt" [(ngModel)]="hourCreated_at" id="createdHour"
+            style="line-height: initial">
         </div>
       </div>
-      <div *ngIf="(arqueoDateCreatedAt.invalid && (arqueoDateCreatedAt.dirty || arqueoDateCreatedAt.touched)) || (arqueoHourCreatedAt.invalid && (arqueoHourCreatedAt.dirty || arqueoHourCreatedAt.touched))"
-           class="alert alert-danger mt-2">
+      <div
+        *ngIf="(arqueoDateCreatedAt.invalid && (arqueoDateCreatedAt.dirty || arqueoDateCreatedAt.touched)) || (arqueoHourCreatedAt.invalid && (arqueoHourCreatedAt.dirty || arqueoHourCreatedAt.touched))"
+        class="alert alert-danger mt-2">
         La fecha es un campo es requerido.
       </div>
     </div>
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Monto Inicial:</label>
-        </div>  
-        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-3 pl-0">
           <i class="fa fa-dollar prefix"></i>
-          <input #arqueoInitialAmount="ngModel" required type="number" class="form-control form-control-sm" [class.is-invalid]="arqueoInitialAmount.invalid && (arqueoInitialAmount.dirty || arqueoInitialAmount.touched)" name="arqueoInitialAmount" 
-          id="arqueoInitialAmount" [ngModel]="newArqueo.initialAmount" (ngModelChange)="newArqueo.initialAmount=$event" name="inputField" style="margin-left: 1.5rem; width: calc(100% - 1.5rem);">
-        </div>    
+          <input #arqueoInitialAmount="ngModel" required type="number" class="form-control form-control-sm customInput customInputNumberAmount"
+            [class.is-invalid]="arqueoInitialAmount.invalid && (arqueoInitialAmount.dirty || arqueoInitialAmount.touched)"
+            name="arqueoInitialAmount" id="arqueoInitialAmount" [ngModel]="newArqueo.initialAmount"
+            (ngModelChange)="newArqueo.initialAmount=$event" name="inputField"
+            style="margin-left: 1.5rem; width: calc(100% - 1.5rem);">
+        </div>
       </div>
-      <div *ngIf="arqueoInitialAmount.invalid && (arqueoInitialAmount.dirty || arqueoInitialAmount.touched)" class="alert alert-danger mt-2">
-          El monto inicial es un campo es requerido.
+      <div *ngIf="arqueoInitialAmount.invalid && (arqueoInitialAmount.dirty || arqueoInitialAmount.touched)"
+        class="alert alert-danger mt-2">
+        El monto inicial es un campo es requerido.
       </div>
     </div>
     <div *ngIf="displayCashRegisterCombo===true" class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Caja:</label>
-        </div>  
+        </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <select #arqueoCashRegister="ngModel" required type="text" class="form-control browser-default"
-          [class.is-invalid]="showMessageCashRegister" name="arqueoCashRegister"
-          id="arqueoCashRegister" (blur)="validateCashRegister(arqueoCashRegister.value)"
+          <select #arqueoCashRegister="ngModel" required type="text" class="form-control browser-default customInput"
+            [class.is-invalid]="showMessageCashRegister" name="arqueoCashRegister" id="arqueoCashRegister"
+            (blur)="validateCashRegister(arqueoCashRegister.value)"
             (change)="validateCashRegister(arqueoCashRegister.value)" [(ngModel)]="newArqueo.cashRegisterId">
             <option value="default" default>Seleccione la caja...</option>
-            <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}</option>
+            <option [value]="cashRegister._id" *ngFor='let cashRegister of cashRegisters'>{{ cashRegister.name }}
+            </option>
           </select>
         </div>
       </div>
       <div *ngIf="showMessageCashRegister && cashRegistersTouched === true" class="alert alert-danger mt-2">
         La Caja es requerida.
-      </div>   
+      </div>
     </div>
     <div class="col-12">
       <div *ngIf="errorArqueo === true" class="alert alert-danger mt-2">
-          {{ errorMsg }}
+        {{ errorMsg }}
       </div>
     </div>
   </form>
 </div>
 <div class="col-12">
   <div class="col-7 offset-5">
-    <button type="button" rounded="true" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" rounded="true" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="(form.invalid || hasCashRegister)" (click)="saveArqueo()">{{saveButton}}</button>
+    <button type="button" rounded="true" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+      [class.customButtonCancel]="true" (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
+    <button type="button" rounded="true" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+      [class.btn-primary-custom]="true" [disabled]="(form.invalid || hasCashRegister)"
+      (click)="saveArqueo()">{{saveButton}}</button>
   </div>
-</div>    
+</div>
