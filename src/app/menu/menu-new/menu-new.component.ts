@@ -46,6 +46,7 @@ export class MenuNewComponent implements OnInit {
 
   ngOnInit(): void {
     this.newMenu = new Menu();
+    this.newMenu.available = true;
   }
 
 
