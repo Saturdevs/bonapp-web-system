@@ -20,7 +20,6 @@ import { DailyMenuResolverService } from '../daily-menu/daily-menu-list/daily-me
 import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
 import { AuthGuard } from '../../shared';
 import { ProductResolverService } from '../product/product-list/product-resolver.service';
-import { CategoryResolverService } from '../category/category-list/category-resolver.service';
 import { MenuResolverService } from '../menu/menu-resolver.service';
 import { UsersResolverService } from '../user/user-list/users-resolver-service';
 
@@ -55,8 +54,7 @@ import { UsersResolverService } from '../user/user-list/users-resolver-service';
             resolve: {
               order: OrderNewResolverService,
               products: ProductResolverService,
-              categories: CategoryResolverService,
-              menus: MenuResolverService,
+              menus: MenuAvailablesResolverService,
               cashRegisters: CashRegisterAvailablesResolverService,
               paymentTypes: PaymentTypeAvailableResolverService,
               dailyMenus: DailyMenuResolverService,
