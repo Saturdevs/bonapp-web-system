@@ -32,7 +32,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label>Código:</label>
-            <input formControlName="code" type="text" class="form-control"
+            <input formControlName="code" type="text" class="form-control customInput"
               [class.is-invalid]="productForm.get('code').invalid && (productForm.get('code').dirty || productForm.get('code').touched)"
               id="code">
           </div>
@@ -45,7 +45,7 @@
 
           <div class="form-group">
             <label>Nombre:</label>
-            <input formControlName="name" type="text" class="form-control"
+            <input formControlName="name" type="text" class="form-control customInput"
               [class.is-invalid]="productForm.get('name').invalid && (productForm.get('name').dirty || productForm.get('name').touched)"
               id="name">
           </div>
@@ -59,7 +59,7 @@
           <div class="form-group">
             <label>Categoría:</label>
             <div class="select-wrapper">
-              <select formControlName="category" type="text" class="form-control"
+              <select formControlName="category" type="text" class="form-control customInput"
                 [class.is-invalid]="productForm.get('category').invalid && (productForm.get('category').dirty || productForm.get('category').touched)"
                 id="category">
                 <option value="default" default>Seleccione la categoría...</option>
@@ -76,7 +76,7 @@
 
           <div class="form-group">
             <label>Descripción</label>
-            <textarea formControlName="description" class="form-control"
+            <textarea formControlName="description" class="form-control customInput"
               [class.is-invalid]="productForm.get('description').invalid && (productForm.get('description').dirty || productForm.get('description').touched)"
               id="description" rows="3" cols="20"></textarea>
           </div>
@@ -89,7 +89,7 @@
 
           <div class="form-group">
             <label>Precio ($):</label>
-            <input formControlName="price" type="number" class="form-control"
+            <input formControlName="price" type="number" class="form-control customInput"
               [class.is-invalid]="productForm.get('price').invalid && (productForm.get('price').dirty || productForm.get('price').touched)"
               id="price">
           </div>

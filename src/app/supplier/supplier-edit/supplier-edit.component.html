@@ -23,7 +23,7 @@
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierName="ngModel" required type="text" class="form-control"
+          <input #supplierName="ngModel" required type="text" class="form-control customInput"
             [class.is-invalid]="supplierName.invalid && (supplierName.dirty || supplierName.touched)"
             name="supplierName" id="supplierName" [(ngModel)]="supplier.name">
         </div>
@@ -39,7 +39,7 @@
           <label>Email:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierEmail="ngModel" type="text" class="form-control"
+          <input #supplierEmail="ngModel" type="text" class="form-control customInput"
             [class.is-invalid]="supplierEmail.invalid && (supplierEmail.dirty || supplierEmail.touched)"
             name="supplierEmail" id="supplierEmail" [(ngModel)]="supplier.email">
         </div>
@@ -52,7 +52,7 @@
           <label>Teléfono:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierTel="ngModel" type="text" class="form-control"
+          <input #supplierTel="ngModel" type="text" class="form-control customInput"
             [class.is-invalid]="supplierTel.invalid && (supplierTel.dirty || supplierTel.touched)" name="supplierTel"
             id="supplierTel" [(ngModel)]="supplier.tel">
         </div>
@@ -65,15 +65,15 @@
           <label>Dirección:</label>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 pl-0">
-          <input #supplierAddressStreet="ngModel" type="text" class="form-control" name="supplierAddressStreet"
+          <input #supplierAddressStreet="ngModel" type="text" class="form-control customInput" name="supplierAddressStreet"
             id="supplierAddressStreet" [(ngModel)]="supplier.addressStreet" placeholder="Calle">
         </div>
         <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #supplierAddressNumber="ngModel" type="text" class="form-control" name="supplierAddressNumber"
+          <input #supplierAddressNumber="ngModel" type="text" class="form-control customInput" name="supplierAddressNumber"
             id="supplierAddressNumber" [(ngModel)]="supplier.addressNumber" placeholder="Número">
         </div>
         <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #supplierAddressDpto="ngModel" type="text" class="form-control" name="supplierAddressDpto"
+          <input #supplierAddressDpto="ngModel" type="text" class="form-control customInput" name="supplierAddressDpto"
             id="supplierAddressDpto" [(ngModel)]="supplier.addressDpto" placeholder="Piso / Dpto">
         </div>
       </div>

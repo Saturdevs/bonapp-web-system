@@ -22,7 +22,7 @@
           <label>{{ 'Users.name' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbActive formControlName="name" type="text" class="form-control"
+          <input mdbActive formControlName="name" type="text" class="form-control customInput"
             [class.is-invalid]="userForm.get('name').invalid && (userForm.get('name').dirty || userForm.get('name').touched)"
             id="name">
         </div>
@@ -39,7 +39,7 @@
           <label>{{ 'Users.lastName' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbActive formControlName="lastname" type="text" class="form-control"
+          <input mdbActive formControlName="lastname" type="text" class="form-control customInput"
             [class.is-invalid]="userForm.get('lastname').invalid && (userForm.get('lastname').dirty || userForm.get('lastname').touched)"
             id="lastname">
         </div>
@@ -57,7 +57,7 @@
           <label>{{ 'Users.userName' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbActive formControlName="username" type="text" class="form-control"
+          <input mdbActive formControlName="username" type="text" class="form-control customInput"
             [class.is-invalid]="userForm.get('username').invalid && (userForm.get('username').dirty || userForm.get('username').touched)"
             id="username">
         </div>
@@ -75,7 +75,7 @@
           <label>{{ 'Users.password' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbActive formControlName="password" type="password" class="form-control"
+          <input mdbActive formControlName="password" type="password" class="form-control customInput"
             [class.is-invalid]="userForm.get('password').invalid && (userForm.get('password').dirty || userForm.get('password').touched)"
             id="password">
         </div>
@@ -93,7 +93,7 @@
           <label>{{ 'Users.confirmPassword' | translate }}:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbActive formControlName="passwordConfirm" type="password" class="form-control"
+          <input mdbActive formControlName="passwordConfirm" type="password" class="form-control customInput"
             [class.is-invalid]="userForm.get('passwordConfirm').invalid && (userForm.get('passwordConfirm').dirty || userForm.get('passwordConfirm').touched)"
             id="passwordConfirm">
         </div>
@@ -116,7 +116,7 @@
           <mdb-select #roleId formControlName="roleId" (selected)="selectUserRole(roleId.value)"
             [options]="userRolesSelect" placeholder="Choose your option"
             [class.is-invalid]="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
-            id="roleId"></mdb-select>
+            id="roleId" class="customInput"></mdb-select>
         </div>
       </div>
       <div *ngIf="userForm.get('roleId').invalid && (userForm.get('roleId').dirty || userForm.get('roleId').touched)"
