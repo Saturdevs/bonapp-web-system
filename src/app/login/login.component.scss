@@ -1,0 +1,47 @@
+form{
+width:90%;
+margin:0px auto;
+margin-top:30px;
+}
+
+h2{
+color:red;
+text-align:center;
+margin-top:40px;
+text-decoration: underline;
+}
+
+h5{
+color:#fff;
+font-size:15px;
+}
+
+img{
+margin-top: 30px;
+}
+
+.login-background{
+background-color: #fff0db;
+width:40%;
+padding:10px;
+border-radius:30px;
+border:2px solid #fff0db;
+margin:0px auto;
+box-shadow: 5px 3px 5px #aaa;
+}
+
+@media (max-width: 992px) {
+    form{
+        width:90%;
+        margin:0px auto;
+        }
+
+        .login-background{
+            background-color: #fff0db;
+            width:100%;
+            padding:10px;
+            border-radius:30px;
+            border:2px solid #fff0db;
+            margin:0px auto;
+            }
+}
