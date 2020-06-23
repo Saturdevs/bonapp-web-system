@@ -10,7 +10,7 @@ import {
   SocketIoService,
   User,
   AppMenu,
-  UtilFunctions,  
+  UtilFunctions,
   ParamService
 } from '../shared/index';
 import { isNullOrUndefined } from 'util';
@@ -85,13 +85,19 @@ export class AppComponent implements OnInit {
     }, 1000);
   };
 
-  subscribeToNotifications() {
-
-    this.swPush.requestSubscription({
-      serverPublicKey: this.VAPID_PUBLIC_KEY
-    })
-      .then(sub => this._notificationService.addPushSubscriber(sub).subscribe())
-      .catch(err => console.error("Could not subscribe to notifications", err));
+  private async subscribeToNotifications() {
+    try {
+      const sub = await this.swPush.requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY,
+      });
+      this._notificationService.addPushSubscriber(sub).subscribe(res => {
+      }
+        , err => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.error('Could not subscribe due to:', err);
+    }
   }
 
   logout() {

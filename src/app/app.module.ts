@@ -89,7 +89,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SharedModule,
     FileInputModule,
     UserModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
     LoginModule,
     UserRolesModule,
     TranslateModule.forRoot({
