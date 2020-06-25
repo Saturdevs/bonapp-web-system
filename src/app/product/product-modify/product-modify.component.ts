@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import {
   Product,
   Category,
-  ProductService,  
+  ProductService,
   Size,
   RightsFunctions,
   User,
@@ -79,7 +79,7 @@ export class ProductModifyComponent implements OnInit {
     private modalService: BsModalService,
     private _authenticationService: AuthenticationService) { }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.sizesArray = this._route.snapshot.data['sizes'];
     this.productForm = this.formBuilder.group({
       code: ['', Validators.required],
@@ -148,27 +148,32 @@ export class ProductModifyComponent implements OnInit {
   }
 
   onProductRetrieved(product: Product): void {
+    console.log(product)
     this.product = product;
     this.productPictureData = this.product.pictures;
     this.productNameModified = this.product.name;
-    const stockValues = this.formBuilder.group({
-      min: this.product.stock.min,
-      current: this.product.stock.current
-    });
+
     this.productForm.patchValue({
       code: this.product.code,
       name: this.product.name,
       description: this.product.description,
       price: this.product.price,
       pictures: this.product.pictures,
-      category: this.product.category,
+      category: this.product.category._id,
       available: this.product.available,
       stockControl: this.product.stockControl
     });
-    // @ts-ignore no borrar. Anda
-    this.productForm.controls['stock'].controls['min'].value = this.product.stock.min;
-    // @ts-ignore no borrar. Anda
-    this.productForm.controls['stock'].controls['current'].value = this.product.stock.current;
+    if (this.product.stockControl) {
+      const stockValues = this.formBuilder.group({
+        min: this.product.stock.min,
+        current: this.product.stock.current
+      });
+
+      // @ts-ignore no borrar. Anda
+      this.productForm.controls['stock'].controls['min'].value = this.product.stock.min;
+      // @ts-ignore no borrar. Anda
+      this.productForm.controls['stock'].controls['current'].value = this.product.stock.current;
+    }
 
     const prodOpt = this.product.options.map(options => this.formBuilder.group({
       name: [{ value: options.name, disabled: true }, Validators.required],
@@ -277,9 +282,9 @@ export class ProductModifyComponent implements OnInit {
     this.updateProduct();
   }
 
-    /**
-   * Habilita/Deshabilita las opciones stock
-   */
+  /**
+ * Habilita/Deshabilita las opciones stock
+ */
   enableStockControl(): void {
     this.enableStock = RightsFunctions.isRightActiveForUser(this.currentUser, Rights.STOCK_CONTROL);
   }
