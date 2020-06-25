@@ -7,3 +7,4 @@ export * from './params.enum';
 export * from './constants.enum';
 export * from './orderTypes.enum';
 export * from './orderStatus.enum';
+export * from './notificationTypes';

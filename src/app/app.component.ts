@@ -10,8 +10,9 @@ import {
   SocketIoService,
   User,
   AppMenu,
-  UtilFunctions,  
-  ParamService
+  UtilFunctions,
+  ParamService,
+  NotificationTypes
 } from '../shared/index';
 import { isNullOrUndefined } from 'util';
 
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit {
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     this.translate.use('es');
   }
-
+  
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
       x => {
@@ -57,6 +58,7 @@ export class AppComponent implements OnInit {
 
     this.getTime();
     this.subscribeToNotifications(); //only with http-server
+    this.subscribeToNotificationsClick();
     this._socketService.waiterCall() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
       .subscribe(waiterCall => {
         let options = {
@@ -85,13 +87,39 @@ export class AppComponent implements OnInit {
     }, 1000);
   };
 
-  subscribeToNotifications() {
+  private async subscribeToNotifications() {
+    try {
+      const sub = await this.swPush.requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY,
+      });
+      this._notificationService.addPushSubscriber(sub).subscribe(res => {
+      }
+        , err => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.error('Could not subscribe due to:', err);
+    }
+  }
 
-    this.swPush.requestSubscription({
-      serverPublicKey: this.VAPID_PUBLIC_KEY
+  subscribeToNotificationsClick(){
+    this.swPush.notificationClicks.subscribe(notificationClick => {
+      console.log(notificationClick);
+      const notificationType = notificationClick.notification.data.notificationType;
+      const data = notificationClick.notification.data;
+
+      switch (notificationType) {
+        case NotificationTypes.NewOrder:
+            this._socketService.acceptOrder(data);
+          break;
+        case NotificationTypes.TableOcuped:
+          break;
+        case NotificationTypes.WaiterCall:
+          break;
+        default:
+          break;
+      }
     })
-      .then(sub => this._notificationService.addPushSubscriber(sub).subscribe())
-      .catch(err => console.error("Could not subscribe to notifications", err));
   }
 
   logout() {

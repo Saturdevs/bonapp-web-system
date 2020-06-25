@@ -21,6 +21,10 @@ export class SocketIoService {
     this.socket.emit('webSystemConnection', connection);
   }
 
+  acceptOrder(data){
+    this.socket.emit('acceptOrder', data)
+  }
+
   /** Recibe la llamada al mozo. Devuelve un observable que avisa a sus suscribers cada vez que el socket recibio el metodo callWaiter (es emitido desde la app al backend y del backend al sistema web). */
   waiterCall() { 
     return Observable.create((observer) => {
