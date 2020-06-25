@@ -8,7 +8,7 @@
         ¿Estas seguro que desea cancelar esta adición?
       </div>
       <div class="row">
-        <textarea (click)="selectText(obs)" #obs placeholder="Comentario..." [(ngModel)]="deletedReason"></textarea>
+        <textarea class="customInput" (click)="selectText(obs)" #obs placeholder="Comentario..." [(ngModel)]="deletedReason"></textarea>
       </div>
       <div class="row">
         <mdb-checkbox [class.checkbox-primary-custom]="true" (change)="returnStock()" name="productOption">Devolver a
@@ -217,34 +217,34 @@ overflow: auto; overflow-x: hidden;">
       </div>
     </div>
     <div class="row">
-      <span class="mt-2">Usuario:</span>
-      <div class="col-md-4 col-lg-4 col-sm-4 ml-1">
+      <span class="mt-2 span-padding">Usuario:</span>
+      <div class="col-md-4 col-lg-4 col-sm-4 ml-1 span-padding">
         <mdb-select #user name="user" id="user" [options]="userSelect" [(ngModel)]="userSelected"
           (selected)="selectUser(user.value)" placeholder="Seleccionar Usuario"
-          class="colorful-select dropdown-primary"></mdb-select>
+          class="colorful-select dropdown-primary customInput"></mdb-select>
       </div>
     </div>
     <div class="row" *ngIf='enableAddProducts'>
       <div class="col-lg-12 col-md-12 col-sm-12 customAddProductsTitle"><span
           class="align-middle">{{ 'Adicionar' | uppercase }}</span></div>
       <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 customAddProductsSection">
-        <div class="row" [class.has-error]="waiterRequired">
+        <div class="row span-padding" [class.has-error]="waiterRequired">
           Mozo:
           <div class="col-md-6 col-lg-6 col-sm-6 ml-1">
             <mdb-select #waiter name="waiter" id="waiter" [options]="waiterSelect" [(ngModel)]="waiterSelected"
               (selected)="selectWaiter(waiter.value)" placeholder="Seleccionar Mozo"
-              class="colorful-select dropdown-primary"></mdb-select>
+              class="colorful-select dropdown-primary customInput"></mdb-select>
           </div>
         </div>
         <div *ngIf="waiterRequired" class="alert alert-danger">
           Debe seleccionar un mozo.
         </div>
         <div class="row">
-          <div class="col-2">
-            <input type="number" class="form-control" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
+          <div class="col-2  span-padding">
+            <input type="number" class="form-control customInput" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
           </div>
           <div class="md-form col-9">
-            <input type="text" class="completer-input form-control mdb-autocomplete" [ngModel]="searchStr | async"
+            <input type="text" class="completer-input form-control mdb-autocomplete customInput" [ngModel]="searchStr | async"
               (ngModelChange)="searchStr.next($event)" [mdbAutoCompleter]="auto" placeholder="Buscar Producto">
             <mdb-auto-completer #auto="mdbAutoCompleter" textNoResults="No se encontraron resultados"
               (select)="addProductToPreOrderFromList()">

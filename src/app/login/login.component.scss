@@ -1,23 +1,39 @@
+footer{
+text-align: center;
+color:#fff;
+background-color: #a32610;
+position:absolute;
+bottom:0px;
+right:0px;
+left:0px;
+height:40px;
+width:100%;
+}
+
 form{
 width:90%;
 margin:0px auto;
-margin-top:30px;
+margin-top:40px;
+}
+
+.fondo-rojo{
+background-color:#e43012;
 }
 
 h2{
-color:red;
+color:#e43012;
 text-align:center;
 margin-top:40px;
 text-decoration: underline;
 }
 
 h5{
-color:#fff;
+color:#ffffff;
 font-size:15px;
 }
 
 img{
-margin-top: 30px;
+margin-top: 80px;
 }
 
 .login-background{
@@ -27,8 +43,9 @@ padding:10px;
 border-radius:30px;
 border:2px solid #fff0db;
 margin:0px auto;
-box-shadow: 5px 3px 5px #aaa;
+box-shadow: 5px 3px 5px #a32610;
 }
+
 
 @media (max-width: 992px) {
     form{
@@ -37,11 +54,11 @@ box-shadow: 5px 3px 5px #aaa;
         }
 
         .login-background{
-            background-color: #fff0db;
+            background-color: #e43012;
             width:100%;
             padding:10px;
             border-radius:30px;
-            border:2px solid #fff0db;
+            border:2px solid #e43012;
             margin:0px auto;
             }
 }

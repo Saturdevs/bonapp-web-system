@@ -2,7 +2,7 @@
     width: 100%;
     overflow-x: hidden!important;
     height: 10%;
-    background-color:rgba(244, 67, 54, 0.3);
+    background-color:#c7cbaf;
     top: 0;
     bottom: 0;
     left: 0;
@@ -28,7 +28,7 @@
     height: 90%;
 }
 .categoriesContainer{
-    background-color: rgba(244, 67, 54, 0.2);
+    background-color: #fff0db;
     height:100%;
     //min-width:13rem;
     overflow-y: scroll;
@@ -49,7 +49,7 @@
 }
 
 .productsContainer{
-    background-color: rgba(244, 67, 54, 0.1);
+    background-color: #fff0db;
     height: 100%;
     width: 45%;
     overflow-y: scroll;
@@ -88,12 +88,14 @@
 }
 
 .customPaddle{
-    background-color: rgba(0, 0, 0, 0.207);
-    border: none;
+    background-color: #718239;
+    border: 2px solid #718239;
+    border-radius: 50px;
+    color:#fff;
 }
 
 .customSubtittle{
-    font-size: 100%!important;
+    font-size: 80%!important;
     padding-top: .5rem;
     padding-bottom: .5rem;
     padding-left:1.5rem;
@@ -130,7 +132,7 @@
 }
 
 .customAddProductsTitle{
-    background-color: #fac366;
+    background-color: #fddaa2;
     color: #424242;
     font-weight: bold;
     padding-top: .75rem;
@@ -143,8 +145,8 @@
 }
 
 .infoSection{
-    background-color: #f6f6f6;
-    border-left: solid 4px #999999;
+    background-color: #fff0db;
+    border-left: solid 4px #fff0db;
 }
 
 .buttonOrder{
@@ -155,21 +157,21 @@
     padding-left: 1.5rem;
     padding-top: .5rem;
     background-color: #fddaa2;
-    border-left: solid 4px #fb4;
-    border-top: solid 1px #f5c963;  
+    border-left: solid 4px #fddaa2;
+    border-top: solid 1px #fddaa2;  
 }
 
 .totalToConfirm{
-    background-color: #f3f3f3;
-    border-left: solid 4px #999999;
-    border-top: solid 1px #f5c963;
-    border-bottom: solid 1px #d0d0d0;  
+    background-color: #fff0db;
+    border-left: solid 4px #fff0db;
+    border-top: solid 1px #fff0db;
+    border-bottom: solid 1px #fff0db;  
 }
 
 .productsInOrder{
-    background-color: #f3f3f3;
-    border-left: solid 4px #fb4;
-    border-top: solid 1px #d0d0d0;
+    background-color: #fff0db;
+    border-left: solid 4px #fff0db;
+    border-top: solid 1px #fff0db;
 }
 
 .productLine{
@@ -198,6 +200,7 @@
     border: 2px solid #718239;
     background-color: transparent;
     border-radius:30px;
+    font-size:12px;
 }
 
 .increaseDecreaceButton:active {
@@ -228,5 +231,14 @@
 }
 
 .warningMsg {
-  color: red;
+  color: #e43012;
+  font-size: 12px;
+}
+
+.secondary-color{
+background-color: #fddaa2!important;
+}
+
+.span-padding{
+    padding:15px;
 }
