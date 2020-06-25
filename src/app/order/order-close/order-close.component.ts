@@ -17,7 +17,8 @@ import {
   TransactionService,
   Transaction,
   CashRegisterMin,
-  PaymentTypeMin
+  PaymentTypeMin,
+  OrderStatus
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -257,7 +258,7 @@ export class OrderCloseComponent implements OnInit {
     table.status = TableStatus.LIBRE;
 
     this.order.cashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
-    this.order.status = "Closed";
+    this.order.status = OrderStatus.CLOSED;
     this.order.completed_at = new Date();
     this.order.discount = this.discount;
     this.order.totalPrice = this.totalPrice;

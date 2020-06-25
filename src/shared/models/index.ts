@@ -31,6 +31,7 @@ export * from './appMenu';
 export * from './rightForUser';
 export * from './notificationType';
 export * from './notification';
+export * from './notificationData';
 export * from './userTo';
 export * from './notificationReadBy';
 export * from './notificationType';
