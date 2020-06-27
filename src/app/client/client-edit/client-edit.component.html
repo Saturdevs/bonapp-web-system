@@ -39,7 +39,7 @@
           <label>Teléfono:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #clientTel="ngModel" type="text" class="form-control customInput customInputHeight"
+          <input #clientTel="ngModel" type="number" class="form-control customInput customInputTelNumber customInputHeight"
             [class.is-invalid]="clientTel.invalid && (clientTel.dirty || clientTel.touched)" name="clientTel"
             id="clientTel" [(ngModel)]="client.tel">
         </div>
@@ -56,10 +56,10 @@
             name="clientAddressStreet" id="clientAddressStreet" [(ngModel)]="client.addressStreet" placeholder="Calle">
         </div>
         <div class="col-md-2 col-lg-2 col-sm-2 ml-2">
-          <input #clientAddressNumber="ngModel" type="text" class="form-control customInput customInputHeight"
+          <input #clientAddressNumber="ngModel" type="number" class="form-control customInput customInputNumber customInputHeight"
             name="clientAddressNumber" id="clientAddressNumber" [(ngModel)]="client.addressNumber" placeholder="Número">
         </div>
-        <div class="col-md-3 col-lg-3 col-sm-3 ml-2">
+        <div class="col-md-2 col-lg-2 col-sm-3 ml-2">
           <input #clientAddressDpto="ngModel" type="text" class="form-control customInput customInputHeight"
             name="clientAddressDpto" id="clientAddressDpto" [(ngModel)]="client.addressDpto" placeholder="Piso / Dpto">
         </div>
@@ -89,6 +89,9 @@
 
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm" *ngIf='client.enabledTransactions'>
       <div class="row pl-2">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
+          <label>Límite cta. cte.::</label>
+        </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
           <input #clientAddressDpto="ngModel" type="number" min='0' step='100'
             class="form-control customInput customInputHeight" name="clientLimitCtaCte" id="clientLimitCtaCte"

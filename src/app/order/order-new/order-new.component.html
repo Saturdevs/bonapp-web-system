@@ -8,7 +8,8 @@
         ¿Estas seguro que desea cancelar esta adición?
       </div>
       <div class="row">
-        <textarea class="customInput" (click)="selectText(obs)" #obs placeholder="Comentario..." [(ngModel)]="deletedReason"></textarea>
+        <textarea class="customInput" (click)="selectText(obs)" #obs placeholder="Comentario..."
+          [(ngModel)]="deletedReason"></textarea>
       </div>
       <div class="row">
         <mdb-checkbox [class.checkbox-primary-custom]="true" (change)="returnStock()" name="productOption">Devolver a
@@ -207,7 +208,7 @@ overflow: auto; overflow-x: hidden;">
       <div class="row col-lg-8 col-md-8 col-sm-8 customSubtittle">
         {{ order.created_at | date:'dd/MM/yy HH:mm' }}
       </div>
-      <div class="d-flex justify-content-end row col-lg-4 col-md-4 col-sm-4 pr-0">
+      <div *ngIf="true === false" class="d-flex justify-content-end row col-lg-4 col-md-4 col-sm-4 pr-0">
         <div class="float-right pt-2">
           <i class="fa fa-cog float-right pr-4" (click)="showEditModal(editTemplate, order._id)"></i>
         </div>
@@ -228,9 +229,9 @@ overflow: auto; overflow-x: hidden;">
       <div class="col-lg-12 col-md-12 col-sm-12 customAddProductsTitle"><span
           class="align-middle">{{ 'Adicionar' | uppercase }}</span></div>
       <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 customAddProductsSection">
-        <div class="row span-padding" [class.has-error]="waiterRequired">
+        <div class="row span-padding">
           Mozo:
-          <div class="col-md-6 col-lg-6 col-sm-6 ml-1">
+          <div class="col-md-6 col-lg-6 col-sm-6 ml-1 waiterSelect">
             <mdb-select #waiter name="waiter" id="waiter" [options]="waiterSelect" [(ngModel)]="waiterSelected"
               (selected)="selectWaiter(waiter.value)" placeholder="Seleccionar Mozo"
               class="colorful-select dropdown-primary customInput"></mdb-select>
@@ -241,11 +242,12 @@ overflow: auto; overflow-x: hidden;">
         </div>
         <div class="row">
           <div class="col-2  span-padding">
-            <input type="number" class="form-control customInput" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
+            <input id="prodQty" type="number" class="form-control customInput" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
           </div>
-          <div class="md-form col-9">
-            <input type="text" class="completer-input form-control mdb-autocomplete customInput" [ngModel]="searchStr | async"
-              (ngModelChange)="searchStr.next($event)" [mdbAutoCompleter]="auto" placeholder="Buscar Producto">
+          <div class="md-form col-9 searchProduct">
+            <input type="text" class="completer-input form-control mdb-autocomplete customInput customInputHeight"
+              [ngModel]="searchStr | async" (ngModelChange)="searchStr.next($event)" [mdbAutoCompleter]="auto"
+              placeholder="Buscar Producto">
             <mdb-auto-completer #auto="mdbAutoCompleter" textNoResults="No se encontraron resultados"
               (select)="addProductToPreOrderFromList()">
               <mdb-option *ngFor="let option of results | async" [value]="option.name">
@@ -335,7 +337,8 @@ overflow: auto; overflow-x: hidden;">
             <div class="col-2 p-0" *ngIf='enableDeleteProducts'>
               <button type="button" [disabled]="product.deleted === true" mdbBtn rounded="true"
                 [class.btn-primary-custom]="true" [class.buttonOrder]="true" mdbWavesEffect
-                class="z-depth-0 btn-tb float-left mt-0" (click)="showModalRemoveProduct(deleteTemplate, product, user)">
+                class="z-depth-0 btn-tb float-left mt-0"
+                (click)="showModalRemoveProduct(deleteTemplate, product, user)">
                 <i class="fa fa-times fa-1x"></i>
               </button>
             </div>
