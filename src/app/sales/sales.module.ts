@@ -17,11 +17,10 @@ import { OrderNewResolverService } from '../order/order-new/order-new-resolver.s
 import { CashRegisterAvailablesResolverService } from '../cash-register/resolvers/cash-register-availables-resolver.service';
 import { PaymentTypeAvailableResolverService } from '../payment-type/resolvers/payment-type-available-resolver.service';
 import { DailyMenuResolverService } from '../daily-menu/daily-menu-list/daily-menu-resolver.service';
-import { MenuAvailablesResolverService } from '../menu/resolvers/menu-availables-resolver.service';
 import { AuthGuard } from '../../shared';
 import { ProductResolverService } from '../product/product-list/product-resolver.service';
-import { MenuResolverService } from '../menu/menu-resolver.service';
 import { UsersResolverService } from '../user/user-list/users-resolver-service';
+import { MenuAvailablesWithCategoriesResolverService } from '../menu/resolvers/menu-availables-with-categories-resolver.service';
 
 @NgModule({
   imports: [
@@ -54,7 +53,7 @@ import { UsersResolverService } from '../user/user-list/users-resolver-service';
             resolve: {
               order: OrderNewResolverService,
               products: ProductResolverService,
-              menus: MenuAvailablesResolverService,
+              menus: MenuAvailablesWithCategoriesResolverService,
               cashRegisters: CashRegisterAvailablesResolverService,
               paymentTypes: PaymentTypeAvailableResolverService,
               dailyMenus: DailyMenuResolverService,
