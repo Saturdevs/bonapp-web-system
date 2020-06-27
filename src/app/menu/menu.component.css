@@ -1,3 +1,9 @@
+.customForm{
+width:500px;
+padding:10px;
+}
+
+
 .search-menu{
     float: left;
     padding-left: 1em;
@@ -56,7 +62,8 @@
     -o-transform: translate(0,-25%);
     transform: translate(0,-25%);
 }
- 
+  
+
 @media (min-width: 768px) {
     .modal-dialog {
         width: 600px;
