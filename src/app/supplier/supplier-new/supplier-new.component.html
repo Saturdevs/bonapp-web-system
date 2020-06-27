@@ -17,13 +17,13 @@
     </h5>
   </div>
   <form class="pt-4 pr-3 pl-3" #form="ngForm" method="post" novalidate>
-    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierName="ngModel" required type="text" class="form-control customInput"
+          <input #supplierName="ngModel" required type="text" class="form-control customInput customInputHeight"
             [class.is-invalid]="supplierName.invalid && (supplierName.dirty || supplierName.touched)"
             name="supplierName" id="supplierName" [(ngModel)]="newSupplier.name">
         </div>
@@ -33,48 +33,51 @@
       </div>
     </div>
 
-    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Email:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierEmail="ngModel" type="text" class="form-control customInput"
+          <input #supplierEmail="ngModel" type="text" class="form-control customInput customInputHeight"
             [class.is-invalid]="supplierEmail.invalid && (supplierEmail.dirty || supplierEmail.touched)"
             name="supplierEmail" id="supplierEmail" [(ngModel)]="newSupplier.email">
         </div>
       </div>
     </div>
 
-    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Teléfono:</label>
         </div>
-        <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input #supplierTel="ngModel" type="text" class="form-control customInput"
+        <div class="col-md-4 col-lg-4 col-sm-4 pl-0">
+          <input #supplierTel="ngModel" type="number" class="form-control customInput customInputTelNumber"
             [class.is-invalid]="supplierTel.invalid && (supplierTel.dirty || supplierTel.touched)" name="supplierTel"
             id="supplierTel" [(ngModel)]="newSupplier.tel">
         </div>
       </div>
     </div>
 
-    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
+    <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Dirección:</label>
         </div>
         <div class="col-md-3 col-lg-3 col-sm-3 pl-0">
-          <input #supplierAddressStreet="ngModel" type="text" class="form-control customInput" name="supplierAddressStreet"
-            id="supplierAddressStreet" [(ngModel)]="newSupplier.addressStreet" placeholder="Calle">
+          <input #supplierAddressStreet="ngModel" type="text" class="form-control customInput customInputHeight"
+            name="supplierAddressStreet" id="supplierAddressStreet" [(ngModel)]="newSupplier.addressStreet"
+            placeholder="Calle">
         </div>
         <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #supplierAddressNumber="ngModel" type="text" class="form-control customInput" name="supplierAddressNumber"
-            id="supplierAddressNumber" [(ngModel)]="newSupplier.addressNumber" placeholder="Número">
+          <input #supplierAddressNumber="ngModel" type="number" class="form-control customInput customInputNumberAmount customInputHeight"
+            name="supplierAddressNumber" id="supplierAddressNumber" [(ngModel)]="newSupplier.addressNumber"
+            placeholder="Número">
         </div>
-        <div class="col-md-2 col-lg-2 col-sm-2 pl-0">
-          <input #supplierAddressDpto="ngModel" type="text" class="form-control customInput" name="supplierAddressDpto"
-            id="supplierAddressDpto" [(ngModel)]="newSupplier.addressDpto" placeholder="Piso / Dpto">
+        <div class="col-md-3 col-lg-3 col-sm-3 ml-2">
+          <input #supplierAddressDpto="ngModel" type="text" class="form-control customInput customInputHeight"
+            name="supplierAddressDpto" id="supplierAddressDpto" [(ngModel)]="newSupplier.addressDpto"
+            placeholder="Piso / Dpto">
         </div>
       </div>
     </div>
@@ -82,7 +85,8 @@
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm pt-3 pb-3 pr-3 pl-3">
       <div class="row pl-2">
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <mdb-checkbox [class.checkbox-primary-custom]="true"  name="checkEnabledTransactions" [(ngModel)]="newSupplier.active"> {{ checkboxText }}
+          <mdb-checkbox [class.checkbox-primary-custom]="true" name="checkEnabledTransactions"
+            [(ngModel)]="newSupplier.active"> {{ checkboxText }}
           </mdb-checkbox>
         </div>
       </div>
@@ -93,7 +97,7 @@
   <div class="col-7 offset-5">
     <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
       (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="(form.invalid)"
-      (click)="saveSupplier()">{{saveButton}}</button>
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true"
+      [disabled]="(form.invalid)" (click)="saveSupplier()">{{saveButton}}</button>
   </div>
 </div>

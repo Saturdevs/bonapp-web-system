@@ -30,6 +30,12 @@ export class MenuService {
       .catch(this.handleError);
   }
 
+  getAllAvailablesWithCategories(): Observable<Menu[]> {
+    return this.apiService.get('/menu/availableswithcategories')
+      .map(data => data.menus)
+      .catch(this.handleError);
+  }
+
   updateMenu(menu) {
     return this.apiService.put(`/menu/${menu._id}`, menu)
       .map(data => data.menu)

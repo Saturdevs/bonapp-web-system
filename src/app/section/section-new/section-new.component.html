@@ -19,11 +19,11 @@
   <form class="pt-4 pr-3 pl-3" method="post" novalidate [formGroup]="sectionForm">
     <div class="col-md-12 col-lg-12 col-sm-12 md-form form-sm">
       <div class="row pl-2">
-        <div class="col-md-4 col-lg-4 col-sm-4 pr-0">
+        <div class="col-md-3 col-lg-3 col-sm-3 pr-0">
           <label>Nombre:</label>
         </div>
         <div class="col-md-5 col-lg-5 col-sm-5 pl-0">
-          <input mdbActive formControlName="name" type="text" class="form-control customInput"
+          <input mdbActive formControlName="name" type="text" class="form-control customInput customInputHeight"
             [class.is-invalid]="sectionForm.get('name').invalid && (sectionForm.get('name').dirty || sectionForm.get('name').touched)"
             id="name">
         </div>
@@ -39,7 +39,7 @@
   <div class="col-7 offset-5">
     <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true"
       (click)="showModalCancel(cancelTemplate)">{{cancelButton}}</button>
-    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="sectionForm.invalid"
-      (click)="saveSection()">{{saveButton}}</button>
+    <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true"
+      [disabled]="sectionForm.invalid" (click)="saveSection()">{{saveButton}}</button>
   </div>
 </div>

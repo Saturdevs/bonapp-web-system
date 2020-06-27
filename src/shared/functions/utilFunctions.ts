@@ -26,7 +26,7 @@ export class UtilFunctions {
    */
   static getChildAPpMenus(currentUser: User, menuParentName: String) {
     if (!isNullOrUndefined(currentUser)) {
-      let appMenus = currentUser.menus.filter(menu => menu.parent === menuParentName);
+      let appMenus = currentUser.menus.filter(menu => (menu.parent === menuParentName && menu.show));
       appMenus.sort((a,b) => { return this.orderAppMenus(a, b) });
 
       return appMenus;

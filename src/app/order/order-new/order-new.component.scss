@@ -107,7 +107,7 @@
 }
 
 .customTableNumberTitle{
-    height: 15%;
+    height: 10%;
     padding-left: .5rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -241,4 +241,17 @@ background-color: #fddaa2!important;
 
 .span-padding{
     padding:15px;
+}
+
+.waiterSelect {
+  margin-top: -1rem;
+}
+
+.searchProduct {
+  margin-top: .8rem;
+}
+
+#prodQty {
+  text-align: right;
+  height: 2rem;
 }

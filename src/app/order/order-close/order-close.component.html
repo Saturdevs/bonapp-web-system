@@ -3,7 +3,7 @@
   </app-error-template>
 </ng-template>
 
-<div class="container col-md-12">
+<div class="col-md-12">
   <!-- Titulo del form -->
   <div class="row pageTitle primary-color">
     <span aria-hidden="true" (click)="closeForm()" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1">&times;</span>
@@ -195,7 +195,7 @@
   <div class="row grey lighten-3">
     <div class="col-7 offset-5 closeOrderButton">
       <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="closeForm()">{{cancelButton}}</button>
-      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="changeAmount < 0 || !canPayWithAccount" (click)="closeTable()">{{closeTableButton + order.table.toString()}}</button>
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="changeAmount < 0 || !canPayWithAccount" (click)="closeTable()">{{closeTableButton}} {{order.table.toString()}}</button>
     </div>
   </div>
 </div>
