@@ -28,11 +28,7 @@
     <form #form="ngForm" novalidate class="form-inline">
       <img src="assets/img/filtros.png" height="40px" width="auto">
       <h6 class="pt-2">Filtrar:</h6>
-      <div class="md-form form-group mr-0 pr-0 col-lg-1 col-md-1 customPaddingbottom">
-        <input type="text" class="input-alternate" placeholder="Codigo" name="queryCod" [(ngModel)]='listFilterCod'
-          id="queryCod">
-      </div>
-      <div class="md-form form-group mr-0 ml-0 col-md-2 col-lg-2 customPaddingbottom">
+      <div class="md-form form-group mr-0 ml-0 col-md-2 col-lg-2">
         <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
           id="query">
       </div>
@@ -58,8 +54,7 @@
   <div class="row">
     <table class="table table-bordered table-hover customTable" mdbTable #tableEl="mdbTable">
       <thead class="primary-color customTableText">
-        <tr>
-          <th class="customShortTh">Código</th>
+        <tr>          
           <th class="customLongTh">Nombre</th>
           <th class="customShortTh">Precio</th>
           <th>Categoría</th>
@@ -70,8 +65,6 @@
       </thead>
       <tbody class="table-wrapper" *ngIf='products && products.length'>
         <tr *ngFor='let product of filteredProducts; let i = index'>
-          <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
-            class="align-middle customShortTh">{{ product.code }}</td>
           <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
             class="align-middle customLongTh">{{ product.name }}</td>
           <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
@@ -94,7 +87,7 @@
       </tbody>
       <tfoot class="PaginationBackground w-100">
         <tr>
-          <td colspan="7">
+          <td colspan="6">
             <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredProducts">
             </mdb-table-pagination>
           </td>

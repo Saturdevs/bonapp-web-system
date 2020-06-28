@@ -29,20 +29,7 @@
           <img class="customImage" [src]="productPictureData"
             onerror="this.src='../../../assets/img/No_image_available.svg'" />
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Código:</label>
-            <input formControlName="code" type="text" class="form-control customInput"
-              [class.is-invalid]="productForm.get('code').invalid && (productForm.get('code').dirty || productForm.get('code').touched)"
-              id="code">
-          </div>
-
-          <div
-            *ngIf="productForm.get('code').invalid && (productForm.get('code').dirty || productForm.get('code').touched)"
-            class="alert alert-danger">
-            El código del Producto es requerido.
-          </div>
-
+        <div class="col-md-6">        
           <div class="form-group">
             <label>Nombre:</label>
             <input formControlName="name" type="text" class="form-control customInput"

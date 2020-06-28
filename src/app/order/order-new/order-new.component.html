@@ -134,26 +134,20 @@ overflow: auto; overflow-x: hidden;">
   <div class="d-flex flex-row flex-wrap col-md-8 col-lg-8 col-xs-8 col-sm-8 pr-0" style="height: 100%">
     <div class="row col-12 menusContainer pr-0 pl-0">
       <div class="d-flex align-items-center pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0" style="width: 100%">
-        <button class="left-paddle paddle btn customPaddle waves-light" mdbRippleRadius style="left:0!important;">
-          < </button>
-            <div style="margin-left:8%;" *ngFor="let menu of menus"
-              class="d-flex align-items-center menuButtonContainer">
-              <a (click)="getCategoriesAvailables(menu._id); applyClassMenu(menu._id)"
-                [ngClass]="{'activeItem': activeMenu == menu._id}" mdbBtn size="md" rounded="true"
-                [class.btn-primary-custom]="true" mdbWavesEffect [class.menuButton]="true"
-                class="d-flex align-items-center justify-content-center mt-0 mb-0"
-                mdbRippleRadius><span>{{menu.name}}</span></a>
-            </div>
-            <div style="margin-left:8%;" *ngIf="dailyMenus.length > 0"
-              class="d-flex align-items-center menuButtonContainer">
-              <a [ngClass]="{'activeItem': activeDailyMenu}" (click)="applyClassDailyMenu();" mdbBtn size="md"
-                [class.btn-primary-custom]="true" mdbWavesEffect rounded="true" [class.menuButton]="true"
-                class="d-flex align-items-center justify-content-center mt-0 mb-0"
-                mdbRippleRadius><span>{{ dailyMenusLabel }}</span></a>
-            </div>
-            <button class="right-paddle paddle btn customPaddle waves-light" mdbRippleRadius>
-              >
-            </button>
+        <div style="margin-left:2%;" *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
+          <a (click)="getCategoriesAvailables(menu._id); applyClassMenu(menu._id)"
+            [ngClass]="{'activeItem': activeMenu == menu._id}" mdbBtn size="md" rounded="true"
+            [class.btn-primary-custom]="true" mdbWavesEffect [class.menuButton]="true"
+            class="d-flex align-items-center justify-content-center mt-0 mb-0"
+            mdbRippleRadius><span>{{menu.name}}</span></a>
+        </div>
+        <div style="margin-left:2%;" *ngIf="dailyMenus.length > 0"
+          class="d-flex align-items-center menuButtonContainer">
+          <a [ngClass]="{'activeItem': activeDailyMenu}" (click)="applyClassDailyMenu();" mdbBtn size="md"
+            [class.btn-primary-custom]="true" mdbWavesEffect rounded="true" [class.menuButton]="true"
+            class="d-flex align-items-center justify-content-center mt-0 mb-0"
+            mdbRippleRadius><span>{{ dailyMenusLabel }}</span></a>
+        </div>
       </div>
     </div>
     <div class="row col-12 pr-0 pl-0 categoriesAndProductsContainer">
@@ -242,7 +236,8 @@ overflow: auto; overflow-x: hidden;">
         </div>
         <div class="row">
           <div class="col-2  span-padding">
-            <input id="prodQty" type="number" class="form-control customInput" [(ngModel)]="qtyProd" id="prodQty" mdbActive>
+            <input id="prodQty" type="number" class="form-control customInput" [(ngModel)]="qtyProd" id="prodQty"
+              mdbActive>
           </div>
           <div class="md-form col-9 searchProduct">
             <input type="text" class="completer-input form-control mdb-autocomplete customInput customInputHeight"
@@ -344,8 +339,9 @@ overflow: auto; overflow-x: hidden;">
             </div>
           </div>
           <div class="row mb-2">
-            <div *ngIf="product.observations !== undefined && product.observations !== ''">
-              <span>{{ product.observations }}</span>
+            <div
+              *ngIf="product.observations !== undefined && product.observations !== null && product.observations !== ''">
+              <span>OBSERVACIONES: {{ product.observations }}</span>
             </div>
             <div class="pl-4" *ngIf="product.deleted === true">
               <span>- CANCELADO: {{ product.deletedReason }}</span>

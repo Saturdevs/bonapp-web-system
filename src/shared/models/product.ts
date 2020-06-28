@@ -6,8 +6,7 @@ import {
 } from '../index';
 
 export class Product {
-  readonly _id: string;
-  code: string;
+  readonly _id: string;  
   name: string;
   category: Category;
   pictures: string;

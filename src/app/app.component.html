@@ -9,7 +9,7 @@
 			<!-- App Menus -->
 			<ul class="navbar-nav mr-auto">
 				<div *ngFor='let appMenu of appMenus'>
-					<li *ngIf='appMenu.show' class="nav-item waves-light customLi" [routerLinkActive]="['customActive']" mdbTooltip="{{ 'AppMenus.' + appMenu._id | translate }}" placement="bottom" mdbRippleRadius>
+					<li *ngIf='appMenu.show' class="nav-item waves-light customLi" [class.customNavBarItem]="true" [routerLinkActive]="['customActive']" mdbTooltip="{{ 'AppMenus.' + appMenu._id | translate }}" placement="bottom" mdbRippleRadius>
 							<a [routerLink]="appMenu._id" class="nav-link"><img [src]="appMenu.imgsrc" height="50px" width="auto"></a>
 					</li>
 				</div>
