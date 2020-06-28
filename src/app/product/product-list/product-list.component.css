@@ -15,3 +15,14 @@
     opacity: 1;
 }
 
+.customPaddingbottom{
+    padding-bottom:20px;
+    }
+
+.customPaddingLeft{
+padding-left:50px;
+}
+
+.PaginationBackground{
+background-color: #c7cbaf;
+}

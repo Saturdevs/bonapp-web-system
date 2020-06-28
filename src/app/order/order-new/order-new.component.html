@@ -324,7 +324,7 @@ overflow: auto; overflow-x: hidden;">
       <div class="col-lg-12 col-md-12 col-sm-12 productLine" *ngFor="let user of usersInOrder">
         <label *ngIf="userSelected === 'default'">Usuario: {{ user.username }}</label>
         <div *ngFor="let product of user.products">
-          <div class="row mb-0">
+          <div class="row mb-0 customBorder">
             <div class="col-2 p-0 pl-3">
               <span>{{ product.quantity }}</span>
             </div>

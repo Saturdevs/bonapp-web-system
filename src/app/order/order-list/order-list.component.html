@@ -23,48 +23,50 @@
         <div class="row mb-2 customBox">
           <form #form="ngForm" novalidate
             class="form-imd-form form-group mr-2 col-md-3 col-lg-3 text-leftnline col-md-12 col-lg-12">
-            <div class="row col-md-12">
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-1 col-lg-1 text-left">
+            <div class="row col-lg-12">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
                 <h6 class="pt-2">Estado:</h6>
                 <mdb-select #queryStatus name="queryStatus" id="queryStatus" [options]="statusSelect"
                   [(ngModel)]="statusSelectedValue" placeholder="Estado" class="colorful-select dropdown-primary">
                 </mdb-select>
               </div>
 
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
                 <h6 class="pt-2">Mozo:</h6>
                 <mdb-select #queryWaiter name="queryWaiter" id="queryWaiter" [options]="waitersSelect"
                   [(ngModel)]="waiterSelectedValue" placeholder="Choose your option"
                   class="colorful-select dropdown-primary"></mdb-select>
               </div>
 
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
                 <h6 class="pt-2">Forma de pago:</h6>
                 <mdb-select #queryPayments name="queryPayments" id="queryPayments" [options]="paymentsSelect"
                   [(ngModel)]="paymentsValue" placeholder="Choose your option" class="colorful-select dropdown-primary">
                 </mdb-select>
               </div>
 
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
                 <h6 class="pt-2">Caja:</h6>
                 <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
                   [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Choose your option"
                   class="colorful-select dropdown-primary"></mdb-select>
               </div>
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-1 col-lg-1 text-left">
+            </div>
+            <div class="row col-lg-12">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-4 col-lg-4 text-left">
                 <h6 class="pt-2">Mesa:</h6>
                 <mdb-select #queryTables name="queryTables" id="queryTables" [options]="tableSelect"
                   [(ngModel)]="tableSelectedValue" placeholder="Nro." class="colorful-select dropdown-primary">
                 </mdb-select>
               </div>
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-4 col-lg-4 text-left">
                 <h6 class="pt-2">Fecha Desde:</h6>
                 <input type="date" #queryDateFrom name="queryDateFrom" id="queryDateFrom"
-                  [(ngModel)]="dateFromSelectedValue">
+                  [(ngModel)]="dateFromSelectedValue" class="customDate">
               </div>
-              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-2 col-lg-2 text-left">
+              <div class="md-form form-group mt-0 mb-0 mr-0 col-md-4 col-lg-4 text-left">
                 <h6 class="pt-2">Fecha Hasta:</h6>
-                <input type="date" #queryDateTo name="queryDateTo" id="queryDateTo" [(ngModel)]="dateToSelectedValue">
+                <input type="date" #queryDateTo name="queryDateTo" id="queryDateTo" [(ngModel)]="dateToSelectedValue" class="customDate">
               </div>
             </div>
           </form>
@@ -119,7 +121,7 @@
                 </td>
               </tr>
             </tbody>
-            <tfoot class="grey lighten-5 w-100">
+            <tfoot class="PaginationBackground w-100">
               <tr>
                 <td colspan="8">
                   <mdb-table-pagination [tableEl]="tableEl" [searchDataSource]="filteredOrders"></mdb-table-pagination>

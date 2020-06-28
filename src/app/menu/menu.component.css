@@ -62,7 +62,10 @@ padding:10px;
     -o-transform: translate(0,-25%);
     transform: translate(0,-25%);
 }
-  
+
+.customPaddingbottom{
+    padding-bottom:20px;
+    }  
 
 @media (min-width: 768px) {
     .modal-dialog {
