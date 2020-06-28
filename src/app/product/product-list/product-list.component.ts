@@ -33,7 +33,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   filteredProducts: Product[];
   products: Product[];
   _listFilter: string;
-  _listFilterCod: string;
   _percentage: number;
   idProductDelete: any;
   categoryProduct: Category;
@@ -56,14 +55,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   set listFilter(value: string) {
     this._listFilter = value;
     this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
-  }
-
-  get listFilterCod(): string {
-    return this._listFilterCod;
-  }
-  set listFilterCod(value: string) {
-    this._listFilterCod = value;
-    this.filteredProducts = this.listFilterCod ? this.performFilterCod(this.listFilterCod) : this.products;
   }
 
   get percentage(): number {
@@ -123,18 +114,10 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this.enableActionButtons = this.enableDelete || this.enableEdit;
   }
 
-  performFilter(filterBy: string): Product[] {
-    this.listFilterCod = '';
+  performFilter(filterBy: string): Product[] {    
     filterBy = filterBy.toLocaleLowerCase();
     return this.products.filter((product: Product) =>
       product.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
-  }
-
-  performFilterCod(filterBy: string): Product[] {
-    this.listFilter = '';
-    filterBy = filterBy.toLocaleLowerCase();
-    return this.products.filter((product: Product) =>
-      product.code.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 
   getProducts(): void {
@@ -150,7 +133,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   filterByCategoria(value) {
     this._listFilter = '';
-    this._listFilterCod = '';
     if (value === 'default') {
       this.filteredProducts = this.products;
     } else {

@@ -81,8 +81,7 @@ export class ProductModifyComponent implements OnInit {
 
   ngOnInit() {
     this.sizesArray = this._route.snapshot.data['sizes'];
-    this.productForm = this.formBuilder.group({
-      code: ['', Validators.required],
+    this.productForm = this.formBuilder.group({      
       name: ['', Validators.required],
       category: ['', ComboValidators.hasValue],
       pictures: ['', Validators.required],
@@ -153,8 +152,7 @@ export class ProductModifyComponent implements OnInit {
     this.productPictureData = this.product.pictures;
     this.productNameModified = this.product.name;
 
-    this.productForm.patchValue({
-      code: this.product.code,
+    this.productForm.patchValue({      
       name: this.product.name,
       description: this.product.description,
       price: this.product.price,

@@ -80,7 +80,6 @@ export class ProductNewComponent implements OnInit {
       }
     )
     this.productForm = this.formBuilder.group({
-      code: ['', Validators.required],
       name: ['', Validators.required],
       category: ['', ComboValidators.hasValue],
       pictures: ['', Validators.required],
