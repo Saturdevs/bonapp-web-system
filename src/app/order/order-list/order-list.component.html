@@ -23,49 +23,50 @@
         <div class="row mb-2 customBox">
           <form #form="ngForm" novalidate
             class="form-imd-form form-group mr-2 col-md-3 col-lg-3 text-leftnline col-md-12 col-lg-12">
+            <label>Filtrar:</label>
             <div class="row col-lg-12">
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
-                <h6 class="pt-2">Estado:</h6>
+                
                 <mdb-select #queryStatus name="queryStatus" id="queryStatus" [options]="statusSelect"
                   [(ngModel)]="statusSelectedValue" placeholder="Estado" class="colorful-select dropdown-primary">
                 </mdb-select>
               </div>
 
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
-                <h6 class="pt-2">Mozo:</h6>
+                
                 <mdb-select #queryWaiter name="queryWaiter" id="queryWaiter" [options]="waitersSelect"
-                  [(ngModel)]="waiterSelectedValue" placeholder="Choose your option"
+                  [(ngModel)]="waiterSelectedValue" placeholder="Mozo"
                   class="colorful-select dropdown-primary"></mdb-select>
               </div>
 
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
-                <h6 class="pt-2">Forma de pago:</h6>
+                
                 <mdb-select #queryPayments name="queryPayments" id="queryPayments" [options]="paymentsSelect"
-                  [(ngModel)]="paymentsValue" placeholder="Choose your option" class="colorful-select dropdown-primary">
+                  [(ngModel)]="paymentsValue" placeholder="Forma de pago" class="colorful-select dropdown-primary">
                 </mdb-select>
               </div>
 
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-3 col-lg-3 text-left">
-                <h6 class="pt-2">Caja:</h6>
+                
                 <mdb-select #queryCashRegister name="queryCashRegister" id="queryCashRegister"
-                  [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Choose your option"
+                  [options]="cashRegistersSelect" [(ngModel)]="cashSelectedValue" placeholder="Caja"
                   class="colorful-select dropdown-primary"></mdb-select>
               </div>
             </div>
             <div class="row col-lg-12">
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-4 col-lg-4 text-left">
-                <h6 class="pt-2">Mesa:</h6>
+                
                 <mdb-select #queryTables name="queryTables" id="queryTables" [options]="tableSelect"
-                  [(ngModel)]="tableSelectedValue" placeholder="Nro." class="colorful-select dropdown-primary">
+                  [(ngModel)]="tableSelectedValue" placeholder="Mesa Nro." class="colorful-select dropdown-primary">
                 </mdb-select>
               </div>
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-4 col-lg-4 text-left">
-                <h6 class="pt-2">Fecha Desde:</h6>
+               Desde:&nbsp; 
                 <input type="date" #queryDateFrom name="queryDateFrom" id="queryDateFrom"
                   [(ngModel)]="dateFromSelectedValue" class="customDate">
               </div>
               <div class="md-form form-group mt-0 mb-0 mr-0 col-md-4 col-lg-4 text-left">
-                <h6 class="pt-2">Fecha Hasta:</h6>
+                Hasta:&nbsp;
                 <input type="date" #queryDateTo name="queryDateTo" id="queryDateTo" [(ngModel)]="dateToSelectedValue" class="customDate">
               </div>
             </div>

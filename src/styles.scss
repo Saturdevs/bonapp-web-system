@@ -15,7 +15,7 @@ $alternative-color:  #f56a6a !default;
     background-image: linear-gradient(#e43012,#e43012);
     color: #fff;
     padding:20px;
-    
+    box-shadow:none !important;
 }
 
 .navBarColor a {
@@ -185,7 +185,7 @@ table {
 .customInput {
   border: 1px solid #718239!important;
   border-radius:20px!important;
-  background-color:transparent!important;
+  background-color:#FFFAF0!important;
   color:#555!important;
   padding-left: 1rem!important;
   padding-right: 1rem!important;

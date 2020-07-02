@@ -5,6 +5,7 @@ border-radius:30px;
 padding:5px;
 margin-bottom:10px;
 border-color:transparent;
+padding-left: 10px;
 }
 
 .chkAvailable {
@@ -25,4 +26,16 @@ ul li{
 #price {
   width: 6rem;
   text-align: right;
+}
+
+.customBackground{
+background-color:white;
+padding-top:20px;
+padding-bottom:20px;
+border:solid 1px rgb(180, 180, 180);
+border-radius: 15px;
+}
+
+label{
+  padding-left:10px;
 }

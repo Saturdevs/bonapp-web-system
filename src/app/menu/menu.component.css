@@ -67,6 +67,14 @@ padding:10px;
     padding-bottom:20px;
     }  
 
+    .pt-2{
+        padding-left:10px;
+        }
+
+tbody{
+background-color: #FFFAF0;
+}
+
 @media (min-width: 768px) {
     .modal-dialog {
         width: 600px;

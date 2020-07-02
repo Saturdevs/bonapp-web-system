@@ -35,3 +35,11 @@
 .PaginationBackground{
         background-color: #c7cbaf;
         }
+
+.pt-2{
+      padding-left:10px;
+    }
+
+tbody{
+        background-color: #FFFAF0;
+        }

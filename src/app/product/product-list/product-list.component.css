@@ -19,10 +19,14 @@
     padding-bottom:20px;
     }
 
-.customPaddingLeft{
-padding-left:50px;
-}
-
 .PaginationBackground{
 background-color: #c7cbaf;
 }
+
+.pt-2{
+    padding-left:30px;
+  }
+
+  tbody{
+    background-color: #FFFAF0;
+    }

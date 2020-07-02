@@ -43,7 +43,7 @@
             {{ tablesText }}
           </div>
           <div class="row">
-              <div *ngFor="let table of tables" style="border: solid 2px #718239; padding:1rem; border-radius:20px; margin:5px;">
+              <div *ngFor="let table of tables" style="border: solid 2px #718239; padding:1rem; border-radius:10px; margin:5px; background-color: #FFFAF0;">
                   <mdb-checkbox [class.checkbox-primary-custom]="true"  (change)="addToGenerator(table)">{{ table.number }}</mdb-checkbox>
               </div>
           </div>

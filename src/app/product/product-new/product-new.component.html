@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="row col-md-12 col-lg-12 col-sm-12 mr-0">
-      <div class="col-md-6">
+      <div class="col-md-6 customBackground">
         <label>Tamaños:</label>
         <div formArrayName="sizes" *ngFor="let productSize of sizes.controls; let i=index">
           <div [formGroupName]="i" class="form-group col-md-10">
@@ -193,7 +193,7 @@
         </button>
       </div>
 
-      <div class="col-md-6 pl-0">
+      <div class="col-md-6 pl-0 customBackground">
         <label>Opciones:</label>
         <div formArrayName="options" *ngFor="let productOption of options.controls; let i=index">
           <div [formGroupName]="i" class="form-group col-md-10">
