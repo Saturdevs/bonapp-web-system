@@ -3,8 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgGridConfig, NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 import { CONFLICT } from 'http-status-codes';
 
- import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
- 
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 import {
   Table,
   TableService,
@@ -178,14 +178,14 @@ export class TableListComponent implements OnInit {
       this.gridConfig.draggable = false;
       this.gridConfig.resizable = false;
       this.selectedTable = new Table();
-    
+
       this._socketService.updateTable() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
-      .subscribe(updateTables => {
-        if(updateTables){
-          this.getTables();
-      this.changeDetector.detectChanges();      
-        }
-      });
+        .subscribe(updateTables => {
+          if (updateTables) {
+            this.getTables();
+            this.changeDetector.detectChanges();
+          }
+        });
     }
   }
 
@@ -484,7 +484,17 @@ export class TableListComponent implements OnInit {
       .subscribe(resp => {
         console.log("Se actualizo la mesa" + this.tableToEdit.number);
         this.showSuccessToast()
-        this.closeModal();
+        this._tableService.getTablesBySection(this._route.snapshot.params['id']).subscribe(
+          sectionTables => {
+            this.tablesNow = sectionTables;
+            this._setDashConfig();
+            this.closeModal();
+          },
+          error => {
+            this.closeModal();
+            this.showModalError(this.serviceErrorTitle, error.error.message);
+          }
+        )        
       },
         error => {
           this.closeModal();
