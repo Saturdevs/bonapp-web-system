@@ -13,4 +13,5 @@ export class ProductsInUserOrder {
   quantity: number;
   deleted: boolean;
   deletedReason: string;
+  paymentStatus: string;
 }

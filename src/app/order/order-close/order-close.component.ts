@@ -18,7 +18,9 @@ import {
   Transaction,
   CashRegisterMin,
   PaymentTypeMin,
-  OrderStatus
+  OrderStatus,
+  ProductPaymentStatus,
+  UtilFunctions
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -125,7 +127,14 @@ export class OrderCloseComponent implements OnInit {
 
     this.order.users.forEach(usr => {
       usr.products.forEach(prod => {
-        this.productsInOrder.push(prod);
+        if (prod.paymentStatus !== ProductPaymentStatus.PAYED && prod.deleted === false) {
+          const productInOrderIndex = this.productsInOrder.findIndex(p => UtilFunctions.compareProducts(p, prod));        
+          if (productInOrderIndex !== -1) {
+            this.productsInOrder[productInOrderIndex].quantity += prod.quantity;
+          } else {
+            this.productsInOrder.push(JSON.parse(JSON.stringify(prod)));
+          }
+        }
       })
     });
 

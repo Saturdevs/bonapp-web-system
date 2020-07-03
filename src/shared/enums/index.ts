@@ -8,3 +8,4 @@ export * from './constants.enum';
 export * from './orderTypes.enum';
 export * from './orderStatus.enum';
 export * from './notificationTypes';
+export * from './productPaymentStatus.enum';

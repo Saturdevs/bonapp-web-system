@@ -2,6 +2,7 @@ import { ProductsInUserOrder, PaymentInUserOrder } from '../index';
 
 export class UsersInOrder {
   /**Id del usuario */
+  _id: string;
   username: string;
   name: string;
   lastName: string;  
@@ -10,4 +11,7 @@ export class UsersInOrder {
   payments: Array<PaymentInUserOrder>;
   owner: Boolean;
   clientId? : string;
+
+  //No tienen su correspondiente propiedad en el backend, solo se usan en el front.
+  productsPendingPayments: Array<ProductsInUserOrder>;
 }

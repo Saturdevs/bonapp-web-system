@@ -28,7 +28,8 @@ import {
   Client,
   Constants,
   Params,
-  ParamService
+  ParamService,
+  UtilFunctions
 } from '../../../shared/index';
 import { isNullOrUndefined } from 'util';
 import { OrderCloseComponent } from '../order-close/order-close.component';
@@ -122,6 +123,7 @@ export class OrderNewComponent implements OnInit {
   /** Configuracion de la modal de cierre de mesa*/
   config = {
     backdrop: true,
+    ignoreBackdropClick: true
   };
   /**Variable para controlar si se devuelve el stock de un producto al eliminarlo de una orden */
   returnStockValue: Boolean = false;
@@ -216,7 +218,9 @@ export class OrderNewComponent implements OnInit {
       if (this.userSelected === null) {
         this.userSelected = bonappUser.username;
       }
-    }
+    } else {
+      this.userSelect.push({ value: Constants.BONAPP_WEB_USER, label: Constants.BONAPP_WEB_USER, selected: false });
+    }    
     for (let user of this.order.users) {
       this.userSelect.push({ value: user.username, label: user.username, selected: false });
     }
@@ -403,7 +407,7 @@ export class OrderNewComponent implements OnInit {
       currentProduct.deleted = false;
 
       //Producto en el array preOrderProducts si existe.
-      productInPreOrder = this.preOrderProducts.find(x => this.compareProducts(x, currentProduct));
+      productInPreOrder = this.preOrderProducts.find(x => UtilFunctions.compareProducts(x, currentProduct));
       //Si el producto ya esta en los productos pre seleccionados aumento la cantidad. Sino hago el push al array
       if (!isNullOrUndefined(productInPreOrder)) {
         //Si el producto ya existe en el pre pedido se suma la cantidad nueva.    
@@ -481,7 +485,7 @@ export class OrderNewComponent implements OnInit {
       currentProduct.deleted = false;
 
       //Producto en el array preOrderProducts si existe.
-      productInPreOrder = this.preOrderProducts.find(x => this.compareProducts(x, currentProduct));
+      productInPreOrder = this.preOrderProducts.find(x => UtilFunctions.compareProducts(x, currentProduct));
       //Si el producto ya esta en los productos pre seleccionados aumento la cantidad. Sino hago el push al array
       if (!isNullOrUndefined(productInPreOrder)) {
         //Si el producto ya existe en el pre pedido se suma la cantidad nueva.    
@@ -502,45 +506,6 @@ export class OrderNewComponent implements OnInit {
           });
       }
 
-    }
-  }
-
-  /**Compara propiedad por propiedad para determinar si los productos dados como parámetros son iguales.
-   * No compara la propiedad quantity porque esta va cambiando a medida que se agregan productos iguales al array.
-   * @param prodInPreOrder producto existente en el array preOrderProducts 
-   * @param product producto para el que se quiere determinar su existencia en el array preOrederProducts
-   * @returns true si el producto se encuentra en el array preOrderProducts. false si no se encuentra.
-   */
-  compareProducts(prodInPreOrder: ProductsInUserOrder, product: ProductsInUserOrder): boolean {
-    if (isNullOrUndefined(prodInPreOrder.options)) {
-      prodInPreOrder.options = null;
-    }
-
-    if (isNullOrUndefined(product.options)) {
-      product.options = null;
-    }
-
-    if (isNullOrUndefined(prodInPreOrder.size) ||
-        (Object.keys(prodInPreOrder.size).length === 0 && prodInPreOrder.size.constructor === Object)) {
-      prodInPreOrder.size = null;
-    }
-
-    if (isNullOrUndefined(product.size) || 
-        (Object.keys(product.size).length === 0 && product.size.constructor === Object)) {
-      product.size = null;
-    }
-
-    if (prodInPreOrder.product === product.product &&
-      prodInPreOrder.name === product.name &&
-      prodInPreOrder.observations === product.observations &&
-      prodInPreOrder.options === product.options &&
-      prodInPreOrder.price === product.price &&
-      prodInPreOrder.size === product.size &&
-      prodInPreOrder.deleted === product.deleted) {
-      return true;
-    }
-    else {
-      return false;
     }
   }
 

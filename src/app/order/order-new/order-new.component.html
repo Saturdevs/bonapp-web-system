@@ -347,6 +347,9 @@ overflow: auto; overflow-x: hidden;">
               <span>- CANCELADO: {{ product.deletedReason }}</span>
             </div>
           </div>
+          <div class="row mb-2" *ngIf="product.paymentStatus === 'Payed'">
+            <span>PAGADO</span>
+          </div>
         </div>
       </div>
     </div>
