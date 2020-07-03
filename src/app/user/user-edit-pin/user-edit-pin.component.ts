@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ParamService, User, Params, Constants } from '../../../shared';
 import { isNullOrUndefined } from 'util';
@@ -8,7 +8,7 @@ import { isNullOrUndefined } from 'util';
   templateUrl: './user-edit-pin.component.html',
   styleUrls: ['./user-edit-pin.component.scss']
 })
-export class UserEditPinComponent implements OnInit {
+export class UserEditPinComponent implements OnInit, OnChanges {
 
   @Input() user: User;
   @Output() handlePinMatch = new EventEmitter<Boolean>();
@@ -31,10 +31,14 @@ export class UserEditPinComponent implements OnInit {
     this.addPinControls(this.user.isGeneral);
   }
 
-  addPinControls(isGeneral) {
-    this.showPinControls = false;
+  ngOnChanges() {
+    this.addPinControls(this.user.isGeneral);
+  }
+
+  addPinControls(isGeneral) {    
     if (this._paramService.getBooleanParameter(Params.ASK_FOR_USER_PIN)) {
       if (isGeneral) {
+        this.showPinControls = false;
         this.enterPin = false;
         this.pinForm.removeControl(Constants.PIN);
         this.pinForm.removeControl(Constants.PIN_CONFIRM);
@@ -54,6 +58,8 @@ export class UserEditPinComponent implements OnInit {
           '', [Validators.required]
         ))
       }
+    } else {
+      this.showPinControls = false;
     }
   }
 
