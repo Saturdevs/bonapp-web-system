@@ -8,31 +8,69 @@
   <div class="row pageTitle primary-color">
     <span aria-hidden="true" (click)="closeForm()" class="close pr-2 mr-1 ml-1 pl-1 mt-1 mb-1 pb-1 pt-1">&times;</span>
     <div class="col-md-12">
-        <h4 class="text-white text-center mb-0">{{title + order.table.toString()}}</h4>
+      <h4 class="text-white text-center mb-0">{{title + order.table.toString()}}</h4>
     </div>
   </div>
   <!-- Cuerpo del form -->
   <div class="row" *ngIf="productsInOrder !== null && productsInOrder !== undefined && productsInOrder.length > 0">
     <!-- Adiciones -->
-    <div class="col-md-6 pl-0 pr-1">    
+    <div class="col-md-6 pl-0 pr-1">
       <div class="col-md-12 sectionTitle">
         <div class="row">
           {{ aditionsTitle }}
-        </div>  
+        </div>
+      </div>
+      <div class="row ml-2 mr-0" *ngIf="isPartialClose === true">
+        <span class="mt-3 span-padding">Usuario:</span>
+        <div class="col-md-6 col-lg-6 col-sm-6 ml-1 pr-0 span-padding">
+          <mdb-select #user name="user" id="user" [options]="userSelect" [(ngModel)]="userSelected"
+            (selected)="selectUser(user.value)" placeholder="Seleccionar Usuario"
+            class="colorful-select dropdown-primary customInput mt-1 mb-1 mr-0"></mdb-select>
+        </div>
       </div>
 
-      <div class="col-md-12 productsInOrder" *ngFor="let product of productsInOrder">
-        <div class="row mb-0 pt-2 pb-2" *ngIf="product.deleted === false">
-          <div class="col-2 p-0 pl-3">
-            <span>{{ product.quantity }}</span>
+      <div *ngIf="isPartialClose === true">
+        <div class="warningMsg" *ngIf="displaySelectUserMessage === true">
+          Por favor seleecione un usuario.
+        </div>
+
+        <div *ngIf="displaySelectUserMessage === false">
+          <div class="col-lg-12 col-md-12 col-sm-12 productLine" *ngFor="let user of selectedUsers">
+            <label>Usuario: {{ user.username }}</label>
+            <a class="ml-4 mt-1" (click)="removeUser(user)"><img src="assets/img/equis.png" height="17px" width="auto"></a>
+            <div class="col-md-12 productsInOrder" *ngFor="let product of user.productsPendingPayments">
+              <div class="row mb-0 pt-2 pb-2" *ngIf="product.deleted === false">
+                <div class="col-2 p-0 pl-3">
+                  <span>{{ product.quantity }}</span>
+                </div>
+                <div class="col-7 p-0">
+                  <span>{{ product.name }}</span>
+                </div>
+                <div class="col-3 p-0">
+                  <span class="float-right pr-3">{{ product.price * product.quantity | currency}}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-7 p-0">
-            <span>{{ product.name }}</span>  
+        </div>
+      </div>
+
+      <div *ngIf="isPartialClose === false">
+        <div *ngIf="displaySelectUserMessage === false">
+          <div class="col-md-12 productsInOrder" *ngFor="let product of productsInOrder">
+            <div class="row mb-0 pt-2 pb-2" *ngIf="product.deleted === false">
+              <div class="col-2 p-0 pl-3">
+                <span>{{ product.quantity }}</span>
+              </div>
+              <div class="col-7 p-0">
+                <span>{{ product.name }}</span>
+              </div>
+              <div class="col-3 p-0">
+                <span class="float-right pr-3">{{ product.price * product.quantity | currency}}</span>
+              </div>
+            </div>
           </div>
-          <div class="col-3 p-0">
-            <span class="float-right pr-3">{{ product.price * product.quantity | currency}}</span>  
-          </div>
-        </div> 
+        </div>
       </div>
       <!-- Mostrar descuento si hay alguno ingresado -->
       <div class="col-md-12 sectionDiscounts" *ngIf='discount !== undefined && discount !== null'>
@@ -45,7 +83,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12 sectionDiscounts" *ngIf='discount !== undefined && discount !== null'>        
+      <div class="col-md-12 sectionDiscounts" *ngIf='discount !== undefined && discount !== null'>
         <div class="row discountAmount">
           <div class="col-lg-6 col-md-6 col-sm-6">
             <span class="float-left">{{'Descuento' | uppercase}} </span>
@@ -54,7 +92,7 @@
             <span class="float-right pr-3">{{ discount.discountAmount | currency }}</span>
           </div>
         </div>
-      </div>  
+      </div>
 
       <!--Total-->
       <div class="col-md-12 totalOrder">
@@ -69,19 +107,20 @@
       </div>
     </div>
 
-    <!-- Pago -->    
+    <!-- Pago -->
     <div class="col-md-6 pr-0 pl-1">
       <div class="col-md-12 sectionTitle pt-0 pb-0">
         <div class="row">
           <div class="col-10 paymentsTitle pl-0">
             {{ paymentsTitle }}
           </div>
-          <div class="col-2 addPaymentContainer">
-            <label (click)="addPayment()"  rounded="true" [class.addPaymentButton]="true" [class.customSizeY]="true" [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0">
+          <div class="col-2 addPaymentContainer" *ngIf="allowMorePayments === true">
+            <label (click)="addPayment()" rounded="true" [class.addPaymentButton]="true" [class.customSizeY]="true"
+              [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0">
               <span class="pb-0 mb-0"><i class="fa fa-plus fa-1x"></i></span>
-            </label> 
+            </label>
           </div>
-        </div>  
+        </div>
       </div>
 
       <div class="col-md-12 sectionPayed">
@@ -101,8 +140,8 @@
             <span class="float-left">{{ cashRegisterLabel | uppercase}}:</span>
           </div>
           <div class="col-lg-7 col-md-7 col-sm-7">
-            <mdb-select [(ngModel)]="selectedCashRegister" 
-              [options]="cashRegistersSelect" placeholder="Choose your option" class="mdbSelectClass">
+            <mdb-select [(ngModel)]="selectedCashRegister" [options]="cashRegistersSelect"
+              placeholder="Choose your option" class="mdbSelectClass">
             </mdb-select>
           </div>
         </div>
@@ -111,65 +150,69 @@
       <div class="col-md-12 cashRegisterSelectSection" *ngFor="let payment of payments">
         <div class="row">
           <div class="col-lg-5 col-md-5 col-sm-5 pr-0">
-            <mdb-select [(ngModel)]="payment.methodId" 
-              [options]="paymentTypesSelect" (selected)="checkAccount()" placeholder="Choose your option" class="mdbSelectClass">
-            </mdb-select>   
+            <mdb-select [(ngModel)]="payment.methodId" [options]="paymentTypesSelect" (selected)="checkAccount()"
+              placeholder="Choose your option" class="mdbSelectClass">
+            </mdb-select>
           </div>
           <div class="col-lg-5 col-md-5 col-sm-5">
-            <input type="number" class="form-control pt-0" [(ngModel)]="payment.amount" id="amount" (input)="calculateChangeAmount(); checkAccount()" mdbActive>
+            <input type="number" class="form-control pt-0" [(ngModel)]="payment.amount" id="amount"
+              (input)="calculateChangeAmount(); checkAccount()" mdbActive>
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-2">
-            <label (click)="removePayment(payment)" rounded="true" [class.customSizeY]="true" [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0" [class.removePayment]="true">
+          <div class="col-lg-2 col-md-2 col-sm-2" *ngIf="allowMorePayments === true">
+            <label (click)="removePayment(payment)" rounded="true" [class.customSizeY]="true"
+              [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0"
+              [class.removePayment]="true">
               <span class="pb-0 mb-0"><i class="fa fa-times fa-1x"></i></span>
-            </label>  
+            </label>
           </div>
-        </div>         
+        </div>
       </div>
-      <div class="col-md-12 cashRegisterSelectSection" *ngIf='showDiscount===false && (discount === null || discount === undefined)'>
+      <div class="col-md-12 cashRegisterSelectSection"
+        *ngIf='showDiscount===false && (discount === null || discount === undefined)'>
         <div class="row">
           <!-- Ingresar descuento -->
           <div class="float-left col 2">
-            <button [disabled]="productsInOrder.length === 0" rounded="true"  type="button" [class.customSizeY]="true" [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0" [class.removePayment]="true" mdbRippleRadius (click)="showDiscountSection(true)"><i class="fa fa-percent fa-1x"></i></button>
-          </div>   
-        </div>         
+            <button [disabled]="productsInOrder.length === 0" rounded="true" type="button" [class.customSizeY]="true"
+              [class.btn-primary-custom]="true" mdbBtn mdbWavesEffect class="z-depth-0 btn-tb float-left mb-0 mt-0"
+              [class.removePayment]="true" mdbRippleRadius (click)="showDiscountSection(true)"><i
+                class="fa fa-percent fa-1x"></i></button>
+          </div>
+        </div>
       </div>
 
-      <form #formDiscount="ngForm" novalidate>      
-      <div class="col-md-12 discountAndButtonsSection" *ngIf='showDiscount===true'>
+      <form #formDiscount="ngForm" novalidate>
+        <div class="col-md-12 discountAndButtonsSection" *ngIf='showDiscount===true'>
           <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 cashRegisterLabel pr-0 pt-3">
               <span class="float-left">{{discountRateLabel | uppercase}}:</span>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 pr-0">
-              <input type="number" class="form-control" [(ngModel)]="discountRate" name="discountRate" 
-                (input)="calculateAmount()"
-                (click)="selectText(rate)"
-                #rate
-                mdbActive>
+              <input type="number" class="form-control" [(ngModel)]="discountRate" name="discountRate"
+                (input)="calculateAmount()" (click)="selectText(rate)" #rate mdbActive>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1 pl-0 pt-3">
-                <i class="fa fa-percent"></i>
+              <i class="fa fa-percent"></i>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1 pr-0 pt-3">
-                <i class="fa fa-dollar"></i>
+              <i class="fa fa-dollar"></i>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 pl-0">
-              <input type="number" class="form-control" [ngModel]="discountAmount" (ngModelChange)="discountAmount=$event" name="discountAmount"
-                (input)="calculateRate()" 
-                (click)="selectText(amount)"
-                #amount
-                mdbActive>
+              <input type="number" class="form-control" [ngModel]="discountAmount"
+                (ngModelChange)="discountAmount=$event" name="discountAmount" (input)="calculateRate()"
+                (click)="selectText(amount)" #amount mdbActive>
             </div>
           </div>
-      </div>
-      <div class="col-12 cashRegisterSelectSection" *ngIf='showDiscount===true'>
-        <div class="col-6 offset-6 buttonsRow pl-4 pr-0">
-          <button type="button" class="btn customButtonCancel btn-sm waves-light" (click)='showDiscountSection(false)'>{{ cancelButtonLabel }}</button>
-          <button [disabled]="formDiscount.invalid"  rounded="true" type="button" mdbBtn size="sm" [class.btn-primary-custom]="true" mdbWavesEffect (click)="addDiscount()">{{ confirmButtonLabel }}</button>
         </div>
-      </div>
+        <div class="col-12 cashRegisterSelectSection" *ngIf='showDiscount===true'>
+          <div class="col-6 offset-6 buttonsRow pl-4 pr-0">
+            <button type="button" class="btn customButtonCancel btn-sm waves-light"
+              (click)='showDiscountSection(false)'>{{ cancelButtonLabel }}</button>
+            <button [disabled]="formDiscount.invalid" rounded="true" type="button" mdbBtn size="sm"
+              [class.btn-primary-custom]="true" mdbWavesEffect (click)="addDiscount()">{{ confirmButtonLabel }}</button>
+          </div>
+        </div>
 
-    </form>
+      </form>
       <!-- Vuelto -->
       <div class="col-md-12 totalChange">
         <div class="row">
@@ -186,16 +229,36 @@
       <div class="col-12">
         <span class="text-red">{{ payWithAccountError }}</span>
       </div>
-    </div>   
+    </div>
   </div>
   <div class="row" *ngIf="productsInOrder === null || productsInOrder === undefined || productsInOrder.length === 0">
     {{ closeOrderWithoutAditions }}
   </div>
   <!-- Botones -->
-  <div class="row grey lighten-3">
-    <div class="col-7 offset-5 closeOrderButton">
-      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.customButtonCancel]="true" (click)="closeForm()">{{cancelButton}}</button>
-      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect [class.btn-primary-custom]="true" [disabled]="changeAmount < 0 || !canPayWithAccount" (click)="closeTable()">{{closeTableButton}} {{order.table.toString()}}</button>
+  <div class="row grey lighten-3 col-12"
+    *ngIf="productsInOrder !== null && productsInOrder !== undefined && productsInOrder.length > 0">
+    <div class="col-md-5 col-lg-5 col-sm-5 pl-0 partialClose">
+      <mdb-checkbox [class.checkbox-primary-custom]="true" [(ngModel)]="isPartialClose" (change)="partialClose()">
+        Cierre Parcial
+      </mdb-checkbox>
+    </div>
+    <div class="col-md-7 col-lg-7 col-sm-7 pl-0 closeOrderButton">
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+        [class.customButtonCancel]="true" (click)="closeForm()">{{cancelButton}}</button>
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+        [class.btn-primary-custom]="true" [disabled]="changeAmount < 0 || !canPayWithAccount"
+        (click)="closeTable()">{{closeTableButton}} {{order.table.toString()}}</button>
+    </div>
+  </div>
+
+  <div class="row grey lighten-3 col-12"
+    *ngIf="productsInOrder === null || productsInOrder === undefined || productsInOrder.length === 0">
+    <div class="col-md-7 col-lg-7 col-sm-7 pl-0 offset-5 closeOrderButton">
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+        [class.customButtonCancel]="true" (click)="closeForm()">{{cancelButton}}</button>
+      <button type="button" mdbBtn role="button" rounded="true" size="sm" mdbWavesEffect
+        [class.btn-primary-custom]="true" [disabled]="changeAmount < 0 || !canPayWithAccount"
+        (click)="closeTable()">{{closeTableButton}} {{order.table.toString()}}</button>
     </div>
   </div>
 </div>

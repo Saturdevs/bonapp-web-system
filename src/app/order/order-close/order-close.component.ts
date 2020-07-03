@@ -7,18 +7,17 @@ import {
   OrderDiscount,
   UsersInOrder,
   ProductsInUserOrder,
-  Table,
-  TableService,
   OrderService,
   ArqueoCajaService,
-  TableStatus,
-  ClientService,
   Client,
   TransactionService,
   Transaction,
   CashRegisterMin,
   PaymentTypeMin,
-  OrderStatus
+  OrderStatus,
+  Constants,
+  UtilFunctions,
+  ProductPaymentStatus
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -40,10 +39,8 @@ export class OrderCloseComponent implements OnInit {
 
   constructor(private _router: Router,
     private modalService: BsModalService,
-    private tableService: TableService,
     private orderService: OrderService,
     private arqueoCajaService: ArqueoCajaService,
-    private clientService: ClientService,
     private transactionService: TransactionService
   ) { }
 
@@ -69,6 +66,12 @@ export class OrderCloseComponent implements OnInit {
   private paymentTypesSelect: Array<any> = [];
   private selectedPaymentType: string = '';
   private totalSum: number;
+  public isPartialClose: boolean;
+  public userSelect: Array<any> = [];
+  public userSelected: any = null;
+  public selectedUsers: Array<UsersInOrder> = [];
+  public displaySelectUserMessage: boolean;
+  public allowMorePayments: boolean;
   /**Booleano para determinar si mostrar la sección de descuento o no. */
   showDiscount: Boolean;
   /**Porcentaje de descuento. */
@@ -90,10 +93,13 @@ export class OrderCloseComponent implements OnInit {
   canPayWithAccount: boolean = true;
 
   ngOnInit() {
+    this.isPartialClose = false;
+    this.displaySelectUserMessage = false;
+    this.allowMorePayments = true;
     this.payments = [];
-    this.productsInOrder = [];
     this.discount = null;
     this.totalPrice = this.order.totalPrice;
+    this.totalSum = 0;
 
     for (let cashRegister of this.cashRegisters) {
       if (cashRegister.available === true) {
@@ -123,20 +129,104 @@ export class OrderCloseComponent implements OnInit {
       };
     }
 
-    this.order.users.forEach(usr => {
-      usr.products.forEach(prod => {
-        this.productsInOrder.push(prod);
-      })
-    });
-
-    if (this.productsInOrder.length > 0) {
-      this.calculatePartialPaidAmount();
-      this.addPayment();
-    }
+    this.calculatePartialPaidAmount();
+    this.setProductsInOrder(Constants.DEFAULT);
 
     this.showDiscount = false;
     this.calculateChangeAmount();
+    this.setUserSelect();
   }
+
+  setUserSelect(): void {
+    if (this.order.users.length > 1) {
+      this.order.users.sort((a, b) => a.username.localeCompare(b.username));
+    }
+
+    for (let user of this.order.users) {
+      this.userSelect.push({ value: user.username, label: user.username, selected: false });
+    }
+
+    if (this.userSelected === null) {
+      this.userSelected = this.order.users[0].username;
+    }
+  }
+
+  selectUser(value: string): void {
+    this.displaySelectUserMessage = false;
+    this.setProductsInOrder(value);
+  }
+
+  setProductsInOrder(username: string): void {
+    if (username === Constants.DEFAULT) {
+      this.productsInOrder = [];
+      this.payments = [];
+      this.totalPrice = 0;
+      this.allowMorePayments = true;
+      this.order.users.forEach(usr => {
+        usr.products.forEach(prod => {
+          if (prod.paymentStatus !== ProductPaymentStatus.PAYED && prod.deleted === false) {
+            const productInOrderIndex = this.productsInOrder.findIndex(p => UtilFunctions.compareProducts(p, prod));
+            this.totalPrice += prod.quantity * prod.price;
+            if (productInOrderIndex !== -1) {
+              this.productsInOrder[productInOrderIndex].quantity += prod.quantity;
+            } else {
+              this.productsInOrder.push(JSON.parse(JSON.stringify(prod)));
+            }
+          }
+        })
+      });
+    } else {
+      const userIndex = this.selectedUsers.findIndex(u => u.username === username);
+      if (userIndex === -1) {
+        this.totalPrice = 0;
+        const user = this.order.users.find(u => u.username === username);
+        if (user) {
+          this.selectedUsers.push(user);
+        }
+        this.selectedUsers.forEach(user => {
+          user.productsPendingPayments = [];
+          user.products.forEach(prod => {
+            if (prod.paymentStatus !== ProductPaymentStatus.PAYED && prod.deleted === false) {
+              this.totalPrice += prod.price * prod.quantity;
+              user.productsPendingPayments.push(prod);
+            }
+          })
+        })
+        if (this.selectedUsers.length > 1) {
+          this.allowMorePayments = false;
+        }
+      }
+    }
+
+    if (this.productsInOrder.length > 0) {
+      this.payments = [];
+      this.addPayment();
+    }
+  }
+
+  /**Elimina el usuario dado como parámetro del array de usuarios
+ * @param userToRemove usuario a eliminar del array de pagos.
+ */
+  removeUser(userToRemove: UsersInOrder): void {
+    const userIndex = this.selectedUsers.findIndex(user => user._id === userToRemove._id);
+    if (userIndex !== -1) {
+      this.selectedUsers[userIndex].productsPendingPayments.forEach(prod => {
+        this.totalPrice -= prod.price * prod.quantity;
+      })
+      this.selectedUsers.splice(userIndex, 1);
+      this.payments = [];
+      if (this.selectedUsers.length > 0) {
+        this.addPayment();
+      } else {
+        this.displaySelectUserMessage = true;
+      }
+    }
+
+    if (this.selectedUsers.length <= 1) {
+      this.allowMorePayments = true;
+    }
+  }
+
 
   closeForm(): void {
     this.close.emit('');
@@ -148,7 +238,7 @@ export class OrderCloseComponent implements OnInit {
     let amount: number;
     this.calculateTotalSum();
     payment.methodId = this.paymentTypes.find(pt => pt.default === true)._id;
-    amount = this.order.totalPrice - (this.totalSum + this.partialPaidAmount);
+    amount = this.totalPrice - (this.totalSum + this.partialPaidAmount);
     payment.amount = amount >= 0 ? amount : 0;
     //Si se realiza el pago de un pedido que se hizo por la app se asigna todo el pago al usuario owner
     this.payments.push(payment);
@@ -252,48 +342,39 @@ export class OrderCloseComponent implements OnInit {
 
   /**Cierra la mesa y el pedido actual */
   closeTable(): void {
-    let usrOwner = new UsersInOrder();
-    let table = new Table();
-    table.number = this.order.table;
-    table.status = TableStatus.LIBRE;
+    if (!this.isPartialClose) {
+      let usrOwner = new UsersInOrder();
 
-    this.order.cashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
-    this.order.status = OrderStatus.CLOSED;
-    this.order.completed_at = new Date();
-    this.order.discount = this.discount;
-    this.order.totalPrice = this.totalPrice;
+      this.order.cashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);      
+      this.order.completed_at = new Date();
+      this.order.discount = this.discount;
 
-    usrOwner = this.order.users.find(usr => usr.owner === true);
+      usrOwner = this.order.users.find(usr => usr.owner === true);
 
-    if (!isNullOrUndefined(this.payments) && this.payments.length > 0) {
-      this.payments.forEach(payment => {
-        usrOwner.payments.push(payment);
-      })
-    }
-
-    this.tableService.updateTableByNumber(table).subscribe(
-      tableReturned => {
-        if (tableReturned.status === TableStatus.LIBRE) {
-          this.orderService.closeOrder(this.order).subscribe(
-            orderReturned => {
-              let order = orderReturned;
-              this.addOrderToArqueo(orderReturned);
-              this.addAccountMovements(orderReturned);
-              this.closeForm();
-              this._router.navigate(['./orders']);
-            },
-            error => {
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          )
-        }
-      },
-      error => {
-        this.showModalError(this.serviceErrorTitle, error.error.message);
+      if (!isNullOrUndefined(this.payments) && this.payments.length > 0) {
+        this.payments.forEach(payment => {
+          usrOwner.payments.push(payment);
+        })
       }
-    )
+
+      this.orderService.closeOrder(this.order).subscribe(
+        orderReturned => {
+          let order = orderReturned;
+          this.addOrderToArqueo(orderReturned);
+          this.addAccountMovements(orderReturned);
+          this.closeForm();
+          this._router.navigate(['./orders']);
+        },
+        error => {
+          this.showModalError(this.serviceErrorTitle, error.error.message);
+        }
+      )
+    } else {
+      
+    }
   }
 
+  //TODO: Hacer en el backend!! Todavia no usamos la funcionalidad de arqueo. Revisar que usa users[0]. REFACTORIZAR EL METODO - Loren: 01/07/2020
   /**Agrega el pedido enviado como parámetro al arqueo abierto para la caja registradora donde se realiza el pago
    * @param order pedido para agregar al arqueo
    */
@@ -347,8 +428,9 @@ export class OrderCloseComponent implements OnInit {
     )
   }
 
+  //TODO: Hacer en el backend!! Todavia no usamos la funcionalidad de clientes y por lo tanto no usamos transacciones - Loren: 01/07/2020
   /**Agrega las transacciones de los pagos con cuenta corriente */
-  addAccountMovements(order: Order){
+  addAccountMovements(order: Order) {
     let currentCashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
     let minCashRegister = new CashRegisterMin();
     minCashRegister._id = currentCashRegister._id;
@@ -356,7 +438,7 @@ export class OrderCloseComponent implements OnInit {
     order.users.forEach(user => {
       user.payments.forEach(payment => {
         let currentPayment = this.paymentTypes.find(x => x._id == payment.methodId);
-        if(currentPayment.currentAccount){
+        if (currentPayment.currentAccount) {
           let minPayment = new PaymentTypeMin()
           minPayment._id = currentPayment._id;
           minPayment.name = currentPayment.name.toString();
@@ -373,7 +455,7 @@ export class OrderCloseComponent implements OnInit {
           transaction.paymentType = currentPayment._id;
 
           this.transactionService.saveTransaction(transaction)
-            .subscribe(result =>{
+            .subscribe(result => {
               console.log(result);
             });
         }
@@ -394,10 +476,29 @@ export class OrderCloseComponent implements OnInit {
           return;
         }
       }
-      else{
+      else {
         this.canPayWithAccount = true;
         continue;
       }
+    }
+  }
+
+  partialClose(): void {
+    if (this.isPartialClose) {
+      if (this.order.users.length > 1) {
+        this.displaySelectUserMessage = true;
+        this.payments = [];
+        this.totalPrice = 0;
+        this.addPayment();
+      } else {
+        this.userSelected = this.order.users[0];
+        this.selectedUsers.push(this.userSelected);
+        this.setProductsInOrder(this.userSelected);
+      }
+    } else {
+      this.displaySelectUserMessage = false;
+      this.setProductsInOrder(Constants.DEFAULT);
+      this.selectedUsers = [];
     }
   }
 
