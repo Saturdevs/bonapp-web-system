@@ -1,8 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
- import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
- 
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 import {
   ProductService,
   Product,
@@ -15,6 +15,7 @@ import {
 } from '../../../shared';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
+import { ProductSearchPipe } from '../../../shared/pipes/product-search.pipe';
 
 @Component({
   selector: 'app-product-list',
@@ -46,9 +47,19 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   enableActionButtons: Boolean;
   productName: string;
   categoryProduct: string
+  _listFilter: string;
 
-  @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
-  @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
+  @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.performFilter();
+    this.mdbTable.setDataSource(this.filteredProducts);
+  }
 
   get percentage(): number {
     return this._percentage;
@@ -108,11 +119,22 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this.enableActionButtons = this.enableDelete || this.enableEdit;
   }
 
+  performFilter(): void {  
+    const productSearch = new ProductSearchPipe();
+    this.filteredProducts = productSearch.transform(this.products, this.listFilter, this.categoryProduct);
+    this.mdbTable.setDataSource(this.filteredProducts);
+  }
+
+  filterByCategoria(value) {
+    this.performFilter();
+  }
+
   getProducts(): void {
     this.productService.getAll()
       .subscribe(products => {
         this.products = products;
         this.filteredProducts = this.products;
+        this.mdbTable.setDataSource(this.filteredProducts);
       },
         error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);

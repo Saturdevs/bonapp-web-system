@@ -29,13 +29,14 @@
       <img src="assets/img/filtros.png" height="40px" width="auto">
       <h6 class="pt-2">Filtrar:</h6>
       <div class="md-form form-group mr-0 ml-0 col-md-2 col-lg-2 customPaddingbottom">
-        <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='productName'
-          id="query">
+        <input type="text" class="input-alternate" placeholder="Nombre" name="query" [(ngModel)]='listFilter'
+          id="query" (keyup)='performFilter()'>
       </div>
       <h6 class="pt-2 ml-2 customPaddingLeft">Categoria:</h6>
       <div class="md-form form-group mr-2 col-md-2 col-lg-2 text-left customPaddingbottom">
-        <mdb-select #queryCategory name="queryCategory" id="queryCategory" [options]="categoriesOptions"
-          [(ngModel)]="categoryProduct" placeholder="Choose your option" class="colorful-select dropdown-primary">
+        <mdb-select #queryCategory name="queryCategory" (selected)="filterByCategoria(queryCategory.value)"
+          id="queryCategory" [options]="categoriesOptions" [(ngModel)]="categoryProduct"
+          placeholder="Choose your option" class="colorful-select dropdown-primary" style="width: 10rem;">
         </mdb-select>
       </div>
       <h6 class="pt-2 ml-2">Actualizar Precios:</h6>
@@ -64,8 +65,7 @@
         </tr>
       </thead>
       <tbody class="table-wrapper" *ngIf='products && products.length'>
-        <tr
-          *ngFor='let product of filteredProducts | productSearch: productName:categoryProduct; let i = index'>
+        <tr *ngFor='let product of filteredProducts; let i = index'>
           <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
             class="align-middle customLongTh">{{ product.name }}</td>
           <td *ngIf='(i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex)'
