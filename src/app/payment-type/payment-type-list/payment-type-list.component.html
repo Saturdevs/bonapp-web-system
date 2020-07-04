@@ -59,7 +59,7 @@
                             <td class="align-middle" *ngIf='enableActionButtons'>
                                 <input [class.buttonEdit]='true' type="image" [routerLink]="['/settings/general-settings/payment-types', { outlets: { edit: ['editPaymentType', paymentType._id] } }]"
                                     *ngIf='enableEdit' src="assets/img/editar.png">
-                                <input [class.buttonEdit]='true' type="image" [disabled]="paymentType.default === true" 
+                                <input [class.buttonEdit]='true' type="image" [disabled]="paymentType.default === true || paymentType.cash === true" 
                                     (click)="showModalDelete(deleteTemplate, paymentType._id)"
                                     *ngIf='enableDelete' src="assets/img/eliminar.png" >
                             </td>

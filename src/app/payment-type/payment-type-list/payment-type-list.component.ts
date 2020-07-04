@@ -1,8 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
- import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
- 
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 import { CONFLICT } from 'http-status-codes';
 
 import {
@@ -23,7 +23,7 @@ export class PaymentTypeListComponent implements OnInit {
 
   @ViewChild('errorTemplate') errorTemplate: TemplateRef<any>;
   pageTitle: string = "Formas de Pago";
-  cantDeleteDefaultPaymentTypeLabel = 'El tipo de pago por defecto no puede ser eliminado.';
+  cantDeleteDefaultPaymentTypeLabel = 'El tipo de pago por defecto y el tipo de pago Efectivo no puede ser eliminados.';
   private serviceErrorTitle = 'Error de Servicio';
   private modalErrorTittle: string;
   private modalErrorMessage: string;
@@ -61,7 +61,7 @@ export class PaymentTypeListComponent implements OnInit {
         this.enableActions();
       }
     );
-    
+
     this.route.data.subscribe(
       data => {
         this.paymentTypes = data['paymentTypes'];
@@ -114,9 +114,10 @@ export class PaymentTypeListComponent implements OnInit {
 
   deletePaymentType() {
     if (this.closeModal()) {
-      this.paymentTypeService.deletePaymentType(this.idPaymentTypeDelete).subscribe(success => {
-        this.getPaymentTypes();
-      },
+      this.paymentTypeService.deletePaymentType(this.idPaymentTypeDelete).subscribe(
+        success => {
+          this.getPaymentTypes();
+        },
         error => {
           if (error.status === CONFLICT) {
             this.validationMessage = error.error.message;
@@ -124,7 +125,8 @@ export class PaymentTypeListComponent implements OnInit {
           else {
             this.showModalError(this.serviceErrorTitle, error.error.message);
           }
-        });
+        }
+      );
     }
   }
 
