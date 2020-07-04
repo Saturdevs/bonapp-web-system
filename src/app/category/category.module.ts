@@ -13,6 +13,7 @@ import { CategoryResolverService } from './category-list/category-resolver.servi
 import { CategoryModifyResolverService } from './category-modify/category-modify-resolver.service';
 import { MenuResolverService } from '../menu/menu-resolver.service';
 import { FileInputModule } from '../file-input/file-input.module';
+import { CategorySearchPipe } from '../../shared/pipes/category-search.pipe';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { FileInputModule } from '../file-input/file-input.module';
   declarations: [
     CategoryComponent,
     CategoryNewComponent,
-    CategoryModifyComponent
+    CategoryModifyComponent,
+    CategorySearchPipe
   ],
   providers: [
     CategoryService,

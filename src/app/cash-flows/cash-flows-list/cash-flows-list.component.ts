@@ -33,7 +33,6 @@ export class CashFlowsListComponent implements OnInit, AfterViewInit {
   public modalRef: BsModalRef;
   cashFlows: CashFlow[];
   filteredCashFlows: CashFlow[];
-  _listFilter: string;
   idCashFlowsDelete: any;
   cashRegister: CashRegister;
   cashRegisters: CashRegister[];

@@ -10,7 +10,8 @@ import {
   AuthenticationService,
   User,
   Rights,
-  RightsFunctions
+  RightsFunctions,
+  Constants
 } from '../../../shared';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -32,10 +33,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   public modalRef: BsModalRef;
   filteredProducts: Product[];
   products: Product[];
-  _listFilter: string;
   _percentage: number;
   idProductDelete: any;
-  categoryProduct: Category;
   categories: Category[];
   categoriesOptions: Array<any> = [];
   selectedValue: string = '';
@@ -45,17 +44,11 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   enableEdit: Boolean;
   enableNew: Boolean;
   enableActionButtons: Boolean;
+  productName: string;
+  categoryProduct: string
 
   @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
-
-  get listFilter(): string {
-    return this._listFilter;
-  }
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.filteredProducts = this.listFilter ? this.performFilter(this.listFilter) : this.products;
-  }
 
   get percentage(): number {
     return this._percentage;
@@ -80,14 +73,15 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
     this.products = this.route.snapshot.data['products'];
     this.filteredProducts = this.products;
-    this.categoriesOptions.push({ value: 'default', label: 'Todas', selected: 'true' })
+    this.categoriesOptions.push({ value: Constants.DEFAULT, label: 'Todas', selected: 'true' })
     this.categories = this.route.snapshot.data['categories'];
 
     for (let cat of this.categories) {
       this.categoriesOptions.push({ value: cat._id, label: cat.name })
     };
-    this.selectedValue = 'default';
+    this.selectedValue = Constants.DEFAULT;
 
+    this.categoryProduct = Constants.DEFAULT;
 
     this.mdbTable.setDataSource(this.filteredProducts);
     this.filteredProducts = this.mdbTable.getDataSource();
@@ -114,12 +108,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this.enableActionButtons = this.enableDelete || this.enableEdit;
   }
 
-  performFilter(filterBy: string): Product[] {    
-    filterBy = filterBy.toLocaleLowerCase();
-    return this.products.filter((product: Product) =>
-      product.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
-  }
-
   getProducts(): void {
     this.productService.getAll()
       .subscribe(products => {
@@ -129,15 +117,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
         error => {
           this.showModalError(this.serviceErrorTitle, error.error.message);
         });
-  }
-
-  filterByCategoria(value) {
-    this._listFilter = '';
-    if (value === 'default') {
-      this.filteredProducts = this.products;
-    } else {
-      this.filteredProducts = this.products.filter(pr => pr.category._id === value);
-    }
   }
 
   updatePrice() {

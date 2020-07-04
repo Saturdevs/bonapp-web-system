@@ -11,7 +11,8 @@ import {
   AuthenticationService,
   User,
   Rights,
-  RightsFunctions
+  RightsFunctions,
+  Constants
 } from '../../../shared/index';
 
 import { MdbTableDirective, MdbTablePaginationComponent } from 'ng-uikit-pro-standard';
@@ -34,7 +35,6 @@ export class CategoryComponent implements OnInit, AfterViewInit {
   public modalRef: BsModalRef;
   filteredCategories: Category[];
   categories: Category[];
-  _listFilter: string;
   idCategoryDelete: String;
   menuCategory: Menu;
   products: Product[];
@@ -47,17 +47,11 @@ export class CategoryComponent implements OnInit, AfterViewInit {
   enableEdit: Boolean;
   enableNew: Boolean;
   enableActionButtons: Boolean;
+  categoryName: string;
+  categoryMenu: string;
 
   @ViewChild(MdbTablePaginationComponent, {static: true}) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective,{static: true}) mdbTable: MdbTableDirective
-
-  get listFilter(): string {
-    return this._listFilter;
-  }
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.filteredCategories = this.listFilter ? this.performFilter(this.listFilter) : this.categories;
-  }
 
   constructor(private categoryService: CategoryService,
     private modalService: BsModalService,
@@ -75,13 +69,15 @@ export class CategoryComponent implements OnInit, AfterViewInit {
 
     this.categories = this.route.snapshot.data['categories'];
     this.filteredCategories = this.categories;
-    this.menusSelect.push({ value: 'default', label: 'Todas', selected: true })
+    this.menusSelect.push({ value: Constants.DEFAULT, label: 'Todas', selected: true })
     this.menus = this.route.snapshot.data['menus'];
 
     for (let menu of this.menus) {
       this.menusSelect.push({ value: menu._id, label: menu.name, selected: false })
     };
-    this.selectedValue = 'default';
+    this.selectedValue = Constants.DEFAULT;
+
+    this.categoryMenu = Constants.DEFAULT;
 
     this.mdbTable.setDataSource(this.filteredCategories);
     this.filteredCategories = this.mdbTable.getDataSource();
@@ -109,12 +105,6 @@ export class CategoryComponent implements OnInit, AfterViewInit {
     this.enableActionButtons = this.enableDelete || this.enableEdit;
   }
 
-  performFilter(filterBy: string): Category[] {
-    filterBy = filterBy.toLocaleLowerCase();
-    return this.categories.filter((category: Category) =>
-      category.name.toLocaleLowerCase().indexOf(filterBy) !== -1);
-  }
-
   getCategories(): void {
     this.categoryService.getAll()
       .subscribe(
@@ -127,33 +117,11 @@ export class CategoryComponent implements OnInit, AfterViewInit {
         });
   }
 
-  getCategoriesByMenu(idMenu: String): void {
-    this.categoryService.getCategoriesByMenu(idMenu)
-      .subscribe(
-        categories => {
-          this.categories = categories;
-          this.filteredCategories = this.categories;
-        },
-        error => {
-          this.showModalError(this.serviceErrorTitle, error.error.message);
-        }
-      )
-  }
-
   async showModalDelete(templateDelete: TemplateRef<any>, templateNoDelete: TemplateRef<any>, idCategory: String) {
     this.idCategoryDelete = idCategory;
     this.modalDeleteTitle = this.deleteTitle;
     this.modalDeleteMessage = "¿Seguro desea eliminar esta Categoría?";
     this.modalRef = this.modalService.show(templateDelete, { backdrop: true });
-  }
-
-  filterMenu(value: string) {
-    this._listFilter = '';
-    if (value === 'default') {
-      this.getCategories();
-    } else {
-      this.getCategoriesByMenu(value);
-    }
   }
 
   deleteCategory() {
