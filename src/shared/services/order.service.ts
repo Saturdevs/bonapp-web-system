@@ -67,8 +67,16 @@ export class OrderService {
            .catch(this.handleError);
   }
 
-  closeOrder(order) {
+  //Se usaba en el order close component. Se cambio por updateOrderPayments()
+  //Loren - 05/07/20
+  /* closeOrder(order) {
     return this.apiService.put(`/order/close/${order._id}`, order)
+      .map(data => data.order)
+      .catch(this.handleError);
+  } */
+
+  updateOrderPayments(order) {
+    return this.apiService.put(`/order`, order)
       .map(data => data.order)
       .catch(this.handleError);
   }

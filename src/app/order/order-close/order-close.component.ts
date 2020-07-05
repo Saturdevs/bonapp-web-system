@@ -157,7 +157,7 @@ export class OrderCloseComponent implements OnInit {
     let amount: number;
     this.calculateTotalSum();
     payment.methodId = this.paymentTypes.find(pt => pt.default === true)._id;
-    amount = this.order.totalPrice - (this.totalSum + this.partialPaidAmount);
+    amount = this.order.totalPrice - this.totalSum;
     payment.amount = amount >= 0 ? amount : 0;
     //Si se realiza el pago de un pedido que se hizo por la app se asigna todo el pago al usuario owner
     this.payments.push(payment);
@@ -239,7 +239,8 @@ export class OrderCloseComponent implements OnInit {
   /**Calcula el monto del vuelto teniendo en cuenta lo pagado hasta el momento mas los pagos a realizar ingresados en el sistema */
   calculateChangeAmount(): void {
     this.calculateTotalSum();
-    this.changeAmount = this.totalSum + this.partialPaidAmount - this.totalPrice;
+    const change = this.totalSum - this.totalPrice
+    this.changeAmount = change > 0 ? change : 0;
   }
 
   selectText(component): void {
@@ -283,11 +284,12 @@ export class OrderCloseComponent implements OnInit {
     this.tableService.updateTableByNumber(table).subscribe(
       tableReturned => {
         if (tableReturned.status === TableStatus.LIBRE) {
-          this.orderService.closeOrder(this.order).subscribe(
+          this.orderService.updateOrderPayments(this.order).subscribe(
             orderReturned => {
               let order = orderReturned;
-              this.addOrderToArqueo(orderReturned);
-              this.addAccountMovements(orderReturned);
+              //TODO: Pasar al backend. Solo se hace cuando se cierra un pedido (metodo closeOrder) - Loren 05/07/20
+              /* this.addOrderToArqueo(orderReturned);
+              this.addAccountMovements(orderReturned); */
               this.closeForm();
               this._router.navigate(['./orders']);
             },
@@ -303,6 +305,7 @@ export class OrderCloseComponent implements OnInit {
     )
   }
 
+  //TODO: Debe hacerse en el metodo closeOrder del backend. Loren - 05/07/20
   /**Agrega el pedido enviado como parámetro al arqueo abierto para la caja registradora donde se realiza el pago
    * @param order pedido para agregar al arqueo
    */
@@ -356,6 +359,7 @@ export class OrderCloseComponent implements OnInit {
     )
   }
 
+  //TODO: Debe hacerse en el metodo closeOrder del backend. Loren - 05/07/20
   /**Agrega las transacciones de los pagos con cuenta corriente */
   addAccountMovements(order: Order){
     let currentCashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
