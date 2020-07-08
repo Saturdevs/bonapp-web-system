@@ -7,20 +7,18 @@ import {
   OrderDiscount,
   UsersInOrder,
   ProductsInUserOrder,
-  Table,
   TableService,
   OrderService,
   ArqueoCajaService,
-  TableStatus,
   ClientService,
   Client,
   TransactionService,
   Transaction,
   CashRegisterMin,
   PaymentTypeMin,
-  OrderStatus,
   ProductPaymentStatus,
-  UtilFunctions
+  UtilFunctions,
+  Constants
 } from '../../../shared';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -42,10 +40,8 @@ export class OrderCloseComponent implements OnInit {
 
   constructor(private _router: Router,
     private modalService: BsModalService,
-    private tableService: TableService,
     private orderService: OrderService,
     private arqueoCajaService: ArqueoCajaService,
-    private clientService: ClientService,
     private transactionService: TransactionService
   ) { }
 
@@ -128,7 +124,7 @@ export class OrderCloseComponent implements OnInit {
     this.order.users.forEach(usr => {
       usr.products.forEach(prod => {
         if (prod.paymentStatus !== ProductPaymentStatus.PAYED && prod.deleted === false) {
-          const productInOrderIndex = this.productsInOrder.findIndex(p => UtilFunctions.compareProducts(p, prod));        
+          const productInOrderIndex = this.productsInOrder.findIndex(p => UtilFunctions.compareProducts(p, prod));
           if (productInOrderIndex !== -1) {
             this.productsInOrder[productInOrderIndex].quantity += prod.quantity;
           } else {
@@ -262,42 +258,35 @@ export class OrderCloseComponent implements OnInit {
 
   /**Cierra la mesa y el pedido actual */
   closeTable(): void {
-    let usrOwner = new UsersInOrder();
-    let table = new Table();
-    table.number = this.order.table;
-    table.status = TableStatus.LIBRE;
+    const userPayments = [];
+    const usrBonappWeb = this.order.users.find(usr => usr.username === Constants.BONAPP_WEB_USER);
+    let usr = new UsersInOrder();  
 
     this.order.cashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
-    this.order.status = OrderStatus.CLOSED;
-    this.order.completed_at = new Date();
     this.order.discount = this.discount;
     this.order.totalPrice = this.totalPrice;
-
-    usrOwner = this.order.users.find(usr => usr.owner === true);
-
-    if (!isNullOrUndefined(this.payments) && this.payments.length > 0) {
-      this.payments.forEach(payment => {
-        usrOwner.payments.push(payment);
-      })
+    
+    if (usrBonappWeb) {
+      usr = JSON.parse(JSON.stringify(usrBonappWeb));
+    } else {
+      const usrOwner = this.order.users.find(usr => usr.owner === true);
+      usr = usrOwner ? JSON.parse(JSON.stringify(usrOwner)) : JSON.parse(JSON.stringify(this.order.users[0]));
     }
 
-    this.tableService.updateTableByNumber(table).subscribe(
-      tableReturned => {
-        if (tableReturned.status === TableStatus.LIBRE) {
-          this.orderService.updateOrderPayments(this.order).subscribe(
-            orderReturned => {
-              let order = orderReturned;
-              //TODO: Pasar al backend. Solo se hace cuando se cierra un pedido (metodo closeOrder) - Loren 05/07/20
-              /* this.addOrderToArqueo(orderReturned);
-              this.addAccountMovements(orderReturned); */
-              this.closeForm();
-              this._router.navigate(['./orders']);
-            },
-            error => {
-              this.showModalError(this.serviceErrorTitle, error.error.message);
-            }
-          )
-        }
+    if (!isNullOrUndefined(this.payments) && this.payments.length > 0) {
+      usr.payments = this.payments;
+    }
+    userPayments.push(usr);
+    const data = { order: this.order, userPayments: userPayments };
+
+    this.orderService.updateOrderPayments(data).subscribe(
+      orderReturned => {
+        let order = orderReturned;
+        //TODO: Pasar al backend. Solo se hace cuando se cierra un pedido (metodo closeOrder) - Loren 05/07/20
+        /* this.addOrderToArqueo(orderReturned);
+        this.addAccountMovements(orderReturned); */
+        this.closeForm();
+        this._router.navigate(['./orders']);
       },
       error => {
         this.showModalError(this.serviceErrorTitle, error.error.message);
@@ -361,7 +350,7 @@ export class OrderCloseComponent implements OnInit {
 
   //TODO: Debe hacerse en el metodo closeOrder del backend. Loren - 05/07/20
   /**Agrega las transacciones de los pagos con cuenta corriente */
-  addAccountMovements(order: Order){
+  addAccountMovements(order: Order) {
     let currentCashRegister = this.cashRegisters.find(cr => cr._id === this.selectedCashRegister);
     let minCashRegister = new CashRegisterMin();
     minCashRegister._id = currentCashRegister._id;
@@ -369,7 +358,7 @@ export class OrderCloseComponent implements OnInit {
     order.users.forEach(user => {
       user.payments.forEach(payment => {
         let currentPayment = this.paymentTypes.find(x => x._id == payment.methodId);
-        if(currentPayment.currentAccount){
+        if (currentPayment.currentAccount) {
           let minPayment = new PaymentTypeMin()
           minPayment._id = currentPayment._id;
           minPayment.name = currentPayment.name.toString();
@@ -386,7 +375,7 @@ export class OrderCloseComponent implements OnInit {
           transaction.paymentType = currentPayment._id;
 
           this.transactionService.saveTransaction(transaction)
-            .subscribe(result =>{
+            .subscribe(result => {
               console.log(result);
             });
         }
@@ -407,7 +396,7 @@ export class OrderCloseComponent implements OnInit {
           return;
         }
       }
-      else{
+      else {
         this.canPayWithAccount = true;
         continue;
       }

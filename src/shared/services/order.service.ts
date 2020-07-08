@@ -75,8 +75,8 @@ export class OrderService {
       .catch(this.handleError);
   } */
 
-  updateOrderPayments(order) {
-    return this.apiService.put(`/order`, order)
+  updateOrderPayments(data) {
+    return this.apiService.put(`/order`, data)
       .map(data => data.order)
       .catch(this.handleError);
   }
