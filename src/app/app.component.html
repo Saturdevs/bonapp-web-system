@@ -1,44 +1,87 @@
+<ng-template #orderModal>
+	<div class="modal-header primary-color">
+		<h4 class="modal-title">Pedido</h4>
+	</div>
+	<div class="modal-body">
+		<div class="col-md-12">
+			<div class="row" *ngFor="let product of currentNotificationToDisplay.data.newProducts">
+				<h3>
+					{{product.name + " "}}
+				</h3>
+				<h3>
+					{{(product.observations !== null) ? product.observations : "" }} 
+				</h3>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer row customFooterModal">
+		<button type="button" (click)="closeNewOrderNotificationModal()" class="button special">Cerrar</button>
+	</div>
+</ng-template>
+
 <!-- Wrapper -->
 <div id="wrapper">
 	<div class="containter-fluid customMB" *ngIf="currentUser">
-	<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navBarColor pr-0" [containerInside]="false">
-		<logo>
-			<a class="logo navbar-brand pl-4" href="#"><img src="assets/img/logo-blanco.png" height="40px" width="auto"></a>
-		</logo>
-		<links>
-			<!-- App Menus -->
-			<ul class="navbar-nav mr-auto">
-				<div *ngFor='let appMenu of appMenus'>
-					<li *ngIf='appMenu.show' class="nav-item waves-light customLi" [class.customNavBarItem]="true" [routerLinkActive]="['customActive']" mdbTooltip="{{ 'AppMenus.' + appMenu._id | translate }}" placement="bottom" mdbRippleRadius>
-							<a [routerLink]="appMenu._id" class="nav-link"><img [src]="appMenu.imgsrc" height="50px" width="auto"></a>
-					</li>
-				</div>
-			</ul>
-			
-			<ul class="navbar-nav nav-flex-icons">
-				<li class="pt-0 pr-2 text-center customLiDate" mdbRippleRadius>
-					<p class="mb-0 customDate">{{ myDate | date:'EEEE'}}</p>
-					<p class="mb-0 customDate">{{ myDate | date:'MMMM d'}}</p>
-				</li>
-				<li class="pt-2 customLiDate">
-					<h5 class="mb-0">{{ myDate | date:'HH:mm:ss'}}</h5>
-				</li>
-				<li class="nav-item dropdown btn-group pr-2" dropdown>
-					<a dropdownToggle type="button" class="nav-link dropdown-toggle waves-light" mdbRippleRadius><img src="assets/img/perfil2.png" height="50px" width="auto">
-						<b>User</b><span class="caret"></span></a>
-				
-					<div *dropdownMenu class="dropdown-menu dropdown-primary dropdown customUser" role="menu">
-						<a class="dropdown-item waves-light" href="#" mdbRippleRadius>Cuenta</a>
-						<a class="dropdown-item waves-light" (click)="logout()" mdbRippleRadius>Salir</a>
+		<mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navBarColor pr-0" [containerInside]="false">
+			<logo>
+				<a class="logo navbar-brand pl-4" href="#"><img src="assets/img/logo-blanco.png" height="40px"
+						width="auto"></a>
+			</logo>
+			<links>
+				<!-- App Menus -->
+				<ul class="navbar-nav mr-auto">
+					<div *ngFor='let appMenu of appMenus'>
+						<li *ngIf='appMenu.show' class="nav-item waves-light customLi" [class.customNavBarItem]="true"
+							[routerLinkActive]="['customActive']"
+							mdbTooltip="{{ 'AppMenus.' + appMenu._id | translate }}" placement="bottom" mdbRippleRadius>
+							<a [routerLink]="appMenu._id" class="nav-link"><img [src]="appMenu.imgsrc" height="50px"
+									width="auto"></a>
+						</li>
 					</div>
-				</li>
-			</ul>
-		</links>
-	</mdb-navbar>
+				</ul>
+
+				<ul class="navbar-nav nav-flex-icons">
+					<li class="pt-0 pr-2 text-center customLiDate" mdbRippleRadius>
+						<p class="mb-0 customDate">{{ myDate | date:'EEEE'}}</p>
+						<p class="mb-0 customDate">{{ myDate | date:'MMMM d'}}</p>
+					</li>
+					<li class="pt-2 customLiDate">
+						<h5 class="mb-0">{{ myDate | date:'HH:mm:ss'}}</h5>
+					</li>
+					<li class="nav-item dropdown btn-group pr-2" dropdown>
+						<a dropdownToggle type="button" class="nav-link dropdown-toggle waves-light"
+							mdbRippleRadius><img src="assets/img/perfil2.png" height="50px" width="auto">
+							<span *ngIf="notifications.length !== 0" id="navbarNotificationCounter"
+								class="badge rounded blue z-depth-1"
+								style="font-size: 1rem; margin-left: 1rem; margin-right: 1rem;"
+								alt="Notificaciones">{{notifications.length}}</span>
+						</a>
+						<div *dropdownMenu class="dropdown-menu dropdown-primary dropdown customUser" role="menu" style="left: -20rem;">
+							<ng-container *ngIf="notifications.length !== 0">
+								<a class="dropdown-item waves-light" mdbRippleRadius
+									*ngFor="let notification of notifications"
+									(click)="showNewOrderNotificationModal(notification)">
+									{{notification.detailedType?.message + ' ' + notification.table}}
+								</a>
+							</ng-container>
+						</div>
+					</li>
+					<li class="nav-item dropdown btn-group pr-2" dropdown>
+						<a dropdownToggle type="button" class="nav-link dropdown-toggle waves-light"
+							mdbRippleRadius><img src="assets/img/perfil2.png" height="50px" width="auto">
+							<b>User</b><span class="caret"></span></a>
+						<div *dropdownMenu class="dropdown-menu dropdown-primary dropdown customUser" role="menu">
+							<a class="dropdown-item waves-light" href="#" mdbRippleRadius>Cuenta</a>
+							<a class="dropdown-item waves-light" (click)="logout()" mdbRippleRadius>Salir</a>
+						</div>
+					</li>
+				</ul>
+			</links>
+		</mdb-navbar>
 	</div>
 	<div class="container-fluid col-md-12 customContainer">
 		<router-outlet></router-outlet>
-	</div>	
+	</div>
 </div>
 
 <ng-http-loader spinner="sk-three-bounce"></ng-http-loader>

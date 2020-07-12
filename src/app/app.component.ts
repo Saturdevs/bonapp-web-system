@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { SwPush } from '@angular/service-worker';
@@ -12,9 +12,12 @@ import {
   AppMenu,
   UtilFunctions,
   ParamService,
-  NotificationTypes
+  NotificationTypes,
+  Notification,
+  NotificationReadBy
 } from '../shared/index';
 import { isNullOrUndefined } from 'util';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal/';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +28,15 @@ export class AppComponent implements OnInit {
   readonly VAPID_PUBLIC_KEY = "BFXG3OYw9d3Nsd-h8yKWxKI0ok4ISyjtIOpqRBOOIy_bkBnP6QbCEzaN9cu-ac3yJFaduuqFvcFWvXrj9FB-t3E";
   title: string = 'Web Bar';
   subtitle: string = 'by Los Pibes';
+  notifications: Array<Notification> = [];
   myDate: Date;
   currentUser: User;
   appMenus: Array<AppMenu> = [];
-
+  public modalRef: BsModalRef;
+  
+  @ViewChild('orderModal') orderModal: TemplateRef<any>;
+  currentNotificationToDisplay: any;
+  
   constructor(
     private _socketService: SocketIoService,
     private toast: ToastService,
@@ -37,7 +45,8 @@ export class AppComponent implements OnInit {
     private _authenticationService: AuthenticationService,
     private _router: Router,
     private translate: TranslateService,
-    private _parameterService: ParamService
+    private _parameterService: ParamService,
+    private modalService: BsModalService
   ) {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translate.setDefaultLang('es');
@@ -57,18 +66,10 @@ export class AppComponent implements OnInit {
     );
 
     this.getTime();
-    this.subscribeToNotifications(); //only with http-server
-    this.subscribeToNotificationsClick();
-    this._socketService.waiterCall() //Se suscribe al observable que avisa cuando recibio el metodo callWaiter
-      .subscribe(waiterCall => {
-        let options = {
-          timeOut: 0,
-          closeButton: true,
-          toastClass: 'opacity'
-        };
-        this.toast.success('Se requiere un mozo en la mesa ' + waiterCall.tableNumber, 'ATENCION:', options);
-      });
-
+    // this.subscribeToNotifications(); //only with http-server
+    // this.subscribeToNotificationsClick();
+    this.getNewNotifications();
+    this.getNonReadNotifications();
     this.getParams();
   }
 
@@ -102,15 +103,29 @@ export class AppComponent implements OnInit {
     }
   }
 
+  getNewNotifications(){
+    this.swPush.messages.subscribe(notificationReceived => {
+      this.getNonReadNotifications();
+    })
+  }
+
+  getNonReadNotifications(){
+    this._notificationService.getNonReadNotifications()
+    .subscribe(notifications => {
+      console.log(notifications);
+      this.notifications = notifications;
+    })
+  }
+
   subscribeToNotificationsClick(){
     this.swPush.notificationClicks.subscribe(notificationClick => {
-      console.log(notificationClick);
       const notificationType = notificationClick.notification.data.notificationType;
       const data = notificationClick.notification.data;
 
       switch (notificationType) {
         case NotificationTypes.NewOrder:
             this._socketService.acceptOrder(data);
+            this.showNewOrderNotificationModal(data);
           break;
         case NotificationTypes.TableOcuped:
           break;
@@ -120,6 +135,28 @@ export class AppComponent implements OnInit {
           break;
       }
     })
+  }
+
+  showNewOrderNotificationModal(notification){
+    if(notification.notificationType === NotificationTypes.NewOrder){
+      this.currentNotificationToDisplay = notification;
+      this.modalRef = this.modalService.show(this.orderModal, { backdrop: true, ignoreBackdropClick: true });
+    }
+    let newRead = new NotificationReadBy();
+    newRead.readAt = new Date();
+    
+    notification.readBy = newRead;
+    this._notificationService.updateNotification(notification)
+      .subscribe(notificationUpdated => {
+        console.log(notificationUpdated);
+        this.getNonReadNotifications();
+      });
+  }
+
+  closeNewOrderNotificationModal() {
+    this.modalRef.hide();
+    this.modalRef = null;
+    this.currentNotificationToDisplay = null;
   }
 
   logout() {

@@ -83,7 +83,7 @@ export class QrGeneratorComponent implements OnInit {
     return true;
   }
 
-    download(filename, qrBase64) {
+    download(filename: string, qrBase64: string) {
 
       let element = document.createElement('a');
       element.setAttribute('href', qrBase64);

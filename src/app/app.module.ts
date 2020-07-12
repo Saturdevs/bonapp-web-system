@@ -47,6 +47,8 @@ import { UserEditComponent } from './user/user-edit/user-edit.component';
 import { UserModule } from './user/user.module';
 import { QrGeneratorComponent } from './qrGenerator/qr-generator.component';
 import { UserRolesModule } from './user-roles/user-roles.module';
+import { ModalModule } from 'ngx-bootstrap/modal/';
+import { MDBBootstrapModulesPro } from 'ng-uikit-pro-standard';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -60,6 +62,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     QrGeneratorComponent
   ],
   imports: [
+    ModalModule.forRoot(),
     BrowserModule,
     HttpClientModule,
     CategoryModule,
@@ -108,6 +111,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+    MDBBootstrapModulesPro,
+    ModalModule,
+  ]
 })
 export class AppModule { }

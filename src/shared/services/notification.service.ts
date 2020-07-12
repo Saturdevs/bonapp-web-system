@@ -28,6 +28,18 @@ export class NotificationService {
       .map(data => data.notificationTypes)
       .catch(this.handleError);
   }
+
+  getNonReadNotifications(){
+    return this.apiService.get('/notification/nonRead')
+      .map(data => data.notificaions)
+      .catch(this.handleError);
+  }
+
+  updateNotification(notification){
+    return this.apiService.put(`/notification/${notification._id}`,notification)
+      .map(data => data.notification)
+      .catch(this.handleError);
+  }
   
   private handleError(err: HttpErrorResponse){
     console.log(err.message);

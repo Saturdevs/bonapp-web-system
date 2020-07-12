@@ -135,7 +135,7 @@ overflow: auto; overflow-x: hidden;">
     <div class="row col-12 menusContainer pr-0 pl-0">
       <div class="d-flex align-items-center pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0" style="width: 100%">
         <div style="margin-left:2%;" *ngFor="let menu of menus" class="d-flex align-items-center menuButtonContainer">
-          <a (click)="getCategoriesAvailables(menu._id); applyClassMenu(menu._id)"
+          <a (click)="getCategoriesAvailables(menu._id); applyClassMenu(menu._id)" style="font-size: 1.2rem;"
             [ngClass]="{'activeItem': activeMenu == menu._id}" mdbBtn size="md" rounded="true"
             [class.btn-primary-custom]="true" mdbWavesEffect [class.menuButton]="true"
             class="d-flex align-items-center justify-content-center mt-0 mb-0"
@@ -145,7 +145,7 @@ overflow: auto; overflow-x: hidden;">
           class="d-flex align-items-center menuButtonContainer">
           <a [ngClass]="{'activeItem': activeDailyMenu}" (click)="applyClassDailyMenu();" mdbBtn size="md"
             [class.btn-primary-custom]="true" mdbWavesEffect rounded="true" [class.menuButton]="true"
-            class="d-flex align-items-center justify-content-center mt-0 mb-0"
+            class="d-flex align-items-center justify-content-center mt-0 mb-0" style="font-size: 1.1rem;"
             mdbRippleRadius><span>{{ dailyMenusLabel }}</span></a>
         </div>
       </div>
@@ -154,29 +154,33 @@ overflow: auto; overflow-x: hidden;">
       <div class="col-3 categoriesContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <ng-container *ngIf="activeDailyMenu == false">
           <div class="d-flex flex-wrap align-items-center justify-content-center categoryButtonContainer"
-            *ngFor="let category of categories">
+            *ngFor="let category of categories" style="font-size: 1.5rem;">
             <a (click)="getProductsAvailablesByCategory(category._id); applyClassCategory(category._id); categorySelected = true;"
               [ngClass]="{'activeItem': activeCategory == category._id}" mdbBtn rounded="true"
               [class.btn-primary-custom]="true" size="md" mdbWavesEffect [class.categoryButton]="true"
-              class="d-flex align-items-center justify-content-center"
-              mdbRippleRadius><span>{{category.name}}</span></a>
+              class="d-flex align-items-center justify-content-center" mdbRippleRadius><span>{{category.name}}</span><i
+                class="fa fa-arrow-right" style="font-size: 1.3rem; margin-left: 1rem;" aria-hidden="true"></i>
+            </a>
           </div>
         </ng-container>
       </div>
       <div *ngIf="products && products.length > 0"
         class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <ng-container *ngIf="activeDailyMenu == false">
-          <div class="productsButtonContainer" *ngFor="let product of products">
+          <div class="productsButtonContainer" style="font-size: 1.5rem; text-align: center;"
+            *ngFor="let product of products">
             <a (click)="validateSizesAndOptions(product, 1)" mdbBtn size="md" rounded="true"
               [class.productButton]="true" [class.btn-primary-custom]="true" mdbWavesEffect
-              class="d-flex align-items-center justify-content-center" mdbRippleRadius><span>{{product.name}}</span></a>
+              class="d-flex align-items-center justify-content-center" mdbRippleRadius><span>{{product.name}}</span><i
+                class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></a>
           </div>
         </ng-container>
       </div>
       <div
         class="col-9 d-flex flex-wrap col-9 productsContainer customScrollBar pr-0 pl-0 pb-0 pt-0 mr-0 ml-0 mt-0 mb-0">
         <ng-container *ngIf="dailyMenus && dailyMenus.length > 0 && activeDailyMenu == true">
-          <div class="productsButtonContainer" *ngFor="let dailyMenu of dailyMenus">
+          <div class="productsButtonContainer" style="font-size: 1.5rem; text-align: center;"
+            *ngFor="let dailyMenu of dailyMenus">
             <a (click)="addDailyMenuToPreOrder(dailyMenu,1)" mdbBtn size="md" rounded="true"
               [class.productButton]="true" [class.btn-primary-custom]="true" mdbWavesEffect
               class="d-flex align-items-center justify-content-center"
@@ -195,9 +199,9 @@ overflow: auto; overflow-x: hidden;">
     </div>
   </div>
   <div class="col-md-4 col-lg-4 col-xs-4 col-sm-4 pl-0 pr-0">
-    <div class="row secondary-color customTextColor customTableNumberTitle">
+    <div class="row secondary-color customTextColor customTableNumberTitle" style="padding-left: 1rem">
       <div class="row col-lg-12 col-md-12 col-sm-12">
-        <h5>{{'Mesa ' + order.table | uppercase}}</h5>
+        <h5 style="margin-bottom: 0px; padding-top: .5rem;">{{'Mesa ' + order.table | uppercase}}</h5>
       </div>
       <div class="row col-lg-8 col-md-8 col-sm-8 customSubtittle">
         {{ order.created_at | date:'dd/MM/yy HH:mm' }}
@@ -211,7 +215,7 @@ overflow: auto; overflow-x: hidden;">
         </div>
       </div> -->
     </div>
-    <div class="row">
+    <div class="row" style="padding-left: 2rem; padding-top: .7rem;">
       <span class="mt-2 span-padding">Usuario:</span>
       <div class="col-md-4 col-lg-4 col-sm-4 ml-1 span-padding">
         <mdb-select #user name="user" id="user" [options]="userSelect" [(ngModel)]="userSelected"
@@ -317,9 +321,13 @@ overflow: auto; overflow-x: hidden;">
     <!-- Listado de productos en order -->
     <div class="row mt-0 productsInOrder">
       <div class="col-lg-12 col-md-12 col-sm-12 productLine" *ngFor="let user of usersInOrder">
-        <label *ngIf="userSelected === 'default'">Usuario: {{ user.username }}</label>
+        <div class="row secondary-color customTextColor customTableNumberTitle usersOrderingLabel">
+          <div class="row col-lg-12 col-md-12 col-sm-12">
+            <label *ngIf="userSelected === 'default'">Usuario: {{ user.username }}</label>
+          </div>
+        </div>
         <div *ngFor="let product of user.products">
-          <div class="row mb-0 customBorder">
+          <div class="row mb-0 customBorder productInOrderLabel">
             <div class="col-2 p-0 pl-3">
               <span>{{ product.quantity }}</span>
             </div>
@@ -350,12 +358,13 @@ overflow: auto; overflow-x: hidden;">
           <div class="row mb-2" *ngIf="product.paymentStatus === 'Payed'">
             <span>PAGADO</span>
           </div>
+          <hr *ngIf="user.products.length > 1" style="margin-bottom:0px;" />
         </div>
       </div>
     </div>
 
     <!--Total-->
-    <div class="row">
+    <div class="row" style="height: 4rem;">
       <div class="col-lg-6 col-md-6 col-sm-6 totalOrder">
         <span class="float-left">{{'Total' | uppercase}} </span>
       </div>
@@ -366,7 +375,7 @@ overflow: auto; overflow-x: hidden;">
     <div class="row" *ngIf='enableCloseOrder'>
       <div class="col-4 offset-4 mt-2">
         <button type="button" rounded="true" mdbBtn size="md" [class.btn-primary-custom]="true" mdbWavesEffect
-          mdbRippleRadius (click)="closeTable(closeOrderTemplate)">Cerrar Mesa</button>
+          mdbRippleRadius (click)="closeTable(closeOrderTemplate)" style="font-size: 1rem; width: 100%">Cerrar Mesa</button>
       </div>
     </div>
   </div>
