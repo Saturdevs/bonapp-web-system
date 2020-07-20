@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { AuthenticationService } from '../../shared/index';
+import { AuthenticationService, NotificationService } from '../../shared/index';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -56,6 +57,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.username.value, this.f.password.value, this.f.keepLoggedIn.value)
       .subscribe(
         data => {
+          this.notificationService.subscribeToNotifications(); //only with http-server
           let returnUrl = this.returnUrl;
           this.router.navigate([returnUrl]);
         },

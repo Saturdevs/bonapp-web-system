@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastService } from 'ng-uikit-pro-standard';
 import { SwPush } from '@angular/service-worker';
@@ -25,7 +25,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal/';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  readonly VAPID_PUBLIC_KEY = "BFXG3OYw9d3Nsd-h8yKWxKI0ok4ISyjtIOpqRBOOIy_bkBnP6QbCEzaN9cu-ac3yJFaduuqFvcFWvXrj9FB-t3E";
   title: string = 'Web Bar';
   subtitle: string = 'by Los Pibes';
   notifications: Array<Notification> = [];
@@ -33,10 +32,10 @@ export class AppComponent implements OnInit {
   currentUser: User;
   appMenus: Array<AppMenu> = [];
   public modalRef: BsModalRef;
-  
+
   @ViewChild('orderModal') orderModal: TemplateRef<any>;
   currentNotificationToDisplay: any;
-  
+
   constructor(
     private _socketService: SocketIoService,
     private toast: ToastService,
@@ -54,7 +53,7 @@ export class AppComponent implements OnInit {
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     this.translate.use('es');
   }
-  
+
   ngOnInit() {
     this._authenticationService.currentUser.subscribe(
       x => {
@@ -65,12 +64,18 @@ export class AppComponent implements OnInit {
       }
     );
 
-    this.getTime();
-    // this.subscribeToNotifications(); //only with http-server
-    // this.subscribeToNotificationsClick();
+    this.getTime();    
+    this.subscribeToNotificationsClick();
     this.getNewNotifications();
     this.getNonReadNotifications();
     this.getParams();
+  }
+
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event) {
+    if (!localStorage.getItem('currentUser') || JSON.parse(localStorage.getItem('currentUser')) === {}) {
+      this._notificationService.deleteSubscription();
+    }
   }
 
   getParams() {
@@ -88,44 +93,28 @@ export class AppComponent implements OnInit {
     }, 1000);
   };
 
-  private async subscribeToNotifications() {
-    try {
-      const sub = await this.swPush.requestSubscription({
-        serverPublicKey: this.VAPID_PUBLIC_KEY,
-      });
-      this._notificationService.addPushSubscriber(sub).subscribe(res => {
-      }
-        , err => {
-          console.log(err);
-        });
-    } catch (err) {
-      console.error('Could not subscribe due to:', err);
-    }
-  }
-
-  getNewNotifications(){
+  getNewNotifications() {
     this.swPush.messages.subscribe(notificationReceived => {
       this.getNonReadNotifications();
     })
   }
 
-  getNonReadNotifications(){
+  getNonReadNotifications() {
     this._notificationService.getNonReadNotifications()
-    .subscribe(notifications => {
-      console.log(notifications);
-      this.notifications = notifications;
-    })
+      .subscribe(notifications => {
+        this.notifications = notifications;
+      })
   }
 
-  subscribeToNotificationsClick(){
+  subscribeToNotificationsClick() {
     this.swPush.notificationClicks.subscribe(notificationClick => {
       const notificationType = notificationClick.notification.data.notificationType;
       const data = notificationClick.notification.data;
 
       switch (notificationType) {
         case NotificationTypes.NewOrder:
-            this._socketService.acceptOrder(data);
-            this.showNewOrderNotificationModal(data);
+          this._socketService.acceptOrder(data);
+          this.showNewOrderNotificationModal(data);
           break;
         case NotificationTypes.TableOcuped:
           break;
@@ -137,14 +126,14 @@ export class AppComponent implements OnInit {
     })
   }
 
-  showNewOrderNotificationModal(notification){
-    if(notification.notificationType === NotificationTypes.NewOrder){
+  showNewOrderNotificationModal(notification) {
+    if (notification.notificationType === NotificationTypes.NewOrder) {
       this.currentNotificationToDisplay = notification;
       this.modalRef = this.modalService.show(this.orderModal, { backdrop: true, ignoreBackdropClick: true });
     }
     let newRead = new NotificationReadBy();
     newRead.readAt = new Date();
-    
+
     notification.readBy = newRead;
     this._notificationService.updateNotification(notification)
       .subscribe(notificationUpdated => {
