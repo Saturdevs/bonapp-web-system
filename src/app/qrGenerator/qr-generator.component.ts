@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ActivatedRoute } from '@angular/router';
-import { AuthenticationService, Table } from '../../shared';
+import { AuthenticationService, Table, OrderTypes } from '../../shared';
 import { QrGeneratorService } from '../../shared/services/qr-generator.service';
 import { SettingsService } from '../../shared/services/settings.service';
 
@@ -59,7 +59,8 @@ export class QrGeneratorComponent implements OnInit {
         .subscribe(settings => {
           let data = {
             tableNumber: table.number,
-            restaurantId: settings[0].restaurantId
+            restaurantId: settings[0].restaurantId,
+            orderType: OrderTypes.RESTAURANT
           };
           this.qrGeneratorService.generateQR(data)
             .subscribe(result => {
