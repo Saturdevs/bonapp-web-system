@@ -37,7 +37,7 @@ export class ParamService {
 
   getBooleanParameter(paramName: String): Boolean {
     if (!isNullOrUndefined(this.params) && this.params.length > 0) {
-      const param = this.params.find(param => param._id === paramName);
+      const param = this.params.find(param => param.code === paramName);
       if (!isNullOrUndefined(param)) {        
         return param.value;
       } else {

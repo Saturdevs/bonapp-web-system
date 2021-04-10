@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
     );
 
     this.getTime();    
-    this.subscribeToNotificationsClick();
+    // this.subscribeToNotificationsClick();
     this.getNewNotifications();
     this.getNonReadNotifications();
     this.getParams();
